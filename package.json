@@ -1,0 +1,9 @@
+{
+  "private": true,
+  "scripts": {
+    "prettier": "prettier --write README.md \"{frontend,backend}/src/**/*.{js,jsx,ts,tsx,json,css,scss,graphql}\" \"{frontend,backend}/README.md\""
+  },
+  "devDependencies": {
+    "prettier": "3.0.3"
+  }
+}
