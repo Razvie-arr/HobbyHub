@@ -10,8 +10,7 @@ export function NotFoundPage() {
       <TopNavigation />
       <Box p="8">
         <Box>
-          Page not found, please return to{' '}
-          <RouterLink to={route.home()}>Home</RouterLink>.
+          Page not found, please return to <RouterLink to={route.home()}>Home</RouterLink>.
         </Box>
       </Box>
     </Box>

@@ -1,7 +1,4 @@
-import {
-  Link as ChakraLink,
-  type LinkProps as ChakraLinkProps,
-} from '@chakra-ui/react';
+import { Link as ChakraLink, type LinkProps as ChakraLinkProps } from '@chakra-ui/react';
 
 export type NavLinkProps = ChakraLinkProps;
 

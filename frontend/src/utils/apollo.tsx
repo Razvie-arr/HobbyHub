@@ -1,14 +1,7 @@
 import 'cross-fetch/polyfill';
 
 import { ReactNode, useCallback } from 'react';
-import {
-  ApolloClient,
-  ApolloLink,
-  ApolloProvider,
-  createHttpLink,
-  from,
-  InMemoryCache,
-} from '@apollo/client';
+import { ApolloClient, ApolloLink, ApolloProvider, createHttpLink, from, InMemoryCache } from '@apollo/client';
 import { GraphQLErrors, NetworkError } from '@apollo/client/errors';
 import { onError } from '@apollo/client/link/error';
 import { useNavigate } from 'react-router-dom';
@@ -17,9 +10,9 @@ import { config } from 'src/config';
 import { useAuth } from 'src/modules/auth';
 import { route } from 'src/route';
 
-type Props = {
+interface Props {
   children: ReactNode;
-};
+}
 
 export function EnhancedApolloProvider({ children }: Props) {
   const navigate = useNavigate();
@@ -42,10 +35,7 @@ export function EnhancedApolloProvider({ children }: Props) {
   });
 
   const logoutLink = onError(({ graphQLErrors, networkError }) => {
-    if (
-      hasUnauthenticatedErrorCode(graphQLErrors) ||
-      hasNetworkStatusCode(networkError, 401)
-    ) {
+    if (hasUnauthenticatedErrorCode(graphQLErrors) || hasNetworkStatusCode(networkError, 401)) {
       handleSignOut();
     }
   });
@@ -69,19 +59,11 @@ export function EnhancedApolloProvider({ children }: Props) {
 
 const UNAUTHENTICATED_CODE = 'UNAUTHENTICATED';
 
-const hasUnauthenticatedErrorCode = (errors: GraphQLErrors | undefined) => {
-  return (
-    errors &&
-    errors.some((error) => error.extensions.code === UNAUTHENTICATED_CODE)
-  );
-};
+const hasUnauthenticatedErrorCode = (errors: GraphQLErrors | undefined) =>
+  errors && errors.some((error) => error.extensions.code === UNAUTHENTICATED_CODE);
 
-const hasNetworkStatusCode = (
-  error: NetworkError | undefined,
-  code: number,
-) => {
-  return error && 'statusCode' in error && error.statusCode === code;
-};
+const hasNetworkStatusCode = (error: NetworkError | undefined, code: number) =>
+  error && 'statusCode' in error && error.statusCode === code;
 
 const httpLink = createHttpLink({
   uri: config.GRAPHQL_API,

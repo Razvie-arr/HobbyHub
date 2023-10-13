@@ -2,11 +2,7 @@ import { GraphQLError } from 'graphql/error';
 import * as argon2 from 'argon2';
 
 import { type CustomContext } from '../../../types/types';
-import {
-  type AuthInfo,
-  type MutationSignInArgs,
-  type MutationSignUpArgs,
-} from '../../../types/graphqlTypesGenerated';
+import { type AuthInfo, type MutationSignInArgs, type MutationSignUpArgs } from '../../../types/graphqlTypesGenerated';
 import { createToken } from '../../../libs/jwt';
 
 export const signInResolver = async (
@@ -16,10 +12,7 @@ export const signInResolver = async (
 ): Promise<AuthInfo> => {
   const email = rawEmail.toLocaleLowerCase();
 
-  const dbResponse = await dbConnection.query(
-    `SELECT * FROM user WHERE email = ?`,
-    [email],
-  );
+  const dbResponse = await dbConnection.query(`SELECT * FROM user WHERE email = ?`, [email]);
 
   if (dbResponse.length === 0) {
     throw new GraphQLError('Unauthorized.');
@@ -45,9 +38,7 @@ export const signUpResolver = async (
 ): Promise<AuthInfo> => {
   const email = rawEmail.toLocaleLowerCase();
 
-  const userByEmail = (
-    await dbConnection.query(`SELECT * FROM user WHERE email = ?`, [email])
-  )[0];
+  const userByEmail = (await dbConnection.query(`SELECT * FROM user WHERE email = ?`, [email]))[0];
 
   if (userByEmail) {
     throw new GraphQLError('Email already registered');

@@ -1,8 +1,5 @@
 import { ApolloServer } from '@apollo/server';
-import {
-  startStandaloneServer,
-  StandaloneServerContextFunctionArgument,
-} from '@apollo/server/standalone';
+import { startStandaloneServer, StandaloneServerContextFunctionArgument } from '@apollo/server/standalone';
 
 import schemaDefinition from './graphql/rootTypeDefs';
 import rootResolver from './graphql/rootResolver';
@@ -16,9 +13,7 @@ const init = async () => {
     resolvers: rootResolver,
   });
 
-  const customContext = async ({
-    req,
-  }: StandaloneServerContextFunctionArgument): Promise<CustomContext> => {
+  const customContext = async ({ req }: StandaloneServerContextFunctionArgument): Promise<CustomContext> => {
     const auth = req.headers.Authorization || '';
 
     return {

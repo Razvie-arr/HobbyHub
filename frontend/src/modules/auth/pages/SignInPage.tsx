@@ -23,6 +23,7 @@ export function SignInPage() {
   const auth = useAuth();
   const navigate = useNavigate();
 
+  // @ts-expect-error
   const [signInRequest, signInRequestState] = useMutation(SIGNIN_MUTATION, {
     onCompleted: ({ signIn: { user, token } }) => {
       auth.signIn({ token, user });
@@ -37,7 +38,7 @@ export function SignInPage() {
       <Box p="8">
         <Button
           onClick={() => {
-            signInRequest({
+            void signInRequest({
               variables: {
                 email: 'a@a.com',
                 password: 'pass',
@@ -48,9 +49,7 @@ export function SignInPage() {
         >
           Sign In
         </Button>
-        {signInRequestState.error ? (
-          <Box color="red">{signInRequestState.error.message}</Box>
-        ) : null}
+        {signInRequestState.error ? <Box color="red">{signInRequestState.error.message}</Box> : null}
       </Box>
     </Box>
   );
