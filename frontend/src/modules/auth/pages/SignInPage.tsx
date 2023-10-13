@@ -23,7 +23,6 @@ export function SignInPage() {
   const auth = useAuth();
   const navigate = useNavigate();
 
-  // @ts-expect-error
   const [signInRequest, signInRequestState] = useMutation(SIGNIN_MUTATION, {
     onCompleted: ({ signIn: { user, token } }) => {
       auth.signIn({ token, user });
