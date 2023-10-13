@@ -6,13 +6,11 @@ import { NotFoundPage } from 'src/shared/navigation';
 
 import { route } from './route';
 
-export function Routes() {
-  return (
-    <RouterRoutes>
-      <Route path={route.home()} element={<HomePage />} />
-      <Route path={route.signIn()} element={<SignInPage />} />
-      <Route path={route.signUp()} element={<SignUpPage />} />
-      <Route path="*" element={<NotFoundPage />} />
-    </RouterRoutes>
-  );
-}
+export const Routes = () => (
+  <RouterRoutes>
+    <Route path={route.home()} element={<HomePage />} />
+    <Route path={route.signIn()} element={<SignInPage />} />
+    <Route path={route.signUp()} element={<SignUpPage />} />
+    <Route path="*" element={<NotFoundPage />} />
+  </RouterRoutes>
+);

@@ -1,9 +1,9 @@
 import { type ReactNode, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 
-export type ScrollToTopProps = {
+export interface ScrollToTopProps {
   children?: ReactNode;
-};
+}
 
 export function ScrollToTop({ children }: ScrollToTopProps) {
   const { pathname } = useLocation();

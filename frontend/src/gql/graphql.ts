@@ -11,10 +11,7 @@ export type MakeOptional<T, K extends keyof T> = Omit<T, K> & {
 export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & {
   [SubKey in K]: Maybe<T[SubKey]>;
 };
-export type MakeEmpty<
-  T extends { [key: string]: unknown },
-  K extends keyof T,
-> = { [_ in K]?: never };
+export type MakeEmpty<T extends { [key: string]: unknown }, K extends keyof T> = { [_ in K]?: never };
 export type Incremental<T> =
   | T
   | {
@@ -306,9 +303,7 @@ export const QuacksDocument = {
       name: { kind: 'Name', value: 'Quacks' },
       selectionSet: {
         kind: 'SelectionSet',
-        selections: [
-          { kind: 'Field', name: { kind: 'Name', value: '_empty' } },
-        ],
+        selections: [{ kind: 'Field', name: { kind: 'Name', value: '_empty' } }],
       },
     },
   ],

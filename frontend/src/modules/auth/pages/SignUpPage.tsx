@@ -36,7 +36,7 @@ export function SignUpPage() {
       <Box p="8">
         <Button
           onClick={() => {
-            signUpRequest({
+            void signUpRequest({
               variables: {
                 email: 'a@a.com',
                 name: 'John Doe',
@@ -48,9 +48,7 @@ export function SignUpPage() {
         >
           Sign Up
         </Button>
-        {signUpRequestState.error ? (
-          <Box color="red">{signUpRequestState.error.message}</Box>
-        ) : null}
+        {signUpRequestState.error ? <Box color="red">{signUpRequestState.error.message}</Box> : null}
       </Box>
     </Box>
   );

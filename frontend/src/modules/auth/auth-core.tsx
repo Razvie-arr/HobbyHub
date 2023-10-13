@@ -1,21 +1,14 @@
-import {
-  createContext,
-  type ReactNode,
-  useCallback,
-  useContext,
-  useMemo,
-  useState,
-} from 'react';
+import { createContext, type ReactNode, useCallback, useContext, useMemo, useState } from 'react';
 
-type AuthState = {
+interface AuthState {
   token: string | null;
   user: AuthUser | null;
-};
+}
 
-export type AuthUser = {
+export interface AuthUser {
   id: number;
   name: string;
-};
+}
 
 const LOCAL_STORAGE_AUTH_KEY = 'project-auth';
 
@@ -28,8 +21,8 @@ const AuthContext = createContext(
   createContextValue({
     token: initialState.token,
     user: initialState.user,
-    setState: () =>
-      console.error('You are using AuthContext without AuthProvider!'),
+    // eslint-disable-next-line no-console
+    setState: () => console.error('You are using AuthContext without AuthProvider!'),
   }),
 );
 
@@ -38,9 +31,9 @@ export function useAuth() {
   return useContext(AuthContext);
 }
 
-type Props = {
+interface Props {
   children: ReactNode;
-};
+}
 
 export function AuthProvider({ children }: Props) {
   const [state, setState] = usePersistedAuth(initialState);
@@ -50,9 +43,7 @@ export function AuthProvider({ children }: Props) {
     return createContextValue({ token, user, setState });
   }, [state, setState]);
 
-  return (
-    <AuthContext.Provider value={contextValue}>{children}</AuthContext.Provider>
-  );
+  return <AuthContext.Provider value={contextValue}>{children}</AuthContext.Provider>;
 }
 
 function createContextValue({
@@ -65,14 +56,12 @@ function createContextValue({
   return {
     token,
     user,
-    signIn: ({ token, user }: AuthState) => setState({ token, user }),
+    signIn: (authState: AuthState) => setState({ token: authState.token, user: authState.user }),
     signOut: () => setState({ token: null, user: null }),
   };
 }
 
-function usePersistedAuth(
-  defaultState: AuthState,
-): [AuthState, (newState: AuthState) => void] {
+function usePersistedAuth(defaultState: AuthState): [AuthState, (newState: AuthState) => void] {
   const [state, setStateRaw] = useState(() => getStorageState(defaultState));
 
   const setState = useCallback((newState: AuthState) => {
