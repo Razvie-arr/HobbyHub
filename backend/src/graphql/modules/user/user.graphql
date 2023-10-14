@@ -6,6 +6,8 @@ extend type Mutation {
 type User { # Public info about user
   id: Int!
   name: String!
+  email: String!
+  password: String!
 }
 
 type AuthUser { # Private info about user (e.g. with email address, ...)

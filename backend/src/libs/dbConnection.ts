@@ -4,6 +4,7 @@ import { DB_HOST, DB_PORT, DB_USER, DB_PASSWORD, DB_NAME } from '../config';
 let conn: Connection | null = null;
 
 export const getConnection = async (): Promise<Connection> => {
+  console.log({ DB_HOST, DB_PORT, DB_USER, DB_PASSWORD, DB_NAME });
   try {
     if (!conn) {
       conn = await mariadb.createConnection({
@@ -20,3 +21,4 @@ export const getConnection = async (): Promise<Connection> => {
     throw err;
   }
 };
+

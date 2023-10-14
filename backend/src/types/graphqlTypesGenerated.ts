@@ -2,24 +2,12 @@ import { GraphQLResolveInfo } from 'graphql';
 import { CustomContext } from './types';
 export type Maybe<T> = T | null;
 export type InputMaybe<T> = Maybe<T>;
-export type Exact<T extends { [key: string]: unknown }> = {
-  [K in keyof T]: T[K];
-};
-export type MakeOptional<T, K extends keyof T> = Omit<T, K> & {
-  [SubKey in K]?: Maybe<T[SubKey]>;
-};
-export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & {
-  [SubKey in K]: Maybe<T[SubKey]>;
-};
+export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
+export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
 export type MakeEmpty<T extends { [key: string]: unknown }, K extends keyof T> = { [_ in K]?: never };
-export type Incremental<T> =
-  | T
-  | {
-      [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never;
-    };
-export type RequireFields<T, K extends keyof T> = Omit<T, K> & {
-  [P in K]-?: NonNullable<T[P]>;
-};
+export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
+export type RequireFields<T, K extends keyof T> = Omit<T, K> & { [P in K]-?: NonNullable<T[P]> };
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
   ID: { input: string; output: string };
@@ -42,10 +30,47 @@ export type AuthUser = {
   name: Scalars['String']['output'];
 };
 
+export type Event = {
+  __typename?: 'Event';
+  author: User;
+  description?: Maybe<Scalars['String']['output']>;
+  end_datetime: Scalars['String']['output'];
+  id: Scalars['Int']['output'];
+  image_filePath?: Maybe<Scalars['String']['output']>;
+  location: Location;
+  name: Scalars['String']['output'];
+  start_datetime: Scalars['String']['output'];
+  summary: Scalars['String']['output'];
+};
+
+export type EventType = {
+  __typename?: 'EventType';
+  id: Scalars['Int']['output'];
+  logo_filepath: Scalars['String']['output'];
+  name: Scalars['String']['output'];
+};
+
+export type Location = {
+  __typename?: 'Location';
+  additional_information?: Maybe<Scalars['String']['output']>;
+  city: Scalars['String']['output'];
+  country: Scalars['String']['output'];
+  id: Scalars['Int']['output'];
+  latitude: Scalars['Float']['output'];
+  longitude: Scalars['Float']['output'];
+  street_name: Scalars['String']['output'];
+  street_number: Scalars['String']['output'];
+};
+
 export type Mutation = {
   __typename?: 'Mutation';
+  _empty?: Maybe<Scalars['String']['output']>;
   signIn: AuthInfo;
   signUp: AuthInfo;
+};
+
+export type Mutation_EmptyArgs = {
+  nothing?: InputMaybe<Scalars['String']['input']>;
 };
 
 export type MutationSignInArgs = {
@@ -59,10 +84,35 @@ export type MutationSignUpArgs = {
   password: Scalars['String']['input'];
 };
 
+export type Query = {
+  __typename?: 'Query';
+  event?: Maybe<Event>;
+  eventType?: Maybe<EventType>;
+  eventTypes?: Maybe<Array<Maybe<EventType>>>;
+  events?: Maybe<Array<Maybe<Event>>>;
+  location?: Maybe<Location>;
+  locations?: Maybe<Array<Maybe<Location>>>;
+};
+
+export type QueryEventArgs = {
+  id: Scalars['Int']['input'];
+};
+
+export type QueryEventTypeArgs = {
+  id: Scalars['Int']['input'];
+};
+
+export type QueryLocationArgs = {
+  latitude: Scalars['Float']['input'];
+  longitude: Scalars['Float']['input'];
+};
+
 export type User = {
   __typename?: 'User';
+  email: Scalars['String']['output'];
   id: Scalars['Int']['output'];
   name: Scalars['String']['output'];
+  password: Scalars['String']['output'];
 };
 
 export type ResolverTypeWrapper<T> = Promise<T> | T;
@@ -140,8 +190,13 @@ export type ResolversTypes = {
   AuthInfo: ResolverTypeWrapper<AuthInfo>;
   AuthUser: ResolverTypeWrapper<AuthUser>;
   Boolean: ResolverTypeWrapper<Scalars['Boolean']['output']>;
+  Event: ResolverTypeWrapper<Event>;
+  EventType: ResolverTypeWrapper<EventType>;
+  Float: ResolverTypeWrapper<Scalars['Float']['output']>;
   Int: ResolverTypeWrapper<Scalars['Int']['output']>;
+  Location: ResolverTypeWrapper<Location>;
   Mutation: ResolverTypeWrapper<{}>;
+  Query: ResolverTypeWrapper<{}>;
   String: ResolverTypeWrapper<Scalars['String']['output']>;
   User: ResolverTypeWrapper<User>;
 };
@@ -151,8 +206,13 @@ export type ResolversParentTypes = {
   AuthInfo: AuthInfo;
   AuthUser: AuthUser;
   Boolean: Scalars['Boolean']['output'];
+  Event: Event;
+  EventType: EventType;
+  Float: Scalars['Float']['output'];
   Int: Scalars['Int']['output'];
+  Location: Location;
   Mutation: {};
+  Query: {};
   String: Scalars['String']['output'];
   User: User;
 };
@@ -176,10 +236,52 @@ export type AuthUserResolvers<
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
+export type EventResolvers<
+  ContextType = CustomContext,
+  ParentType extends ResolversParentTypes['Event'] = ResolversParentTypes['Event'],
+> = {
+  author?: Resolver<ResolversTypes['User'], ParentType, ContextType>;
+  description?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  end_datetime?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  image_filePath?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  location?: Resolver<ResolversTypes['Location'], ParentType, ContextType>;
+  name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  start_datetime?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  summary?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type EventTypeResolvers<
+  ContextType = CustomContext,
+  ParentType extends ResolversParentTypes['EventType'] = ResolversParentTypes['EventType'],
+> = {
+  id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  logo_filepath?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type LocationResolvers<
+  ContextType = CustomContext,
+  ParentType extends ResolversParentTypes['Location'] = ResolversParentTypes['Location'],
+> = {
+  additional_information?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  city?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  country?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  latitude?: Resolver<ResolversTypes['Float'], ParentType, ContextType>;
+  longitude?: Resolver<ResolversTypes['Float'], ParentType, ContextType>;
+  street_name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  street_number?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
 export type MutationResolvers<
   ContextType = CustomContext,
   ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation'],
 > = {
+  _empty?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType, Partial<Mutation_EmptyArgs>>;
   signIn?: Resolver<
     ResolversTypes['AuthInfo'],
     ParentType,
@@ -194,18 +296,46 @@ export type MutationResolvers<
   >;
 };
 
+export type QueryResolvers<
+  ContextType = CustomContext,
+  ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query'],
+> = {
+  event?: Resolver<Maybe<ResolversTypes['Event']>, ParentType, ContextType, RequireFields<QueryEventArgs, 'id'>>;
+  eventType?: Resolver<
+    Maybe<ResolversTypes['EventType']>,
+    ParentType,
+    ContextType,
+    RequireFields<QueryEventTypeArgs, 'id'>
+  >;
+  eventTypes?: Resolver<Maybe<Array<Maybe<ResolversTypes['EventType']>>>, ParentType, ContextType>;
+  events?: Resolver<Maybe<Array<Maybe<ResolversTypes['Event']>>>, ParentType, ContextType>;
+  location?: Resolver<
+    Maybe<ResolversTypes['Location']>,
+    ParentType,
+    ContextType,
+    RequireFields<QueryLocationArgs, 'latitude' | 'longitude'>
+  >;
+  locations?: Resolver<Maybe<Array<Maybe<ResolversTypes['Location']>>>, ParentType, ContextType>;
+};
+
 export type UserResolvers<
   ContextType = CustomContext,
   ParentType extends ResolversParentTypes['User'] = ResolversParentTypes['User'],
 > = {
+  email?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  password?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
 export type Resolvers<ContextType = CustomContext> = {
   AuthInfo?: AuthInfoResolvers<ContextType>;
   AuthUser?: AuthUserResolvers<ContextType>;
+  Event?: EventResolvers<ContextType>;
+  EventType?: EventTypeResolvers<ContextType>;
+  Location?: LocationResolvers<ContextType>;
   Mutation?: MutationResolvers<ContextType>;
+  Query?: QueryResolvers<ContextType>;
   User?: UserResolvers<ContextType>;
 };
