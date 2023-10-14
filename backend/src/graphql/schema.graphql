@@ -1,7 +1,13 @@
 type Query {
-  _empty: String
+  event(id: Int!): Event
+  events: [Event]
+  eventType(id: Int!): EventType
+  eventTypes: [EventType]
+  location(longitude: Float!, latitude: Float!): Location
+  locations: [Location]
 }
 
 type Mutation {
   _empty(nothing: String): String
 }
+

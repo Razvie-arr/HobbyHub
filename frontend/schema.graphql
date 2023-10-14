@@ -22,4 +22,38 @@ type Query {
 type User {
   id: Int!
   name: String!
+  email: String!
+  password: String!
 }
+type Location{
+  id: Int!
+  country: String!
+  region: String!
+  city: String!
+  street_name: String!
+  street_number: String!
+  additional_information: String!
+  latitude: Float!
+  longitude: Float!
+}
+
+type Event{
+  id: Int!
+  name: String!
+  summary: String!
+  description: String!
+  image_filePath: String!
+  start_date: String!
+  end_date: String!
+
+  author: User
+  location: Location
+  even_type: EventType
+}
+
+type EventType{
+  id: Int!
+  name: String!
+  logo_filepath: String!
+}
+

@@ -1,0 +1,13 @@
+type Event {
+  id: Int!
+  name: String!
+  summary: String!
+  description: String
+  image_filePath: String
+  start_datetime: String!
+  end_datetime: String!
+
+  author: User!
+  location: Location!
+}
+
