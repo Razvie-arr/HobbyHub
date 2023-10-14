@@ -1,8 +1,8 @@
 import { ApolloServer } from '@apollo/server';
-import { startStandaloneServer, StandaloneServerContextFunctionArgument } from '@apollo/server/standalone';
+import { StandaloneServerContextFunctionArgument, startStandaloneServer } from '@apollo/server/standalone';
 
+import { rootResolver } from './graphql/rootResolver';
 import schemaDefinition from './graphql/rootTypeDefs';
-import rootResolver from './graphql/rootResolver';
 import { getConnection } from './libs/dbConnection';
 import { CustomContext } from './types/types';
 import { PORT } from './config';
@@ -29,7 +29,9 @@ const init = async () => {
     context: customContext,
   });
 
+  // eslint-disable-next-line no-console
   console.log('Server listening at: ' + url);
 };
 
-init();
+void init();
+

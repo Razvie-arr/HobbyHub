@@ -1,10 +1,11 @@
 import { type Resolvers } from '../types/graphqlTypesGenerated';
-import { signInResolver, signUpResolver } from './modules/user/userResolver';
-import { eventTypesResolver, eventTypeResolver } from './modules/eventType/eventTypeResolver';
-import { locationsResolver, locationResolver } from './modules/location/locationResolver';
-import { eventResolver, eventsResolver } from './modules/event/eventResolvers';
 
-const resolvers: Resolvers = {
+import { eventResolver, eventsResolver } from './modules/event/eventResolvers';
+import { eventTypeResolver, eventTypesResolver } from './modules/eventType/eventTypeResolver';
+import { locationResolver, locationsResolver } from './modules/location/locationResolver';
+import { signInResolver, signUpResolver } from './modules/user/userResolver';
+
+export const rootResolver: Resolvers = {
   Query: {
     event: eventResolver,
     events: eventsResolver,
@@ -19,6 +20,4 @@ const resolvers: Resolvers = {
     signUp: signUpResolver,
   },
 };
-
-export default resolvers;
 
