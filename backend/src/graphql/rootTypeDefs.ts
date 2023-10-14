@@ -4,4 +4,5 @@ import * as path from 'path';
 
 const typesArray = loadFilesSync(path.join(__dirname, './**/*.graphql'));
 
-export default mergeTypeDefs(typesArray);
+export const rootTypeDefs = mergeTypeDefs(typesArray);
+

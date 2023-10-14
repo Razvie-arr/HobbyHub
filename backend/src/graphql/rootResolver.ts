@@ -20,4 +20,3 @@ export const rootResolver: Resolvers = {
     signUp: signUpResolver,
   },
 };
-

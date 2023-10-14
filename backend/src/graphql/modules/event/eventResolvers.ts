@@ -18,8 +18,7 @@ export const eventResolver = async (
   { id }: { id: number },
   { dbConnection }: CustomContext,
 ): Promise<Event | null> => {
-  const result = await dbConnection.query<Array<Event>>(createEventQuery(id));
+  const result = await dbConnection.query<Array<Event>>(createEventQuery({ single: true }), [id]);
   // @ts-expect-error
   return Object.values(result[0]).flatMap((value) => value)[0] ?? null;
 };
-

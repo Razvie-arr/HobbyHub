@@ -1,5 +1,5 @@
-import { type CustomContext } from '../../../types/types';
 import { EventType } from '../../../types/graphqlTypesGenerated';
+import { type CustomContext } from '../../../types/types';
 
 export const eventTypesResolver = async (
   _: unknown,
@@ -15,4 +15,3 @@ export const eventTypeResolver = async (
   const eventType = await dbConnection.query<Array<EventType>>(`SELECT * from EventType where id = ?`, [id]);
   return eventType[0] ?? null;
 };
-

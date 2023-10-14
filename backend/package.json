@@ -7,6 +7,7 @@
   "scripts": {
     "dev": "nodemon --watch ./src -e ts,js,graphql --exec 'ts-node src/server.ts'",
     "prettier": "prettier --write \"src/**/*.{ts,tsx,graphql}\" README.md documentNode.d.ts tsconfig.json",
+    "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "graphql": "graphql-codegen",
     "graphql-watch": "graphql-codegen --watch",
     "start": "node ./dist/src/server.js",

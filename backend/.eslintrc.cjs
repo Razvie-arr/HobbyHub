@@ -1,7 +1,14 @@
 module.exports = {
   root: true,
   env: { browser: true, es2020: true },
-  ignorePatterns: ['build', '.eslintrc.cjs', 'src/gql/*.ts', 'codegen.ts', 'vite.config.ts'],
+  ignorePatterns: [
+    'build',
+    '.eslintrc.cjs',
+    'src/gql/*.ts',
+    'codegen.ts',
+    'vite.config.ts',
+    'graphqlTypesGenerated.ts',
+  ],
   parser: '@typescript-eslint/parser',
   extends: ['react-app'],
   plugins: ['simple-import-sort'],

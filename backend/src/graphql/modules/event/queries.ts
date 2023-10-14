@@ -1,4 +1,4 @@
-export const createEventQuery = (id?: number) => `
+export const createEventQuery = ({ single }: { single?: boolean } = {}) => `
 SELECT 
   JSON_ARRAYAGG(
     JSON_OBJECT(
@@ -52,7 +52,6 @@ FROM
       JOIN Location location ON event.location_id = location.id 
     GROUP BY 
       event.id 
-    ${id ? `HAVING event.id = ${id}` : ''}
+    ${single ? `HAVING event.id = ?` : ''}
   ) as t
 `;
-

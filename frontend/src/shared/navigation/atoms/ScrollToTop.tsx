@@ -1,11 +1,7 @@
-import { type ReactNode, useEffect } from 'react';
+import { PropsWithChildren, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 
-export interface ScrollToTopProps {
-  children?: ReactNode;
-}
-
-export function ScrollToTop({ children }: ScrollToTopProps) {
+export const ScrollToTop = ({ children }: PropsWithChildren) => {
   const { pathname } = useLocation();
 
   useEffect(() => {
@@ -15,5 +11,5 @@ export function ScrollToTop({ children }: ScrollToTopProps) {
     window.scrollTo(0, 0);
   }, [pathname]);
 
-  return children ?? null;
-}
+  return children ? <>{children}</> : null;
+};

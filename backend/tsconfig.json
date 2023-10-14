@@ -17,6 +17,6 @@
     "noUncheckedIndexedAccess": true
   },
   "exclude": ["node_modules", "tmp", "dist", "**/*.spec.ts", "**/*.test.ts"],
-  "include": ["src/**/*.ts", "src/**/*.graphql"]
+  "include": ["src/**/*.ts", "src/**/*.graphql", "documentNode.d.ts"]
 }
 

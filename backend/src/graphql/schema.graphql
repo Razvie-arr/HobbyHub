@@ -10,4 +10,3 @@ type Query {
 type Mutation {
   _empty(nothing: String): String
 }
-

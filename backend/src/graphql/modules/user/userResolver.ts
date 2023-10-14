@@ -1,9 +1,9 @@
-import { GraphQLError } from 'graphql/error';
 import * as argon2 from 'argon2';
+import { GraphQLError } from 'graphql/error';
 
-import { type CustomContext } from '../../../types/types';
-import { type AuthInfo, type MutationSignInArgs, type MutationSignUpArgs } from '../../../types/graphqlTypesGenerated';
 import { createToken } from '../../../libs/jwt';
+import { type AuthInfo, type MutationSignInArgs, type MutationSignUpArgs } from '../../../types/graphqlTypesGenerated';
+import { type CustomContext } from '../../../types/types';
 
 export const signInResolver = async (
   _: unknown,
@@ -26,9 +26,8 @@ export const signInResolver = async (
       user: { ...user },
       token,
     };
-  } else {
-    throw new GraphQLError('Unauthorized.');
   }
+  throw new GraphQLError('Unauthorized.');
 };
 
 export const signUpResolver = async (

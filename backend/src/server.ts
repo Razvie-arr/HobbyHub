@@ -2,14 +2,14 @@ import { ApolloServer } from '@apollo/server';
 import { StandaloneServerContextFunctionArgument, startStandaloneServer } from '@apollo/server/standalone';
 
 import { rootResolver } from './graphql/rootResolver';
-import schemaDefinition from './graphql/rootTypeDefs';
+import { rootTypeDefs } from './graphql/rootTypeDefs';
 import { getConnection } from './libs/dbConnection';
 import { CustomContext } from './types/types';
 import { PORT } from './config';
 
 const init = async () => {
   const server = new ApolloServer({
-    typeDefs: [schemaDefinition],
+    typeDefs: [rootTypeDefs],
     resolvers: rootResolver,
   });
 
@@ -34,4 +34,3 @@ const init = async () => {
 };
 
 void init();
-
