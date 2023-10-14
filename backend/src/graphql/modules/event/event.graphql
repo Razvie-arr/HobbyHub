@@ -9,5 +9,6 @@ type Event {
 
   author: User!
   location: Location!
+  eventTypes: [EventType!]!
 }
 
