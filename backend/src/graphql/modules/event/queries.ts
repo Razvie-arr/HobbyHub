@@ -29,8 +29,7 @@ FROM
         '[', 
         GROUP_CONCAT(
           JSON_OBJECT(
-            'id', eventType.id, 'name', eventType.name, 
-            'logo_filepath', eventType.logo_filepath
+            'id', eventType.id, 'name', eventType.name
           )
         ), 
         ']'

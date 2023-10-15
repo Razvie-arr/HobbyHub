@@ -2,7 +2,6 @@ import { useQuery } from '@apollo/client';
 import { Stack } from '@chakra-ui/react';
 
 import { gql } from 'src/gql';
-import { useAuth } from 'src/modules/auth';
 import { Box } from 'src/shared/design-system';
 import { TopNavigation } from 'src/shared/navigation';
 
@@ -49,9 +48,9 @@ export const Events = () => {
   return (
     <Box>
       <TopNavigation />
+      <EventsMapButton events={events.slice(0, 1)} position="fixed" bottom="8" right="8" />
       <Box w={{ xl: '1470px', lg: '1024px', md: '768px' }} mx="auto" pt="8" px="8">
         <Stack spacing="8">
-          <EventsMapButton />
           <EventsSection title="Today around you" events={events} />
           <EventsSection title="You might be interested" events={events} />
           <EventsSection title="Newly added around you" events={events} />

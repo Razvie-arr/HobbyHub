@@ -1,37 +1,35 @@
 import {
   Button,
+  ButtonProps,
+  Icon,
   Modal,
   ModalBody,
   ModalCloseButton,
   ModalContent,
-  ModalFooter,
-  ModalHeader,
   ModalOverlay,
   useDisclosure,
 } from '@chakra-ui/react';
+import { FaMapLocationDot } from 'react-icons/fa6';
+
+import { WithEvents } from '../types';
 
 import { EventsMap } from './EventsMap';
 
-export const EventsMapButton = () => {
+export const EventsMapButton = ({ events, ...buttonProps }: ButtonProps & WithEvents) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   return (
     <>
-      <Button onClick={onOpen} key="full" m={4}>
-        Open full Modal
+      <Button onClick={onOpen} m={4} {...buttonProps} colorScheme="purple" borderRadius="full" size="lg">
+        <Icon as={FaMapLocationDot} mr="2" />
+        View on map
       </Button>
 
-      <Modal onClose={onClose} size="full" isOpen={isOpen}>
+      <Modal onClose={onClose} size="6xl" isOpen={isOpen}>
         <ModalOverlay />
         <ModalContent>
-          <ModalHeader>Modal Title</ModalHeader>
-          <ModalCloseButton />
-          <ModalBody>
-            <EventsMap />
-          </ModalBody>
-          <ModalFooter>
-            <Button onClick={onClose}>Close</Button>
-          </ModalFooter>
+          <ModalCloseButton position="absolute" top="3" right="16" zIndex="1" size="lg" />
+          <EventsMap events={events} />
         </ModalContent>
       </Modal>
     </>

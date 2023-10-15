@@ -4,3 +4,11 @@ export type EventProps = Omit<Event, 'author' | 'location'> & { author: Omit<Use
   location: Omit<Location, 'id'>;
 };
 
+export interface WithEvent {
+  event: EventProps;
+}
+
+export interface WithEvents {
+  events: Array<EventProps>;
+}
+

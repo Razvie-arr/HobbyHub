@@ -5,11 +5,10 @@ import { FaArrowRight } from 'react-icons/fa6';
 import { Box, Button, Flex } from 'src/shared/design-system';
 
 import { EventCard } from '../components';
-import { EventProps } from '../types';
+import { WithEvents } from '../types';
 
-interface EventsSectionProps {
+interface EventsSectionProps extends WithEvents {
   title: ReactNode;
-  events: Array<EventProps>;
 }
 
 export const EventsSection = ({ events, title }: EventsSectionProps) => (
@@ -17,7 +16,9 @@ export const EventsSection = ({ events, title }: EventsSectionProps) => (
     <Stack spacing="8">
       <Heading as="h1">{title}</Heading>
       <Flex flexWrap="wrap" columnGap="12">
-        {events.map((value) => <EventCard key={value.id} {...value} />).slice(0, 5)}
+        {events.map((value) => (
+          <EventCard key={value.id} event={value} />
+        ))}
       </Flex>
       <Flex justify="center">
         <Button size="lg" colorScheme="purple">
