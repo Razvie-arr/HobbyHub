@@ -46,7 +46,6 @@ export type Event = {
 export type EventType = {
   __typename?: 'EventType';
   id: Scalars['Int']['output'];
-  logo_filepath: Scalars['String']['output'];
   name: Scalars['String']['output'];
 };
 
@@ -150,15 +149,24 @@ export type GetEventsQuery = {
   __typename?: 'Query';
   events?: Array<{
     __typename?: 'Event';
+    id: number;
     name: string;
     start_datetime: string;
     end_datetime: string;
     summary: string;
     description?: string | null;
     image_filePath?: string | null;
-    eventTypes: Array<{ __typename?: 'EventType'; name: string }>;
+    eventTypes: Array<{ __typename?: 'EventType'; id: number; name: string }>;
     author: { __typename?: 'User'; name: string };
-    location: { __typename?: 'Location'; country: string; city: string; street_name: string; street_number: string };
+    location: {
+      __typename?: 'Location';
+      country: string;
+      city: string;
+      street_name: string;
+      street_number: string;
+      longitude: number;
+      latitude: number;
+    };
   } | null> | null;
 };
 
@@ -310,6 +318,7 @@ export const GetEventsDocument = {
             selectionSet: {
               kind: 'SelectionSet',
               selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
                 { kind: 'Field', name: { kind: 'Name', value: 'name' } },
                 { kind: 'Field', name: { kind: 'Name', value: 'start_datetime' } },
                 { kind: 'Field', name: { kind: 'Name', value: 'end_datetime' } },
@@ -318,7 +327,10 @@ export const GetEventsDocument = {
                   name: { kind: 'Name', value: 'eventTypes' },
                   selectionSet: {
                     kind: 'SelectionSet',
-                    selections: [{ kind: 'Field', name: { kind: 'Name', value: 'name' } }],
+                    selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'name' } },
+                    ],
                   },
                 },
                 {
@@ -339,6 +351,8 @@ export const GetEventsDocument = {
                       { kind: 'Field', name: { kind: 'Name', value: 'city' } },
                       { kind: 'Field', name: { kind: 'Name', value: 'street_name' } },
                       { kind: 'Field', name: { kind: 'Name', value: 'street_number' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'longitude' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'latitude' } },
                     ],
                   },
                 },

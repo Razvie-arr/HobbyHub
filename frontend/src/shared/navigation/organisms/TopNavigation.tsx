@@ -7,6 +7,7 @@ export function TopNavigation() {
   return (
     <Stack bg="gray.200" p="4" direction="row" spacing="0">
       <RouterNavLink to={route.home()}>Home</RouterNavLink>
+      <RouterNavLink to={route.events()}>Events</RouterNavLink>
       <RouterNavLink to={route.signIn()}>Sign In</RouterNavLink>
       <RouterNavLink to={route.signUp()}>Sign Up</RouterNavLink>
     </Stack>

@@ -19,8 +19,8 @@ FROM
       event.summary, 
       event.description, 
       event.image_filepath, 
-      event.start_datetime, 
-      event.end_datetime, 
+      DATE_FORMAT(event.start_datetime, '%Y-%m-%dT%H:%i:%sZ') as start_datetime, 
+      DATE_FORMAT(event.end_datetime, '%Y-%m-%dT%H:%i:%sZ') as end_datetime, 
       JSON_OBJECT(
         'id', user.id, 'name', user.name, 'email', 
         user.email
@@ -55,3 +55,4 @@ FROM
     ${single ? `HAVING event.id = ?` : ''}
   ) as t
 `;
+
