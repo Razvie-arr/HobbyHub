@@ -24,7 +24,7 @@ export const EventCard = ({ event, simplified: simpleUI }: EventCardProps) => {
       flexBasis={{ xl: '31%', md: '46%' }}
       {...(simpleUI
         ? { shadow: 'none' }
-        : { borderColor: 'purple.300', borderWidth: '2px', backgroundColor: 'gray.50', mb: '12' })}
+        : { borderColor: 'purple.50', borderWidth: '1px', backgroundColor: 'gray.50', mb: '12' })}
     >
       <CardBody p="0">
         {simpleUI ? null : (
