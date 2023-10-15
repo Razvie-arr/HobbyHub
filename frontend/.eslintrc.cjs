@@ -47,6 +47,7 @@ module.exports = {
     'no-restricted-exports': ['error', { restrictDefaultExports: { direct: true, named: true } }],
     'no-unused-vars': ['error'],
     'prefer-destructuring': ['error', { object: true, array: false }],
+    'react/jsx-curly-brace-presence': ['error', { props: 'never', children: 'never' }],
   },
   overrides: [
     {
@@ -140,3 +141,4 @@ module.exports = {
     },
   ],
 };
+
