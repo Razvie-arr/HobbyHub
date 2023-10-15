@@ -6,7 +6,7 @@ import { useAuth } from 'src/modules/auth';
 import { Box } from 'src/shared/design-system';
 import { TopNavigation } from 'src/shared/navigation';
 
-import { EventsSection } from '../components';
+import { EventsMapButton, EventsSection } from '../components';
 
 const EVENTS = gql(`
   query GetEvents {
@@ -38,7 +38,6 @@ const EVENTS = gql(`
 `);
 
 export const Events = () => {
-  const { user, signOut } = useAuth();
   const queryState = useQuery(EVENTS);
 
   if (!(queryState.data?.events && queryState.data.events)) {
@@ -52,6 +51,7 @@ export const Events = () => {
       <TopNavigation />
       <Box w={{ xl: '1470px', lg: '1024px', md: '768px' }} mx="auto" pt="8" px="8">
         <Stack spacing="8">
+          <EventsMapButton />
           <EventsSection title="Today around you" events={events} />
           <EventsSection title="You might be interested" events={events} />
           <EventsSection title="Newly added around you" events={events} />
