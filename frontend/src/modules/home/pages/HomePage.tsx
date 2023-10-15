@@ -5,15 +5,34 @@ import { useAuth } from 'src/modules/auth';
 import { Box, Button } from 'src/shared/design-system';
 import { TopNavigation } from 'src/shared/navigation';
 
-const EMPTY_QUERY = gql(/* GraphQL */ `
-  query Quacks {
-    _empty
+const EVENTS = gql(`
+  query GetEvents {
+    events {
+      name
+      start_datetime
+      end_datetime
+      eventTypes {
+        name
+      }
+      author {
+        name
+      }
+      location {
+        country
+        city
+        street_name
+        street_number
+      }
+      summary
+      description
+      image_filePath
+    }
   }
 `);
 
-export function HomePage() {
+export const HomePage = () => {
   const { user, signOut } = useAuth();
-  const queryState = useQuery(EMPTY_QUERY);
+  const queryState = useQuery(EVENTS);
 
   return (
     <Box>
@@ -36,4 +55,5 @@ export function HomePage() {
       </Box>
     </Box>
   );
-}
+};
+

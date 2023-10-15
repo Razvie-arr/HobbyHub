@@ -10,7 +10,10 @@ export const eventsResolver = async (
 ): Promise<Array<Event>> => {
   const result: unknown[] = await dbConnection.query(createEventQuery());
   // @ts-expect-error
-  return Object.values(result[0]).flatMap((value) => value);
+  return Object.values(result[0]).flatMap((value) =>
+    // @ts-expect-error
+    value.map(({ eventTypes, ...rest }) => ({ ...rest, eventTypes: JSON.parse(eventTypes) })),
+  );
 };
 
 export const eventResolver = async (
@@ -19,6 +22,12 @@ export const eventResolver = async (
   { dbConnection }: CustomContext,
 ): Promise<Event | null> => {
   const result = await dbConnection.query<Array<Event>>(createEventQuery({ single: true }), [id]);
-  // @ts-expect-error
-  return Object.values(result[0]).flatMap((value) => value)[0] ?? null;
+  return (
+    // @ts-expect-error
+    Object.values(result[0]).flatMap((value) =>
+      // @ts-expect-error
+      value.map(({ eventTypes, ...rest }) => ({ ...rest, eventTypes: JSON.parse(eventTypes) })),
+    )[0] ?? null
+  );
 };
+

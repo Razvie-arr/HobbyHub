@@ -17,7 +17,8 @@ const documents = {
     types.SignInDocument,
   '\n  mutation SignUp($email: String!, $name: String!, $password: String!) {\n    signUp(email: $email, name: $name, password: $password) {\n      user {\n        id\n        name\n        email\n      }\n      token\n    }\n  }\n':
     types.SignUpDocument,
-  '\n  query Quacks {\n    _empty\n  }\n': types.QuacksDocument,
+  '\n  query GetEvents {\n    events {\n      name\n      start_datetime\n      end_datetime\n      eventTypes {\n        name\n      }\n      author {\n        name\n      }\n      location {\n        country\n        city\n        street_name\n        street_number\n      }\n      summary\n      description\n      image_filePath\n    }\n  }\n':
+    types.GetEventsDocument,
 };
 
 /**
@@ -50,8 +51,8 @@ export function gql(
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function gql(
-  source: '\n  query Quacks {\n    _empty\n  }\n',
-): (typeof documents)['\n  query Quacks {\n    _empty\n  }\n'];
+  source: '\n  query GetEvents {\n    events {\n      name\n      start_datetime\n      end_datetime\n      eventTypes {\n        name\n      }\n      author {\n        name\n      }\n      location {\n        country\n        city\n        street_name\n        street_number\n      }\n      summary\n      description\n      image_filePath\n    }\n  }\n',
+): (typeof documents)['\n  query GetEvents {\n    events {\n      name\n      start_datetime\n      end_datetime\n      eventTypes {\n        name\n      }\n      author {\n        name\n      }\n      location {\n        country\n        city\n        street_name\n        street_number\n      }\n      summary\n      description\n      image_filePath\n    }\n  }\n'];
 
 export function gql(source: string) {
   return (documents as any)[source] ?? {};

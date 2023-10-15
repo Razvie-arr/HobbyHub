@@ -1,7 +1,5 @@
 import { GraphQLResolveInfo } from 'graphql';
-
 import { CustomContext } from './types';
-
 export type Maybe<T> = T | null;
 export type InputMaybe<T> = Maybe<T>;
 export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
@@ -37,6 +35,7 @@ export type Event = {
   author: User;
   description?: Maybe<Scalars['String']['output']>;
   end_datetime: Scalars['String']['output'];
+  eventTypes: Array<EventType>;
   id: Scalars['Int']['output'];
   image_filePath?: Maybe<Scalars['String']['output']>;
   location: Location;
@@ -245,6 +244,7 @@ export type EventResolvers<
   author?: Resolver<ResolversTypes['User'], ParentType, ContextType>;
   description?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   end_datetime?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  eventTypes?: Resolver<Array<ResolversTypes['EventType']>, ParentType, ContextType>;
   id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   image_filePath?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   location?: Resolver<ResolversTypes['Location'], ParentType, ContextType>;
