@@ -20,7 +20,7 @@ export const EventsMapButton = ({ events, ...buttonProps }: ButtonProps & WithEv
 
   return (
     <>
-      <Button onClick={onOpen} m={4} {...buttonProps} colorScheme="purple" borderRadius="full" size="lg">
+      <Button onClick={onOpen} m={4} {...buttonProps} colorScheme="purple" borderRadius="full" size="lg" zIndex="1" borderWidth="1px" borderColor="purple.100">
         <Icon as={FaMapLocationDot} mr="2" />
         View on map
       </Button>
