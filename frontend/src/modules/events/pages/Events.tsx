@@ -8,12 +8,12 @@ import { EventsMapButton, EventsSection } from '../components';
 
 const EVENTS = gql(`
   query GetEvents {
-    events {
+    getEvents {
       id
       name
       start_datetime
       end_datetime
-      eventTypes {
+      event_types {
         id
         name
       }
@@ -38,11 +38,11 @@ const EVENTS = gql(`
 export const Events = () => {
   const queryState = useQuery(EVENTS);
 
-  if (!(queryState.data?.events && queryState.data.events)) {
+  if (!(queryState.data?.getEvents && queryState.data.getEvents)) {
     return null;
   }
 
-  const events = queryState.data.events.filter((value): value is NonNullable<typeof value> => Boolean(value));
+  const events = queryState.data.getEvents.filter((value): value is NonNullable<typeof value> => Boolean(value));
 
   return (
     <>

@@ -2,8 +2,8 @@ import * as argon2 from 'argon2';
 import { GraphQLError } from 'graphql/error';
 
 import { createToken } from '../../../libs/jwt';
+import { CustomContext } from '../../../types';
 import { type AuthInfo, type MutationSignInArgs, type MutationSignUpArgs } from '../../../types/graphqlTypesGenerated';
-import { type CustomContext } from '../../../types/types';
 
 export const signInResolver = async (
   _: unknown,
@@ -46,7 +46,7 @@ export const signUpResolver = async (
   const passwordHash = await argon2.hash(password);
 
   const dbResponse = await dbConnection.query(
-    `INSERT INTO user (id, email, password, name) 
+    `INSERT INTO user (id, email, password, name)
     VALUES (NULL, ?, ?, ?);`,
     [email, passwordHash, name],
   );
@@ -63,3 +63,4 @@ export const signUpResolver = async (
 
   return { user: userObject, token: token };
 };
+

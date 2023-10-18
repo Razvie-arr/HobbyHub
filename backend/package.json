@@ -23,6 +23,7 @@
     "@apollo/server": "^4.9.2",
     "@graphql-tools/load-files": "^7.0.0",
     "@graphql-tools/schema": "^10.0.0",
+    "@nic-jennings/sql-datasource": "^0.0.7",
     "@types/node": "^16.18.52",
     "@typescript-eslint/eslint-plugin": "^6.7.5",
     "@typescript-eslint/parser": "^6.7.5",
@@ -33,7 +34,9 @@
     "eslint-plugin-simple-import-sort": "^10.0.0",
     "graphql": "^16.8.0",
     "jsonwebtoken": "^9.0.2",
+    "knex": "^3.0.1",
     "mariadb": "^3.2.0",
+    "mysql": "^2.18.1",
     "typescript": "^5.2.2"
   },
   "devDependencies": {

@@ -32,13 +32,16 @@ export type AuthUser = {
 export type Event = {
   __typename?: 'Event';
   author: User;
+  author_id: Scalars['Int']['output'];
   description?: Maybe<Scalars['String']['output']>;
   end_datetime: Scalars['String']['output'];
-  eventTypes: Array<EventType>;
+  event_types: Array<EventType>;
   id: Scalars['Int']['output'];
   image_filePath?: Maybe<Scalars['String']['output']>;
   location: Location;
+  location_id: Scalars['Int']['output'];
   name: Scalars['String']['output'];
+  participants: Array<User>;
   start_datetime: Scalars['String']['output'];
   summary: Scalars['String']['output'];
 };
@@ -85,25 +88,50 @@ export type MutationSignUpArgs = {
 
 export type Query = {
   __typename?: 'Query';
-  event?: Maybe<Event>;
-  eventType?: Maybe<EventType>;
-  eventTypes?: Maybe<Array<Maybe<EventType>>>;
-  events?: Maybe<Array<Maybe<Event>>>;
-  location?: Maybe<Location>;
-  locations?: Maybe<Array<Maybe<Location>>>;
+  getEventById?: Maybe<Event>;
+  getEventByIds?: Maybe<Array<Maybe<Event>>>;
+  getEventTypeById?: Maybe<EventType>;
+  getEventTypes?: Maybe<Array<Maybe<EventType>>>;
+  getEventTypesByIds?: Maybe<Array<Maybe<EventType>>>;
+  getEvents?: Maybe<Array<Maybe<Event>>>;
+  getLocationById?: Maybe<Location>;
+  getLocations?: Maybe<Array<Maybe<Location>>>;
+  getLocationsByIds?: Maybe<Array<Maybe<Location>>>;
+  getUserById?: Maybe<User>;
+  getUsers?: Maybe<Array<Maybe<User>>>;
+  getUsersByIds?: Maybe<Array<Maybe<User>>>;
 };
 
-export type QueryEventArgs = {
+export type QueryGetEventByIdArgs = {
   id: Scalars['Int']['input'];
 };
 
-export type QueryEventTypeArgs = {
+export type QueryGetEventByIdsArgs = {
+  ids: Array<Scalars['Int']['input']>;
+};
+
+export type QueryGetEventTypeByIdArgs = {
   id: Scalars['Int']['input'];
 };
 
-export type QueryLocationArgs = {
-  latitude: Scalars['Float']['input'];
-  longitude: Scalars['Float']['input'];
+export type QueryGetEventTypesByIdsArgs = {
+  ids: Array<Scalars['Int']['input']>;
+};
+
+export type QueryGetLocationByIdArgs = {
+  id: Scalars['Int']['input'];
+};
+
+export type QueryGetLocationsByIdsArgs = {
+  ids: Array<Scalars['Int']['input']>;
+};
+
+export type QueryGetUserByIdArgs = {
+  id: Scalars['Int']['input'];
+};
+
+export type QueryGetUsersByIdsArgs = {
+  ids: Array<Scalars['Int']['input']>;
 };
 
 export type User = {
@@ -147,7 +175,7 @@ export type GetEventsQueryVariables = Exact<{ [key: string]: never }>;
 
 export type GetEventsQuery = {
   __typename?: 'Query';
-  events?: Array<{
+  getEvents?: Array<{
     __typename?: 'Event';
     id: number;
     name: string;
@@ -156,7 +184,7 @@ export type GetEventsQuery = {
     summary: string;
     description?: string | null;
     image_filePath?: string | null;
-    eventTypes: Array<{ __typename?: 'EventType'; id: number; name: string }>;
+    event_types: Array<{ __typename?: 'EventType'; id: number; name: string }>;
     author: { __typename?: 'User'; name: string };
     location: {
       __typename?: 'Location';
@@ -314,7 +342,7 @@ export const GetEventsDocument = {
         selections: [
           {
             kind: 'Field',
-            name: { kind: 'Name', value: 'events' },
+            name: { kind: 'Name', value: 'getEvents' },
             selectionSet: {
               kind: 'SelectionSet',
               selections: [
@@ -324,7 +352,7 @@ export const GetEventsDocument = {
                 { kind: 'Field', name: { kind: 'Name', value: 'end_datetime' } },
                 {
                   kind: 'Field',
-                  name: { kind: 'Name', value: 'eventTypes' },
+                  name: { kind: 'Name', value: 'event_types' },
                   selectionSet: {
                     kind: 'SelectionSet',
                     selections: [

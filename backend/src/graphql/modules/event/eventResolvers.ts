@@ -1,33 +1,45 @@
-import { Event } from '../../../types/graphqlTypesGenerated';
-import { type CustomContext } from '../../../types/types';
+import {
+  ContextualResolver,
+  ContextualResolverWithParent,
+  Event,
+  EventType,
+  Location,
+  QueryGetEventByIdArgs,
+  User,
+} from '../../../types';
 
-import { createEventQuery } from './queries';
+export const getEventsResolver: ContextualResolver<Array<Event>> = async (_, __, { dataSources }) =>
+  await dataSources.sql.events.getAll();
 
-export const eventsResolver = async (
-  _: unknown,
-  __: unknown,
-  { dbConnection }: CustomContext,
-): Promise<Array<Event>> => {
-  const result: unknown[] = await dbConnection.query(createEventQuery());
-  // @ts-expect-error
-  return Object.values(result[0]).flatMap((value) =>
-    // @ts-expect-error
-    value.map(({ eventTypes, ...rest }) => ({ ...rest, eventTypes: JSON.parse(eventTypes) })),
-  );
-};
+export const eventAuthorResolver: ContextualResolverWithParent<User, Event> = async (parent, _, { dataSources }) =>
+  (await dataSources.sql.users.getById(parent.author_id)) as unknown as User;
 
-export const eventResolver = async (
-  _: unknown,
-  { id }: { id: number },
-  { dbConnection }: CustomContext,
-): Promise<Event | null> => {
-  const result = await dbConnection.query<Array<Event>>(createEventQuery({ single: true }), [id]);
-  return (
-    // @ts-expect-error
-    Object.values(result[0]).flatMap((value) =>
-      // @ts-expect-error
-      value.map(({ eventTypes, ...rest }) => ({ ...rest, eventTypes: JSON.parse(eventTypes) })),
-    )[0] ?? null
-  );
-};
+export const eventLocationResolver: ContextualResolverWithParent<Location, Event> = async (
+  parent,
+  _,
+  { dataSources },
+) => (await dataSources.sql.locations.getById(parent.location_id)) as unknown as Location;
+
+export const eventEventTypesResolver: ContextualResolverWithParent<Array<EventType>, Event> = async (
+  { id },
+  _,
+  { dataSources },
+) =>
+  await dataSources.sql.db
+    .query('Event_EventType')
+    .innerJoin('EventType', 'Event_EventType.event_type_id', 'EventType.id')
+    .where('event_id', id);
+
+export const eventParticipantsResolver: ContextualResolverWithParent<Array<User>, Event> = async (
+  { id },
+  _,
+  { dataSources },
+) =>
+  await dataSources.sql.db.query('Event_User').innerJoin('User', 'Event_User.user_id', 'User.id').where('event_id', id);
+
+export const getEventByIdResolver: ContextualResolver<Event | null, QueryGetEventByIdArgs> = async (
+  _,
+  { id },
+  { dataSources },
+) => await dataSources.sql.events.getById(id);
 

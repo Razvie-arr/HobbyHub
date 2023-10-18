@@ -7,7 +7,12 @@ type Event {
   start_datetime: String!
   end_datetime: String!
 
+  author_id: Int!
+  location_id: Int!
+
   author: User!
+  event_types: [EventType!]!
   location: Location!
-  eventTypes: [EventType!]!
+  participants: [User!]!
 }
+

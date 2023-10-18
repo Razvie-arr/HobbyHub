@@ -33,13 +33,16 @@ export type AuthUser = {
 export type Event = {
   __typename?: 'Event';
   author: User;
+  author_id: Scalars['Int']['output'];
   description?: Maybe<Scalars['String']['output']>;
   end_datetime: Scalars['String']['output'];
-  eventTypes: Array<EventType>;
+  event_types: Array<EventType>;
   id: Scalars['Int']['output'];
   image_filePath?: Maybe<Scalars['String']['output']>;
   location: Location;
+  location_id: Scalars['Int']['output'];
   name: Scalars['String']['output'];
+  participants: Array<User>;
   start_datetime: Scalars['String']['output'];
   summary: Scalars['String']['output'];
 };
@@ -47,7 +50,6 @@ export type Event = {
 export type EventType = {
   __typename?: 'EventType';
   id: Scalars['Int']['output'];
-  logo_filepath: Scalars['String']['output'];
   name: Scalars['String']['output'];
 };
 
@@ -87,25 +89,50 @@ export type MutationSignUpArgs = {
 
 export type Query = {
   __typename?: 'Query';
-  event?: Maybe<Event>;
-  eventType?: Maybe<EventType>;
-  eventTypes?: Maybe<Array<Maybe<EventType>>>;
-  events?: Maybe<Array<Maybe<Event>>>;
-  location?: Maybe<Location>;
-  locations?: Maybe<Array<Maybe<Location>>>;
+  getEventById?: Maybe<Event>;
+  getEventByIds?: Maybe<Array<Maybe<Event>>>;
+  getEventTypeById?: Maybe<EventType>;
+  getEventTypes?: Maybe<Array<Maybe<EventType>>>;
+  getEventTypesByIds?: Maybe<Array<Maybe<EventType>>>;
+  getEvents?: Maybe<Array<Maybe<Event>>>;
+  getLocationById?: Maybe<Location>;
+  getLocations?: Maybe<Array<Maybe<Location>>>;
+  getLocationsByIds?: Maybe<Array<Maybe<Location>>>;
+  getUserById?: Maybe<User>;
+  getUsers?: Maybe<Array<Maybe<User>>>;
+  getUsersByIds?: Maybe<Array<Maybe<User>>>;
 };
 
-export type QueryEventArgs = {
+export type QueryGetEventByIdArgs = {
   id: Scalars['Int']['input'];
 };
 
-export type QueryEventTypeArgs = {
+export type QueryGetEventByIdsArgs = {
+  ids: Array<Scalars['Int']['input']>;
+};
+
+export type QueryGetEventTypeByIdArgs = {
   id: Scalars['Int']['input'];
 };
 
-export type QueryLocationArgs = {
-  latitude: Scalars['Float']['input'];
-  longitude: Scalars['Float']['input'];
+export type QueryGetEventTypesByIdsArgs = {
+  ids: Array<Scalars['Int']['input']>;
+};
+
+export type QueryGetLocationByIdArgs = {
+  id: Scalars['Int']['input'];
+};
+
+export type QueryGetLocationsByIdsArgs = {
+  ids: Array<Scalars['Int']['input']>;
+};
+
+export type QueryGetUserByIdArgs = {
+  id: Scalars['Int']['input'];
+};
+
+export type QueryGetUsersByIdsArgs = {
+  ids: Array<Scalars['Int']['input']>;
 };
 
 export type User = {
@@ -242,13 +269,16 @@ export type EventResolvers<
   ParentType extends ResolversParentTypes['Event'] = ResolversParentTypes['Event'],
 > = {
   author?: Resolver<ResolversTypes['User'], ParentType, ContextType>;
+  author_id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   description?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   end_datetime?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  eventTypes?: Resolver<Array<ResolversTypes['EventType']>, ParentType, ContextType>;
+  event_types?: Resolver<Array<ResolversTypes['EventType']>, ParentType, ContextType>;
   id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   image_filePath?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   location?: Resolver<ResolversTypes['Location'], ParentType, ContextType>;
+  location_id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  participants?: Resolver<Array<ResolversTypes['User']>, ParentType, ContextType>;
   start_datetime?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   summary?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
@@ -259,7 +289,6 @@ export type EventTypeResolvers<
   ParentType extends ResolversParentTypes['EventType'] = ResolversParentTypes['EventType'],
 > = {
   id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
-  logo_filepath?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
@@ -302,22 +331,58 @@ export type QueryResolvers<
   ContextType = CustomContext,
   ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query'],
 > = {
-  event?: Resolver<Maybe<ResolversTypes['Event']>, ParentType, ContextType, RequireFields<QueryEventArgs, 'id'>>;
-  eventType?: Resolver<
+  getEventById?: Resolver<
+    Maybe<ResolversTypes['Event']>,
+    ParentType,
+    ContextType,
+    RequireFields<QueryGetEventByIdArgs, 'id'>
+  >;
+  getEventByIds?: Resolver<
+    Maybe<Array<Maybe<ResolversTypes['Event']>>>,
+    ParentType,
+    ContextType,
+    RequireFields<QueryGetEventByIdsArgs, 'ids'>
+  >;
+  getEventTypeById?: Resolver<
     Maybe<ResolversTypes['EventType']>,
     ParentType,
     ContextType,
-    RequireFields<QueryEventTypeArgs, 'id'>
+    RequireFields<QueryGetEventTypeByIdArgs, 'id'>
   >;
-  eventTypes?: Resolver<Maybe<Array<Maybe<ResolversTypes['EventType']>>>, ParentType, ContextType>;
-  events?: Resolver<Maybe<Array<Maybe<ResolversTypes['Event']>>>, ParentType, ContextType>;
-  location?: Resolver<
+  getEventTypes?: Resolver<Maybe<Array<Maybe<ResolversTypes['EventType']>>>, ParentType, ContextType>;
+  getEventTypesByIds?: Resolver<
+    Maybe<Array<Maybe<ResolversTypes['EventType']>>>,
+    ParentType,
+    ContextType,
+    RequireFields<QueryGetEventTypesByIdsArgs, 'ids'>
+  >;
+  getEvents?: Resolver<Maybe<Array<Maybe<ResolversTypes['Event']>>>, ParentType, ContextType>;
+  getLocationById?: Resolver<
     Maybe<ResolversTypes['Location']>,
     ParentType,
     ContextType,
-    RequireFields<QueryLocationArgs, 'latitude' | 'longitude'>
+    RequireFields<QueryGetLocationByIdArgs, 'id'>
   >;
-  locations?: Resolver<Maybe<Array<Maybe<ResolversTypes['Location']>>>, ParentType, ContextType>;
+  getLocations?: Resolver<Maybe<Array<Maybe<ResolversTypes['Location']>>>, ParentType, ContextType>;
+  getLocationsByIds?: Resolver<
+    Maybe<Array<Maybe<ResolversTypes['Location']>>>,
+    ParentType,
+    ContextType,
+    RequireFields<QueryGetLocationsByIdsArgs, 'ids'>
+  >;
+  getUserById?: Resolver<
+    Maybe<ResolversTypes['User']>,
+    ParentType,
+    ContextType,
+    RequireFields<QueryGetUserByIdArgs, 'id'>
+  >;
+  getUsers?: Resolver<Maybe<Array<Maybe<ResolversTypes['User']>>>, ParentType, ContextType>;
+  getUsersByIds?: Resolver<
+    Maybe<Array<Maybe<ResolversTypes['User']>>>,
+    ParentType,
+    ContextType,
+    RequireFields<QueryGetUsersByIdsArgs, 'ids'>
+  >;
 };
 
 export type UserResolvers<

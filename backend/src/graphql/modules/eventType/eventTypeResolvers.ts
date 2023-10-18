@@ -15,3 +15,4 @@ export const eventTypeResolver = async (
   const eventType = await dbConnection.query<Array<EventType>>(`SELECT * from EventType where id = ?`, [id]);
   return eventType[0] ?? null;
 };
+
