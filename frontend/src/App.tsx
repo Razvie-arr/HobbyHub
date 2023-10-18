@@ -6,6 +6,8 @@ import { ChakraProvider } from 'src/shared/design-system';
 import { ScrollToTop } from 'src/shared/navigation';
 import { EnhancedApolloProvider } from 'src/utils/apollo';
 
+import { Layout } from './shared/layout';
+
 export function App() {
   return (
     <ChakraProvider>
@@ -13,10 +15,13 @@ export function App() {
         <AuthProvider>
           <EnhancedApolloProvider>
             <ScrollToTop />
-            <Routes />
+            <Layout>
+              <Routes />
+            </Layout>
           </EnhancedApolloProvider>
         </AuthProvider>
       </BrowserRouter>
     </ChakraProvider>
   );
 }
+

@@ -3,7 +3,6 @@ import { Stack } from '@chakra-ui/react';
 
 import { gql } from 'src/gql';
 import { Box } from 'src/shared/design-system';
-import { Layout } from 'src/shared/layout';
 
 import { EventsMapButton, EventsSection } from '../components';
 
@@ -46,7 +45,7 @@ export const Events = () => {
   const events = queryState.data.events.filter((value): value is NonNullable<typeof value> => Boolean(value));
 
   return (
-    <Layout>
+    <>
       <EventsMapButton events={events} position="fixed" bottom="8" right="8" />
       <Box w={{ xl: '1470px', lg: '1024px', md: '768px' }} mx="auto">
         <Stack spacing="8">
@@ -55,7 +54,7 @@ export const Events = () => {
           <EventsSection title="Newly added around you" events={events} />
         </Stack>
       </Box>
-    </Layout>
+    </>
   );
 };
 
