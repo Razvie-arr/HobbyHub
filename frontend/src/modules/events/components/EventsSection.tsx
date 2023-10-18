@@ -15,7 +15,7 @@ export const EventsSection = ({ events, title }: EventsSectionProps) => (
   <Box>
     <Stack spacing="8">
       <Heading as="h1">{title}</Heading>
-      <Flex flexWrap="wrap" columnGap="12">
+      <Flex flexWrap="wrap" columnGap="4">
         {events.map((value) => (
           <EventCard key={value.id} event={value} />
         ))}

@@ -21,12 +21,12 @@ export const EventCard = ({ event, simplified: simpleUI }: EventCardProps) => {
   const eventEndDate = new Date(event.start_datetime);
   return (
     <Card
-      flexBasis={{ xl: '31%', md: '46%' }}
+      flexBasis={{ xl: '24%', lg: '30%', md: '46%' }}
       {...(simpleUI
         ? { shadow: 'none' }
-        : { borderColor: 'purple.50', borderWidth: '1px', backgroundColor: 'gray.50', mb: '12' })}
+        : { borderColor: 'purple.50', borderWidth: '1px', backgroundColor: 'gray.50', mb: '4' })}
     >
-      <CardBody p="0">
+      <CardBody p="0" display="flex" flexDirection="column">
         {simpleUI ? null : (
           <>
             <Tag position="absolute" top="4" left="4" size="lg" borderRadius="full" lineHeight="2.4" shadow="base">
@@ -41,8 +41,8 @@ export const EventCard = ({ event, simplified: simpleUI }: EventCardProps) => {
             />
           </>
         )}
-        <Box px="8" py="4">
-          <Stack spacing="4" justifyContent="space-between">
+        <Stack justifyContent="space-between" flex="1" spacing="2" px="3" py="2">
+          <Stack>
             <Heading size="md" noOfLines={1} lineHeight="initial">
               {event.name}
             </Heading>
@@ -79,9 +79,9 @@ export const EventCard = ({ event, simplified: simpleUI }: EventCardProps) => {
                 </Text>
               </Stack>
             </Stack>
-            <Button colorScheme="purple">{simpleUI ? 'See details' : 'Join Event'}</Button>
           </Stack>
-        </Box>
+          <Button colorScheme="purple">{simpleUI ? 'See details' : 'Join Event'}</Button>
+        </Stack>
       </CardBody>
     </Card>
   );

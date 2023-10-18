@@ -47,8 +47,8 @@ export const Events = () => {
 
   return (
     <Layout>
-      <EventsMapButton events={events.slice(0, 1)} position="fixed" bottom="8" right="8" />
-      <Box w={{ xl: '1470px', lg: '1024px', md: '768px' }} mx="auto" pt="8" px="8">
+      <EventsMapButton events={events} position="fixed" bottom="8" right="8" />
+      <Box w={{ xl: '1470px', lg: '1024px', md: '768px' }} mx="auto">
         <Stack spacing="8">
           <EventsSection title="Today around you" events={events} />
           <EventsSection title="You might be interested" events={events} />
