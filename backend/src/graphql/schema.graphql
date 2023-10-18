@@ -1,10 +1,19 @@
 type Query {
-  event(id: Int!): Event
-  events: [Event]
-  eventType(id: Int!): EventType
-  eventTypes: [EventType]
-  location(longitude: Float!, latitude: Float!): Location
-  locations: [Location]
+  getEvents: [Event]
+  getEventById(id: Int!): Event
+  getEventByIds(ids: [Int!]!): [Event]
+
+  getEventTypes: [EventType]
+  getEventTypeById(id: Int!): EventType
+  getEventTypesByIds(ids: [Int!]!): [EventType]
+
+  getLocations: [Location]
+  getLocationById(id: Int!): Location
+  getLocationsByIds(ids: [Int!]!): [Location]
+
+  getUsers: [User]
+  getUserById(id: Int!): User
+  getUsersByIds(ids: [Int!]!): [User]
 }
 
 type Mutation {

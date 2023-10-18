@@ -5,7 +5,8 @@ import { rootResolver } from './graphql/rootResolver';
 import { rootTypeDefs } from './graphql/rootTypeDefs';
 import { getConnection } from './libs/dbConnection';
 import { CustomContext } from './types/types';
-import { PORT } from './config';
+import { DB_HOST, DB_NAME, DB_PASSWORD, DB_PORT, DB_USER, PORT } from './config';
+import { SQLDataSource } from './dataSource';
 
 const init = async () => {
   const server = new ApolloServer({
@@ -18,6 +19,29 @@ const init = async () => {
 
     return {
       dbConnection: await getConnection(),
+      dataSources: {
+        sql: new SQLDataSource({
+          knexConfig: {
+            client: 'mysql',
+            // @ts-expect-error
+            connection: {
+              host: DB_HOST,
+              port: DB_PORT,
+              user: DB_USER,
+              password: DB_PASSWORD,
+              database: DB_NAME,
+              // @ts-expect-error
+              typeCast: (field, next) => {
+                if (field.type === 'DATETIME') {
+                  const [datePart, hourPart] = field.string().slice(0, 23).split(' ');
+                  return `${datePart}T${hourPart}Z`;
+                }
+                return next();
+              },
+            },
+          },
+        }),
+      },
       auth,
     };
   };
@@ -34,3 +58,4 @@ const init = async () => {
 };
 
 void init();
+

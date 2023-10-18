@@ -1,4 +1,4 @@
-import { Location } from '../../../types/graphqlTypesGenerated';
+import { Location, QueryGetLocationByIdArgs } from '../../../types/graphqlTypesGenerated';
 import { type CustomContext } from '../../../types/types';
 
 export const locationsResolver = async (
@@ -9,12 +9,10 @@ export const locationsResolver = async (
 
 export const locationResolver = async (
   _: unknown,
-  { latitude, longitude }: { latitude: number; longitude: number },
+  { id }: QueryGetLocationByIdArgs,
   { dbConnection }: CustomContext,
 ): Promise<Location | null> => {
-  const locations = await dbConnection.query(`SELECT * from EventType where latitude = ? and longitude = ?`, [
-    latitude,
-    longitude,
-  ]);
+  const locations = await dbConnection.query(`SELECT * from EventType where id = ?`, [id]);
   return locations[0] ?? null;
 };
+
