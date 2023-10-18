@@ -5,14 +5,18 @@ export type NavLinkProps = ChakraLinkProps;
 export function NavLink(props: NavLinkProps) {
   return (
     <ChakraLink
-      p="3"
+      py="1"
+      px="4"
+      borderRadius={5}
       _hover={{
-        bg: 'blackAlpha.400',
+        bg: 'purple.50',
       }}
       _activeLink={{
-        bg: 'blackAlpha.300',
+        borderBottom: 2,
+        borderStyle: 'solid',
+        borderColor: 'purple.500',
         _hover: {
-          bg: 'blackAlpha.400',
+          bg: 'purple.50',
         },
       }}
       {...props}
