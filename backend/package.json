@@ -12,7 +12,7 @@
     "graphql-watch": "graphql-codegen --watch",
     "start": "node ./dist/src/server.js",
     "prestart": "run-s build",
-    "build": "run-s build:*",
+    "build": "run-s 'build:*'",
     "build:rm-dist": "rimraf dist",
     "build:tsc": "tsc",
     "build:copy-graphql": "node ./scripts/copy-graphql-schema-defs.js",
