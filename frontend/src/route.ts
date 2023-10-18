@@ -4,7 +4,6 @@ export const route = {
   signIn: () => `/auth/signin`,
   signUp: () => `/auth/signup`,
   helloWorld: () => `/helloworld`,
-  events: () => `/events`,
   groups: () => `/groups`,
 };
 
