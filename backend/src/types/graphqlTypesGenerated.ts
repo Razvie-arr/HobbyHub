@@ -146,12 +146,16 @@ export type QueryGetLocationsByIdsArgs = {
 
 export type QueryGetNewlyCreatedNearbyEventsArgs = {
   latitude: Scalars['Float']['input'];
+  limit?: InputMaybe<Scalars['Int']['input']>;
   longitude: Scalars['Float']['input'];
+  offset?: InputMaybe<Scalars['Int']['input']>;
 };
 
 export type QueryGetTodaysNearbyEventsArgs = {
   latitude: Scalars['Float']['input'];
+  limit?: InputMaybe<Scalars['Int']['input']>;
   longitude: Scalars['Float']['input'];
+  offset?: InputMaybe<Scalars['Int']['input']>;
 };
 
 export type QueryGetUserByIdArgs = {

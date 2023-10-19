@@ -1,8 +1,4 @@
 type Query {
-  getEvents(offset: Int, limit: Int): [Event]
-  getEventById(id: Int!): Event
-  getEventByIds(ids: [Int!]!): [Event]
-
   getEventTypes: [EventType]
   getEventTypeById(id: Int!): EventType
   getEventTypesByIds(ids: [Int!]!): [EventType]

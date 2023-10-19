@@ -64,30 +64,33 @@ export const getEventByIdResolver: ContextualNullableResolver<Event, QueryGetEve
 
 export const getNewlyCreatedNearbyEventsResolver = async (
   _: unknown,
-  { longitude, latitude }: QueryGetNewlyCreatedNearbyEventsArgs,
+  { longitude, latitude, offset, limit }: QueryGetNewlyCreatedNearbyEventsArgs,
   { dataSources }: CustomContext,
 ): Promise<Array<Event>> => {
   const distance = dataSources.sql.db.query.raw(haversineFormula, [latitude, longitude, latitude]);
-  return dataSources.sql.db
+  const result = dataSources.sql.db
     .query('Event')
     .join('Location', 'Event.location_id', '=', 'Location.id')
     .having(distance, '<', 20)
     .orderBy('created_at')
-    .limit(5);
+    .offset(offset ?? 0);
+  return limit ? result.limit(limit) : result;
 };
 
 export const getTodaysNearbyEventsResolver = async (
   _: unknown,
-  { longitude, latitude }: QueryGetTodaysNearbyEventsArgs,
+  { longitude, latitude, offset, limit }: QueryGetTodaysNearbyEventsArgs,
   { dataSources }: CustomContext,
 ): Promise<Array<Event>> => {
   const distance = dataSources.sql.db.query.raw(haversineFormula, [latitude, longitude, latitude]);
   const todaysDate = new Date().toISOString().split('T')[0];
-  return dataSources.sql.db
+  const result = dataSources.sql.db
     .query('Event')
     .join('Location', 'Event.location_id', '=', 'Location.id')
     .having(distance, '<', 20)
     .whereRaw('DATE(start_datetime) = ?', [todaysDate])
     .orderByRaw(distance)
-    .limit(5);
+    .offset(offset ?? 0);
+  return limit ? result.limit(limit) : result;
 };
+

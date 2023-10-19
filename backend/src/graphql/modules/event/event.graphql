@@ -1,6 +1,10 @@
 extend type Query {
-  getNewlyCreatedNearbyEvents(longitude: Float!, latitude: Float!): [Event!]!
-  getTodaysNearbyEvents(longitude: Float!, latitude: Float!): [Event!]
+  getEvents(offset: Int, limit: Int): [Event]
+  getEventById(id: Int!): Event
+  getEventByIds(ids: [Int!]!): [Event]
+
+  getNewlyCreatedNearbyEvents(longitude: Float!, latitude: Float!, offset: Int, limit: Int): [Event!]!
+  getTodaysNearbyEvents(longitude: Float!, latitude: Float!, offset: Int, limit: Int): [Event!]
 }
 
 type Event {

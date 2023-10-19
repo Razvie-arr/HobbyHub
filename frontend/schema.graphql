@@ -7,6 +7,8 @@ type AuthUser {
   email: String!
   id: Int!
   name: String!
+  password: String!
+  verified: Boolean!
 }
 
 type Event {
@@ -14,6 +16,7 @@ type Event {
   author: User!
   author_id: Int!
   capacity: Int!
+  created_at: String!
   description: String
   end_datetime: String!
   event_types: [EventType!]!
@@ -25,7 +28,6 @@ type Event {
   participants: [User!]!
   start_datetime: String!
   summary: String!
-  created_at: String!
 }
 
 type EventType {
@@ -48,6 +50,7 @@ type Mutation {
   _empty(nothing: String): String
   signIn(email: String!, password: String!): AuthInfo!
   signUp(email: String!, name: String!, password: String!): AuthInfo!
+  verify(token: String!): String!
 }
 
 type Query {
@@ -60,6 +63,8 @@ type Query {
   getLocationById(id: Int!): Location
   getLocations: [Location]
   getLocationsByIds(ids: [Int!]!): [Location]
+  getNewlyCreatedNearbyEvents(latitude: Float!, limit: Int, longitude: Float!, offset: Int): [Event!]!
+  getTodaysNearbyEvents(latitude: Float!, limit: Int, longitude: Float!, offset: Int): [Event!]
   getUserById(id: Int!): User
   getUsers: [User]
   getUsersByIds(ids: [Int!]!): [User]
@@ -69,5 +74,4 @@ type User {
   email: String!
   id: Int!
   name: String!
-  password: String!
 }
