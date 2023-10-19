@@ -3,6 +3,7 @@ import { Stack } from '@chakra-ui/react';
 
 import { gql } from 'src/gql';
 import { Box } from 'src/shared/design-system';
+import { QueryResult } from 'src/shared/layout';
 
 import { EventsMapButton, EventsSection } from '../components';
 
@@ -36,25 +37,26 @@ const EVENTS = gql(`
 `);
 
 export const Events = () => {
-  const queryState = useQuery(EVENTS);
-
-  if (!(queryState.data?.getEvents && queryState.data.getEvents)) {
-    return null;
-  }
-
-  const events = queryState.data.getEvents.filter((value): value is NonNullable<typeof value> => Boolean(value));
-
+  const queryResult = useQuery(EVENTS);
   return (
-    <>
-      <EventsMapButton events={events} position="fixed" bottom="8" right="8" />
-      <Box w={{ xl: '1470px', lg: '1024px', md: '768px' }} mx="auto">
-        <Stack spacing="8">
-          <EventsSection title="Today around you" events={events} />
-          <EventsSection title="You might be interested" events={events} />
-          <EventsSection title="Newly added around you" events={events} />
-        </Stack>
-      </Box>
-    </>
+    <QueryResult
+      queryResult={queryResult}
+      render={(data) => {
+        const events = data.getEvents?.filter((value): value is NonNullable<typeof value> => Boolean(value));
+        return events && events.length > 0 ? (
+          <>
+            <EventsMapButton events={events} position="fixed" bottom="8" right="8" />
+            <Box w={{ xl: '1470px', lg: '1024px', md: '768px' }} mx="auto">
+              <Stack spacing="8">
+                <EventsSection title="Today around you" events={events} />
+                <EventsSection title="You might be interested" events={events} />
+                <EventsSection title="Newly added around you" events={events} />
+              </Stack>
+            </Box>
+          </>
+        ) : null;
+      }}
+    ></QueryResult>
   );
 };
 

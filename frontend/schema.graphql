@@ -9,6 +9,38 @@ type AuthUser {
   name: String!
 }
 
+type Event {
+  author: User!
+  author_id: Int!
+  description: String
+  end_datetime: String!
+  event_types: [EventType!]!
+  id: Int!
+  image_filePath: String
+  location: Location!
+  location_id: Int!
+  name: String!
+  participants: [User!]!
+  start_datetime: String!
+  summary: String!
+}
+
+type EventType {
+  id: Int!
+  name: String!
+}
+
+type Location {
+  additional_information: String
+  city: String!
+  country: String!
+  id: Int!
+  latitude: Float!
+  longitude: Float!
+  street_name: String!
+  street_number: String!
+}
+
 type Mutation {
   _empty(nothing: String): String
   signIn(email: String!, password: String!): AuthInfo!
@@ -16,44 +48,23 @@ type Mutation {
 }
 
 type Query {
-  _empty: String
+  getEventById(id: Int!): Event
+  getEventByIds(ids: [Int!]!): [Event]
+  getEventTypeById(id: Int!): EventType
+  getEventTypes: [EventType]
+  getEventTypesByIds(ids: [Int!]!): [EventType]
+  getEvents: [Event]
+  getLocationById(id: Int!): Location
+  getLocations: [Location]
+  getLocationsByIds(ids: [Int!]!): [Location]
+  getUserById(id: Int!): User
+  getUsers: [User]
+  getUsersByIds(ids: [Int!]!): [User]
 }
 
 type User {
+  email: String!
   id: Int!
   name: String!
-  email: String!
   password: String!
 }
-type Location{
-  id: Int!
-  country: String!
-  region: String!
-  city: String!
-  street_name: String!
-  street_number: String!
-  additional_information: String!
-  latitude: Float!
-  longitude: Float!
-}
-
-type Event{
-  id: Int!
-  name: String!
-  summary: String!
-  description: String!
-  image_filePath: String!
-  start_date: String!
-  end_date: String!
-
-  author: User
-  location: Location
-  even_type: EventType
-}
-
-type EventType{
-  id: Int!
-  name: String!
-  logo_filepath: String!
-}
-
