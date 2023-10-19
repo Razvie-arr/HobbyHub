@@ -1,5 +1,5 @@
 import { OperationVariables, QueryResult as ApolloQueryResult } from '@apollo/client';
-import { Flex, Spinner } from '@chakra-ui/react';
+import { Alert, AlertDescription, AlertIcon, AlertTitle, Box, Card, Flex, Spinner } from '@chakra-ui/react';
 
 interface QueryResultProps<T, V extends OperationVariables> {
   queryResult: ApolloQueryResult<T, V>;
@@ -8,7 +8,17 @@ interface QueryResultProps<T, V extends OperationVariables> {
 
 export const QueryResult = <T, V extends OperationVariables>({ queryResult, render }: QueryResultProps<T, V>) => {
   if (queryResult.error) {
-    return <p>ERROR: {queryResult.error.message}</p>;
+    return (
+      <Card>
+        <Alert status="error" borderRadius="4">
+          <AlertIcon />
+          <Box>
+            <AlertTitle>{queryResult.error.name}</AlertTitle>
+            <AlertDescription>{queryResult.error.message}</AlertDescription>
+          </Box>
+        </Alert>
+      </Card>
+    );
   }
   if (queryResult.loading) {
     return (
