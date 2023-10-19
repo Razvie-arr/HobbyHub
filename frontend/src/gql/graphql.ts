@@ -178,7 +178,10 @@ export type SignUpMutation = {
   };
 };
 
-export type GetEventsQueryVariables = Exact<{ [key: string]: never }>;
+export type GetEventsQueryVariables = Exact<{
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+}>;
 
 export type GetEventsQuery = {
   __typename?: 'Query';
@@ -347,6 +350,18 @@ export const GetEventsDocument = {
       kind: 'OperationDefinition',
       operation: 'query',
       name: { kind: 'Name', value: 'GetEvents' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'offset' } },
+          type: { kind: 'NamedType', name: { kind: 'Name', value: 'Int' } },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'limit' } },
+          type: { kind: 'NamedType', name: { kind: 'Name', value: 'Int' } },
+        },
+      ],
       selectionSet: {
         kind: 'SelectionSet',
         selections: [
@@ -354,8 +369,16 @@ export const GetEventsDocument = {
             kind: 'Field',
             name: { kind: 'Name', value: 'getEvents' },
             arguments: [
-              { kind: 'Argument', name: { kind: 'Name', value: 'offset' }, value: { kind: 'NullValue' } },
-              { kind: 'Argument', name: { kind: 'Name', value: 'limit' }, value: { kind: 'NullValue' } },
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'offset' },
+                value: { kind: 'Variable', name: { kind: 'Name', value: 'offset' } },
+              },
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'limit' },
+                value: { kind: 'Variable', name: { kind: 'Name', value: 'limit' } },
+              },
             ],
             selectionSet: {
               kind: 'SelectionSet',

@@ -39,6 +39,7 @@ const init = async () => {
                 return next();
               },
             },
+            pool: { min: 0, max: 7 },
           },
         }),
       },

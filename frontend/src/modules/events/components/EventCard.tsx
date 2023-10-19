@@ -24,7 +24,7 @@ export const EventCard = ({ event, simplified: simpleUI }: EventCardProps) => {
   const isFullCapacity = event.participants.length === event.capacity;
   return (
     <Card
-      flexBasis={{ xl: '24%', lg: '30%', md: '46%' }}
+      flexBasis={{ '2xl': '24%', xl: '28%', lg: '30%', md: '46%' }}
       {...(simpleUI
         ? { shadow: 'none' }
         : { borderColor: 'purple.50', borderWidth: '1px', backgroundColor: 'gray.50', mb: '4' })}

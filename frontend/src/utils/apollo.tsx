@@ -4,6 +4,7 @@ import { ReactNode, useCallback } from 'react';
 import { ApolloClient, ApolloLink, ApolloProvider, createHttpLink, from, InMemoryCache } from '@apollo/client';
 import { GraphQLErrors, NetworkError } from '@apollo/client/errors';
 import { onError } from '@apollo/client/link/error';
+import { offsetLimitPagination } from '@apollo/client/utilities';
 import { useNavigate } from 'react-router-dom';
 
 import { config } from 'src/config';
@@ -42,7 +43,9 @@ export function EnhancedApolloProvider({ children }: Props) {
 
   const client = new ApolloClient({
     link: from([logoutLink, authLink, httpLink]),
-    cache: new InMemoryCache(),
+    cache: new InMemoryCache({
+      typePolicies: { Query: { fields: { getEvents: offsetLimitPagination() } } },
+    }),
     defaultOptions: {
       watchQuery: {
         fetchPolicy: 'cache-and-network',
@@ -68,3 +71,4 @@ const hasNetworkStatusCode = (error: NetworkError | undefined, code: number) =>
 const httpLink = createHttpLink({
   uri: config.GRAPHQL_API,
 });
+
