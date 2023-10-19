@@ -1,8 +1,8 @@
-import { Event, Location, User } from 'src/gql/graphql';
+import { GetEventsQuery } from 'src/gql/graphql';
 
-export type EventProps = Omit<Event, 'author' | 'location'> & { author: Omit<User, 'email' | 'id' | 'password'> } & {
-  location: Omit<Location, 'id'>;
-};
+type ArrayType<T extends unknown[]> = T extends Array<infer U> ? U : never;
+
+export type EventProps = NonNullable<ArrayType<NonNullable<GetEventsQuery['getEvents']>>>;
 
 export interface WithEvent {
   event: EventProps;

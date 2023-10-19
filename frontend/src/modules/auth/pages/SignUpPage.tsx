@@ -4,7 +4,6 @@ import { useNavigate } from 'react-router-dom';
 import { gql } from 'src/gql';
 import { useAuth } from 'src/modules/auth';
 import { Box, Button } from 'src/shared/design-system';
-import { TopNavigation } from 'src/shared/navigation';
 
 const SIGNUP_MUTATION = gql(/* GraphQL */ `
   mutation SignUp($email: String!, $name: String!, $password: String!) {
@@ -31,25 +30,23 @@ export function SignUpPage() {
   });
 
   return (
-    <Box>
-      <TopNavigation />
-      <Box p="8">
-        <Button
-          onClick={() => {
-            void signUpRequest({
-              variables: {
-                email: 'a@a.com',
-                name: 'John Doe',
-                password: 'pass',
-              },
-            });
-          }}
-          isLoading={signUpRequestState.loading}
-        >
-          Sign Up
-        </Button>
-        {signUpRequestState.error ? <Box color="red">{signUpRequestState.error.message}</Box> : null}
-      </Box>
-    </Box>
+    <>
+      <Button
+        onClick={() => {
+          void signUpRequest({
+            variables: {
+              email: 'a@a.com',
+              name: 'John Doe',
+              password: 'pass',
+            },
+          });
+        }}
+        isLoading={signUpRequestState.loading}
+      >
+        Sign Up
+      </Button>
+      {signUpRequestState.error ? <Box color="red">{signUpRequestState.error.message}</Box> : null}
+    </>
   );
 }
+

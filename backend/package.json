@@ -12,7 +12,7 @@
     "graphql-watch": "graphql-codegen --watch",
     "start": "node ./dist/src/server.js",
     "prestart": "run-s build",
-    "build": "run-s build:*",
+    "build": "run-s 'build:*'",
     "build:rm-dist": "rimraf dist",
     "build:tsc": "tsc",
     "build:copy-graphql": "node ./scripts/copy-graphql-schema-defs.js",
@@ -23,7 +23,9 @@
     "@apollo/server": "^4.9.2",
     "@graphql-tools/load-files": "^7.0.0",
     "@graphql-tools/schema": "^10.0.0",
+    "@nic-jennings/sql-datasource": "^0.0.7",
     "@types/node": "^16.18.52",
+    "@types/nodemailer": "^6.4.13",
     "@typescript-eslint/eslint-plugin": "^6.7.5",
     "@typescript-eslint/parser": "^6.7.5",
     "argon2": "^0.31.1",
@@ -33,7 +35,10 @@
     "eslint-plugin-simple-import-sort": "^10.0.0",
     "graphql": "^16.8.0",
     "jsonwebtoken": "^9.0.2",
+    "knex": "^3.0.1",
     "mariadb": "^3.2.0",
+    "mysql": "^2.18.1",
+    "nodemailer": "^6.9.6",
     "typescript": "^5.2.2"
   },
   "devDependencies": {
@@ -48,5 +53,6 @@
     "shelljs": "^0.8.5",
     "touch": "^3.1.0",
     "ts-node": "^10.9.1"
-  }
+  },
+  "packageManager": "yarn@3.6.4"
 }

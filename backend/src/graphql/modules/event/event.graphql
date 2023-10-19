@@ -1,3 +1,12 @@
+extend type Query {
+  getEvents(offset: Int, limit: Int): [Event]
+  getEventById(id: Int!): Event
+  getEventByIds(ids: [Int!]!): [Event]
+
+  getNewlyCreatedNearbyEvents(longitude: Float!, latitude: Float!, offset: Int, limit: Int): [Event!]!
+  getTodaysNearbyEvents(longitude: Float!, latitude: Float!, offset: Int, limit: Int): [Event!]
+}
+
 type Event {
   id: Int!
   name: String!
@@ -6,8 +15,16 @@ type Event {
   image_filePath: String
   start_datetime: String!
   end_datetime: String!
+  capacity: Int!
+  allow_waitlist: Boolean!
+  created_at: String!
+
+  author_id: Int!
+  location_id: Int!
 
   author: User!
+  event_types: [EventType!]!
   location: Location!
-  eventTypes: [EventType!]!
+  participants: [User!]!
 }
+

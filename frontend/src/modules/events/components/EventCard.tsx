@@ -5,6 +5,8 @@ import { Box, Button } from 'src/shared/design-system';
 
 import { WithEvent } from '../types';
 
+import { EventStatusTag } from './EventStatusTag';
+
 const localeTimeStringOptions = {
   hourCycle: 'h24',
   hour: '2-digit',
@@ -19,20 +21,28 @@ export const EventCard = ({ event, simplified: simpleUI }: EventCardProps) => {
   const { locale } = Intl.DateTimeFormat().resolvedOptions();
   const eventStartDate = new Date(event.start_datetime);
   const eventEndDate = new Date(event.start_datetime);
+  const isFullCapacity = event.participants.length === event.capacity;
   return (
     <Card
-      flexBasis={{ xl: '31%', md: '46%' }}
+      flexBasis={{ '2xl': '24%', xl: '28%', lg: '30%', md: '46%' }}
       {...(simpleUI
         ? { shadow: 'none' }
-        : { borderColor: 'purple.50', borderWidth: '1px', backgroundColor: 'gray.50', mb: '12' })}
+        : { borderColor: 'purple.50', borderWidth: '1px', backgroundColor: 'gray.50', mb: '4' })}
     >
-      <CardBody p="0">
+      <CardBody p="0" display="flex" flexDirection="column">
         {simpleUI ? null : (
           <>
-            <Tag position="absolute" top="4" left="4" size="lg" borderRadius="full" lineHeight="2.4" shadow="base">
-              New
-            </Tag>
-            <Button position="absolute" top="4" right="4" borderRadius="full" shadow="base">
+            <EventStatusTag hasWaitlist={event.allow_waitlist} isFullCapacity={isFullCapacity} />
+            <Button
+              position="absolute"
+              top="4"
+              right="4"
+              borderRadius="full"
+              shadow="base"
+              variant="outline"
+              colorScheme="purple"
+              backgroundColor="white"
+            >
               See details
             </Button>
             <Image
@@ -41,8 +51,8 @@ export const EventCard = ({ event, simplified: simpleUI }: EventCardProps) => {
             />
           </>
         )}
-        <Box px="8" py="4">
-          <Stack spacing="4" justifyContent="space-between">
+        <Stack justifyContent="space-between" flex="1" spacing="2" px="3" py="2">
+          <Stack>
             <Heading size="md" noOfLines={1} lineHeight="initial">
               {event.name}
             </Heading>
@@ -75,13 +85,17 @@ export const EventCard = ({ event, simplified: simpleUI }: EventCardProps) => {
               <Stack direction="row">
                 <Icon as={FaPeopleGroup} color="purple.500" />
                 <Text fontWeight="medium" fontSize="sm">
-                  2 participants / 12
+                  {`${event.participants.length} participant${event.participants.length > 1 ? 's' : ''} / ${
+                    event.capacity
+                  }`}
                 </Text>
               </Stack>
             </Stack>
-            <Button colorScheme="purple">{simpleUI ? 'See details' : 'Join Event'}</Button>
           </Stack>
-        </Box>
+          <Button colorScheme="purple" isDisabled={isFullCapacity && !event.allow_waitlist}>
+            {simpleUI ? 'See details' : isFullCapacity && event.allow_waitlist ? 'Join Waitlist' : 'Join Event'}
+          </Button>
+        </Stack>
       </CardBody>
     </Card>
   );
