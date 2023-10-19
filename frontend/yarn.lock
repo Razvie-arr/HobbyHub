@@ -3302,6 +3302,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@fontsource/roboto@npm:^5.0.8":
+  version: 5.0.8
+  resolution: "@fontsource/roboto@npm:5.0.8"
+  checksum: 8aa9c1557ea9489db0eb47f849094e53b644e9d7f60008c7d514481d00ff132726da67f350b63c76943ace6a49ac4de5983b9f92acb05c55b622b4ab4a2a19c6
+  languageName: node
+  linkType: hard
+
 "@googlemaps/js-api-loader@npm:1.16.2":
   version: 1.16.2
   resolution: "@googlemaps/js-api-loader@npm:1.16.2"
@@ -7626,6 +7633,7 @@ __metadata:
     "@chakra-ui/react": ^2.8.0
     "@emotion/react": ^11.11.1
     "@emotion/styled": ^11.11.0
+    "@fontsource/roboto": ^5.0.8
     "@graphql-codegen/cli": ^5.0.0
     "@graphql-codegen/client-preset": ^4.1.0
     "@graphql-codegen/typescript": ^4.0.1
