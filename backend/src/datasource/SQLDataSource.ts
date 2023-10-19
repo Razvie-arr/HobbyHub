@@ -26,8 +26,18 @@ export class SQLDataSource extends BatchedSQLDataSource {
     getByIds: this.createGetByIdsQuery(tableName),
   });
 
-  // @ts-ignore, no actual type error but ts-node is erroneously detecting errors
-  events = this.createBaseQueries('Event');
+  events = {
+    // @ts-ignore, no actual type error but ts-node is erroneously detecting errors
+    ...this.createBaseQueries('Event'),
+    getEventEventTypes: (eventId: number) =>
+      this.db
+        .query('Event_EventType')
+        .innerJoin('EventType', 'Event_EventType.event_type_id', 'EventType.id')
+        .where('event_id', eventId),
+    getEventParticipants: (eventId: number) =>
+      this.db.query('Event_User').innerJoin('User', 'Event_User.user_id', 'User.id').where('event_id', eventId),
+  };
+
   // @ts-ignore, no actual type error but ts-node is erroneously detecting errors
   eventTypes = this.createBaseQueries('EventType');
   // @ts-ignore, no actual type error but ts-node is erroneously detecting errors

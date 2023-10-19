@@ -1,4 +1,5 @@
 import {
+  ContextualNullableResolver,
   ContextualResolver,
   ContextualResolverWithParent,
   Event,
@@ -21,23 +22,18 @@ export const eventLocationResolver: ContextualResolverWithParent<Location, Event
 ) => (await dataSources.sql.locations.getById(parent.location_id)) as unknown as Location;
 
 export const eventEventTypesResolver: ContextualResolverWithParent<Array<EventType>, Event> = async (
-  { id },
+  parent,
   _,
   { dataSources },
-) =>
-  await dataSources.sql.db
-    .query('Event_EventType')
-    .innerJoin('EventType', 'Event_EventType.event_type_id', 'EventType.id')
-    .where('event_id', id);
+) => await dataSources.sql.events.getEventEventTypes(parent.id);
 
 export const eventParticipantsResolver: ContextualResolverWithParent<Array<User>, Event> = async (
-  { id },
+  parent,
   _,
   { dataSources },
-) =>
-  await dataSources.sql.db.query('Event_User').innerJoin('User', 'Event_User.user_id', 'User.id').where('event_id', id);
+) => await dataSources.sql.events.getEventParticipants(parent.id);
 
-export const getEventByIdResolver: ContextualResolver<Event | null, QueryGetEventByIdArgs> = async (
+export const getEventByIdResolver: ContextualNullableResolver<Event, QueryGetEventByIdArgs> = async (
   _,
   { id },
   { dataSources },

@@ -16,4 +16,9 @@ export type ContextualResolverWithParent<R, P = unknown, A = unknown> = (
   context: CustomContext,
 ) => Promise<R>;
 export type ContextualResolver<R, A = unknown> = (parent: unknown, args: A, context: CustomContext) => Promise<R>;
+export type ContextualNullableResolver<R, A = unknown> = (
+  parent: unknown,
+  args: A,
+  context: CustomContext,
+) => Promise<R | null>;
 
