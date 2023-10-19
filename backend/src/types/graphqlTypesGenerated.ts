@@ -36,6 +36,7 @@ export type Event = {
   author: User;
   author_id: Scalars['Int']['output'];
   capacity: Scalars['Int']['output'];
+  created_at: Scalars['String']['output'];
   description?: Maybe<Scalars['String']['output']>;
   end_datetime: Scalars['String']['output'];
   event_types: Array<EventType>;
@@ -100,6 +101,8 @@ export type Query = {
   getLocationById?: Maybe<Location>;
   getLocations?: Maybe<Array<Maybe<Location>>>;
   getLocationsByIds?: Maybe<Array<Maybe<Location>>>;
+  getNewlyCreatedNearbyEvents: Array<Event>;
+  getTodaysNearbyEvents?: Maybe<Array<Event>>;
   getUserById?: Maybe<User>;
   getUsers?: Maybe<Array<Maybe<User>>>;
   getUsersByIds?: Maybe<Array<Maybe<User>>>;
@@ -132,6 +135,16 @@ export type QueryGetLocationByIdArgs = {
 
 export type QueryGetLocationsByIdsArgs = {
   ids: Array<Scalars['Int']['input']>;
+};
+
+export type QueryGetNewlyCreatedNearbyEventsArgs = {
+  latitude: Scalars['Float']['input'];
+  longitude: Scalars['Float']['input'];
+};
+
+export type QueryGetTodaysNearbyEventsArgs = {
+  latitude: Scalars['Float']['input'];
+  longitude: Scalars['Float']['input'];
 };
 
 export type QueryGetUserByIdArgs = {
@@ -279,6 +292,7 @@ export type EventResolvers<
   author?: Resolver<ResolversTypes['User'], ParentType, ContextType>;
   author_id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   capacity?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  created_at?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   description?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   end_datetime?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   event_types?: Resolver<Array<ResolversTypes['EventType']>, ParentType, ContextType>;
@@ -383,6 +397,18 @@ export type QueryResolvers<
     ParentType,
     ContextType,
     RequireFields<QueryGetLocationsByIdsArgs, 'ids'>
+  >;
+  getNewlyCreatedNearbyEvents?: Resolver<
+    Array<ResolversTypes['Event']>,
+    ParentType,
+    ContextType,
+    RequireFields<QueryGetNewlyCreatedNearbyEventsArgs, 'latitude' | 'longitude'>
+  >;
+  getTodaysNearbyEvents?: Resolver<
+    Maybe<Array<ResolversTypes['Event']>>,
+    ParentType,
+    ContextType,
+    RequireFields<QueryGetTodaysNearbyEventsArgs, 'latitude' | 'longitude'>
   >;
   getUserById?: Resolver<
     Maybe<ResolversTypes['User']>,

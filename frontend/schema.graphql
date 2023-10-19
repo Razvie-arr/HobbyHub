@@ -25,6 +25,7 @@ type Event {
   participants: [User!]!
   start_datetime: String!
   summary: String!
+  created_at: String!
 }
 
 type EventType {

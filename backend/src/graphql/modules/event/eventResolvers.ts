@@ -2,13 +2,32 @@ import {
   ContextualNullableResolver,
   ContextualResolver,
   ContextualResolverWithParent,
+  CustomContext,
   Event,
   EventType,
   Location,
   QueryGetEventByIdArgs,
   QueryGetEventsArgs,
+  QueryGetNewlyCreatedNearbyEventsArgs,
+  QueryGetTodaysNearbyEventsArgs,
   User,
 } from '../../../types';
+
+const haversineFormula = ` (
+      6371 * acos(
+        cos(
+          radians(?)
+        ) * cos(
+          radians(latitude)
+        ) * cos(
+          radians(longitude) - radians(?)
+        ) + sin(
+          radians(?)
+        ) * sin(
+          radians(latitude)
+        )
+      )
+    )`;
 
 export const getEventsResolver: ContextualResolver<Array<Event>, QueryGetEventsArgs> = async (
   _,
@@ -43,3 +62,32 @@ export const getEventByIdResolver: ContextualNullableResolver<Event, QueryGetEve
   { dataSources },
 ) => await dataSources.sql.events.getById(id);
 
+export const getNewlyCreatedNearbyEventsResolver = async (
+  _: unknown,
+  { longitude, latitude }: QueryGetNewlyCreatedNearbyEventsArgs,
+  { dataSources }: CustomContext,
+): Promise<Array<Event>> => {
+  const distance = dataSources.sql.db.query.raw(haversineFormula, [latitude, longitude, latitude]);
+  return dataSources.sql.db
+    .query('Event')
+    .join('Location', 'Event.location_id', '=', 'Location.id')
+    .having(distance, '<', 20)
+    .orderBy('created_at')
+    .limit(5);
+};
+
+export const getTodaysNearbyEventsResolver = async (
+  _: unknown,
+  { longitude, latitude }: QueryGetTodaysNearbyEventsArgs,
+  { dataSources }: CustomContext,
+): Promise<Array<Event>> => {
+  const distance = dataSources.sql.db.query.raw(haversineFormula, [latitude, longitude, latitude]);
+  const todaysDate = new Date().toISOString().split('T')[0];
+  return dataSources.sql.db
+    .query('Event')
+    .join('Location', 'Event.location_id', '=', 'Location.id')
+    .having(distance, '<', 20)
+    .whereRaw('DATE(start_datetime) = ?', [todaysDate])
+    .orderByRaw(distance)
+    .limit(5);
+};
