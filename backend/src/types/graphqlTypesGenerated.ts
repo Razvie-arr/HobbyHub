@@ -32,8 +32,10 @@ export type AuthUser = {
 
 export type Event = {
   __typename?: 'Event';
+  allow_waitlist: Scalars['Boolean']['output'];
   author: User;
   author_id: Scalars['Int']['output'];
+  capacity: Scalars['Int']['output'];
   description?: Maybe<Scalars['String']['output']>;
   end_datetime: Scalars['String']['output'];
   event_types: Array<EventType>;
@@ -268,8 +270,10 @@ export type EventResolvers<
   ContextType = CustomContext,
   ParentType extends ResolversParentTypes['Event'] = ResolversParentTypes['Event'],
 > = {
+  allow_waitlist?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
   author?: Resolver<ResolversTypes['User'], ParentType, ContextType>;
   author_id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  capacity?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   description?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   end_datetime?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   event_types?: Resolver<Array<ResolversTypes['EventType']>, ParentType, ContextType>;

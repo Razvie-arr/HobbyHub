@@ -19,6 +19,7 @@ const EVENTS = gql(`
         name
       }
       author {
+        id
         name
       }
       location {
@@ -32,6 +33,12 @@ const EVENTS = gql(`
       summary
       description
       image_filePath
+      capacity
+      allow_waitlist
+      participants {
+        id
+        name
+      }
     }
   }
 `);

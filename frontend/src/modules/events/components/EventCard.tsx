@@ -5,6 +5,8 @@ import { Box, Button } from 'src/shared/design-system';
 
 import { WithEvent } from '../types';
 
+import { EventStatusTag } from './EventStatusTag';
+
 const localeTimeStringOptions = {
   hourCycle: 'h24',
   hour: '2-digit',
@@ -19,6 +21,7 @@ export const EventCard = ({ event, simplified: simpleUI }: EventCardProps) => {
   const { locale } = Intl.DateTimeFormat().resolvedOptions();
   const eventStartDate = new Date(event.start_datetime);
   const eventEndDate = new Date(event.start_datetime);
+  const isFullCapacity = event.participants.length === event.capacity;
   return (
     <Card
       flexBasis={{ xl: '24%', lg: '30%', md: '46%' }}
@@ -29,10 +32,17 @@ export const EventCard = ({ event, simplified: simpleUI }: EventCardProps) => {
       <CardBody p="0" display="flex" flexDirection="column">
         {simpleUI ? null : (
           <>
-            <Tag position="absolute" top="4" left="4" size="lg" borderRadius="full" lineHeight="2.4" shadow="base">
-              New
-            </Tag>
-            <Button position="absolute" top="4" right="4" borderRadius="full" shadow="base">
+            <EventStatusTag hasWaitlist={event.allow_waitlist} isFullCapacity={isFullCapacity} />
+            <Button
+              position="absolute"
+              top="4"
+              right="4"
+              borderRadius="full"
+              shadow="base"
+              variant="outline"
+              colorScheme="purple"
+              backgroundColor="white"
+            >
               See details
             </Button>
             <Image
@@ -75,12 +85,16 @@ export const EventCard = ({ event, simplified: simpleUI }: EventCardProps) => {
               <Stack direction="row">
                 <Icon as={FaPeopleGroup} color="purple.500" />
                 <Text fontWeight="medium" fontSize="sm">
-                  2 participants / 12
+                  {`${event.participants.length} participant${event.participants.length > 1 ? 's' : ''} / ${
+                    event.capacity
+                  }`}
                 </Text>
               </Stack>
             </Stack>
           </Stack>
-          <Button colorScheme="purple">{simpleUI ? 'See details' : 'Join Event'}</Button>
+          <Button colorScheme="purple" isDisabled={isFullCapacity && !event.allow_waitlist}>
+            {simpleUI ? 'See details' : isFullCapacity && event.allow_waitlist ? 'Join Waitlist' : 'Join Event'}
+          </Button>
         </Stack>
       </CardBody>
     </Card>

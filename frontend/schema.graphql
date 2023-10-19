@@ -10,8 +10,10 @@ type AuthUser {
 }
 
 type Event {
+  allow_waitlist: Boolean!
   author: User!
   author_id: Int!
+  capacity: Int!
   description: String
   end_datetime: String!
   event_types: [EventType!]!

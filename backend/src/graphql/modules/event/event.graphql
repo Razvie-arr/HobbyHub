@@ -6,6 +6,8 @@ type Event {
   image_filePath: String
   start_datetime: String!
   end_datetime: String!
+  capacity: Int!
+  allow_waitlist: Boolean!
 
   author_id: Int!
   location_id: Int!

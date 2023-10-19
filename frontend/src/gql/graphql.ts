@@ -31,8 +31,10 @@ export type AuthUser = {
 
 export type Event = {
   __typename?: 'Event';
+  allow_waitlist: Scalars['Boolean']['output'];
   author: User;
   author_id: Scalars['Int']['output'];
+  capacity: Scalars['Int']['output'];
   description?: Maybe<Scalars['String']['output']>;
   end_datetime: Scalars['String']['output'];
   event_types: Array<EventType>;
@@ -184,8 +186,10 @@ export type GetEventsQuery = {
     summary: string;
     description?: string | null;
     image_filePath?: string | null;
+    capacity: number;
+    allow_waitlist: boolean;
     event_types: Array<{ __typename?: 'EventType'; id: number; name: string }>;
-    author: { __typename?: 'User'; name: string };
+    author: { __typename?: 'User'; id: number; name: string };
     location: {
       __typename?: 'Location';
       country: string;
@@ -195,6 +199,7 @@ export type GetEventsQuery = {
       longitude: number;
       latitude: number;
     };
+    participants: Array<{ __typename?: 'User'; id: number; name: string }>;
   } | null> | null;
 };
 
@@ -366,7 +371,10 @@ export const GetEventsDocument = {
                   name: { kind: 'Name', value: 'author' },
                   selectionSet: {
                     kind: 'SelectionSet',
-                    selections: [{ kind: 'Field', name: { kind: 'Name', value: 'name' } }],
+                    selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'name' } },
+                    ],
                   },
                 },
                 {
@@ -387,6 +395,19 @@ export const GetEventsDocument = {
                 { kind: 'Field', name: { kind: 'Name', value: 'summary' } },
                 { kind: 'Field', name: { kind: 'Name', value: 'description' } },
                 { kind: 'Field', name: { kind: 'Name', value: 'image_filePath' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'capacity' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'allow_waitlist' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'participants' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'name' } },
+                    ],
+                  },
+                },
               ],
             },
           },
