@@ -14,14 +14,12 @@ const initialValues: FormValues = {
   email: '',
   password: '',
 };
-
-// eslint-disable-next-line @typescript-eslint/consistent-type-definitions
-export type SingInFormProps = {
+export interface SingInFormProps {
   children?: ReactNode;
   isLoading: boolean;
   errorMessage?: string;
   onSubmit: (data: { email: string; password: string }) => void;
-};
+}
 
 export function SignInForm({
   isLoading,

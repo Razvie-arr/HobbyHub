@@ -2,14 +2,13 @@ import { type ReactNode } from 'react';
 
 import { FormControl, FormErrorMessage, FormLabel } from '../atoms';
 
-// eslint-disable-next-line @typescript-eslint/consistent-type-definitions
-export type FieldProps = {
+export interface FieldProps {
   id?: string;
   label?: ReactNode;
   isRequired?: boolean;
   error?: string;
   children: ReactNode;
-};
+}
 
 export function Field({ id, label, isRequired, error, children }: FieldProps) {
   return (

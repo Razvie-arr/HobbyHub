@@ -5,12 +5,11 @@ import { RouterLink } from 'src/shared/navigation';
 
 import { SignInForm } from '../organisms/SignInForm';
 
-// eslint-disable-next-line @typescript-eslint/consistent-type-definitions
-export type SignInTemplateProps = {
+export interface SignInTemplateProps {
   isLoading: boolean;
   error?: Error;
   onSubmit: (data: { email: string; password: string }) => void;
-};
+}
 
 export function SignInTemplate({
   isLoading,

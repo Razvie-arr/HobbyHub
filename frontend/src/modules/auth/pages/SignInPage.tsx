@@ -34,8 +34,7 @@ export function SignInPage() {
 
   const handleSignInFormSubmit = useCallback(
     (variables: { email: string; password: string }) => {
-      // eslint-disable-next-line @typescript-eslint/no-floating-promises
-      signinRequest({ variables });
+      void signinRequest({ variables });
     },
     [signinRequest],
   );
