@@ -1,6 +1,6 @@
 import { Connection } from 'mariadb';
 
-import { SQLDataSource } from '../dataSource';
+import { SQLDataSource } from '../datasource';
 
 export interface CustomContext {
   dbConnection: Connection;

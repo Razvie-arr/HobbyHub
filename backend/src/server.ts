@@ -6,7 +6,7 @@ import { rootTypeDefs } from './graphql/rootTypeDefs';
 import { getConnection } from './libs/dbConnection';
 import { CustomContext } from './types/types';
 import { DB_HOST, DB_NAME, DB_PASSWORD, DB_PORT, DB_USER, PORT } from './config';
-import { SQLDataSource } from './dataSource';
+import { SQLDataSource } from './datasource';
 
 const init = async () => {
   const server = new ApolloServer({
