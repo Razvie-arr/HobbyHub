@@ -12,7 +12,7 @@ import {
 } from './modules/event/eventResolvers';
 import { eventTypeResolver, eventTypesResolver } from './modules/eventType/eventTypeResolvers';
 import { locationResolver, locationsResolver } from './modules/location/locationResolvers';
-import { signInResolver, signUpResolver } from './modules/user/userResolvers';
+import { signInResolver, signUpResolver, verifyUser } from './modules/user/authResolvers';
 
 export const rootResolver: Resolvers = {
   Query: {
@@ -39,5 +39,6 @@ export const rootResolver: Resolvers = {
   Mutation: {
     signIn: signInResolver,
     signUp: signUpResolver,
+    verify: verifyUser,
   },
 };

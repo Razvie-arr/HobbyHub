@@ -2,8 +2,14 @@ import * as argon2 from 'argon2';
 import { GraphQLError } from 'graphql/error';
 
 import { createToken } from '../../../libs/jwt';
-import { CustomContext } from '../../../types';
-import { type AuthInfo, type MutationSignInArgs, type MutationSignUpArgs } from '../../../types';
+import { sendVerificationEmail } from '../../../libs/nodeMailer';
+import {
+  type AuthInfo,
+  type MutationSignInArgs,
+  type MutationSignUpArgs,
+  type MutationVerifyArgs,
+} from '../../../types/graphqlTypesGenerated';
+import { type CustomContext } from '../../../types/types';
 
 export const signInResolver = async (
   _: unknown,
@@ -40,6 +46,7 @@ export const signUpResolver = async (
   const userByEmail = (await dbConnection.query(`SELECT * FROM User WHERE email = ?`, [email]))[0];
 
   if (userByEmail) {
+    await dbConnection.end();
     throw new GraphQLError('Email already registered');
   }
 
@@ -55,11 +62,49 @@ export const signUpResolver = async (
 
   const token = createToken({ id });
 
+  const { affectedRows } = await dbConnection.query(`UPDATE User SET token = ? WHERE id=?;`, [
+    token,
+    dbResponse.insertId,
+  ]);
+
+  if (affectedRows === 0) {
+    await dbConnection.end();
+    throw new GraphQLError(`Error while registering user with id: ${dbResponse.insertId}`);
+  }
+
   const userObject = {
     id,
     email,
     name: name,
+    password: passwordHash,
+    verified: false,
   };
 
+  try {
+    await sendVerificationEmail(email, token);
+  } catch (error) {
+    await dbConnection.end();
+    throw error;
+  }
+
+  await dbConnection.end();
   return { user: userObject, token: token };
 };
+
+export const verifyUser = async (
+  _: unknown,
+  { token }: MutationVerifyArgs,
+  { dbConnection }: CustomContext,
+): Promise<string> => {
+  const { affectedRows } = await dbConnection.query(`UPDATE User SET verified = 1, token = NULL WHERE token = ?`, [
+    token,
+  ]);
+  if (affectedRows === 0) {
+    await dbConnection.end();
+    throw new GraphQLError('User not found!');
+  }
+
+  await dbConnection.end();
+  return 'User verified!';
+};
+

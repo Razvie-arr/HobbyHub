@@ -25,6 +25,7 @@
     "@graphql-tools/schema": "^10.0.0",
     "@nic-jennings/sql-datasource": "^0.0.7",
     "@types/node": "^16.18.52",
+    "@types/nodemailer": "^6.4.13",
     "@typescript-eslint/eslint-plugin": "^6.7.5",
     "@typescript-eslint/parser": "^6.7.5",
     "argon2": "^0.31.1",
@@ -37,6 +38,7 @@
     "knex": "^3.0.1",
     "mariadb": "^3.2.0",
     "mysql": "^2.18.1",
+    "nodemailer": "^6.9.6",
     "typescript": "^5.2.2"
   },
   "devDependencies": {
@@ -51,5 +53,6 @@
     "shelljs": "^0.8.5",
     "touch": "^3.1.0",
     "ts-node": "^10.9.1"
-  }
+  },
+  "packageManager": "yarn@3.6.4"
 }
