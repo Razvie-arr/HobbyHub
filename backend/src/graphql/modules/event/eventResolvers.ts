@@ -6,11 +6,15 @@ import {
   EventType,
   Location,
   QueryGetEventByIdArgs,
+  QueryGetEventsArgs,
   User,
 } from '../../../types';
 
-export const getEventsResolver: ContextualResolver<Array<Event>> = async (_, __, { dataSources }) =>
-  await dataSources.sql.events.getAll();
+export const getEventsResolver: ContextualResolver<Array<Event>, QueryGetEventsArgs> = async (
+  _,
+  { offset, limit },
+  { dataSources },
+) => await dataSources.sql.events.getAll(offset, limit);
 
 export const eventAuthorResolver: ContextualResolverWithParent<User, Event> = async (parent, _, { dataSources }) =>
   (await dataSources.sql.users.getById(parent.author_id)) as unknown as User;

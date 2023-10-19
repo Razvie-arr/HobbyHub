@@ -1,5 +1,5 @@
 type Query {
-  getEvents: [Event]
+  getEvents(offset: Int, limit: Int): [Event]
   getEventById(id: Int!): Event
   getEventByIds(ids: [Int!]!): [Event]
 

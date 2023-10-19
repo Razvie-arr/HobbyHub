@@ -120,6 +120,11 @@ export type QueryGetEventTypesByIdsArgs = {
   ids: Array<Scalars['Int']['input']>;
 };
 
+export type QueryGetEventsArgs = {
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+};
+
 export type QueryGetLocationByIdArgs = {
   id: Scalars['Int']['input'];
 };
@@ -348,6 +353,10 @@ export const GetEventsDocument = {
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'getEvents' },
+            arguments: [
+              { kind: 'Argument', name: { kind: 'Name', value: 'offset' }, value: { kind: 'NullValue' } },
+              { kind: 'Argument', name: { kind: 'Name', value: 'limit' }, value: { kind: 'NullValue' } },
+            ],
             selectionSet: {
               kind: 'SelectionSet',
               selections: [

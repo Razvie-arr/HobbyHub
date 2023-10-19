@@ -121,6 +121,11 @@ export type QueryGetEventTypesByIdsArgs = {
   ids: Array<Scalars['Int']['input']>;
 };
 
+export type QueryGetEventsArgs = {
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+};
+
 export type QueryGetLocationByIdArgs = {
   id: Scalars['Int']['input'];
 };
@@ -360,7 +365,12 @@ export type QueryResolvers<
     ContextType,
     RequireFields<QueryGetEventTypesByIdsArgs, 'ids'>
   >;
-  getEvents?: Resolver<Maybe<Array<Maybe<ResolversTypes['Event']>>>, ParentType, ContextType>;
+  getEvents?: Resolver<
+    Maybe<Array<Maybe<ResolversTypes['Event']>>>,
+    ParentType,
+    ContextType,
+    Partial<QueryGetEventsArgs>
+  >;
   getLocationById?: Resolver<
     Maybe<ResolversTypes['Location']>,
     ParentType,

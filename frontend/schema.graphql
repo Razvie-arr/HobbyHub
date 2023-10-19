@@ -55,7 +55,7 @@ type Query {
   getEventTypeById(id: Int!): EventType
   getEventTypes: [EventType]
   getEventTypesByIds(ids: [Int!]!): [EventType]
-  getEvents: [Event]
+  getEvents(limit: Int, offset: Int): [Event]
   getLocationById(id: Int!): Location
   getLocations: [Location]
   getLocationsByIds(ids: [Int!]!): [Location]

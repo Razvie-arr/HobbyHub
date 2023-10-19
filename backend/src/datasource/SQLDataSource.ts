@@ -7,8 +7,10 @@ type TableNames = keyof Tables;
 export class SQLDataSource extends BatchedSQLDataSource {
   private createGetAllQuery =
     <T extends TableNames>(tableName: T) =>
-    async () =>
-      await this.db.query(tableName);
+    async (offset?: number | null, limit?: number | null) => {
+      const result = this.db.query(tableName).offset(offset ?? 0);
+      return limit ? result.limit(limit) : result;
+    };
 
   private createGetByIdQuery =
     <T extends TableNames>(tableName: T) =>

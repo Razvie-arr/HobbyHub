@@ -9,7 +9,7 @@ import { EventsMapButton, EventsSection } from '../components';
 
 const EVENTS = gql(`
   query GetEvents {
-    getEvents {
+    getEvents(offset: null, limit: null) {
       id
       name
       start_datetime
