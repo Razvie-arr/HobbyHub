@@ -4,7 +4,6 @@ import { useNavigate } from 'react-router-dom';
 import { gql } from 'src/gql';
 import { useAuth } from 'src/modules/auth';
 import { Box, Button } from 'src/shared/design-system';
-import { TopNavigation } from 'src/shared/navigation';
 
 const SIGNIN_MUTATION = gql(/* GraphQL */ `
   mutation SignIn($email: String!, $password: String!) {
@@ -32,24 +31,22 @@ export function SignInPage() {
   });
 
   return (
-    <Box>
-      <TopNavigation />
-      <Box p="8">
-        <Button
-          onClick={() => {
-            void signInRequest({
-              variables: {
-                email: 'a@a.com',
-                password: 'pass',
-              },
-            });
-          }}
-          isLoading={signInRequestState.loading}
-        >
-          Sign In
-        </Button>
-        {signInRequestState.error ? <Box color="red">{signInRequestState.error.message}</Box> : null}
-      </Box>
-    </Box>
+    <>
+      <Button
+        onClick={() => {
+          void signInRequest({
+            variables: {
+              email: 'a@a.com',
+              password: 'pass',
+            },
+          });
+        }}
+        isLoading={signInRequestState.loading}
+      >
+        Sign In
+      </Button>
+      {signInRequestState.error ? <Box color="red">{signInRequestState.error.message}</Box> : null}
+    </>
   );
 }
+
