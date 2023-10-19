@@ -7,6 +7,8 @@ import {
   eventParticipantsResolver,
   getEventByIdResolver,
   getEventsResolver,
+  getNewlyCreatedNearbyEventsResolver,
+  getTodaysNearbyEventsResolver,
 } from './modules/event/eventResolvers';
 import { eventTypeResolver, eventTypesResolver } from './modules/eventType/eventTypeResolvers';
 import { locationResolver, locationsResolver } from './modules/location/locationResolvers';
@@ -22,6 +24,9 @@ export const rootResolver: Resolvers = {
 
     getLocationById: locationResolver,
     getLocations: locationsResolver,
+
+    getNewlyCreatedNearbyEvents: getNewlyCreatedNearbyEventsResolver,
+    getTodaysNearbyEvents: getTodaysNearbyEventsResolver,
   },
 
   Event: {
@@ -36,4 +41,3 @@ export const rootResolver: Resolvers = {
     signUp: signUpResolver,
   },
 };
-

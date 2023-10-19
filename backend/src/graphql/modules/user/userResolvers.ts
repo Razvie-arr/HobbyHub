@@ -3,7 +3,7 @@ import { GraphQLError } from 'graphql/error';
 
 import { createToken } from '../../../libs/jwt';
 import { CustomContext } from '../../../types';
-import { type AuthInfo, type MutationSignInArgs, type MutationSignUpArgs } from '../../../types/graphqlTypesGenerated';
+import { type AuthInfo, type MutationSignInArgs, type MutationSignUpArgs } from '../../../types';
 
 export const signInResolver = async (
   _: unknown,
@@ -12,7 +12,7 @@ export const signInResolver = async (
 ): Promise<AuthInfo> => {
   const email = rawEmail.toLocaleLowerCase();
 
-  const dbResponse = await dbConnection.query(`SELECT * FROM user WHERE email = ?`, [email]);
+  const dbResponse = await dbConnection.query(`SELECT * FROM User WHERE email = ?`, [email]);
 
   if (dbResponse.length === 0) {
     throw new GraphQLError('Unauthorized.');
@@ -37,7 +37,7 @@ export const signUpResolver = async (
 ): Promise<AuthInfo> => {
   const email = rawEmail.toLocaleLowerCase();
 
-  const userByEmail = (await dbConnection.query(`SELECT * FROM user WHERE email = ?`, [email]))[0];
+  const userByEmail = (await dbConnection.query(`SELECT * FROM User WHERE email = ?`, [email]))[0];
 
   if (userByEmail) {
     throw new GraphQLError('Email already registered');
@@ -46,7 +46,7 @@ export const signUpResolver = async (
   const passwordHash = await argon2.hash(password);
 
   const dbResponse = await dbConnection.query(
-    `INSERT INTO user (id, email, password, name)
+    `INSERT INTO User (id, email, password, name)
     VALUES (NULL, ?, ?, ?);`,
     [email, passwordHash, name],
   );
@@ -63,4 +63,3 @@ export const signUpResolver = async (
 
   return { user: userObject, token: token };
 };
-

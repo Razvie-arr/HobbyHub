@@ -1,3 +1,8 @@
+extend type Query {
+  getNewlyCreatedNearbyEvents(longitude: Float!, latitude: Float!): [Event!]!
+  getTodaysNearbyEvents(longitude: Float!, latitude: Float!): [Event!]
+}
+
 type Event {
   id: Int!
   name: String!
@@ -8,6 +13,7 @@ type Event {
   end_datetime: String!
   capacity: Int!
   allow_waitlist: Boolean!
+  created_at: String!
 
   author_id: Int!
   location_id: Int!
