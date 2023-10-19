@@ -1,19 +1,21 @@
 extend type Mutation {
   signIn(email: String!, password: String!): AuthInfo!
   signUp(email: String!, password: String!, name: String!): AuthInfo!
+  verify(token: String!): String!
 }
 
 type User { # Public info about user
   id: Int!
   name: String!
   email: String!
-  password: String!
 }
 
 type AuthUser { # Private info about user (e.g. with email address, ...)
   id: Int!
   name: String!
   email: String!
+  password: String!
+  verified: Boolean!
 }
 
 type AuthInfo {

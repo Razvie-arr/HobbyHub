@@ -28,6 +28,8 @@ export type AuthUser = {
   email: Scalars['String']['output'];
   id: Scalars['Int']['output'];
   name: Scalars['String']['output'];
+  password: Scalars['String']['output'];
+  verified: Scalars['Boolean']['output'];
 };
 
 export type Event = {
@@ -73,6 +75,7 @@ export type Mutation = {
   _empty?: Maybe<Scalars['String']['output']>;
   signIn: AuthInfo;
   signUp: AuthInfo;
+  verify: Scalars['String']['output'];
 };
 
 export type Mutation_EmptyArgs = {
@@ -88,6 +91,10 @@ export type MutationSignUpArgs = {
   email: Scalars['String']['input'];
   name: Scalars['String']['input'];
   password: Scalars['String']['input'];
+};
+
+export type MutationVerifyArgs = {
+  token: Scalars['String']['input'];
 };
 
 export type Query = {
@@ -160,7 +167,6 @@ export type User = {
   email: Scalars['String']['output'];
   id: Scalars['Int']['output'];
   name: Scalars['String']['output'];
-  password: Scalars['String']['output'];
 };
 
 export type ResolverTypeWrapper<T> = Promise<T> | T;
@@ -281,6 +287,8 @@ export type AuthUserResolvers<
   email?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  password?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  verified?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -348,6 +356,7 @@ export type MutationResolvers<
     ContextType,
     RequireFields<MutationSignUpArgs, 'email' | 'name' | 'password'>
   >;
+  verify?: Resolver<ResolversTypes['String'], ParentType, ContextType, RequireFields<MutationVerifyArgs, 'token'>>;
 };
 
 export type QueryResolvers<
@@ -432,7 +441,6 @@ export type UserResolvers<
   email?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  password?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
