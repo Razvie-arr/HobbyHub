@@ -7,12 +7,12 @@ export type FormProps<TFieldValues extends FieldValues = FieldValues> = UseFormP
   noValidate?: boolean;
 };
 
-export function Form<TFieldValues extends FieldValues = FieldValues>({
+export const Form = <TFieldValues extends FieldValues = FieldValues>({
   children,
   onSubmit,
   noValidate = false,
   ...rest
-}: FormProps<TFieldValues>) {
+}: FormProps<TFieldValues>) => {
   const methods = useForm<TFieldValues>(rest);
 
   return (
@@ -22,5 +22,5 @@ export function Form<TFieldValues extends FieldValues = FieldValues>({
       </form>
     </FormProvider>
   );
-}
+};
 

@@ -9,7 +9,7 @@ import {
   ModalOverlay,
   ThemingProps,
 } from '@chakra-ui/react';
-import { type FieldValues, type UseFormProps } from 'react-hook-form';
+import { type FieldValues } from 'react-hook-form';
 
 import { Button, ErrorBanner, Stack, WithDisclosure } from 'src/shared/design-system';
 import { Form, FormProps } from 'src/shared/forms';
@@ -17,8 +17,7 @@ import { Form, FormProps } from 'src/shared/forms';
 import { SubmitButton, SubmitButtonProps } from './SubmitButton';
 
 export interface ModalFormProps<TFieldValues extends FieldValues = FieldValues>
-  extends UseFormProps<TFieldValues>,
-    React.PropsWithChildren,
+  extends React.PropsWithChildren,
     WithDisclosure {
   additionalButtons?: ReactNode;
   children: ReactNode;

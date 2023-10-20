@@ -1,5 +1,4 @@
 import { useMutation } from '@apollo/client';
-import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 
 import { Disclosure, Link, WithDisclosure } from 'src/shared/design-system';
@@ -38,22 +37,9 @@ export const SignInForm = ({ disclosure, signUpModalDisclosure }: SignInFormProp
     },
     onError: () => {},
   });
-  const methods = useForm<FormValues>({
-    defaultValues: initialValues,
-    resolver: zodResolver(schema),
-  });
   return (
     <>
       <ModalForm
-        {...methods}
-        formProps={{
-          defaultValues: initialValues,
-          noValidate: true,
-          onSubmit: (formValues: FormValues) => {
-            void signInRequest({ variables: formValues });
-          },
-          resolver: zodResolver(schema),
-        }}
         additionalButtons={
           <OrSignUpButton
             handleClick={() => {
@@ -63,6 +49,15 @@ export const SignInForm = ({ disclosure, signUpModalDisclosure }: SignInFormProp
           />
         }
         disclosure={disclosure}
+        error={signInRequestState.error?.message}
+        formProps={{
+          defaultValues: initialValues,
+          noValidate: true,
+          onSubmit: (formValues: FormValues) => {
+            void signInRequest({ variables: formValues });
+          },
+          resolver: zodResolver(schema),
+        }}
         modalButtonText="Sign in"
         modalButtonVariant="outline"
         modalTitle="Sign in to your account"

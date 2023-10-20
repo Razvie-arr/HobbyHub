@@ -14,9 +14,6 @@ const schema = zod
     name: zod.string().min(1, { message: 'Name is required' }),
     password: zod.string().min(1, { message: 'Password is required' }),
     passwordConfirmation: zod.string().min(1, { message: 'Password confirmation is required' }),
-    terms: zod.literal<boolean>(true, {
-      errorMap: () => ({ message: 'You must accept the terms and conditions' }),
-    }),
   })
   .refine((data) => data.password === data.passwordConfirmation, {
     message: 'Passwords must match',
@@ -30,7 +27,6 @@ const initialValues: FormValues = {
   name: '',
   password: '',
   passwordConfirmation: '',
-  terms: false,
 };
 
 export const SignUpForm = ({ disclosure }: WithDisclosure) => {
@@ -47,6 +43,8 @@ export const SignUpForm = ({ disclosure }: WithDisclosure) => {
   return (
     <>
       <ModalForm
+        disclosure={disclosure}
+        error={signUpRequestState.error?.message}
         formProps={{
           defaultValues: initialValues,
           noValidate: true,
@@ -55,7 +53,6 @@ export const SignUpForm = ({ disclosure }: WithDisclosure) => {
           },
           resolver: zodResolver(schema),
         }}
-        disclosure={disclosure}
         modalButtonText="Sign up"
         modalTitle="Create your account"
         submitButtonProps={{
