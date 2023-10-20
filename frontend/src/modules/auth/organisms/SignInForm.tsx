@@ -1,9 +1,21 @@
 import { type ReactNode } from 'react';
 import * as React from 'react';
-import { Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, Text } from '@chakra-ui/react';
+import { useMutation } from '@apollo/client';
+import {
+  Modal,
+  ModalBody,
+  ModalCloseButton,
+  ModalContent,
+  ModalOverlay,
+  Text,
+} from '@chakra-ui/react';
+import { useNavigate } from 'react-router-dom';
 
-import { Button, ErrorBanner, Stack, useDisclosure, Link } from 'src/shared/design-system';
+import { gql } from 'src/gql';
+import { Button, ErrorBanner, Link, Stack, useDisclosure } from 'src/shared/design-system';
 import { Form, InputField, zod, zodResolver } from 'src/shared/forms';
+
+import { useAuth } from '../auth-core';
 
 const schema = zod.object({
   email: zod.string().email().nonempty(),
@@ -23,12 +35,30 @@ export interface SingInFormProps {
   onSubmit: (data: { email: string; password: string }) => void;
 }
 
-export function SignInForm({
-  isLoading,
-  errorMessage,
-  onSubmit,
-  children,
-}: SingInFormProps) {
+const SIGNIN_MUTATION = gql(/* GraphQL */ `
+  mutation SignIn($email: String!, $password: String!) {
+    signIn(email: $email, password: $password) {
+      user {
+        id
+        name
+        email
+      }
+      token
+    }
+  }
+`);
+
+export function SignInForm({ children }: React.PropsWithChildren) {
+  const auth = useAuth();
+  const navigate = useNavigate();
+
+  const [signInRequest, signInRequestState] = useMutation(SIGNIN_MUTATION, {
+    onCompleted: ({ signIn: { user, token } }) => {
+      auth.signIn({ token, user });
+      navigate('/');
+    },
+    onError: () => {},
+  });
 
   const { isOpen, onOpen, onClose } = useDisclosure();
   const initialRef = React.useRef(null);
@@ -36,64 +66,59 @@ export function SignInForm({
 
   return (
     <>
-    <Button colorScheme="purple" onClick={onOpen}>Open Modal</Button>
+      <Button colorScheme="purple" onClick={onOpen}>
+        Sign in
+      </Button>
 
-    <Modal
-      initialFocusRef={initialRef}
-      finalFocusRef={finalRef}
-      isOpen={isOpen}
-      onClose={onClose}
-    >
-      <ModalOverlay />
-      <ModalContent>
-        <ModalCloseButton />
-        <ModalBody px={6} py={9}>
-        <Text fontSize="2xl" fontWeight='bold'>Sign in to your account</Text>
-        <Form
-            onSubmit={onSubmit}
-            defaultValues={initialValues}
-            resolver={zodResolver(schema)}
-            noValidate
-            >
-            <Stack spacing="3" py="4">
-                {errorMessage && <ErrorBanner title={errorMessage} />}
+      <Modal initialFocusRef={initialRef} finalFocusRef={finalRef} isOpen={isOpen} onClose={onClose}>
+        <ModalOverlay />
+        <ModalContent>
+          <ModalCloseButton />
+          <ModalBody px={6} py={9}>
+            <Text fontSize="2xl" fontWeight="bold">
+              Sign in to your account
+            </Text>
+            <Form onSubmit={() => {}} defaultValues={initialValues} resolver={zodResolver(schema)} noValidate>
+              <Stack spacing="3" py="4">
+                {signInRequestState.error && <ErrorBanner title={signInRequestState.error.message} />}
                 <InputField
-                name="email"
-                label="Email"
-                type="email"
-                placeholder="e.g. john@doe.com"
-                isRequired
-                autoFocus
-                autoComplete="on"
-                autoCorrect="off"
-                autoCapitalize="off"
+                  name="email"
+                  label="Email"
+                  type="email"
+                  placeholder="e.g. john@doe.com"
+                  isRequired
+                  autoFocus
+                  autoComplete="on"
+                  autoCorrect="off"
+                  autoCapitalize="off"
                 />
                 <InputField
-                name="password"
-                label="Password"
-                type="password"
-                isRequired
-                autoComplete="off"
-                autoCorrect="off"
-                autoCapitalize="off"
+                  name="password"
+                  label="Password"
+                  type="password"
+                  isRequired
+                  autoComplete="off"
+                  autoCorrect="off"
+                  autoCapitalize="off"
                 />
-            <Link color="purple.500">Forgot password?</Link>
-            </Stack>
-            <Button
-                width='100%'
+                <Link color="purple.500">Forgot password?</Link>
+              </Stack>
+              <Button
+                width="100%"
                 size="lg"
                 type="submit"
-                isLoading={isLoading}
+                isLoading={signInRequestState.loading}
                 colorScheme="purple"
                 mt="3"
-            >
+              >
                 Sign In
-            </Button>
-            {children}
+              </Button>
+              {children}
             </Form>
-        </ModalBody>
-      </ModalContent>
-    </Modal>
-  </>
+          </ModalBody>
+        </ModalContent>
+      </Modal>
+    </>
   );
 }
+
