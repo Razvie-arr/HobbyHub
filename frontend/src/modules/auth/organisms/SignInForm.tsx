@@ -2,7 +2,7 @@ import { type ReactNode } from 'react';
 import * as React from 'react';
 import { Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, Text } from '@chakra-ui/react';
 
-import { Button, ErrorBanner, Stack, useDisclosure } from 'src/shared/design-system';
+import { Button, ErrorBanner, Stack, useDisclosure, Link } from 'src/shared/design-system';
 import { Form, InputField, zod, zodResolver } from 'src/shared/forms';
 
 const schema = zod.object({
@@ -77,6 +77,7 @@ export function SignInForm({
                 autoCorrect="off"
                 autoCapitalize="off"
                 />
+            <Link color="purple.500">Forgot password?</Link>
             </Stack>
             <Button
                 width='100%'
@@ -84,7 +85,7 @@ export function SignInForm({
                 type="submit"
                 isLoading={isLoading}
                 colorScheme="purple"
-                mt="4"
+                mt="3"
             >
                 Sign In
             </Button>

@@ -19,7 +19,6 @@ export function SignInTemplate({
 }: SignInTemplateProps) {
   return (
     <>
-        {/* <Heading pb="4">Sign In</Heading> */}
         <SignInForm
           isLoading={isLoading}
           errorMessage={error && error.message}
