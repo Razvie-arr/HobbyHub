@@ -53,7 +53,7 @@ const SIGNIN_MUTATION = gql(/* GraphQL */ `
   }
 `);
 
-export function SignInForm({ children }: React.PropsWithChildren) {
+export function SignInForm() {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const initialRef = React.useRef(null);
   const finalRef = React.useRef(null);

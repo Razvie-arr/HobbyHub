@@ -4,7 +4,7 @@ import { FaBars, FaRegBell, FaRegComment, FaXmark } from 'react-icons/fa6';
 import { useLocation, useNavigate } from 'react-router-dom';
 
 import { useAuth } from 'src/modules/auth';
-import { SignInForm, SignUpForm } from 'src/modules/auth/organisms';
+import { SignInForm, SignUpForm } from 'src/modules/auth/components';
 import { route } from 'src/route';
 import { Box, Flex, IconButton, Image, Spacer, Stack, useDisclosure } from 'src/shared/design-system';
 

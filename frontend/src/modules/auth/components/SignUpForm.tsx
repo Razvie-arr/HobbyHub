@@ -31,7 +31,8 @@ type FormValues = zod.infer<typeof schema>;
 
 const initialValues: FormValues = {
   email: '',
-  name: '',
+  firstName: '',
+  lastName: '',
   password: '',
   passwordConfirmation: '',
   userName: '',
@@ -58,7 +59,7 @@ const SIGNUP_MUTATION = gql(/* GraphQL */ `
   }
 `);
 
-export function SignUpForm({ children }: React.PropsWithChildren) {
+export function SignUpForm() {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const initialRef = React.useRef(null);
   const finalRef = React.useRef(null);
@@ -157,7 +158,6 @@ export function SignUpForm({ children }: React.PropsWithChildren) {
               >
                 Sign Up
               </Button>
-              {children}
             </Form>
           </ModalBody>
         </ModalContent>
