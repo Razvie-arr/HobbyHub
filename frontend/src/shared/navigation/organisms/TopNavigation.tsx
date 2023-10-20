@@ -3,6 +3,7 @@ import { Avatar, Divider, Menu, MenuButton, MenuItem, MenuList, Text } from '@ch
 import { FaBars, FaRegBell, FaRegComment, FaXmark } from 'react-icons/fa6';
 import { useLocation, useNavigate } from 'react-router-dom';
 
+import logoImageUrl from 'src/assets/icon/logo.png';
 import { useAuth } from 'src/modules/auth';
 import { SignInForm, SignUpForm } from 'src/modules/auth/organisms';
 import { route } from 'src/route';
@@ -49,7 +50,7 @@ export function TopNavigation() {
           onClick={mobileNav.onToggle}
         />
 
-        <Image boxSize={{ base: '40px', md: '50px' }} src="src/assets/icon/logo.png" alt="logo" />
+        <Image boxSize={{ base: '40px', md: '50px' }} src={logoImageUrl} alt="logo" />
         <Text as="b" mr={5} fontSize={{ base: 'md', md: 'lg' }} fontFamily="heading" color="blackAlpha.900">
           HobbyHub
         </Text>
