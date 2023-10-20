@@ -62,14 +62,37 @@ export const getEventByIdResolver: ContextualNullableResolver<Event, QueryGetEve
   { dataSources },
 ) => await dataSources.sql.events.getById(id);
 
+const locationAwareEventAttributes = [
+  'Event.id as id',
+  'name',
+  'summary',
+  'description',
+  'author_id',
+  'capacity',
+  'allow_waitlist',
+  'image_filepath',
+  'start_datetime',
+  'end_datetime',
+  'location_id',
+  'created_at',
+  'country',
+  'city',
+  'street_name',
+  'street_number',
+  'additional_information',
+  'latitude',
+  'longitude',
+];
+
 export const getNewlyCreatedNearbyEventsResolver = async (
   _: unknown,
   { longitude, latitude, offset, limit }: QueryGetNewlyCreatedNearbyEventsArgs,
   { dataSources }: CustomContext,
 ): Promise<Array<Event>> => {
   const distance = dataSources.sql.db.query.raw(haversineFormula, [latitude, longitude, latitude]);
-  const result = dataSources.sql.db
-    .query('Event')
+  const result = dataSources.sql.db.query
+    .select(...locationAwareEventAttributes)
+    .from('Event')
     .join('Location', 'Event.location_id', '=', 'Location.id')
     .having(distance, '<', 20)
     .orderBy('created_at')
@@ -84,8 +107,9 @@ export const getTodaysNearbyEventsResolver = async (
 ): Promise<Array<Event>> => {
   const distance = dataSources.sql.db.query.raw(haversineFormula, [latitude, longitude, latitude]);
   const todaysDate = new Date().toISOString().split('T')[0];
-  const result = dataSources.sql.db
-    .query('Event')
+  const result = dataSources.sql.db.query
+    .select(...locationAwareEventAttributes)
+    .from('Event')
     .join('Location', 'Event.location_id', '=', 'Location.id')
     .having(distance, '<', 20)
     .whereRaw('DATE(start_datetime) = ?', [todaysDate])

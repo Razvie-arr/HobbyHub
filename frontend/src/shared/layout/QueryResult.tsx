@@ -3,7 +3,7 @@ import { Alert, AlertDescription, AlertIcon, AlertTitle, Box, Card, Flex, Spinne
 
 interface QueryResultProps<T, V extends OperationVariables> {
   queryResult: ApolloQueryResult<T, V>;
-  render: (data: T) => React.ReactNode;
+  render: (data: T, otherResults: Omit<ApolloQueryResult<T, V>, 'data'>) => React.ReactNode;
 }
 
 export const QueryResult = <T, V extends OperationVariables>({ queryResult, render }: QueryResultProps<T, V>) => {
@@ -28,7 +28,8 @@ export const QueryResult = <T, V extends OperationVariables>({ queryResult, rend
     );
   }
   if (queryResult.data) {
-    return render(queryResult.data);
+    const { data, ...rest } = queryResult;
+    return render(data, rest);
   }
   return <p>Nothing to show...</p>;
 };

@@ -1,11 +1,12 @@
-import { Card, CardBody, Heading, Icon, Image, Stack, Tag, Text } from '@chakra-ui/react';
-import { FaCalendar, FaLocationDot, FaPeopleGroup, FaVolleyball } from 'react-icons/fa6';
+import { Card, CardBody, Heading, HStack, Icon, Image, Stack, Tag, Text, Tooltip } from '@chakra-ui/react';
+import { FaCalendar, FaLocationDot, FaPeopleGroup } from 'react-icons/fa6';
 
-import { Box, Button } from 'src/shared/design-system';
+import { Button } from 'src/shared/design-system';
 
-import { WithEvent } from '../types';
+import { EventTypeName, WithEvent } from '../types';
 
 import { EventStatusTag } from './EventStatusTag';
+import { EventTypeIcon } from './EventTypeIcon';
 
 const localeTimeStringOptions = {
   hourCycle: 'h24',
@@ -56,11 +57,15 @@ export const EventCard = ({ event, simplified: simpleUI }: EventCardProps) => {
             <Heading size="md" noOfLines={1} lineHeight="initial">
               {event.name}
             </Heading>
-            <Box>
-              <Tag colorScheme="purple" size="lg">
-                <Icon as={FaVolleyball} />
-              </Tag>
-            </Box>
+            <HStack>
+              {event.event_types.map(({ name }) => (
+                <Tooltip key={name} label={name}>
+                  <Tag colorScheme="purple" size="lg">
+                    <EventTypeIcon eventTypeName={name as EventTypeName} />
+                  </Tag>
+                </Tooltip>
+              ))}
+            </HStack>
             <Text color="gray.600" fontWeight="medium">
               Hosted by: {event.author.name}
             </Text>
