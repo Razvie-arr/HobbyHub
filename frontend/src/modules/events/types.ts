@@ -12,3 +12,14 @@ export interface WithEvents {
   events: Array<EventProps>;
 }
 
+export type EventTypeName =
+  | 'Football'
+  | 'Games'
+  | 'Basketball'
+  | 'Volleyball'
+  | 'Tennis'
+  | 'Running'
+  | 'Golf'
+  | 'Playstation'
+  | 'Board games';
+

@@ -1,16 +1,23 @@
 import * as argon2 from 'argon2';
 import { GraphQLError } from 'graphql/error';
 
-import { createToken } from '../../../libs/jwt';
+import { createToken, createTokenWithExpirationTime, verifyTokenWithExpirationTime } from '../../../libs/jwt';
 import { sendVerificationEmail } from '../../../libs/nodeMailer';
 import {
   type AuthInfo,
+  type CustomContext,
+  type MutationRequestResetPasswordArgs,
+  type MutationResetPasswordArgs,
   type MutationSignInArgs,
   type MutationSignUpArgs,
   type MutationVerifyArgs,
-} from '../../../types/graphqlTypesGenerated';
-import { type CustomContext } from '../../../types/types';
+} from '../../../types';
 
+const tokenExpirationTime = 60 * 60;
+const SUBJECT_VERIFY = 'Verification email';
+const MESSAGE_VERIFY = 'Please verify your email via this link!';
+const SUBJECT_RESET_PASSWORD = 'Reset password link';
+const MESSAGE_RESET_PASSWORD = 'Please reset your password using this link';
 export const signInResolver = async (
   _: unknown,
   { email: rawEmail, password }: MutationSignInArgs,
@@ -46,7 +53,6 @@ export const signUpResolver = async (
   const userByEmail = (await dbConnection.query(`SELECT * FROM User WHERE email = ?`, [email]))[0];
 
   if (userByEmail) {
-    await dbConnection.end();
     throw new GraphQLError('Email already registered');
   }
 
@@ -68,7 +74,6 @@ export const signUpResolver = async (
   ]);
 
   if (affectedRows === 0) {
-    await dbConnection.end();
     throw new GraphQLError(`Error while registering user with id: ${dbResponse.insertId}`);
   }
 
@@ -81,17 +86,15 @@ export const signUpResolver = async (
   };
 
   try {
-    await sendVerificationEmail(email, token);
+    await sendVerificationEmail(email, SUBJECT_VERIFY, MESSAGE_VERIFY, token);
   } catch (error) {
-    await dbConnection.end();
     throw error;
   }
 
-  await dbConnection.end();
   return { user: userObject, token: token };
 };
 
-export const verifyUser = async (
+export const verifyUserResolver = async (
   _: unknown,
   { token }: MutationVerifyArgs,
   { dbConnection }: CustomContext,
@@ -100,11 +103,67 @@ export const verifyUser = async (
     token,
   ]);
   if (affectedRows === 0) {
-    await dbConnection.end();
     throw new GraphQLError('User not found!');
   }
 
-  await dbConnection.end();
   return 'User verified!';
 };
 
+export const requestResetPasswordResolver = async (
+  _: unknown,
+  { email: rawEmail }: MutationRequestResetPasswordArgs,
+  { dbConnection }: CustomContext,
+): Promise<boolean> => {
+  const email = rawEmail.toLocaleLowerCase();
+
+  const user = (await dbConnection.query(`SELECT * FROM User WHERE email = ?`, [email]))[0];
+  if (!user) {
+    throw new GraphQLError('User not found');
+  }
+
+  const resetToken = createTokenWithExpirationTime({ id: user.id }, tokenExpirationTime);
+
+  const { affectedRows } = await dbConnection.query('UPDATE User SET token = ? WHERE email = ?', [resetToken, email]);
+
+  if (affectedRows === 0) {
+    throw new GraphQLError("Reset token wasn't updated");
+  }
+
+  try {
+    await sendVerificationEmail(email, SUBJECT_RESET_PASSWORD, MESSAGE_RESET_PASSWORD, resetToken);
+  } catch (error) {
+    throw error;
+  }
+
+  return true;
+};
+
+export const resetPasswordResolver = async (
+  _: unknown,
+  { password, token }: MutationResetPasswordArgs,
+  { dbConnection }: CustomContext,
+): Promise<boolean> => {
+  const user = (await dbConnection.query(`SELECT * FROM User WHERE token = ?`, [token]))[0];
+  if (!user) {
+    throw new GraphQLError('Token is incorrect');
+  }
+
+  try {
+    verifyTokenWithExpirationTime(token, tokenExpirationTime);
+  } catch (error) {
+    throw error;
+  }
+
+  const passwordHash = await argon2.hash(password);
+
+  const { affectedRows } = await dbConnection.query('UPDATE User SET password = ? WHERE id = ?', [
+    passwordHash,
+    user.id,
+  ]);
+
+  if (affectedRows === 0) {
+    throw new GraphQLError('Password not changed');
+  }
+
+  return true;
+};

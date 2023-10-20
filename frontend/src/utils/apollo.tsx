@@ -44,7 +44,15 @@ export function EnhancedApolloProvider({ children }: Props) {
   const client = new ApolloClient({
     link: from([logoutLink, authLink, httpLink]),
     cache: new InMemoryCache({
-      typePolicies: { Query: { fields: { getEvents: offsetLimitPagination() } } },
+      typePolicies: {
+        Query: {
+          fields: {
+            getEvents: offsetLimitPagination(),
+            getTodaysNearbyEvents: offsetLimitPagination(),
+            getNewlyCreatedNearbyEvents: offsetLimitPagination(),
+          },
+        },
+      },
     }),
     defaultOptions: {
       watchQuery: {

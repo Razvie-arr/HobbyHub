@@ -73,6 +73,8 @@ export type Location = {
 export type Mutation = {
   __typename?: 'Mutation';
   _empty?: Maybe<Scalars['String']['output']>;
+  requestResetPassword: Scalars['Boolean']['output'];
+  resetPassword: Scalars['Boolean']['output'];
   signIn: AuthInfo;
   signUp: AuthInfo;
   verify: Scalars['String']['output'];
@@ -80,6 +82,15 @@ export type Mutation = {
 
 export type Mutation_EmptyArgs = {
   nothing?: InputMaybe<Scalars['String']['input']>;
+};
+
+export type MutationRequestResetPasswordArgs = {
+  email: Scalars['String']['input'];
+};
+
+export type MutationResetPasswordArgs = {
+  password: Scalars['String']['input'];
+  token: Scalars['String']['input'];
 };
 
 export type MutationSignInArgs = {
@@ -348,6 +359,18 @@ export type MutationResolvers<
   ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation'],
 > = {
   _empty?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType, Partial<Mutation_EmptyArgs>>;
+  requestResetPassword?: Resolver<
+    ResolversTypes['Boolean'],
+    ParentType,
+    ContextType,
+    RequireFields<MutationRequestResetPasswordArgs, 'email'>
+  >;
+  resetPassword?: Resolver<
+    ResolversTypes['Boolean'],
+    ParentType,
+    ContextType,
+    RequireFields<MutationResetPasswordArgs, 'password' | 'token'>
+  >;
   signIn?: Resolver<
     ResolversTypes['AuthInfo'],
     ParentType,
