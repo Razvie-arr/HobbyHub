@@ -4,11 +4,11 @@ import { FaBars, FaRegBell, FaRegComment, FaXmark } from 'react-icons/fa6';
 import { useLocation, useNavigate } from 'react-router-dom';
 
 import { useAuth } from 'src/modules/auth';
-import { SignInForm } from 'src/modules/auth/organisms';
+import { SignInForm, SignUpForm } from 'src/modules/auth/organisms';
 import { route } from 'src/route';
-import { Box, Button, Flex, IconButton, Image, Spacer, Stack, useDisclosure } from 'src/shared/design-system';
+import { Box, Flex, IconButton, Image, Spacer, Stack, useDisclosure } from 'src/shared/design-system';
 
-import { ReactRouterLink, RouterNavLink } from '../atoms';
+import { RouterNavLink } from '../atoms';
 
 export function TopNavigation() {
   const { user, signOut } = useAuth();
@@ -115,19 +115,8 @@ export function TopNavigation() {
         ) : (
           <>
             <Flex gap="2">
-              {/* <Button
-                colorScheme="purple"
-                variant="outline"
-                size={{ base: 'sm', md: 'md' }}
-                to={route.signIn()}
-                as={ReactRouterLink}
-              >
-                Sign In
-              </Button> */}
               <SignInForm></SignInForm>
-              <Button colorScheme="purple" size={{ base: 'sm', md: 'md' }} to={route.signUp()} as={ReactRouterLink}>
-                Sign Up
-              </Button>
+              <SignUpForm></SignUpForm>
             </Flex>
           </>
         )}

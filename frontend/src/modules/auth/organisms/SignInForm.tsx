@@ -2,6 +2,9 @@ import { type ReactNode } from 'react';
 import * as React from 'react';
 import { useMutation } from '@apollo/client';
 import {
+  AbsoluteCenter,
+  Box,
+  Divider,
   Modal,
   ModalBody,
   ModalCloseButton,
@@ -12,8 +15,10 @@ import {
 import { useNavigate } from 'react-router-dom';
 
 import { gql } from 'src/gql';
+import { route } from 'src/route';
 import { Button, ErrorBanner, Link, Stack, useDisclosure } from 'src/shared/design-system';
 import { Form, InputField, zod, zodResolver } from 'src/shared/forms';
+import { ReactRouterLink } from 'src/shared/navigation';
 
 import { useAuth } from '../auth-core';
 
@@ -49,9 +54,12 @@ const SIGNIN_MUTATION = gql(/* GraphQL */ `
 `);
 
 export function SignInForm({ children }: React.PropsWithChildren) {
+  const { isOpen, onOpen, onClose } = useDisclosure();
+  const initialRef = React.useRef(null);
+  const finalRef = React.useRef(null);
+
   const auth = useAuth();
   const navigate = useNavigate();
-
   const [signInRequest, signInRequestState] = useMutation(SIGNIN_MUTATION, {
     onCompleted: ({ signIn: { user, token } }) => {
       auth.signIn({ token, user });
@@ -60,13 +68,9 @@ export function SignInForm({ children }: React.PropsWithChildren) {
     onError: () => {},
   });
 
-  const { isOpen, onOpen, onClose } = useDisclosure();
-  const initialRef = React.useRef(null);
-  const finalRef = React.useRef(null);
-
   return (
     <>
-      <Button colorScheme="purple" onClick={onOpen}>
+      <Button colorScheme="purple" variant="outline" size={{ base: 'sm', md: 'md' }} onClick={onOpen}>
         Sign in
       </Button>
 
@@ -85,7 +89,7 @@ export function SignInForm({ children }: React.PropsWithChildren) {
                   name="email"
                   label="Email"
                   type="email"
-                  placeholder="e.g. john@doe.com"
+                  placeholder="Email address / Nickname"
                   isRequired
                   autoFocus
                   autoComplete="on"
@@ -113,7 +117,24 @@ export function SignInForm({ children }: React.PropsWithChildren) {
               >
                 Sign In
               </Button>
-              {children}
+
+              <Box position="relative" padding="5">
+                <Divider />
+                <AbsoluteCenter bg="white" px="4">
+                  Or
+                </AbsoluteCenter>
+              </Box>
+              <Button
+                width="100%"
+                size="lg"
+                variant="outline"
+                colorScheme="purple"
+                mb="2"
+                to={route.signIn()}
+                as={ReactRouterLink}
+              >
+                Sign Up
+              </Button>
             </Form>
           </ModalBody>
         </ModalContent>
