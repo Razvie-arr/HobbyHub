@@ -46,7 +46,6 @@ export const signUpResolver = async (
   const userByEmail = (await dbConnection.query(`SELECT * FROM User WHERE email = ?`, [email]))[0];
 
   if (userByEmail) {
-    await dbConnection.end();
     throw new GraphQLError('Email already registered');
   }
 
@@ -68,7 +67,6 @@ export const signUpResolver = async (
   ]);
 
   if (affectedRows === 0) {
-    await dbConnection.end();
     throw new GraphQLError(`Error while registering user with id: ${dbResponse.insertId}`);
   }
 
@@ -83,11 +81,9 @@ export const signUpResolver = async (
   try {
     await sendVerificationEmail(email, token);
   } catch (error) {
-    await dbConnection.end();
     throw error;
   }
 
-  await dbConnection.end();
   return { user: userObject, token: token };
 };
 
@@ -100,11 +96,8 @@ export const verifyUser = async (
     token,
   ]);
   if (affectedRows === 0) {
-    await dbConnection.end();
     throw new GraphQLError('User not found!');
   }
 
-  await dbConnection.end();
   return 'User verified!';
 };
-
