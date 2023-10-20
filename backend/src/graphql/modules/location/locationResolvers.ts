@@ -8,7 +8,6 @@ export const locationsResolver = async (
 ): Promise<Array<Location>> => {
   const locations = await dbConnection.query(`SELECT * from Location LIMIT 100`);
 
-  await dbConnection.end();
   return locations;
 };
 
@@ -19,6 +18,5 @@ export const locationResolver = async (
 ): Promise<Location | null> => {
   const locations = await dbConnection.query(`SELECT * from EventType where id = ?`, [id]);
 
-  await dbConnection.end();
   return locations[0] ?? null;
 };
