@@ -1,6 +1,5 @@
 import { Route, Routes as RouterRoutes } from 'react-router-dom';
 
-import { SignInPage, SignUpPage } from 'src/modules/auth';
 import { Events } from 'src/modules/events';
 import { HomePage } from 'src/modules/home';
 import { HelloWorld } from 'src/modules/public';
@@ -12,8 +11,6 @@ export const Routes = () => (
   <RouterRoutes>
     <Route path={route.home()} element={<HomePage />} />
     <Route path={route.events()} element={<Events />} />
-    <Route path={route.signIn()} element={<SignInPage />} />
-    <Route path={route.signUp()} element={<SignUpPage />} />
     <Route path={route.helloWorld()} element={<HelloWorld />} />
     <Route path="*" element={<NotFoundPage />} />
   </RouterRoutes>

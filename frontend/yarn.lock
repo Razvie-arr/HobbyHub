@@ -4214,6 +4214,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@hookform/resolvers@npm:^3.3.2":
+  version: 3.3.2
+  resolution: "@hookform/resolvers@npm:3.3.2"
+  peerDependencies:
+    react-hook-form: ^7.0.0
+  checksum: bcaefe2a8a212b015b3ea99c93d7ecb5c8f475606d83be9d82dc6cc0cbb3cda03f7fd7a4426688c2de29b6800b93adbf9abb932a1dafee1d053dcaa69ec13f3f
+  languageName: node
+  linkType: hard
+
 "@humanwhocodes/config-array@npm:^0.11.11":
   version: 0.11.12
   resolution: "@humanwhocodes/config-array@npm:0.11.12"
@@ -7681,6 +7690,7 @@ __metadata:
     "@graphql-codegen/client-preset": ^4.1.0
     "@graphql-codegen/typescript": ^4.0.1
     "@graphql-inspector/graphql-cli-common": ^2.9.0
+    "@hookform/resolvers": ^3.3.2
     "@parcel/watcher": ^2.3.0
     "@react-google-maps/api": ^2.19.2
     "@types/node": ^20.5.9
@@ -7705,11 +7715,13 @@ __metadata:
     prettier: 3.0.3
     react: ^18.2.0
     react-dom: ^18.2.0
+    react-hook-form: ^7.47.0
     react-icons: ^4.11.0
     react-router-dom: 6.16.0
     typescript: ^5.2.2
     vite: ^4.4.5
     vitest: ^0.34.3
+    zod: ^3.22.4
   languageName: unknown
   linkType: soft
 
@@ -10398,6 +10410,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"react-hook-form@npm:^7.47.0":
+  version: 7.47.0
+  resolution: "react-hook-form@npm:7.47.0"
+  peerDependencies:
+    react: ^16.8.0 || ^17 || ^18
+  checksum: dec192fec9c54e436f9e47008635dd7849b6b119ed477a9b0cd491367a0b2ced3427cd937febfb245e1cb7578c863917181d903eff4519c2787bf713ec7d3426
+  languageName: node
+  linkType: hard
+
 "react-icons@npm:^4.11.0":
   version: 4.11.0
   resolution: "react-icons@npm:4.11.0"
@@ -12654,5 +12675,12 @@ __metadata:
   version: 0.8.15
   resolution: "zen-observable@npm:0.8.15"
   checksum: b7289084bc1fc74a559b7259faa23d3214b14b538a8843d2b001a35e27147833f4107590b1b44bf5bc7f6dfe6f488660d3a3725f268e09b3925b3476153b7821
+  languageName: node
+  linkType: hard
+
+"zod@npm:^3.22.4":
+  version: 3.22.4
+  resolution: "zod@npm:3.22.4"
+  checksum: 80bfd7f8039b24fddeb0718a2ec7c02aa9856e4838d6aa4864335a047b6b37a3273b191ef335bf0b2002e5c514ef261ffcda5a589fb084a48c336ffc4cdbab7f
   languageName: node
   linkType: hard
