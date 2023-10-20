@@ -1,6 +1,7 @@
 import { Card, CardBody, Heading, HStack, Icon, Image, Stack, Tag, Text, Tooltip } from '@chakra-ui/react';
 import { FaCalendar, FaLocationDot, FaPeopleGroup } from 'react-icons/fa6';
 
+import postcardBackgroundImageUrl from 'src/assets/img/cute-purple-aesthetic-abstract-minimal-background-perfect-for-wallpaper-backdrop-postcard-background-vector.jpg';
 import { Button } from 'src/shared/design-system';
 
 import { EventTypeName, WithEvent } from '../types';
@@ -46,10 +47,7 @@ export const EventCard = ({ event, simplified: simpleUI }: EventCardProps) => {
             >
               See details
             </Button>
-            <Image
-              src="src/assets/img/cute-purple-aesthetic-abstract-minimal-background-perfect-for-wallpaper-backdrop-postcard-background-vector.jpg"
-              borderTopRadius="base"
-            />
+            <Image src={postcardBackgroundImageUrl} borderTopRadius="base" />
           </>
         )}
         <Stack justifyContent="space-between" flex="1" spacing="2" px="3" py="2">

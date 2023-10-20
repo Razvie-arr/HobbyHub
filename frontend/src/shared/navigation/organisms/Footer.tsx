@@ -1,6 +1,8 @@
 import { Box, Divider, Flex, IconButton, Image, Link, Spacer, Text, VStack } from '@chakra-ui/react';
 import { FaDiscord, FaFacebook, FaInstagram, FaTwitter } from 'react-icons/fa6';
 
+import logoImageUrl from 'src/assets/icon/logo.png';
+
 export function Footer() {
   return (
     <Box p={8}>
@@ -11,7 +13,7 @@ export function Footer() {
           alignSelf={{ base: 'center', md: 'flex-end' }}
           marginBottom={{ base: '4', md: '0' }}
         >
-          <Image borderRadius="full" boxSize="35px" src="src/assets/icon/logo.png" alt="logo" />
+          <Image borderRadius="full" boxSize="35px" src={logoImageUrl} alt="logo" />
           <Text as="b" mr={5} fontSize="lg" fontFamily="heading" color="blackAlpha.900">
             HobbyHub
           </Text>
