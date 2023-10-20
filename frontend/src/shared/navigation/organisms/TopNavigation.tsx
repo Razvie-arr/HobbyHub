@@ -4,8 +4,7 @@ import { FaBars, FaRegBell, FaRegComment, FaXmark } from 'react-icons/fa6';
 import { useLocation, useNavigate } from 'react-router-dom';
 
 import logoImageUrl from 'src/assets/icon/logo.png';
-import { useAuth } from 'src/modules/auth';
-import { SignInForm, SignUpForm } from 'src/modules/auth/organisms';
+import { AuthModalButtons, useAuth } from 'src/modules/auth';
 import { route } from 'src/route';
 import { Box, Flex, IconButton, Image, Spacer, Stack, useDisclosure } from 'src/shared/design-system';
 
@@ -114,12 +113,7 @@ export function TopNavigation() {
             </Menu>
           </>
         ) : (
-          <>
-            <Flex gap="2">
-              <SignInForm></SignInForm>
-              <SignUpForm></SignUpForm>
-            </Flex>
-          </>
+          <AuthModalButtons />
         )}
       </Flex>
 

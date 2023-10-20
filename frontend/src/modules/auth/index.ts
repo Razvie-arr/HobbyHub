@@ -1,2 +1,3 @@
 export { AuthProvider, useAuth } from './auth-core';
-export * from './pages';
+export { AuthModalButtons } from './components';
+

@@ -28,7 +28,7 @@ export const signInResolver = async (
   const dbResponse = await dbConnection.query(`SELECT * FROM User WHERE email = ?`, [email]);
 
   if (dbResponse.length === 0) {
-    throw new GraphQLError('Unauthorized.');
+    throw new GraphQLError('User not with that email was not found.');
   }
 
   const user = dbResponse[0];
@@ -40,7 +40,7 @@ export const signInResolver = async (
       token,
     };
   }
-  throw new GraphQLError('Unauthorized.');
+  throw new GraphQLError('User email and password do not match.');
 };
 
 export const signUpResolver = async (
@@ -167,3 +167,4 @@ export const resetPasswordResolver = async (
 
   return true;
 };
+
