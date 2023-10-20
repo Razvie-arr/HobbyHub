@@ -8,7 +8,6 @@ export const eventTypesResolver = async (
 ): Promise<Array<EventType>> => {
   const eventTypes = await dbConnection.query<Array<EventType>>(`SELECT * from EventType LIMIT 100`);
 
-  await dbConnection.end();
   return eventTypes;
 };
 
@@ -19,6 +18,5 @@ export const eventTypeResolver = async (
 ): Promise<EventType | null> => {
   const eventType = await dbConnection.query<Array<EventType>>(`SELECT * from EventType where id = ?`, [id]);
 
-  await dbConnection.end();
   return eventType[0] ?? null;
 };
