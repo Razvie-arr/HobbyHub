@@ -1,4 +1,3 @@
-import { useCallback } from 'react';
 import { useMutation } from '@apollo/client';
 import { useNavigate } from 'react-router-dom';
 
@@ -13,8 +12,7 @@ const SIGNIN_MUTATION = gql(/* GraphQL */ `
       user {
         id
         name
-        userName
-        profileImageUrl
+        email
       }
       token
     }
@@ -24,7 +22,8 @@ const SIGNIN_MUTATION = gql(/* GraphQL */ `
 export function SignInPage() {
   const auth = useAuth();
   const navigate = useNavigate();
-  const [signinRequest, signinRequestState] = useMutation(SIGNIN_MUTATION, {
+
+  const [signInRequest, signInRequestState] = useMutation(SIGNIN_MUTATION, {
     onCompleted: ({ signIn: { user, token } }) => {
       auth.signIn({ token, user });
       navigate('/');
@@ -32,19 +31,11 @@ export function SignInPage() {
     onError: () => {},
   });
 
-  const handleSignInFormSubmit = useCallback(
-    (variables: { email: string; password: string }) => {
-      void signinRequest({ variables });
-    },
-    [signinRequest],
-  );
-
   return (
     <SignInTemplate
-      isLoading={signinRequestState.loading}
-      error={signinRequestState.error}
-      onSubmit={handleSignInFormSubmit}
+      isLoading={signInRequestState.loading}
+      error={signInRequestState.error}
+      onSubmit={() => {}}
     />
   );
 }
-
