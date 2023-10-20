@@ -12,6 +12,7 @@ import {
   ModalOverlay,
   Text,
 } from '@chakra-ui/react';
+import { FormProvider, useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 
 import { gql } from 'src/gql';
@@ -67,7 +68,10 @@ export function SignInForm({ children }: React.PropsWithChildren) {
     },
     onError: () => {},
   });
-
+  const methods = useForm<FormValues>({
+    defaultValues: initialValues,
+    resolver: zodResolver(schema),
+  });
   return (
     <>
       <Button colorScheme="purple" variant="outline" size={{ base: 'sm', md: 'md' }} onClick={onOpen}>
@@ -82,60 +86,66 @@ export function SignInForm({ children }: React.PropsWithChildren) {
             <Text fontSize="2xl" fontWeight="bold">
               Sign in to your account
             </Text>
-            <Form onSubmit={() => {}} defaultValues={initialValues} resolver={zodResolver(schema)} noValidate>
-              <Stack spacing="3" py="4">
-                {signInRequestState.error && <ErrorBanner title={signInRequestState.error.message} />}
-                <InputField
-                  name="email"
-                  label="Email"
-                  type="email"
-                  placeholder="Email address / Nickname"
-                  isRequired
-                  autoFocus
-                  autoComplete="on"
-                  autoCorrect="off"
-                  autoCapitalize="off"
-                />
-                <InputField
-                  name="password"
-                  label="Password"
-                  type="password"
-                  isRequired
-                  autoComplete="off"
-                  autoCorrect="off"
-                  autoCapitalize="off"
-                />
-                <Link color="purple.500">Forgot password?</Link>
-              </Stack>
-              <Button
-                width="100%"
-                size="lg"
-                type="submit"
-                isLoading={signInRequestState.loading}
-                colorScheme="purple"
-                mt="3"
-              >
-                Sign In
-              </Button>
+            <FormProvider {...methods}>
+              <form noValidate>
+                <Stack spacing="3" py="4">
+                  {signInRequestState.error && <ErrorBanner title={signInRequestState.error.message} />}
+                  <InputField
+                    name="email"
+                    label="Email"
+                    type="email"
+                    placeholder="Email address / Nickname"
+                    isRequired
+                    autoFocus
+                    autoComplete="on"
+                    autoCorrect="off"
+                    autoCapitalize="off"
+                  />
+                  <InputField
+                    name="password"
+                    label="Password"
+                    type="password"
+                    isRequired
+                    autoComplete="off"
+                    autoCorrect="off"
+                    autoCapitalize="off"
+                  />
+                  <Link color="purple.500">Forgot password?</Link>
+                </Stack>
+                <Button
+                  width="100%"
+                  size="lg"
+                  type="submit"
+                  isLoading={signInRequestState.loading}
+                  colorScheme="purple"
+                  mt="3"
+                  onClick={() => {
+                    const formValues = methods.getValues();
+                    void signInRequest({ variables: formValues });
+                  }}
+                >
+                  Sign In
+                </Button>
 
-              <Box position="relative" padding="5">
-                <Divider />
-                <AbsoluteCenter bg="white" px="4">
-                  Or
-                </AbsoluteCenter>
-              </Box>
-              <Button
-                width="100%"
-                size="lg"
-                variant="outline"
-                colorScheme="purple"
-                mb="2"
-                to={route.signIn()}
-                as={ReactRouterLink}
-              >
-                Sign Up
-              </Button>
-            </Form>
+                <Box position="relative" padding="5">
+                  <Divider />
+                  <AbsoluteCenter bg="white" px="4">
+                    Or
+                  </AbsoluteCenter>
+                </Box>
+                <Button
+                  width="100%"
+                  size="lg"
+                  variant="outline"
+                  colorScheme="purple"
+                  mb="2"
+                  to={route.signIn()}
+                  as={ReactRouterLink}
+                >
+                  Sign Up
+                </Button>
+              </form>
+            </FormProvider>
           </ModalBody>
         </ModalContent>
       </Modal>

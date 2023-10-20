@@ -2,6 +2,7 @@ import { type ReactNode } from 'react';
 import * as React from 'react';
 import { useMutation } from '@apollo/client';
 import { Modal, ModalBody, ModalCloseButton, ModalContent, ModalOverlay, Text, useDisclosure } from '@chakra-ui/react';
+import { FormProvider, useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 
 import { gql } from 'src/gql';
@@ -13,11 +14,9 @@ import { useAuth } from '../auth-core';
 const schema = zod
   .object({
     email: zod.string().email().nonempty(),
-    firstName: zod.string().nonempty({ message: 'First name is required' }),
-    lastName: zod.string().nonempty({ message: 'Last name is required' }),
+    name: zod.string().nonempty({ message: 'Name is required' }),
     password: zod.string().nonempty({ message: 'Password is required' }),
     passwordConfirmation: zod.string().nonempty({ message: 'Password confirmation is required' }),
-    userName: zod.string().nonempty({ message: 'Username is required' }),
     terms: zod.literal<boolean>(true, {
       errorMap: () => ({ message: 'You must accept the terms and conditions' }),
     }),
@@ -34,14 +33,13 @@ const initialValues: FormValues = {
   name: '',
   password: '',
   passwordConfirmation: '',
-  userName: '',
   terms: false,
 };
 
 export interface SignUpFormProps {
   isLoading: boolean;
   errorMessage?: string;
-  onSubmit: (data: { email: string; password: string; name: string; userName: string }) => void;
+  onSubmit: (data: { email: string; password: string; firstName: string; lastName: string; userName: string }) => void;
   children?: ReactNode;
 }
 
@@ -67,12 +65,15 @@ export function SignUpForm({ children }: React.PropsWithChildren) {
   const navigate = useNavigate();
   const [signUpRequest, signUpRequestState] = useMutation(SIGNUP_MUTATION, {
     onCompleted: ({ signUp: { user, token } }) => {
-      auth.signIn({ token, user });
-      navigate('/');
+      // auth.signIn({ token, user });
     },
     onError: () => {},
   });
 
+  const methods = useForm<FormValues>({
+    defaultValues: initialValues,
+    resolver: zodResolver(schema),
+  });
   return (
     <>
       <Button colorScheme="purple" size={{ base: 'sm', md: 'md' }} onClick={onOpen}>
@@ -86,79 +87,66 @@ export function SignUpForm({ children }: React.PropsWithChildren) {
             <Text fontSize="2xl" fontWeight="bold">
               Create your account
             </Text>
-            <Form onSubmit={() => {}} defaultValues={initialValues} resolver={zodResolver(schema)} noValidate>
-              <Stack spacing="3" py="4">
-                {signUpRequestState.error && <ErrorBanner title={signUpRequestState.error.message} />}
-                <InputField
-                  name="firstName"
-                  label="First name"
-                  type="text"
-                  isRequired
-                  autoFocus
-                  autoComplete="on"
-                  autoCorrect="off"
-                  autoCapitalize="off"
-                />
-                <InputField
-                  name="lastName"
-                  label="Last name"
-                  type="text"
-                  isRequired
-                  autoFocus
-                  autoComplete="on"
-                  autoCorrect="off"
-                  autoCapitalize="off"
-                />
-                <InputField
-                  name="userName"
-                  label="Username"
-                  type="text"
-                  isRequired
-                  autoComplete="on"
-                  autoCorrect="off"
-                  autoCapitalize="off"
-                />
-                <InputField
-                  name="email"
-                  label="Email"
-                  type="email"
-                  isRequired
-                  placeholder="e.g. john@doe.com"
-                  autoComplete="on"
-                  autoCorrect="off"
-                  autoCapitalize="off"
-                />
-                <InputField
-                  name="password"
-                  label="Password"
-                  type="password"
-                  isRequired
-                  autoComplete="off"
-                  autoCorrect="off"
-                  autoCapitalize="off"
-                />
-                <InputField
-                  name="passwordConfirmation"
-                  label="Password Confirmation"
-                  type="password"
-                  isRequired
-                  autoComplete="off"
-                  autoCorrect="off"
-                  autoCapitalize="off"
-                />
-              </Stack>
-              <Button
-                width="100%"
-                size="lg"
-                type="submit"
-                isLoading={signUpRequestState.loading}
-                colorScheme="purple"
-                mt="3"
-              >
-                Sign Up
-              </Button>
-              {children}
-            </Form>
+            <FormProvider {...methods}>
+              <form noValidate>
+                <Stack spacing="3" py="4">
+                  {signUpRequestState.error && <ErrorBanner title={signUpRequestState.error.message} />}
+                  <InputField
+                    name="name"
+                    label="Name"
+                    type="text"
+                    isRequired
+                    autoFocus
+                    autoComplete="on"
+                    autoCorrect="off"
+                    autoCapitalize="off"
+                  />
+                  <InputField
+                    name="email"
+                    label="Email"
+                    type="email"
+                    isRequired
+                    placeholder="e.g. john@doe.com"
+                    autoComplete="on"
+                    autoCorrect="off"
+                    autoCapitalize="off"
+                  />
+                  <InputField
+                    name="password"
+                    label="Password"
+                    type="password"
+                    isRequired
+                    autoComplete="off"
+                    autoCorrect="off"
+                    autoCapitalize="off"
+                  />
+                  <InputField
+                    name="passwordConfirmation"
+                    label="Password Confirmation"
+                    type="password"
+                    isRequired
+                    autoComplete="off"
+                    autoCorrect="off"
+                    autoCapitalize="off"
+                  />
+                </Stack>
+                <Button
+                  width="100%"
+                  size="lg"
+                  type="submit"
+                  isLoading={signUpRequestState.loading}
+                  colorScheme="purple"
+                  mt="3"
+                  onClick={() => {
+                    const formValues = methods.getValues();
+                    void signUpRequest({ variables: formValues });
+                  }}
+                >
+                  Sign Up
+                </Button>
+                {children}
+              </form>
+            </FormProvider>
           </ModalBody>
         </ModalContent>
       </Modal>
