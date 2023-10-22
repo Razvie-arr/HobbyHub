@@ -124,6 +124,7 @@ export type Query = {
   getUserById?: Maybe<User>;
   getUsers?: Maybe<Array<Maybe<User>>>;
   getUsersByIds?: Maybe<Array<Maybe<User>>>;
+  interestingNearbyEvents?: Maybe<Array<Event>>;
 };
 
 export type QueryGetEventByIdArgs = {
@@ -175,6 +176,14 @@ export type QueryGetUserByIdArgs = {
 
 export type QueryGetUsersByIdsArgs = {
   ids: Array<Scalars['Int']['input']>;
+};
+
+export type QueryInterestingNearbyEventsArgs = {
+  latitude: Scalars['Float']['input'];
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  longitude: Scalars['Float']['input'];
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  userId: Scalars['Int']['input'];
 };
 
 export type User = {
@@ -458,6 +467,12 @@ export type QueryResolvers<
     ParentType,
     ContextType,
     RequireFields<QueryGetUsersByIdsArgs, 'ids'>
+  >;
+  interestingNearbyEvents?: Resolver<
+    Maybe<Array<ResolversTypes['Event']>>,
+    ParentType,
+    ContextType,
+    RequireFields<QueryInterestingNearbyEventsArgs, 'latitude' | 'longitude' | 'userId'>
   >;
 };
 
