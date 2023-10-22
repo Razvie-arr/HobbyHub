@@ -57,6 +57,7 @@ export function SignInForm() {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const initialRef = React.useRef(null);
   const finalRef = React.useRef(null);
+  const [resetPassword, setResetPassword] = React.useState(false);
 
   const auth = useAuth();
   const navigate = useNavigate();
@@ -67,6 +68,14 @@ export function SignInForm() {
     },
     onError: () => {},
   });
+
+  function handleForgotPassword(): void {
+    setResetPassword(true);
+  }
+
+  function handleResetPassword(): void {
+    setResetPassword(false);
+  }
 
   return (
     <>
@@ -79,63 +88,75 @@ export function SignInForm() {
         <ModalContent>
           <ModalCloseButton />
           <ModalBody px={6} py={9}>
-            <Text fontSize="2xl" fontWeight="bold">
-              Sign in to your account
-            </Text>
-            <Form onSubmit={() => {}} defaultValues={initialValues} resolver={zodResolver(schema)} noValidate>
-              <Stack spacing="3" py="4">
-                {signInRequestState.error && <ErrorBanner title={signInRequestState.error.message} />}
-                <InputField
-                  name="email"
-                  label="Email"
-                  type="email"
-                  placeholder="Email address / Nickname"
-                  isRequired
-                  autoFocus
-                  autoComplete="on"
-                  autoCorrect="off"
-                  autoCapitalize="off"
-                />
-                <InputField
-                  name="password"
-                  label="Password"
-                  type="password"
-                  isRequired
-                  autoComplete="off"
-                  autoCorrect="off"
-                  autoCapitalize="off"
-                />
-                <Link color="purple.500">Forgot password?</Link>
-              </Stack>
-              <Button
-                width="100%"
-                size="lg"
-                type="submit"
-                isLoading={signInRequestState.loading}
-                colorScheme="purple"
-                mt="3"
-              >
-                Sign In
-              </Button>
+            {resetPassword ? (
+              <>
+                <Button variant="link" onClick={handleResetPassword}>
+                  Back
+                </Button>
+              </>
+            ) : (
+              <>
+                <Text fontSize="2xl" fontWeight="bold">
+                  Sign in to your account
+                </Text>
+                <Form onSubmit={() => {}} defaultValues={initialValues} resolver={zodResolver(schema)} noValidate>
+                  <Stack spacing="3" py="4">
+                    {signInRequestState.error && <ErrorBanner title={signInRequestState.error.message} />}
+                    <InputField
+                      name="email"
+                      label="Email"
+                      type="email"
+                      placeholder="Email address / Nickname"
+                      isRequired
+                      autoFocus
+                      autoComplete="on"
+                      autoCorrect="off"
+                      autoCapitalize="off"
+                    />
+                    <InputField
+                      name="password"
+                      label="Password"
+                      type="password"
+                      isRequired
+                      autoComplete="off"
+                      autoCorrect="off"
+                      autoCapitalize="off"
+                    />
+                    <Link onClick={handleForgotPassword} color="purple.500">
+                      Forgot password?
+                    </Link>
+                  </Stack>
+                  <Button
+                    width="100%"
+                    size="lg"
+                    type="submit"
+                    isLoading={signInRequestState.loading}
+                    colorScheme="purple"
+                    mt="3"
+                  >
+                    Sign In
+                  </Button>
 
-              <Box position="relative" padding="5">
-                <Divider />
-                <AbsoluteCenter bg="white" px="4">
-                  Or
-                </AbsoluteCenter>
-              </Box>
-              <Button
-                width="100%"
-                size="lg"
-                variant="outline"
-                colorScheme="purple"
-                mb="2"
-                to={route.signIn()}
-                as={ReactRouterLink}
-              >
-                Sign Up
-              </Button>
-            </Form>
+                  <Box position="relative" padding="5">
+                    <Divider />
+                    <AbsoluteCenter bg="white" px="4">
+                      Or
+                    </AbsoluteCenter>
+                  </Box>
+                  <Button
+                    width="100%"
+                    size="lg"
+                    variant="outline"
+                    colorScheme="purple"
+                    mb="2"
+                    to={route.signIn()}
+                    as={ReactRouterLink}
+                  >
+                    Sign Up
+                  </Button>
+                </Form>
+              </>
+            )}
           </ModalBody>
         </ModalContent>
       </Modal>
