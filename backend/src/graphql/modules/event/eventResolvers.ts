@@ -10,10 +10,11 @@ import {
   QueryGetEventsArgs,
   QueryGetNewlyCreatedNearbyEventsArgs,
   QueryGetTodaysNearbyEventsArgs,
+  QueryInterestingNearbyEventsArgs,
   User,
 } from '../../../types';
 
-const haversineFormula = ` (
+const HAVERSINE_FORMULA = ` (
       6371 * acos(
         cos(
           radians(?)
@@ -28,6 +29,8 @@ const haversineFormula = ` (
         )
       )
     )`;
+const DEFAULT_DISTANCE = 20;
+const DEFAULT_LIMIT = 5;
 
 export const getEventsResolver: ContextualResolver<Array<Event>, QueryGetEventsArgs> = async (
   _,
@@ -89,12 +92,12 @@ export const getNewlyCreatedNearbyEventsResolver = async (
   { longitude, latitude, offset, limit }: QueryGetNewlyCreatedNearbyEventsArgs,
   { dataSources }: CustomContext,
 ): Promise<Array<Event>> => {
-  const distance = dataSources.sql.db.query.raw(haversineFormula, [latitude, longitude, latitude]);
+  const distance = dataSources.sql.db.query.raw(HAVERSINE_FORMULA, [latitude, longitude, latitude]);
   const result = dataSources.sql.db.query
     .select(...locationAwareEventAttributes)
     .from('Event')
     .join('Location', 'Event.location_id', '=', 'Location.id')
-    .having(distance, '<', 20)
+    .having(distance, '<', DEFAULT_DISTANCE)
     .orderBy('created_at')
     .offset(offset ?? 0);
   return limit ? result.limit(limit) : result;
@@ -105,16 +108,34 @@ export const getTodaysNearbyEventsResolver = async (
   { longitude, latitude, offset, limit }: QueryGetTodaysNearbyEventsArgs,
   { dataSources }: CustomContext,
 ): Promise<Array<Event>> => {
-  const distance = dataSources.sql.db.query.raw(haversineFormula, [latitude, longitude, latitude]);
+  const distance = dataSources.sql.db.query.raw(HAVERSINE_FORMULA, [latitude, longitude, latitude]);
   const todaysDate = new Date().toISOString().split('T')[0];
   const result = dataSources.sql.db.query
     .select(...locationAwareEventAttributes)
     .from('Event')
     .join('Location', 'Event.location_id', '=', 'Location.id')
-    .having(distance, '<', 20)
+    .having(distance, '<', DEFAULT_DISTANCE)
     .whereRaw('DATE(start_datetime) = ?', [todaysDate])
     .orderByRaw(distance)
     .offset(offset ?? 0);
-  return limit ? result.limit(limit) : result;
+  return limit ? result.limit(limit) : result.limit(DEFAULT_LIMIT);
+};
+
+export const interestingNearbyEventsResolver = async (
+  _: unknown,
+  { latitude, longitude, userId, offset, limit }: QueryInterestingNearbyEventsArgs,
+  { dataSources }: CustomContext,
+): Promise<Array<Event>> => {
+  const distance = dataSources.sql.db.query.raw(HAVERSINE_FORMULA, [latitude, longitude, latitude]);
+  const result = dataSources.sql.db.query
+    .select(...locationAwareEventAttributes)
+    .from('Event')
+    .join('Event_EventType', 'Event.id', 'Event_EventType.event_id')
+    .join('User_EventType', 'Event_EventType.event_type_id', 'User_EventType.event_type_id')
+    .join('Location', 'Event.location_id', '=', 'Location.id')
+    .where('User_EventType.user_id', '=', userId)
+    .having(distance, '<', DEFAULT_DISTANCE)
+    .offset(offset ?? 0);
+  return limit ? result.limit(limit) : result.limit(DEFAULT_LIMIT);
 };
 
