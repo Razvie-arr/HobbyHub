@@ -15,7 +15,7 @@ export const sendVerificationEmail = async (
     },
   });
 
-  const text = `${message}  link?=${token.toString()}`;
+  const text = `${message}?token=${token.toString()}`;
 
   const mailOptions = {
     from: 'no-reply@hobby.hub',
@@ -26,3 +26,4 @@ export const sendVerificationEmail = async (
 
   return transporter.sendMail(mailOptions);
 };
+

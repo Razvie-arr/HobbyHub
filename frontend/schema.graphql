@@ -48,11 +48,11 @@ type Location {
 
 type Mutation {
   _empty(nothing: String): String
+  requestResetPassword(email: String!): Boolean!
+  resetPassword(password: String!, token: String!): Boolean!
   signIn(email: String!, password: String!): AuthInfo!
   signUp(email: String!, name: String!, password: String!): AuthInfo!
   verify(token: String!): String!
-  requestResetPassword(email: String!): Boolean!
-  resetPassword(password: String!, token: String!): Boolean!
 }
 
 type Query {

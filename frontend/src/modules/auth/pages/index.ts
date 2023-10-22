@@ -1,0 +1,2 @@
+export { VerifyUserPage } from './VerifyUserPage';
+

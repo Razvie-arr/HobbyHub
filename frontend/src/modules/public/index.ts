@@ -1,2 +1,0 @@
-export { HelloWorld } from './pages';
-

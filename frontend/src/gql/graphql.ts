@@ -72,6 +72,8 @@ export type Location = {
 export type Mutation = {
   __typename?: 'Mutation';
   _empty?: Maybe<Scalars['String']['output']>;
+  requestResetPassword: Scalars['Boolean']['output'];
+  resetPassword: Scalars['Boolean']['output'];
   signIn: AuthInfo;
   signUp: AuthInfo;
   verify: Scalars['String']['output'];
@@ -79,6 +81,15 @@ export type Mutation = {
 
 export type Mutation_EmptyArgs = {
   nothing?: InputMaybe<Scalars['String']['input']>;
+};
+
+export type MutationRequestResetPasswordArgs = {
+  email: Scalars['String']['input'];
+};
+
+export type MutationResetPasswordArgs = {
+  password: Scalars['String']['input'];
+  token: Scalars['String']['input'];
 };
 
 export type MutationSignInArgs = {
@@ -200,6 +211,12 @@ export type SignUpMutation = {
     user: { __typename?: 'AuthUser'; id: number; name: string; email: string };
   };
 };
+
+export type MutationMutationVariables = Exact<{
+  token: Scalars['String']['input'];
+}>;
+
+export type MutationMutation = { __typename?: 'Mutation'; verify: string };
 
 export type GetEventsQueryVariables = Exact<{
   offset?: InputMaybe<Scalars['Int']['input']>;
@@ -436,6 +453,39 @@ export const SignUpDocument = {
     },
   ],
 } as unknown as DocumentNode<SignUpMutation, SignUpMutationVariables>;
+export const MutationDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'mutation',
+      name: { kind: 'Name', value: 'Mutation' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'token' } },
+          type: { kind: 'NonNullType', type: { kind: 'NamedType', name: { kind: 'Name', value: 'String' } } },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'verify' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'token' },
+                value: { kind: 'Variable', name: { kind: 'Name', value: 'token' } },
+              },
+            ],
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<MutationMutation, MutationMutationVariables>;
 export const GetEventsDocument = {
   kind: 'Document',
   definitions: [

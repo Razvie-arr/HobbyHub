@@ -15,7 +15,8 @@ import {
 
 const tokenExpirationTime = 60 * 60;
 const SUBJECT_VERIFY = 'Verification email';
-const MESSAGE_VERIFY = 'Please verify your email via this link!';
+const MESSAGE_VERIFY =
+  'Please verify your email via this link!\nhttps://dev-frontend-team01-vse.handson.pro/auth/verifyUser';
 const SUBJECT_RESET_PASSWORD = 'Reset password link';
 const MESSAGE_RESET_PASSWORD = 'Please reset your password using this link';
 export const signInResolver = async (
