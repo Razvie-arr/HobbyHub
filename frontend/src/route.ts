@@ -3,7 +3,7 @@ export const route = {
   events: () => `/events`,
   signIn: () => `/auth/signin`,
   signUp: () => `/auth/signup`,
-  helloWorld: () => `/helloworld`,
+  verifyUser: () => `/auth/verifyUser`,
   groups: () => `/groups`,
 };
 

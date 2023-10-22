@@ -17,6 +17,7 @@ const documents = {
     types.SignInDocument,
   '\n  mutation SignUp($email: String!, $name: String!, $password: String!) {\n    signUp(email: $email, name: $name, password: $password) {\n      user {\n        id\n        name\n        email\n      }\n      token\n    }\n  }\n':
     types.SignUpDocument,
+  '\n  mutation Mutation($token: String!) {\n    verify(token: $token)\n  }\n': types.MutationDocument,
   '\n  query GetEvents($offset: Int, $limit: Int) {\n    getEvents(offset: $offset, limit: $limit) {\n      id\n      name\n      start_datetime\n      end_datetime\n      event_types {\n        id\n        name\n      }\n      author {\n        id\n        name\n      }\n      location {\n        country\n        city\n        street_name\n        street_number\n        longitude\n        latitude\n      }\n      summary\n      description\n      image_filePath\n      capacity\n      allow_waitlist\n      participants {\n        id\n        name\n      }\n    }\n  }\n':
     types.GetEventsDocument,
   '\n  query GetTodaysNearbyEvents($longitude: Float!, $latitude: Float!, $offset: Int, $limit: Int) {\n    getTodaysNearbyEvents(longitude: $longitude, latitude: $latitude, offset: $offset, limit: $limit) {\n      id\n      name\n      start_datetime\n      end_datetime\n      event_types {\n        id\n        name\n      }\n      author {\n        id\n        name\n      }\n      location {\n        country\n        city\n        street_name\n        street_number\n        longitude\n        latitude\n      }\n      summary\n      description\n      image_filePath\n      capacity\n      allow_waitlist\n      participants {\n        id\n        name\n      }\n    }\n  }\n':
@@ -51,6 +52,12 @@ export function gql(
 export function gql(
   source: '\n  mutation SignUp($email: String!, $name: String!, $password: String!) {\n    signUp(email: $email, name: $name, password: $password) {\n      user {\n        id\n        name\n        email\n      }\n      token\n    }\n  }\n',
 ): (typeof documents)['\n  mutation SignUp($email: String!, $name: String!, $password: String!) {\n    signUp(email: $email, name: $name, password: $password) {\n      user {\n        id\n        name\n        email\n      }\n      token\n    }\n  }\n'];
+/**
+ * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function gql(
+  source: '\n  mutation Mutation($token: String!) {\n    verify(token: $token)\n  }\n',
+): (typeof documents)['\n  mutation Mutation($token: String!) {\n    verify(token: $token)\n  }\n'];
 /**
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
