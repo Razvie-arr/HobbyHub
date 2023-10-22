@@ -3,8 +3,8 @@ import { Avatar, Divider, Menu, MenuButton, MenuItem, MenuList, Text } from '@ch
 import { FaBars, FaRegBell, FaRegComment, FaXmark } from 'react-icons/fa6';
 import { useLocation, useNavigate } from 'react-router-dom';
 
-import { useAuth } from 'src/modules/auth';
-import { SignInForm, SignUpForm } from 'src/modules/auth/components';
+import logoImageUrl from 'src/assets/icon/logo.png';
+import { AuthModalButtons, useAuth } from 'src/modules/auth';
 import { route } from 'src/route';
 import { Box, Flex, IconButton, Image, Spacer, Stack, useDisclosure } from 'src/shared/design-system';
 
@@ -49,7 +49,7 @@ export function TopNavigation() {
           onClick={mobileNav.onToggle}
         />
 
-        <Image boxSize={{ base: '40px', md: '50px' }} src="src/assets/icon/logo.png" alt="logo" />
+        <Image boxSize={{ base: '40px', md: '50px' }} src={logoImageUrl} alt="logo" />
         <Text as="b" mr={5} fontSize={{ base: 'md', md: 'lg' }} fontFamily="heading" color="blackAlpha.900">
           HobbyHub
         </Text>
@@ -113,12 +113,7 @@ export function TopNavigation() {
             </Menu>
           </>
         ) : (
-          <>
-            <Flex gap="2">
-              <SignInForm></SignInForm>
-              <SignUpForm></SignUpForm>
-            </Flex>
-          </>
+          <AuthModalButtons />
         )}
       </Flex>
 
