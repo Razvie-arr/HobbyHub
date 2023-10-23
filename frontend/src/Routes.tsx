@@ -9,8 +9,7 @@ import { route } from './route';
 
 export const Routes = () => (
   <RouterRoutes>
-    <Route path={route.home()} element={<HomePage />} />
-    <Route path={route.events()} element={<Events />} />
+    <Route path={route.home()} element={<Events />} />
     <Route path={route.verifyUser()} element={<VerifyUserPage />} />
     <Route path="*" element={<NotFoundPage />} />
   </RouterRoutes>

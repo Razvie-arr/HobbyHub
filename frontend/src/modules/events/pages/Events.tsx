@@ -1,5 +1,5 @@
 import { useQuery } from '@apollo/client';
-import { Alert, AlertIcon, AlertTitle, Card, Heading, Stack } from '@chakra-ui/react';
+import { Alert, AlertIcon, AlertTitle, Card, Container, Heading, Stack } from '@chakra-ui/react';
 
 import { Box } from 'src/shared/design-system';
 
@@ -56,7 +56,7 @@ const LocationAwareEvents = ({ geolocation, userId }: LocationAwareEventsProps) 
   return (
     <>
       <EventsMapButton events={allEvents} position="fixed" bottom="8" right="8" />
-      <Box maxWidth={{ xl: '1470px' }} mx="auto">
+      <Container maxWidth="8xl" mx="auto">
         <Stack spacing="8">
           <Box>
             <Stack spacing="8">
@@ -126,7 +126,7 @@ const LocationAwareEvents = ({ geolocation, userId }: LocationAwareEventsProps) 
             </Stack>
           </Box>
         </Stack>
-      </Box>
+      </Container>
     </>
   );
 };
