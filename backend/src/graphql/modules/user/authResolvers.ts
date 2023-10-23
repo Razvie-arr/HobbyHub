@@ -15,10 +15,8 @@ import {
 
 const tokenExpirationTime = 60 * 60;
 const SUBJECT_VERIFY = 'Verification email';
-const MESSAGE_VERIFY =
-  'Please verify your email via this link!\nhttps://dev-frontend-team01-vse.handson.pro/auth/verifyUser';
 const SUBJECT_RESET_PASSWORD = 'Reset password link';
-const MESSAGE_RESET_PASSWORD = 'Please reset your password using this link';
+
 export const signInResolver = async (
   _: unknown,
   { email: rawEmail, password }: MutationSignInArgs,
@@ -86,8 +84,10 @@ export const signUpResolver = async (
     verified: false,
   };
 
+  const verificationMessage = `Please click <a href="https://frontend-team01-vse.handson.pro/auth/verifyUser?token=${token}">here</a> to verify your account!`;
+
   try {
-    await sendVerificationEmail(email, SUBJECT_VERIFY, MESSAGE_VERIFY, token);
+    await sendVerificationEmail(email, SUBJECT_VERIFY, verificationMessage);
   } catch (error) {
     throw error;
   }
@@ -130,8 +130,10 @@ export const requestResetPasswordResolver = async (
     throw new GraphQLError("Reset token wasn't updated");
   }
 
+  const resetPasswordMessage = `Please reset your password using this <a href="<url for resetting password>?token=${resetToken}" >link</a>`;
+
   try {
-    await sendVerificationEmail(email, SUBJECT_RESET_PASSWORD, MESSAGE_RESET_PASSWORD, resetToken);
+    await sendVerificationEmail(email, SUBJECT_RESET_PASSWORD, resetPasswordMessage);
   } catch (error) {
     throw error;
   }

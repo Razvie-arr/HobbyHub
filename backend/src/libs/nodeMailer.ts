@@ -1,11 +1,6 @@
 import nodemailer from 'nodemailer';
 
-export const sendVerificationEmail = async (
-  targetEmail: string,
-  targetSubject: string,
-  message: string,
-  token: string,
-) => {
+export const sendVerificationEmail = async (targetEmail: string, targetSubject: string, message: string) => {
   const transporter = nodemailer.createTransport({
     host: 'sandbox.smtp.mailtrap.io',
     port: 2525,
@@ -15,13 +10,11 @@ export const sendVerificationEmail = async (
     },
   });
 
-  const text = `${message}?token=${token.toString()}`;
-
   const mailOptions = {
     from: 'no-reply@hobby.hub',
     to: targetEmail.toString(),
     subject: targetSubject,
-    text: text,
+    text: message,
   };
 
   return transporter.sendMail(mailOptions);
