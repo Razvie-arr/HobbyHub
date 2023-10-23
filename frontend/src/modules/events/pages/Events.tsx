@@ -1,5 +1,6 @@
 import { useQuery } from '@apollo/client';
-import { Alert, AlertIcon, AlertTitle, Card, Container, Heading, Stack } from '@chakra-ui/react';
+import { Alert, AlertIcon, AlertTitle, Card, Heading, Stack } from '@chakra-ui/react';
+import { Option, pipe, ReadonlyArray } from 'effect';
 
 import { Box } from 'src/shared/design-system';
 
@@ -7,7 +8,7 @@ import { useGeolocation } from '../../../shared/hooks/useGeolocation';
 import { QueryResult } from '../../../shared/layout';
 import { useAuth } from '../../auth';
 import { EventsMapButton, EventsSection } from '../components';
-import { EVENTS, INTERESTING_NEARBY_EVENTS, NEWLY_CREATED_NEARBY_EVENTS, TODAYS_NEARBY_EVENTS } from '../queries';
+import { EVENTS, LOCATION_AWARE_EVENTS } from '../queries';
 import { EventProps } from '../types';
 
 interface LocationAwareEventsProps {
@@ -26,142 +27,82 @@ const NoEvents = () => (
   </Card>
 );
 
+const HandleEvents = ({ events }: { events: Array<EventProps> | null | undefined }) =>
+  pipe(
+    events,
+    Option.fromNullable,
+    Option.map(ReadonlyArray.filterMap(Option.fromNullable)),
+    Option.filter(ReadonlyArray.isNonEmptyArray),
+    Option.match({
+      onNone: () => <NoEvents />,
+      onSome: (nonEmptyEvents) => <EventsSection events={nonEmptyEvents} handleShowMore={() => {}} />,
+    }),
+  );
+
 const LocationAwareEvents = ({ geolocation, userId }: LocationAwareEventsProps) => {
   const {
     coords: { latitude, longitude },
   } = geolocation;
 
-  const todaysNearbyEventsQueryResult = useQuery(TODAYS_NEARBY_EVENTS, {
-    variables: { offset: 0, limit: 4, longitude, latitude },
-  });
-  const interestingNearbyEventsQueryResult = useQuery(INTERESTING_NEARBY_EVENTS, {
+  const result = useQuery(LOCATION_AWARE_EVENTS, {
     variables: { offset: 0, limit: 4, longitude, latitude, userId },
   });
-  const newlyCreatedNearbyEventsQueryResult = useQuery(NEWLY_CREATED_NEARBY_EVENTS, {
-    variables: { offset: 0, limit: 4, longitude, latitude },
-  });
-
-  const allEvents: Array<EventProps> = Object.values(
-    [
-      ...(todaysNearbyEventsQueryResult.data?.todaysNearbyEvents ?? []),
-      ...(interestingNearbyEventsQueryResult.data?.interestingNearbyEvents ?? []),
-      ...(newlyCreatedNearbyEventsQueryResult.data?.newlyCreatedNearbyEvents ?? []),
-    ].reduce((acc, obj) => ({ ...acc, [obj.id]: obj }), {}),
-  );
 
   return (
-    <>
-      <EventsMapButton events={allEvents} position="fixed" bottom="8" right="8" />
-      <Container maxWidth="8xl" mx="auto">
-        <Stack spacing="8">
-          <Box>
+    <QueryResult
+      queryResult={result}
+      render={({ todaysNearbyEvents, interestingNearbyEvents, newlyCreatedNearbyEvents }) => {
+        const allEvents: Array<EventProps> = ReadonlyArray.dedupeWith(
+          [...(todaysNearbyEvents ?? []), ...(interestingNearbyEvents ?? []), ...(newlyCreatedNearbyEvents ?? [])],
+          (self, that) => self.id === that.id,
+        );
+        return (
+          <>
+            <EventsMapButton events={allEvents} position="fixed" bottom="8" right="8" />
             <Stack spacing="8">
-              <Heading as="h1">Today around you</Heading>
-              <QueryResult
-                queryResult={todaysNearbyEventsQueryResult}
-                render={(data, otherResults) => {
-                  const events = data.todaysNearbyEvents;
-                  return events && events.length > 0 ? (
-                    <EventsSection
-                      events={events}
-                      handleShowMore={() => {
-                        void otherResults.fetchMore({ variables: { offset: events.length + 1 } });
-                      }}
-                    />
-                  ) : (
-                    <NoEvents />
-                  );
-                }}
-              />
+              <Box>
+                <Stack spacing="8">
+                  <Heading as="h1">Today around you</Heading>
+                  <HandleEvents events={todaysNearbyEvents} />
+                </Stack>
+              </Box>
+              <Box>
+                <Stack spacing="8">
+                  <Heading as="h1">Nearby events you might be interested in</Heading>
+                  <HandleEvents events={interestingNearbyEvents} />
+                </Stack>
+              </Box>
+              <Box>
+                <Stack spacing="8">
+                  <Heading as="h1">Newly added around you</Heading>
+                  <HandleEvents events={newlyCreatedNearbyEvents} />
+                </Stack>
+              </Box>
             </Stack>
-          </Box>
-          <Box>
-            <Stack spacing="8">
-              <Heading as="h1">Nearby events you might be interested in</Heading>
-              <QueryResult
-                queryResult={interestingNearbyEventsQueryResult}
-                render={(data, otherResults) => {
-                  const events = data.interestingNearbyEvents?.filter((value): value is NonNullable<typeof value> =>
-                    Boolean(value),
-                  );
-                  return events && events.length > 0 ? (
-                    <EventsSection
-                      events={events}
-                      handleShowMore={() => {
-                        void otherResults.fetchMore({ variables: { offset: events.length + 1 } });
-                      }}
-                    />
-                  ) : (
-                    <NoEvents />
-                  );
-                }}
-              />
-            </Stack>
-          </Box>
-          <Box>
-            <Stack spacing="8">
-              <Heading as="h1">Newly added around you</Heading>
-              <QueryResult
-                queryResult={newlyCreatedNearbyEventsQueryResult}
-                render={(data, otherResults) => {
-                  const events = data.newlyCreatedNearbyEvents?.filter((value): value is NonNullable<typeof value> =>
-                    Boolean(value),
-                  );
-                  return events && events.length > 0 ? (
-                    <EventsSection
-                      events={events}
-                      handleShowMore={() => {
-                        void otherResults.fetchMore({ variables: { offset: events.length + 1 } });
-                      }}
-                    />
-                  ) : (
-                    <NoEvents />
-                  );
-                }}
-              />
-            </Stack>
-          </Box>
-        </Stack>
-      </Container>
-    </>
+          </>
+        );
+      }}
+    />
   );
 };
 
-const LocationUnawareEvents = () => {
-  const getEventsQueryResult = useQuery(EVENTS, {
-    variables: { offset: 0, limit: 4 },
-  });
-
-  return (
-    <>
-      <Box maxWidth={{ xl: '1470px' }} mx="auto">
-        <Stack spacing="8">
-          <Box>
-            <Stack spacing="8">
-              <Heading as="h1">Events</Heading>
-              <QueryResult
-                queryResult={getEventsQueryResult}
-                render={(data, otherResults) => {
-                  const events = data.events?.filter((value): value is NonNullable<typeof value> => Boolean(value));
-                  return events && events.length > 0 ? (
-                    <EventsSection
-                      events={events}
-                      handleShowMore={() => {
-                        void otherResults.fetchMore({ variables: { offset: events.length } });
-                      }}
-                    />
-                  ) : (
-                    <NoEvents />
-                  );
-                }}
-              />
-            </Stack>
-          </Box>
-        </Stack>
-      </Box>
-    </>
-  );
-};
+const LocationUnawareEvents = () => (
+  <QueryResult
+    queryResult={useQuery(EVENTS, {
+      variables: { offset: 0, limit: 4 },
+    })}
+    render={(data) => (
+      <Stack spacing="8">
+        <Box>
+          <Stack spacing="8">
+            <Heading as="h1">Events</Heading>
+            <HandleEvents events={data.events} />
+          </Stack>
+        </Box>
+      </Stack>
+    )}
+  />
+);
 
 export const Events = () => {
   const { geolocation, isLoading } = useGeolocation();

@@ -116,12 +116,12 @@ export type Query = {
   eventTypeById?: Maybe<EventType>;
   eventTypes?: Maybe<Array<Maybe<EventType>>>;
   eventTypesByIds?: Maybe<Array<Maybe<EventType>>>;
-  events?: Maybe<Array<Maybe<Event>>>;
+  events?: Maybe<Array<Event>>;
   interestingNearbyEvents?: Maybe<Array<Event>>;
   locationById?: Maybe<Location>;
   locations?: Maybe<Array<Maybe<Location>>>;
   locationsByIds?: Maybe<Array<Maybe<Location>>>;
-  newlyCreatedNearbyEvents: Array<Event>;
+  newlyCreatedNearbyEvents?: Maybe<Array<Event>>;
   todaysNearbyEvents?: Maybe<Array<Event>>;
   userById?: Maybe<User>;
   users?: Maybe<Array<Maybe<User>>>;
@@ -430,7 +430,7 @@ export type QueryResolvers<
     ContextType,
     RequireFields<QueryEventTypesByIdsArgs, 'ids'>
   >;
-  events?: Resolver<Maybe<Array<Maybe<ResolversTypes['Event']>>>, ParentType, ContextType, Partial<QueryEventsArgs>>;
+  events?: Resolver<Maybe<Array<ResolversTypes['Event']>>, ParentType, ContextType, Partial<QueryEventsArgs>>;
   interestingNearbyEvents?: Resolver<
     Maybe<Array<ResolversTypes['Event']>>,
     ParentType,
@@ -451,7 +451,7 @@ export type QueryResolvers<
     RequireFields<QueryLocationsByIdsArgs, 'ids'>
   >;
   newlyCreatedNearbyEvents?: Resolver<
-    Array<ResolversTypes['Event']>,
+    Maybe<Array<ResolversTypes['Event']>>,
     ParentType,
     ContextType,
     RequireFields<QueryNewlyCreatedNearbyEventsArgs, 'latitude' | 'longitude'>

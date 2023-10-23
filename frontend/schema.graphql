@@ -62,12 +62,12 @@ type Query {
   eventTypeById(id: Int!): EventType
   eventTypes: [EventType]
   eventTypesByIds(ids: [Int!]!): [EventType]
-  events(limit: Int, offset: Int): [Event]
+  events(limit: Int, offset: Int): [Event!]
   interestingNearbyEvents(latitude: Float!, limit: Int, longitude: Float!, offset: Int, userId: Int!): [Event!]
   locationById(id: Int!): Location
   locations: [Location]
   locationsByIds(ids: [Int!]!): [Location]
-  newlyCreatedNearbyEvents(latitude: Float!, limit: Int, longitude: Float!, offset: Int): [Event!]!
+  newlyCreatedNearbyEvents(latitude: Float!, limit: Int, longitude: Float!, offset: Int): [Event!]
   todaysNearbyEvents(latitude: Float!, limit: Int, longitude: Float!, offset: Int): [Event!]
   userById(id: Int!): User
   users: [User]
