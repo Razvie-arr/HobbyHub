@@ -11,7 +11,7 @@ interface EventsSectionProps extends WithEvents {
 
 export const EventsSection = ({ events, handleShowMore }: EventsSectionProps) => (
   <Box>
-    <Flex flexWrap="wrap" columnGap="4">
+    <Flex flexWrap="wrap" columnGap="4" justifyContent="space-between">
       {events.map((value) => (
         <EventCard key={value.id} event={value} />
       ))}
