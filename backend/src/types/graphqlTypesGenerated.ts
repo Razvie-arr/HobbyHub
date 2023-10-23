@@ -110,72 +110,47 @@ export type MutationVerifyArgs = {
 
 export type Query = {
   __typename?: 'Query';
-  getEventById?: Maybe<Event>;
-  getEventByIds?: Maybe<Array<Maybe<Event>>>;
-  getEventTypeById?: Maybe<EventType>;
-  getEventTypes?: Maybe<Array<Maybe<EventType>>>;
-  getEventTypesByIds?: Maybe<Array<Maybe<EventType>>>;
-  getEvents?: Maybe<Array<Maybe<Event>>>;
-  getLocationById?: Maybe<Location>;
-  getLocations?: Maybe<Array<Maybe<Location>>>;
-  getLocationsByIds?: Maybe<Array<Maybe<Location>>>;
-  getNewlyCreatedNearbyEvents: Array<Event>;
-  getTodaysNearbyEvents?: Maybe<Array<Event>>;
-  getUserById?: Maybe<User>;
-  getUsers?: Maybe<Array<Maybe<User>>>;
-  getUsersByIds?: Maybe<Array<Maybe<User>>>;
+  _empty?: Maybe<Scalars['String']['output']>;
+  eventById?: Maybe<Event>;
+  eventByIds?: Maybe<Array<Maybe<Event>>>;
+  eventTypeById?: Maybe<EventType>;
+  eventTypes?: Maybe<Array<Maybe<EventType>>>;
+  eventTypesByIds?: Maybe<Array<Maybe<EventType>>>;
+  events?: Maybe<Array<Maybe<Event>>>;
   interestingNearbyEvents?: Maybe<Array<Event>>;
+  locationById?: Maybe<Location>;
+  locations?: Maybe<Array<Maybe<Location>>>;
+  locationsByIds?: Maybe<Array<Maybe<Location>>>;
+  newlyCreatedNearbyEvents: Array<Event>;
+  todaysNearbyEvents?: Maybe<Array<Event>>;
+  userById?: Maybe<User>;
+  users?: Maybe<Array<Maybe<User>>>;
+  usersByIds?: Maybe<Array<Maybe<User>>>;
 };
 
-export type QueryGetEventByIdArgs = {
+export type Query_EmptyArgs = {
+  nothing?: InputMaybe<Scalars['String']['input']>;
+};
+
+export type QueryEventByIdArgs = {
   id: Scalars['Int']['input'];
 };
 
-export type QueryGetEventByIdsArgs = {
+export type QueryEventByIdsArgs = {
   ids: Array<Scalars['Int']['input']>;
 };
 
-export type QueryGetEventTypeByIdArgs = {
+export type QueryEventTypeByIdArgs = {
   id: Scalars['Int']['input'];
 };
 
-export type QueryGetEventTypesByIdsArgs = {
+export type QueryEventTypesByIdsArgs = {
   ids: Array<Scalars['Int']['input']>;
 };
 
-export type QueryGetEventsArgs = {
+export type QueryEventsArgs = {
   limit?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
-};
-
-export type QueryGetLocationByIdArgs = {
-  id: Scalars['Int']['input'];
-};
-
-export type QueryGetLocationsByIdsArgs = {
-  ids: Array<Scalars['Int']['input']>;
-};
-
-export type QueryGetNewlyCreatedNearbyEventsArgs = {
-  latitude: Scalars['Float']['input'];
-  limit?: InputMaybe<Scalars['Int']['input']>;
-  longitude: Scalars['Float']['input'];
-  offset?: InputMaybe<Scalars['Int']['input']>;
-};
-
-export type QueryGetTodaysNearbyEventsArgs = {
-  latitude: Scalars['Float']['input'];
-  limit?: InputMaybe<Scalars['Int']['input']>;
-  longitude: Scalars['Float']['input'];
-  offset?: InputMaybe<Scalars['Int']['input']>;
-};
-
-export type QueryGetUserByIdArgs = {
-  id: Scalars['Int']['input'];
-};
-
-export type QueryGetUsersByIdsArgs = {
-  ids: Array<Scalars['Int']['input']>;
 };
 
 export type QueryInterestingNearbyEventsArgs = {
@@ -184,6 +159,36 @@ export type QueryInterestingNearbyEventsArgs = {
   longitude: Scalars['Float']['input'];
   offset?: InputMaybe<Scalars['Int']['input']>;
   userId: Scalars['Int']['input'];
+};
+
+export type QueryLocationByIdArgs = {
+  id: Scalars['Int']['input'];
+};
+
+export type QueryLocationsByIdsArgs = {
+  ids: Array<Scalars['Int']['input']>;
+};
+
+export type QueryNewlyCreatedNearbyEventsArgs = {
+  latitude: Scalars['Float']['input'];
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  longitude: Scalars['Float']['input'];
+  offset?: InputMaybe<Scalars['Int']['input']>;
+};
+
+export type QueryTodaysNearbyEventsArgs = {
+  latitude: Scalars['Float']['input'];
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  longitude: Scalars['Float']['input'];
+  offset?: InputMaybe<Scalars['Int']['input']>;
+};
+
+export type QueryUserByIdArgs = {
+  id: Scalars['Int']['input'];
+};
+
+export type QueryUsersByIdsArgs = {
+  ids: Array<Scalars['Int']['input']>;
 };
 
 export type User = {
@@ -399,80 +404,71 @@ export type QueryResolvers<
   ContextType = CustomContext,
   ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query'],
 > = {
-  getEventById?: Resolver<
+  _empty?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType, Partial<Query_EmptyArgs>>;
+  eventById?: Resolver<
     Maybe<ResolversTypes['Event']>,
     ParentType,
     ContextType,
-    RequireFields<QueryGetEventByIdArgs, 'id'>
+    RequireFields<QueryEventByIdArgs, 'id'>
   >;
-  getEventByIds?: Resolver<
+  eventByIds?: Resolver<
     Maybe<Array<Maybe<ResolversTypes['Event']>>>,
     ParentType,
     ContextType,
-    RequireFields<QueryGetEventByIdsArgs, 'ids'>
+    RequireFields<QueryEventByIdsArgs, 'ids'>
   >;
-  getEventTypeById?: Resolver<
+  eventTypeById?: Resolver<
     Maybe<ResolversTypes['EventType']>,
     ParentType,
     ContextType,
-    RequireFields<QueryGetEventTypeByIdArgs, 'id'>
+    RequireFields<QueryEventTypeByIdArgs, 'id'>
   >;
-  getEventTypes?: Resolver<Maybe<Array<Maybe<ResolversTypes['EventType']>>>, ParentType, ContextType>;
-  getEventTypesByIds?: Resolver<
+  eventTypes?: Resolver<Maybe<Array<Maybe<ResolversTypes['EventType']>>>, ParentType, ContextType>;
+  eventTypesByIds?: Resolver<
     Maybe<Array<Maybe<ResolversTypes['EventType']>>>,
     ParentType,
     ContextType,
-    RequireFields<QueryGetEventTypesByIdsArgs, 'ids'>
+    RequireFields<QueryEventTypesByIdsArgs, 'ids'>
   >;
-  getEvents?: Resolver<
-    Maybe<Array<Maybe<ResolversTypes['Event']>>>,
-    ParentType,
-    ContextType,
-    Partial<QueryGetEventsArgs>
-  >;
-  getLocationById?: Resolver<
-    Maybe<ResolversTypes['Location']>,
-    ParentType,
-    ContextType,
-    RequireFields<QueryGetLocationByIdArgs, 'id'>
-  >;
-  getLocations?: Resolver<Maybe<Array<Maybe<ResolversTypes['Location']>>>, ParentType, ContextType>;
-  getLocationsByIds?: Resolver<
-    Maybe<Array<Maybe<ResolversTypes['Location']>>>,
-    ParentType,
-    ContextType,
-    RequireFields<QueryGetLocationsByIdsArgs, 'ids'>
-  >;
-  getNewlyCreatedNearbyEvents?: Resolver<
-    Array<ResolversTypes['Event']>,
-    ParentType,
-    ContextType,
-    RequireFields<QueryGetNewlyCreatedNearbyEventsArgs, 'latitude' | 'longitude'>
-  >;
-  getTodaysNearbyEvents?: Resolver<
-    Maybe<Array<ResolversTypes['Event']>>,
-    ParentType,
-    ContextType,
-    RequireFields<QueryGetTodaysNearbyEventsArgs, 'latitude' | 'longitude'>
-  >;
-  getUserById?: Resolver<
-    Maybe<ResolversTypes['User']>,
-    ParentType,
-    ContextType,
-    RequireFields<QueryGetUserByIdArgs, 'id'>
-  >;
-  getUsers?: Resolver<Maybe<Array<Maybe<ResolversTypes['User']>>>, ParentType, ContextType>;
-  getUsersByIds?: Resolver<
-    Maybe<Array<Maybe<ResolversTypes['User']>>>,
-    ParentType,
-    ContextType,
-    RequireFields<QueryGetUsersByIdsArgs, 'ids'>
-  >;
+  events?: Resolver<Maybe<Array<Maybe<ResolversTypes['Event']>>>, ParentType, ContextType, Partial<QueryEventsArgs>>;
   interestingNearbyEvents?: Resolver<
     Maybe<Array<ResolversTypes['Event']>>,
     ParentType,
     ContextType,
     RequireFields<QueryInterestingNearbyEventsArgs, 'latitude' | 'longitude' | 'userId'>
+  >;
+  locationById?: Resolver<
+    Maybe<ResolversTypes['Location']>,
+    ParentType,
+    ContextType,
+    RequireFields<QueryLocationByIdArgs, 'id'>
+  >;
+  locations?: Resolver<Maybe<Array<Maybe<ResolversTypes['Location']>>>, ParentType, ContextType>;
+  locationsByIds?: Resolver<
+    Maybe<Array<Maybe<ResolversTypes['Location']>>>,
+    ParentType,
+    ContextType,
+    RequireFields<QueryLocationsByIdsArgs, 'ids'>
+  >;
+  newlyCreatedNearbyEvents?: Resolver<
+    Array<ResolversTypes['Event']>,
+    ParentType,
+    ContextType,
+    RequireFields<QueryNewlyCreatedNearbyEventsArgs, 'latitude' | 'longitude'>
+  >;
+  todaysNearbyEvents?: Resolver<
+    Maybe<Array<ResolversTypes['Event']>>,
+    ParentType,
+    ContextType,
+    RequireFields<QueryTodaysNearbyEventsArgs, 'latitude' | 'longitude'>
+  >;
+  userById?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType, RequireFields<QueryUserByIdArgs, 'id'>>;
+  users?: Resolver<Maybe<Array<Maybe<ResolversTypes['User']>>>, ParentType, ContextType>;
+  usersByIds?: Resolver<
+    Maybe<Array<Maybe<ResolversTypes['User']>>>,
+    ParentType,
+    ContextType,
+    RequireFields<QueryUsersByIdsArgs, 'ids'>
   >;
 };
 

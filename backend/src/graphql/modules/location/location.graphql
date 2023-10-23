@@ -8,3 +8,10 @@ type Location {
   latitude: Float!
   longitude: Float!
 }
+
+extend type Query {
+  locations: [Location]
+  locationById(id: Int!): Location
+  locationsByIds(ids: [Int!]!): [Location]
+}
+

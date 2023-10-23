@@ -3,3 +3,9 @@ type EventType {
   name: String!
 }
 
+extend type Query {
+  eventTypes: [EventType]
+  eventTypeById(id: Int!): EventType
+  eventTypesByIds(ids: [Int!]!): [EventType]
+}
+

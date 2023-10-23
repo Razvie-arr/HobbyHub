@@ -6,11 +6,11 @@ import {
   Event,
   EventType,
   Location,
-  QueryGetEventByIdArgs,
-  QueryGetEventsArgs,
-  QueryGetNewlyCreatedNearbyEventsArgs,
-  QueryGetTodaysNearbyEventsArgs,
+  QueryEventByIdArgs,
+  QueryEventsArgs,
   QueryInterestingNearbyEventsArgs,
+  QueryNewlyCreatedNearbyEventsArgs,
+  QueryTodaysNearbyEventsArgs,
   User,
 } from '../../../types';
 
@@ -32,7 +32,7 @@ const HAVERSINE_FORMULA = ` (
 const DEFAULT_DISTANCE = 20;
 const DEFAULT_LIMIT = 5;
 
-export const getEventsResolver: ContextualResolver<Array<Event>, QueryGetEventsArgs> = async (
+export const eventsResolver: ContextualResolver<Array<Event>, QueryEventsArgs> = async (
   _,
   { offset, limit },
   { dataSources },
@@ -59,7 +59,7 @@ export const eventParticipantsResolver: ContextualResolverWithParent<Array<User>
   { dataSources },
 ) => await dataSources.sql.events.getEventParticipants(parent.id);
 
-export const getEventByIdResolver: ContextualNullableResolver<Event, QueryGetEventByIdArgs> = async (
+export const eventByIdResolver: ContextualNullableResolver<Event, QueryEventByIdArgs> = async (
   _,
   { id },
   { dataSources },
@@ -87,9 +87,9 @@ const locationAwareEventAttributes = [
   'longitude',
 ];
 
-export const getNewlyCreatedNearbyEventsResolver = async (
+export const newlyCreatedNearbyEventsResolver = async (
   _: unknown,
-  { longitude, latitude, offset, limit }: QueryGetNewlyCreatedNearbyEventsArgs,
+  { longitude, latitude, offset, limit }: QueryNewlyCreatedNearbyEventsArgs,
   { dataSources }: CustomContext,
 ): Promise<Array<Event>> => {
   const distance = dataSources.sql.db.query.raw(HAVERSINE_FORMULA, [latitude, longitude, latitude]);
@@ -103,9 +103,9 @@ export const getNewlyCreatedNearbyEventsResolver = async (
   return limit ? result.limit(limit) : result;
 };
 
-export const getTodaysNearbyEventsResolver = async (
+export const todaysNearbyEventsResolver = async (
   _: unknown,
-  { longitude, latitude, offset, limit }: QueryGetTodaysNearbyEventsArgs,
+  { longitude, latitude, offset, limit }: QueryTodaysNearbyEventsArgs,
   { dataSources }: CustomContext,
 ): Promise<Array<Event>> => {
   const distance = dataSources.sql.db.query.raw(HAVERSINE_FORMULA, [latitude, longitude, latitude]);

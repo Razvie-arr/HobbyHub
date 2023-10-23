@@ -109,72 +109,47 @@ export type MutationVerifyArgs = {
 
 export type Query = {
   __typename?: 'Query';
-  getEventById?: Maybe<Event>;
-  getEventByIds?: Maybe<Array<Maybe<Event>>>;
-  getEventTypeById?: Maybe<EventType>;
-  getEventTypes?: Maybe<Array<Maybe<EventType>>>;
-  getEventTypesByIds?: Maybe<Array<Maybe<EventType>>>;
-  getEvents?: Maybe<Array<Maybe<Event>>>;
-  getLocationById?: Maybe<Location>;
-  getLocations?: Maybe<Array<Maybe<Location>>>;
-  getLocationsByIds?: Maybe<Array<Maybe<Location>>>;
-  getNewlyCreatedNearbyEvents: Array<Event>;
-  getTodaysNearbyEvents?: Maybe<Array<Event>>;
-  getUserById?: Maybe<User>;
-  getUsers?: Maybe<Array<Maybe<User>>>;
-  getUsersByIds?: Maybe<Array<Maybe<User>>>;
+  _empty?: Maybe<Scalars['String']['output']>;
+  eventById?: Maybe<Event>;
+  eventByIds?: Maybe<Array<Maybe<Event>>>;
+  eventTypeById?: Maybe<EventType>;
+  eventTypes?: Maybe<Array<Maybe<EventType>>>;
+  eventTypesByIds?: Maybe<Array<Maybe<EventType>>>;
+  events?: Maybe<Array<Maybe<Event>>>;
   interestingNearbyEvents?: Maybe<Array<Event>>;
+  locationById?: Maybe<Location>;
+  locations?: Maybe<Array<Maybe<Location>>>;
+  locationsByIds?: Maybe<Array<Maybe<Location>>>;
+  newlyCreatedNearbyEvents: Array<Event>;
+  todaysNearbyEvents?: Maybe<Array<Event>>;
+  userById?: Maybe<User>;
+  users?: Maybe<Array<Maybe<User>>>;
+  usersByIds?: Maybe<Array<Maybe<User>>>;
 };
 
-export type QueryGetEventByIdArgs = {
+export type Query_EmptyArgs = {
+  nothing?: InputMaybe<Scalars['String']['input']>;
+};
+
+export type QueryEventByIdArgs = {
   id: Scalars['Int']['input'];
 };
 
-export type QueryGetEventByIdsArgs = {
+export type QueryEventByIdsArgs = {
   ids: Array<Scalars['Int']['input']>;
 };
 
-export type QueryGetEventTypeByIdArgs = {
+export type QueryEventTypeByIdArgs = {
   id: Scalars['Int']['input'];
 };
 
-export type QueryGetEventTypesByIdsArgs = {
+export type QueryEventTypesByIdsArgs = {
   ids: Array<Scalars['Int']['input']>;
 };
 
-export type QueryGetEventsArgs = {
+export type QueryEventsArgs = {
   limit?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
-};
-
-export type QueryGetLocationByIdArgs = {
-  id: Scalars['Int']['input'];
-};
-
-export type QueryGetLocationsByIdsArgs = {
-  ids: Array<Scalars['Int']['input']>;
-};
-
-export type QueryGetNewlyCreatedNearbyEventsArgs = {
-  latitude: Scalars['Float']['input'];
-  limit?: InputMaybe<Scalars['Int']['input']>;
-  longitude: Scalars['Float']['input'];
-  offset?: InputMaybe<Scalars['Int']['input']>;
-};
-
-export type QueryGetTodaysNearbyEventsArgs = {
-  latitude: Scalars['Float']['input'];
-  limit?: InputMaybe<Scalars['Int']['input']>;
-  longitude: Scalars['Float']['input'];
-  offset?: InputMaybe<Scalars['Int']['input']>;
-};
-
-export type QueryGetUserByIdArgs = {
-  id: Scalars['Int']['input'];
-};
-
-export type QueryGetUsersByIdsArgs = {
-  ids: Array<Scalars['Int']['input']>;
 };
 
 export type QueryInterestingNearbyEventsArgs = {
@@ -183,6 +158,36 @@ export type QueryInterestingNearbyEventsArgs = {
   longitude: Scalars['Float']['input'];
   offset?: InputMaybe<Scalars['Int']['input']>;
   userId: Scalars['Int']['input'];
+};
+
+export type QueryLocationByIdArgs = {
+  id: Scalars['Int']['input'];
+};
+
+export type QueryLocationsByIdsArgs = {
+  ids: Array<Scalars['Int']['input']>;
+};
+
+export type QueryNewlyCreatedNearbyEventsArgs = {
+  latitude: Scalars['Float']['input'];
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  longitude: Scalars['Float']['input'];
+  offset?: InputMaybe<Scalars['Int']['input']>;
+};
+
+export type QueryTodaysNearbyEventsArgs = {
+  latitude: Scalars['Float']['input'];
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  longitude: Scalars['Float']['input'];
+  offset?: InputMaybe<Scalars['Int']['input']>;
+};
+
+export type QueryUserByIdArgs = {
+  id: Scalars['Int']['input'];
+};
+
+export type QueryUsersByIdsArgs = {
+  ids: Array<Scalars['Int']['input']>;
 };
 
 export type User = {
@@ -227,14 +232,14 @@ export type MutationMutationVariables = Exact<{
 
 export type MutationMutation = { __typename?: 'Mutation'; verify: string };
 
-export type GetEventsQueryVariables = Exact<{
+export type EventsQueryVariables = Exact<{
   offset?: InputMaybe<Scalars['Int']['input']>;
   limit?: InputMaybe<Scalars['Int']['input']>;
 }>;
 
-export type GetEventsQuery = {
+export type EventsQuery = {
   __typename?: 'Query';
-  getEvents?: Array<{
+  events?: Array<{
     __typename?: 'Event';
     id: number;
     name: string;
@@ -260,16 +265,16 @@ export type GetEventsQuery = {
   } | null> | null;
 };
 
-export type GetTodaysNearbyEventsQueryVariables = Exact<{
+export type TodaysNearbyEventsQueryVariables = Exact<{
   longitude: Scalars['Float']['input'];
   latitude: Scalars['Float']['input'];
   offset?: InputMaybe<Scalars['Int']['input']>;
   limit?: InputMaybe<Scalars['Int']['input']>;
 }>;
 
-export type GetTodaysNearbyEventsQuery = {
+export type TodaysNearbyEventsQuery = {
   __typename?: 'Query';
-  getTodaysNearbyEvents?: Array<{
+  todaysNearbyEvents?: Array<{
     __typename?: 'Event';
     id: number;
     name: string;
@@ -295,7 +300,7 @@ export type GetTodaysNearbyEventsQuery = {
   }> | null;
 };
 
-export type GetInterestingNearbyEventsQueryVariables = Exact<{
+export type InterestingNearbyEventsQueryVariables = Exact<{
   longitude: Scalars['Float']['input'];
   latitude: Scalars['Float']['input'];
   userId: Scalars['Int']['input'];
@@ -303,7 +308,7 @@ export type GetInterestingNearbyEventsQueryVariables = Exact<{
   limit?: InputMaybe<Scalars['Int']['input']>;
 }>;
 
-export type GetInterestingNearbyEventsQuery = {
+export type InterestingNearbyEventsQuery = {
   __typename?: 'Query';
   interestingNearbyEvents?: Array<{
     __typename?: 'Event';
@@ -331,16 +336,16 @@ export type GetInterestingNearbyEventsQuery = {
   }> | null;
 };
 
-export type GetNewlyCreatedNearbyEventsQueryVariables = Exact<{
+export type NewlyCreatedNearbyEventsQueryVariables = Exact<{
   longitude: Scalars['Float']['input'];
   latitude: Scalars['Float']['input'];
   offset?: InputMaybe<Scalars['Int']['input']>;
   limit?: InputMaybe<Scalars['Int']['input']>;
 }>;
 
-export type GetNewlyCreatedNearbyEventsQuery = {
+export type NewlyCreatedNearbyEventsQuery = {
   __typename?: 'Query';
-  getNewlyCreatedNearbyEvents: Array<{
+  newlyCreatedNearbyEvents: Array<{
     __typename?: 'Event';
     id: number;
     name: string;
@@ -531,13 +536,13 @@ export const MutationDocument = {
     },
   ],
 } as unknown as DocumentNode<MutationMutation, MutationMutationVariables>;
-export const GetEventsDocument = {
+export const EventsDocument = {
   kind: 'Document',
   definitions: [
     {
       kind: 'OperationDefinition',
       operation: 'query',
-      name: { kind: 'Name', value: 'GetEvents' },
+      name: { kind: 'Name', value: 'Events' },
       variableDefinitions: [
         {
           kind: 'VariableDefinition',
@@ -555,7 +560,7 @@ export const GetEventsDocument = {
         selections: [
           {
             kind: 'Field',
-            name: { kind: 'Name', value: 'getEvents' },
+            name: { kind: 'Name', value: 'events' },
             arguments: [
               {
                 kind: 'Argument',
@@ -635,14 +640,14 @@ export const GetEventsDocument = {
       },
     },
   ],
-} as unknown as DocumentNode<GetEventsQuery, GetEventsQueryVariables>;
-export const GetTodaysNearbyEventsDocument = {
+} as unknown as DocumentNode<EventsQuery, EventsQueryVariables>;
+export const TodaysNearbyEventsDocument = {
   kind: 'Document',
   definitions: [
     {
       kind: 'OperationDefinition',
       operation: 'query',
-      name: { kind: 'Name', value: 'GetTodaysNearbyEvents' },
+      name: { kind: 'Name', value: 'TodaysNearbyEvents' },
       variableDefinitions: [
         {
           kind: 'VariableDefinition',
@@ -670,7 +675,7 @@ export const GetTodaysNearbyEventsDocument = {
         selections: [
           {
             kind: 'Field',
-            name: { kind: 'Name', value: 'getTodaysNearbyEvents' },
+            name: { kind: 'Name', value: 'todaysNearbyEvents' },
             arguments: [
               {
                 kind: 'Argument',
@@ -760,14 +765,14 @@ export const GetTodaysNearbyEventsDocument = {
       },
     },
   ],
-} as unknown as DocumentNode<GetTodaysNearbyEventsQuery, GetTodaysNearbyEventsQueryVariables>;
-export const GetInterestingNearbyEventsDocument = {
+} as unknown as DocumentNode<TodaysNearbyEventsQuery, TodaysNearbyEventsQueryVariables>;
+export const InterestingNearbyEventsDocument = {
   kind: 'Document',
   definitions: [
     {
       kind: 'OperationDefinition',
       operation: 'query',
-      name: { kind: 'Name', value: 'GetInterestingNearbyEvents' },
+      name: { kind: 'Name', value: 'InterestingNearbyEvents' },
       variableDefinitions: [
         {
           kind: 'VariableDefinition',
@@ -895,14 +900,14 @@ export const GetInterestingNearbyEventsDocument = {
       },
     },
   ],
-} as unknown as DocumentNode<GetInterestingNearbyEventsQuery, GetInterestingNearbyEventsQueryVariables>;
-export const GetNewlyCreatedNearbyEventsDocument = {
+} as unknown as DocumentNode<InterestingNearbyEventsQuery, InterestingNearbyEventsQueryVariables>;
+export const NewlyCreatedNearbyEventsDocument = {
   kind: 'Document',
   definitions: [
     {
       kind: 'OperationDefinition',
       operation: 'query',
-      name: { kind: 'Name', value: 'GetNewlyCreatedNearbyEvents' },
+      name: { kind: 'Name', value: 'NewlyCreatedNearbyEvents' },
       variableDefinitions: [
         {
           kind: 'VariableDefinition',
@@ -930,7 +935,7 @@ export const GetNewlyCreatedNearbyEventsDocument = {
         selections: [
           {
             kind: 'Field',
-            name: { kind: 'Name', value: 'getNewlyCreatedNearbyEvents' },
+            name: { kind: 'Name', value: 'newlyCreatedNearbyEvents' },
             arguments: [
               {
                 kind: 'Argument',
@@ -1020,4 +1025,4 @@ export const GetNewlyCreatedNearbyEventsDocument = {
       },
     },
   ],
-} as unknown as DocumentNode<GetNewlyCreatedNearbyEventsQuery, GetNewlyCreatedNearbyEventsQueryVariables>;
+} as unknown as DocumentNode<NewlyCreatedNearbyEventsQuery, NewlyCreatedNearbyEventsQueryVariables>;

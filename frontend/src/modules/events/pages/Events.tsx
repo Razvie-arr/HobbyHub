@@ -7,12 +7,7 @@ import { useGeolocation } from '../../../shared/hooks/useGeolocation';
 import { QueryResult } from '../../../shared/layout';
 import { useAuth } from '../../auth';
 import { EventsMapButton, EventsSection } from '../components';
-import {
-  GET_EVENTS,
-  GET_INTERESTING_NEARBY_EVENTS,
-  GET_NEWLY_CREATED_NEARBY_EVENTS,
-  GET_TODAYS_NEARBY_EVENTS,
-} from '../queries';
+import { EVENTS, INTERESTING_NEARBY_EVENTS, NEWLY_CREATED_NEARBY_EVENTS, TODAYS_NEARBY_EVENTS } from '../queries';
 import { EventProps } from '../types';
 
 interface LocationAwareEventsProps {
@@ -36,21 +31,21 @@ const LocationAwareEvents = ({ geolocation, userId }: LocationAwareEventsProps) 
     coords: { latitude, longitude },
   } = geolocation;
 
-  const todaysNearbyEventsQueryResult = useQuery(GET_TODAYS_NEARBY_EVENTS, {
+  const todaysNearbyEventsQueryResult = useQuery(TODAYS_NEARBY_EVENTS, {
     variables: { offset: 0, limit: 4, longitude, latitude },
   });
-  const interestingNearbyEventsQueryResult = useQuery(GET_INTERESTING_NEARBY_EVENTS, {
+  const interestingNearbyEventsQueryResult = useQuery(INTERESTING_NEARBY_EVENTS, {
     variables: { offset: 0, limit: 4, longitude, latitude, userId },
   });
-  const newlyCreatedNearbyEventsQueryResult = useQuery(GET_NEWLY_CREATED_NEARBY_EVENTS, {
+  const newlyCreatedNearbyEventsQueryResult = useQuery(NEWLY_CREATED_NEARBY_EVENTS, {
     variables: { offset: 0, limit: 4, longitude, latitude },
   });
 
   const allEvents: Array<EventProps> = Object.values(
     [
-      ...(todaysNearbyEventsQueryResult.data?.getTodaysNearbyEvents ?? []),
+      ...(todaysNearbyEventsQueryResult.data?.todaysNearbyEvents ?? []),
       ...(interestingNearbyEventsQueryResult.data?.interestingNearbyEvents ?? []),
-      ...(newlyCreatedNearbyEventsQueryResult.data?.getNewlyCreatedNearbyEvents ?? []),
+      ...(newlyCreatedNearbyEventsQueryResult.data?.newlyCreatedNearbyEvents ?? []),
     ].reduce((acc, obj) => ({ ...acc, [obj.id]: obj }), {}),
   );
 
@@ -65,7 +60,7 @@ const LocationAwareEvents = ({ geolocation, userId }: LocationAwareEventsProps) 
               <QueryResult
                 queryResult={todaysNearbyEventsQueryResult}
                 render={(data, otherResults) => {
-                  const events = data.getTodaysNearbyEvents;
+                  const events = data.todaysNearbyEvents;
                   return events && events.length > 0 ? (
                     <EventsSection
                       events={events}
@@ -109,7 +104,7 @@ const LocationAwareEvents = ({ geolocation, userId }: LocationAwareEventsProps) 
               <QueryResult
                 queryResult={newlyCreatedNearbyEventsQueryResult}
                 render={(data, otherResults) => {
-                  const events = data.getNewlyCreatedNearbyEvents?.filter((value): value is NonNullable<typeof value> =>
+                  const events = data.newlyCreatedNearbyEvents?.filter((value): value is NonNullable<typeof value> =>
                     Boolean(value),
                   );
                   return events && events.length > 0 ? (
@@ -133,7 +128,7 @@ const LocationAwareEvents = ({ geolocation, userId }: LocationAwareEventsProps) 
 };
 
 const LocationUnawareEvents = () => {
-  const getEventsQueryResult = useQuery(GET_EVENTS, {
+  const getEventsQueryResult = useQuery(EVENTS, {
     variables: { offset: 0, limit: 4 },
   });
 
@@ -147,7 +142,7 @@ const LocationUnawareEvents = () => {
               <QueryResult
                 queryResult={getEventsQueryResult}
                 render={(data, otherResults) => {
-                  const events = data.getEvents?.filter((value): value is NonNullable<typeof value> => Boolean(value));
+                  const events = data.events?.filter((value): value is NonNullable<typeof value> => Boolean(value));
                   return events && events.length > 0 ? (
                     <EventsSection
                       events={events}

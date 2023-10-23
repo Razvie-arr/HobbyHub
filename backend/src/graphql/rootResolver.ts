@@ -2,14 +2,14 @@ import { Resolvers } from '../types';
 
 import {
   eventAuthorResolver,
+  eventByIdResolver,
   eventEventTypesResolver,
   eventLocationResolver,
   eventParticipantsResolver,
-  getEventByIdResolver,
-  getEventsResolver,
-  getNewlyCreatedNearbyEventsResolver,
-  getTodaysNearbyEventsResolver,
+  eventsResolver,
   interestingNearbyEventsResolver,
+  newlyCreatedNearbyEventsResolver,
+  todaysNearbyEventsResolver,
 } from './modules/event/eventResolvers';
 import { eventTypeResolver, eventTypesResolver } from './modules/eventType/eventTypeResolvers';
 import { locationResolver, locationsResolver } from './modules/location/locationResolvers';
@@ -23,17 +23,17 @@ import {
 
 export const rootResolver: Resolvers = {
   Query: {
-    getEventById: getEventByIdResolver,
-    getEvents: getEventsResolver,
+    eventById: eventByIdResolver,
+    events: eventsResolver,
 
-    getEventTypeById: eventTypeResolver,
-    getEventTypes: eventTypesResolver,
+    eventTypeById: eventTypeResolver,
+    eventTypes: eventTypesResolver,
 
-    getLocationById: locationResolver,
-    getLocations: locationsResolver,
+    locationById: locationResolver,
+    locations: locationsResolver,
 
-    getNewlyCreatedNearbyEvents: getNewlyCreatedNearbyEventsResolver,
-    getTodaysNearbyEvents: getTodaysNearbyEventsResolver,
+    newlyCreatedNearbyEvents: newlyCreatedNearbyEventsResolver,
+    todaysNearbyEvents: todaysNearbyEventsResolver,
     interestingNearbyEvents: interestingNearbyEventsResolver,
   },
 

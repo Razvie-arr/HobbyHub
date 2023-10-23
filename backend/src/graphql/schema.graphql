@@ -1,15 +1,5 @@
 type Query {
-  getEventTypes: [EventType]
-  getEventTypeById(id: Int!): EventType
-  getEventTypesByIds(ids: [Int!]!): [EventType]
-
-  getLocations: [Location]
-  getLocationById(id: Int!): Location
-  getLocationsByIds(ids: [Int!]!): [Location]
-
-  getUsers: [User]
-  getUserById(id: Int!): User
-  getUsersByIds(ids: [Int!]!): [User]
+  _empty(nothing: String): String
 }
 
 type Mutation {

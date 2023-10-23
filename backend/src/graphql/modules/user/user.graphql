@@ -1,3 +1,9 @@
+extend type Query {
+  users: [User]
+  userById(id: Int!): User
+  usersByIds(ids: [Int!]!): [User]
+}
+
 extend type Mutation {
   signIn(email: String!, password: String!): AuthInfo!
   signUp(email: String!, password: String!, name: String!): AuthInfo!
@@ -24,3 +30,4 @@ type AuthInfo {
   user: AuthUser!
   token: String!
 }
+

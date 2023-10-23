@@ -1,8 +1,8 @@
 import { gql } from '../../gql';
 
-export const GET_EVENTS = gql(`
-  query GetEvents($offset: Int, $limit: Int) {
-    getEvents(offset: $offset, limit: $limit) {
+export const EVENTS = gql(`
+  query Events($offset: Int, $limit: Int) {
+    events(offset: $offset, limit: $limit) {
       id
       name
       start_datetime
@@ -36,9 +36,9 @@ export const GET_EVENTS = gql(`
   }
 `);
 
-export const GET_TODAYS_NEARBY_EVENTS = gql(`
-  query GetTodaysNearbyEvents($longitude: Float!, $latitude: Float!, $offset: Int, $limit: Int) {
-    getTodaysNearbyEvents(longitude: $longitude, latitude: $latitude, offset: $offset, limit: $limit) {
+export const TODAYS_NEARBY_EVENTS = gql(`
+  query TodaysNearbyEvents($longitude: Float!, $latitude: Float!, $offset: Int, $limit: Int) {
+    todaysNearbyEvents(longitude: $longitude, latitude: $latitude, offset: $offset, limit: $limit) {
       id
       name
       start_datetime
@@ -72,8 +72,8 @@ export const GET_TODAYS_NEARBY_EVENTS = gql(`
   }
 `);
 
-export const GET_INTERESTING_NEARBY_EVENTS = gql(`
-  query GetInterestingNearbyEvents($longitude: Float!, $latitude: Float!, $userId: Int! $offset: Int, $limit: Int) {
+export const INTERESTING_NEARBY_EVENTS = gql(`
+  query InterestingNearbyEvents($longitude: Float!, $latitude: Float!, $userId: Int! $offset: Int, $limit: Int) {
     interestingNearbyEvents(longitude: $longitude, latitude: $latitude, userId: $userId, offset: $offset, limit: $limit) {
       id
       name
@@ -108,9 +108,9 @@ export const GET_INTERESTING_NEARBY_EVENTS = gql(`
   }
 `);
 
-export const GET_NEWLY_CREATED_NEARBY_EVENTS = gql(`
-  query GetNewlyCreatedNearbyEvents($longitude: Float!, $latitude: Float!, $offset: Int, $limit: Int) {
-    getNewlyCreatedNearbyEvents(longitude: $longitude, latitude: $latitude, offset: $offset, limit: $limit) {
+export const NEWLY_CREATED_NEARBY_EVENTS = gql(`
+  query NewlyCreatedNearbyEvents($longitude: Float!, $latitude: Float!, $offset: Int, $limit: Int) {
+    newlyCreatedNearbyEvents(longitude: $longitude, latitude: $latitude, offset: $offset, limit: $limit) {
       id
       name
       start_datetime

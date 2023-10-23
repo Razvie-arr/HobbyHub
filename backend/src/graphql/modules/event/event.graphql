@@ -1,13 +1,3 @@
-extend type Query {
-  getEvents(offset: Int, limit: Int): [Event]
-  getEventById(id: Int!): Event
-  getEventByIds(ids: [Int!]!): [Event]
-
-  getNewlyCreatedNearbyEvents(longitude: Float!, latitude: Float!, offset: Int, limit: Int): [Event!]!
-  getTodaysNearbyEvents(longitude: Float!, latitude: Float!, offset: Int, limit: Int): [Event!]
-  interestingNearbyEvents(longitude: Float!, latitude: Float!, userId: Int!, offset: Int, limit: Int): [Event!]
-}
-
 type Event {
   id: Int!
   name: String!
@@ -27,5 +17,15 @@ type Event {
   event_types: [EventType!]!
   location: Location!
   participants: [User!]!
+}
+
+extend type Query {
+  events(offset: Int, limit: Int): [Event]
+  eventById(id: Int!): Event
+  eventByIds(ids: [Int!]!): [Event]
+
+  newlyCreatedNearbyEvents(longitude: Float!, latitude: Float!, offset: Int, limit: Int): [Event!]!
+  todaysNearbyEvents(longitude: Float!, latitude: Float!, offset: Int, limit: Int): [Event!]
+  interestingNearbyEvents(longitude: Float!, latitude: Float!, userId: Int!, offset: Int, limit: Int): [Event!]
 }
 

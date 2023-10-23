@@ -56,21 +56,22 @@ type Mutation {
 }
 
 type Query {
-  getEventById(id: Int!): Event
-  getEventByIds(ids: [Int!]!): [Event]
-  getEventTypeById(id: Int!): EventType
-  getEventTypes: [EventType]
-  getEventTypesByIds(ids: [Int!]!): [EventType]
-  getEvents(limit: Int, offset: Int): [Event]
-  getLocationById(id: Int!): Location
-  getLocations: [Location]
-  getLocationsByIds(ids: [Int!]!): [Location]
-  getNewlyCreatedNearbyEvents(latitude: Float!, limit: Int, longitude: Float!, offset: Int): [Event!]!
-  getTodaysNearbyEvents(latitude: Float!, limit: Int, longitude: Float!, offset: Int): [Event!]
-  getUserById(id: Int!): User
-  getUsers: [User]
-  getUsersByIds(ids: [Int!]!): [User]
+  _empty(nothing: String): String
+  eventById(id: Int!): Event
+  eventByIds(ids: [Int!]!): [Event]
+  eventTypeById(id: Int!): EventType
+  eventTypes: [EventType]
+  eventTypesByIds(ids: [Int!]!): [EventType]
+  events(limit: Int, offset: Int): [Event]
   interestingNearbyEvents(latitude: Float!, limit: Int, longitude: Float!, offset: Int, userId: Int!): [Event!]
+  locationById(id: Int!): Location
+  locations: [Location]
+  locationsByIds(ids: [Int!]!): [Location]
+  newlyCreatedNearbyEvents(latitude: Float!, limit: Int, longitude: Float!, offset: Int): [Event!]!
+  todaysNearbyEvents(latitude: Float!, limit: Int, longitude: Float!, offset: Int): [Event!]
+  userById(id: Int!): User
+  users: [User]
+  usersByIds(ids: [Int!]!): [User]
 }
 
 type User {
