@@ -1,7 +1,6 @@
 import { Route, Routes as RouterRoutes } from 'react-router-dom';
 
 import { Events } from 'src/modules/events';
-import { HomePage } from 'src/modules/home';
 import { NotFoundPage } from 'src/shared/navigation';
 
 import { VerifyUserPage } from './modules/auth';

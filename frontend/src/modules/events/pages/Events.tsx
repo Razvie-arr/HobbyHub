@@ -35,6 +35,7 @@ const LocationAwareEvents = ({ geolocation, userId }: LocationAwareEventsProps) 
   const {
     coords: { latitude, longitude },
   } = geolocation;
+
   const todaysNearbyEventsQueryResult = useQuery(GET_TODAYS_NEARBY_EVENTS, {
     variables: { offset: 0, limit: 4, longitude, latitude },
   });
@@ -69,7 +70,7 @@ const LocationAwareEvents = ({ geolocation, userId }: LocationAwareEventsProps) 
                     <EventsSection
                       events={events}
                       handleShowMore={() => {
-                        void otherResults.fetchMore({ variables: { offset: events.length } });
+                        void otherResults.fetchMore({ variables: { offset: events.length + 1 } });
                       }}
                     />
                   ) : (
@@ -92,7 +93,7 @@ const LocationAwareEvents = ({ geolocation, userId }: LocationAwareEventsProps) 
                     <EventsSection
                       events={events}
                       handleShowMore={() => {
-                        void otherResults.fetchMore({ variables: { offset: events.length } });
+                        void otherResults.fetchMore({ variables: { offset: events.length + 1 } });
                       }}
                     />
                   ) : (
@@ -115,7 +116,7 @@ const LocationAwareEvents = ({ geolocation, userId }: LocationAwareEventsProps) 
                     <EventsSection
                       events={events}
                       handleShowMore={() => {
-                        void otherResults.fetchMore({ variables: { offset: events.length } });
+                        void otherResults.fetchMore({ variables: { offset: events.length + 1 } });
                       }}
                     />
                   ) : (
@@ -168,8 +169,11 @@ const LocationUnawareEvents = () => {
 };
 
 export const Events = () => {
-  const geolocation = useGeolocation();
+  const { geolocation, isLoading } = useGeolocation();
   const { user } = useAuth();
+  if (isLoading) {
+    return null;
+  }
   return geolocation && user ? (
     <LocationAwareEvents geolocation={geolocation} userId={user.id} />
   ) : (

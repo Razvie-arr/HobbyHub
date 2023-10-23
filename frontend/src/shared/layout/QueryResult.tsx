@@ -22,7 +22,7 @@ export const QueryResult = <T, V extends OperationVariables>({ queryResult, rend
   }
   if (queryResult.loading) {
     return (
-      <Flex justify="center" alignItems="center">
+      <Flex justify="center" alignItems="center" width="100%">
         <Spinner size="xl" />
       </Flex>
     );

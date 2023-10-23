@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 
 export const useGeolocation = () => {
+  const [isLoading, setIsLoading] = useState(true);
   const [geolocation, setGeolocation] = useState<GeolocationPosition>();
   useEffect(() => {
     if ('geolocation' in navigator) {
@@ -8,7 +9,8 @@ export const useGeolocation = () => {
         setGeolocation(position);
       });
     }
+    setIsLoading(false);
   }, []);
-  return geolocation;
+  return { geolocation, isLoading };
 };
 

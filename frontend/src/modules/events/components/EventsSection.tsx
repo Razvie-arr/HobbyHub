@@ -1,4 +1,4 @@
-import { Center } from '@chakra-ui/react';
+import { Box } from '@chakra-ui/react';
 
 import { Button, Flex } from 'src/shared/design-system';
 
@@ -10,19 +10,17 @@ interface EventsSectionProps extends WithEvents {
 }
 
 export const EventsSection = ({ events, handleShowMore }: EventsSectionProps) => (
-  <>
-    <Center>
-      <Flex flexWrap="wrap" columnGap="4">
-        {events.map((value) => (
-          <EventCard key={value.id} event={value} />
-        ))}
-      </Flex>
-    </Center>
+  <Box>
+    <Flex flexWrap="wrap" columnGap="4">
+      {events.map((value) => (
+        <EventCard key={value.id} event={value} />
+      ))}
+    </Flex>
     <Flex justify="center">
       <Button size="lg" colorScheme="purple" onClick={handleShowMore}>
         Show more
       </Button>
     </Flex>
-  </>
+  </Box>
 );
 

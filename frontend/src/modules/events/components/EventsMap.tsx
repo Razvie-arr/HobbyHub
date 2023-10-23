@@ -4,7 +4,7 @@ import { GoogleMap, InfoWindowF, MarkerF, useLoadScript } from '@react-google-ma
 
 import { EventProps, WithEvents } from '../types';
 
-import { EventCard } from './EventCard';
+import { EventCard } from './EventCard/EventCard';
 
 export const EventsMap = (props: WithEvents) => {
   const { isLoaded } = useLoadScript({

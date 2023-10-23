@@ -1,28 +1,21 @@
-import { Card, CardBody, Heading, HStack, Icon, Image, Stack, Tag, Text, Tooltip } from '@chakra-ui/react';
-import { FaCalendar, FaLocationDot, FaPeopleGroup } from 'react-icons/fa6';
+import { Card, CardBody, Heading, HStack, Image, Stack, Tag, Text, Tooltip } from '@chakra-ui/react';
 
 import postcardBackgroundImageUrl from 'src/assets/img/cute-purple-aesthetic-abstract-minimal-background-perfect-for-wallpaper-backdrop-postcard-background-vector.jpg';
 import { Button } from 'src/shared/design-system';
 
-import { EventTypeName, WithEvent } from '../types';
+import { EventTypeName, WithEvent } from '../../types';
+import { EventStatusTag } from '../EventStatusTag';
+import { EventTypeIcon } from '../EventTypeIcon';
 
-import { EventStatusTag } from './EventStatusTag';
-import { EventTypeIcon } from './EventTypeIcon';
-
-const localeTimeStringOptions = {
-  hourCycle: 'h24',
-  hour: '2-digit',
-  minute: '2-digit',
-} as const;
+import { EventAddress } from './EventAddress';
+import { EventDateTime } from './EventDateTime';
+import { EventParticipants } from './EventParticipants';
 
 interface EventCardProps extends WithEvent {
   simplified?: boolean;
 }
 
 export const EventCard = ({ event, simplified: simpleUI }: EventCardProps) => {
-  const { locale } = Intl.DateTimeFormat().resolvedOptions();
-  const eventStartDate = new Date(event.start_datetime);
-  const eventEndDate = new Date(event.start_datetime);
   const isFullCapacity = event.participants.length === event.capacity;
   return (
     <Card
@@ -68,31 +61,9 @@ export const EventCard = ({ event, simplified: simpleUI }: EventCardProps) => {
               Hosted by: {event.author.name}
             </Text>
             <Stack spacing="2">
-              <Stack direction="row">
-                <Icon as={FaCalendar} color="purple.500" />
-                <Text fontSize="sm" fontWeight="medium">
-                  {eventStartDate.toLocaleString(locale, { day: '2-digit' })}{' '}
-                  {eventStartDate.toLocaleString(locale, { month: 'long' })}
-                  {' • '}
-                  {eventStartDate.toLocaleTimeString(locale, localeTimeStringOptions)}
-                  {' - '}
-                  {eventEndDate.toLocaleTimeString(locale, localeTimeStringOptions)}
-                </Text>
-              </Stack>
-              <Stack direction="row">
-                <Icon as={FaLocationDot} color="purple.500" />
-                <Text fontWeight="medium" fontSize="sm">
-                  {event.location.city}, {event.location.street_name} {event.location.street_number}
-                </Text>
-              </Stack>
-              <Stack direction="row">
-                <Icon as={FaPeopleGroup} color="purple.500" />
-                <Text fontWeight="medium" fontSize="sm">
-                  {`${event.participants.length} participant${event.participants.length > 1 ? 's' : ''} / ${
-                    event.capacity
-                  }`}
-                </Text>
-              </Stack>
+              <EventDateTime startDateTime={event.start_datetime} endDateTime={event.end_datetime} />
+              <EventAddress location={event.location} />
+              <EventParticipants capacity={event.capacity} participants={event.participants} />
             </Stack>
           </Stack>
           <Button colorScheme="purple" isDisabled={isFullCapacity && !event.allow_waitlist}>
