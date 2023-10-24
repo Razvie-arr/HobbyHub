@@ -1,21 +1,25 @@
 import nodemailer from 'nodemailer';
 
+const EMAIL_USER = '4sa540team1throwaway@gmail.com';
+const EMAIL_PASSWD = 'xsmtpsib-48bae8923a44385ca7ed04180e4530644ebb9ac7f47f27b29877be4cf1d6da37-3JO75kHGwtNMqhE1';
+
 export const sendVerificationEmail = async (
   targetEmail: string,
   targetSubject: string,
   { text, html }: { text: string; html?: string },
 ) => {
   const transporter = nodemailer.createTransport({
-    host: 'sandbox.smtp.mailtrap.io',
-    port: 2525,
+    host: 'smtp-relay.brevo.com',
+    port: 587,
+    secure: false,
     auth: {
-      user: '959d752cd49a19',
-      pass: '9ce0a80758fc53',
+      user: EMAIL_USER,
+      pass: EMAIL_PASSWD,
     },
   });
 
   const mailOptions = {
-    from: 'no-reply@hobby.hub',
+    from: 'HobbyHub <no-reply@hobby-hub.io>',
     to: targetEmail.toString(),
     subject: targetSubject,
     text,
@@ -24,4 +28,3 @@ export const sendVerificationEmail = async (
 
   return transporter.sendMail(mailOptions);
 };
-
