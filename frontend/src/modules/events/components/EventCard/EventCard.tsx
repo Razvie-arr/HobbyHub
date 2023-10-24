@@ -1,6 +1,6 @@
-import { Card, CardBody, Heading, HStack, Image, Stack, Tag, Text, Tooltip } from '@chakra-ui/react';
+import { Card, CardBody, Heading, HStack, Image, Link, Stack, Tag, Text, Tooltip } from '@chakra-ui/react';
 
-import postcardBackgroundImageUrl from 'src/assets/img/cute-purple-aesthetic-abstract-minimal-background-perfect-for-wallpaper-backdrop-postcard-background-vector.jpg';
+import postcardBackgroundImageUrl from 'src/assets/img/event-image-placeholder.jpg';
 import { Button } from 'src/shared/design-system';
 
 import { EventTypeName, WithEvent } from '../../types';
@@ -20,33 +20,22 @@ export const EventCard = ({ event, simplified: simpleUI }: EventCardProps) => {
   return (
     <Card
       flexBasis={{ '2xl': '24%', lg: '32%', md: '48%' }}
-      {...(simpleUI
-        ? { shadow: 'none' }
-        : { borderColor: 'purple.50', borderWidth: '1px', backgroundColor: 'gray.50', mb: '4' })}
+      backgroundColor="white"
+      mb="20"
+      shadow="none"
+      borderRadius="none"
     >
       <CardBody p="0" display="flex" flexDirection="column">
         {simpleUI ? null : (
           <>
             <EventStatusTag hasWaitlist={event.allow_waitlist} isFullCapacity={isFullCapacity} />
-            <Button
-              position="absolute"
-              top="4"
-              right="4"
-              borderRadius="full"
-              shadow="base"
-              variant="outline"
-              colorScheme="purple"
-              backgroundColor="white"
-            >
-              See details
-            </Button>
-            <Image src={postcardBackgroundImageUrl} borderTopRadius="base" />
+            <Image src={postcardBackgroundImageUrl} borderTopRadius="none" />
           </>
         )}
-        <Stack justifyContent="space-between" flex="1" spacing="2" px="3" py="2">
+        <Stack justifyContent="space-between" flex="1" spacing="2" p="4">
           <Stack>
-            <Heading size="md" noOfLines={1} lineHeight="initial">
-              {event.name}
+            <Heading size="md" noOfLines={3} lineHeight="initial">
+              <Link>{event.name}</Link>
             </Heading>
             <HStack>
               {event.event_types.map(({ name }) => (
@@ -57,7 +46,7 @@ export const EventCard = ({ event, simplified: simpleUI }: EventCardProps) => {
                 </Tooltip>
               ))}
             </HStack>
-            <Text color="gray.600" fontWeight="medium">
+            <Text color="purple.600" as="b">
               Hosted by: {event.author.name}
             </Text>
             <Stack spacing="2">
@@ -66,8 +55,13 @@ export const EventCard = ({ event, simplified: simpleUI }: EventCardProps) => {
               <EventParticipants capacity={event.capacity} participants={event.participants} />
             </Stack>
           </Stack>
-          <Button colorScheme="purple" isDisabled={isFullCapacity && !event.allow_waitlist}>
-            {simpleUI ? 'See details' : isFullCapacity && event.allow_waitlist ? 'Join Waitlist' : 'Join Event'}
+          <Button
+            borderRadius="full"
+            size="sm"
+            colorScheme="purple"
+            isDisabled={isFullCapacity && !event.allow_waitlist}
+          >
+            {isFullCapacity && event.allow_waitlist ? 'Join Waitlist' : 'Join Event'}
           </Button>
         </Stack>
       </CardBody>

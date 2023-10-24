@@ -20,8 +20,7 @@ export const EventDateTime = ({ startDateTime, endDateTime }: EventDateTimeProps
     <Stack direction="row">
       <Icon as={FaCalendar} color="purple.500" />
       <Text fontSize="sm" fontWeight="medium">
-        {eventStartDate.toLocaleString(locale, { day: '2-digit' })}{' '}
-        {eventStartDate.toLocaleString(locale, { month: 'long' })}
+        {eventStartDate.toLocaleString(locale, { day: '2-digit', month: 'long', weekday: 'short' }).toLocaleUpperCase()}{' '}
         {' • '}
         {eventStartDate.toLocaleTimeString(locale, localeTimeStringOptions)}
         {' - '}

@@ -7,11 +7,13 @@ export function NavLink(props: NavLinkProps) {
     <ChakraLink
       py="1"
       px="4"
-      borderRadius={5}
       _hover={{
         bg: 'purple.50',
+        color: 'purple.600',
       }}
+      color="purple.300"
       _activeLink={{
+        color: 'purple.600',
         borderBottom: 2,
         borderStyle: 'solid',
         borderColor: 'purple.500',
@@ -23,3 +25,4 @@ export function NavLink(props: NavLinkProps) {
     />
   );
 }
+

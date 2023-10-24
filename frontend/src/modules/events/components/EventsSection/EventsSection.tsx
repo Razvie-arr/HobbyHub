@@ -1,5 +1,5 @@
 import { ReactNode } from 'react';
-import { Heading, Stack } from '@chakra-ui/react';
+import { Button, Heading, HStack, Stack } from '@chakra-ui/react';
 import { Option, pipe, ReadonlyArray } from 'effect';
 
 import { Box } from 'src/shared/design-system';
@@ -17,7 +17,12 @@ interface EventsSectionProps {
 export const EventsSection = ({ events, title }: EventsSectionProps) => (
   <Box>
     <Stack spacing="8">
-      <Heading as="h1">{title}</Heading>
+      <HStack justifyContent="space-between">
+        <Heading as="h2">{title}</Heading>{' '}
+        <Button size="md" variant="ghost" colorScheme="purple">
+          See all events
+        </Button>
+      </HStack>
       {pipe(
         events,
         Option.fromNullable,
