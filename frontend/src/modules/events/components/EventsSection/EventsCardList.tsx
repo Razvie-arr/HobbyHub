@@ -2,14 +2,14 @@ import { Box } from '@chakra-ui/react';
 
 import { Button, Flex } from 'src/shared/design-system';
 
-import { EventCard } from '../components';
-import { WithEvents } from '../types';
+import { WithEvents } from '../../types';
+import { EventCard } from '../EventCard';
 
 interface EventsSectionProps extends WithEvents {
   handleShowMore: () => void;
 }
 
-export const EventsSection = ({ events, handleShowMore }: EventsSectionProps) => (
+export const EventsCardList = ({ events, handleShowMore }: EventsSectionProps) => (
   <Box>
     <Flex flexWrap="wrap" columnGap="4" justifyContent="space-between">
       {events.map((value) => (

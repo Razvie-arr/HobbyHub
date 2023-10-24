@@ -33,7 +33,6 @@ export const EventsMapButton = ({ events, ...buttonProps }: ButtonProps & WithEv
         <Icon as={FaMapLocationDot} mr="2" />
         View on map
       </Button>
-
       <Modal onClose={onClose} size="6xl" isOpen={isOpen}>
         <ModalOverlay />
         <ModalContent>

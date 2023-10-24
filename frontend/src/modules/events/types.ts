@@ -1,8 +1,10 @@
-import { EventsQuery } from 'src/gql/graphql';
+import { DocumentType } from '../../gql';
 
-type ArrayType<T extends unknown[]> = T extends Array<infer U> ? U : never;
+import { EventFragment } from './fragments';
 
-export type EventProps = NonNullable<ArrayType<NonNullable<EventsQuery['events']>>>;
+export type EventFragmentResultType = DocumentType<typeof EventFragment>;
+
+export type EventProps = DocumentType<typeof EventFragment>;
 
 export interface WithEvent {
   event: EventProps;

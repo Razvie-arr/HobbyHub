@@ -1,13 +1,12 @@
 import { useQuery } from '@apollo/client';
-import { Alert, AlertIcon, AlertTitle, Card, Heading, Stack } from '@chakra-ui/react';
-import { Option, pipe, ReadonlyArray } from 'effect';
-
-import { Box } from 'src/shared/design-system';
+import { Stack } from '@chakra-ui/react';
+import { ReadonlyArray } from 'effect';
 
 import { useGeolocation } from '../../../shared/hooks/useGeolocation';
 import { QueryResult } from '../../../shared/layout';
 import { useAuth } from '../../auth';
 import { EventsMapButton, EventsSection } from '../components';
+import { toFragmentData } from '../fragments';
 import { EVENTS, LOCATION_AWARE_EVENTS } from '../queries';
 import { EventProps } from '../types';
 
@@ -15,29 +14,6 @@ interface LocationAwareEventsProps {
   geolocation: GeolocationPosition;
   userId: number;
 }
-
-const NoEvents = () => (
-  <Card>
-    <Alert status="info" borderRadius="4">
-      <AlertIcon />
-      <Box>
-        <AlertTitle>No events found</AlertTitle>
-      </Box>
-    </Alert>
-  </Card>
-);
-
-const HandleEvents = ({ events }: { events: Array<EventProps> | null | undefined }) =>
-  pipe(
-    events,
-    Option.fromNullable,
-    Option.map(ReadonlyArray.filterMap(Option.fromNullable)),
-    Option.filter(ReadonlyArray.isNonEmptyArray),
-    Option.match({
-      onNone: () => <NoEvents />,
-      onSome: (nonEmptyEvents) => <EventsSection events={nonEmptyEvents} handleShowMore={() => {}} />,
-    }),
-  );
 
 const LocationAwareEvents = ({ geolocation, userId }: LocationAwareEventsProps) => {
   const {
@@ -51,33 +27,23 @@ const LocationAwareEvents = ({ geolocation, userId }: LocationAwareEventsProps) 
   return (
     <QueryResult
       queryResult={result}
-      render={({ todaysNearbyEvents, interestingNearbyEvents, newlyCreatedNearbyEvents }) => {
+      render={(data) => {
+        const todaysNearbyEvents = data.todaysNearbyEvents.map(toFragmentData);
+        const interestingNearbyEvents = data.interestingNearbyEvents.map(toFragmentData);
+        const newlyCreatedNearbyEvents = data.newlyCreatedNearbyEvents.map(toFragmentData);
+
         const allEvents: Array<EventProps> = ReadonlyArray.dedupeWith(
-          [...(todaysNearbyEvents ?? []), ...(interestingNearbyEvents ?? []), ...(newlyCreatedNearbyEvents ?? [])],
+          [...todaysNearbyEvents, ...interestingNearbyEvents, ...newlyCreatedNearbyEvents],
           (self, that) => self.id === that.id,
         );
+
         return (
           <>
             <EventsMapButton events={allEvents} position="fixed" bottom="8" right="8" />
             <Stack spacing="8">
-              <Box>
-                <Stack spacing="8">
-                  <Heading as="h1">Today around you</Heading>
-                  <HandleEvents events={todaysNearbyEvents} />
-                </Stack>
-              </Box>
-              <Box>
-                <Stack spacing="8">
-                  <Heading as="h1">Nearby events you might be interested in</Heading>
-                  <HandleEvents events={interestingNearbyEvents} />
-                </Stack>
-              </Box>
-              <Box>
-                <Stack spacing="8">
-                  <Heading as="h1">Newly added around you</Heading>
-                  <HandleEvents events={newlyCreatedNearbyEvents} />
-                </Stack>
-              </Box>
+              <EventsSection events={todaysNearbyEvents} title="Today around you" />
+              <EventsSection events={interestingNearbyEvents} title="Nearby events you might be interested in" />
+              <EventsSection events={newlyCreatedNearbyEvents} title="Newly added around you" />
             </Stack>
           </>
         );
@@ -93,12 +59,7 @@ const LocationUnawareEvents = () => (
     })}
     render={(data) => (
       <Stack spacing="8">
-        <Box>
-          <Stack spacing="8">
-            <Heading as="h1">Events</Heading>
-            <HandleEvents events={data.events} />
-          </Stack>
-        </Box>
+        <EventsSection events={data.events.map(toFragmentData)} title="Events" />
       </Stack>
     )}
   />

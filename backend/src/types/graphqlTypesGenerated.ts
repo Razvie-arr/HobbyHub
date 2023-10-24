@@ -112,17 +112,17 @@ export type Query = {
   __typename?: 'Query';
   _empty?: Maybe<Scalars['String']['output']>;
   eventById?: Maybe<Event>;
-  eventByIds?: Maybe<Array<Maybe<Event>>>;
+  eventByIds: Array<Event>;
   eventTypeById?: Maybe<EventType>;
   eventTypes?: Maybe<Array<Maybe<EventType>>>;
   eventTypesByIds?: Maybe<Array<Maybe<EventType>>>;
-  events?: Maybe<Array<Event>>;
-  interestingNearbyEvents?: Maybe<Array<Event>>;
+  events: Array<Event>;
+  interestingNearbyEvents: Array<Event>;
   locationById?: Maybe<Location>;
   locations?: Maybe<Array<Maybe<Location>>>;
   locationsByIds?: Maybe<Array<Maybe<Location>>>;
-  newlyCreatedNearbyEvents?: Maybe<Array<Event>>;
-  todaysNearbyEvents?: Maybe<Array<Event>>;
+  newlyCreatedNearbyEvents: Array<Event>;
+  todaysNearbyEvents: Array<Event>;
   userById?: Maybe<User>;
   users?: Maybe<Array<Maybe<User>>>;
   usersByIds?: Maybe<Array<Maybe<User>>>;
@@ -412,7 +412,7 @@ export type QueryResolvers<
     RequireFields<QueryEventByIdArgs, 'id'>
   >;
   eventByIds?: Resolver<
-    Maybe<Array<Maybe<ResolversTypes['Event']>>>,
+    Array<ResolversTypes['Event']>,
     ParentType,
     ContextType,
     RequireFields<QueryEventByIdsArgs, 'ids'>
@@ -430,9 +430,9 @@ export type QueryResolvers<
     ContextType,
     RequireFields<QueryEventTypesByIdsArgs, 'ids'>
   >;
-  events?: Resolver<Maybe<Array<ResolversTypes['Event']>>, ParentType, ContextType, Partial<QueryEventsArgs>>;
+  events?: Resolver<Array<ResolversTypes['Event']>, ParentType, ContextType, Partial<QueryEventsArgs>>;
   interestingNearbyEvents?: Resolver<
-    Maybe<Array<ResolversTypes['Event']>>,
+    Array<ResolversTypes['Event']>,
     ParentType,
     ContextType,
     RequireFields<QueryInterestingNearbyEventsArgs, 'latitude' | 'longitude' | 'userId'>
@@ -451,13 +451,13 @@ export type QueryResolvers<
     RequireFields<QueryLocationsByIdsArgs, 'ids'>
   >;
   newlyCreatedNearbyEvents?: Resolver<
-    Maybe<Array<ResolversTypes['Event']>>,
+    Array<ResolversTypes['Event']>,
     ParentType,
     ContextType,
     RequireFields<QueryNewlyCreatedNearbyEventsArgs, 'latitude' | 'longitude'>
   >;
   todaysNearbyEvents?: Resolver<
-    Maybe<Array<ResolversTypes['Event']>>,
+    Array<ResolversTypes['Event']>,
     ParentType,
     ContextType,
     RequireFields<QueryTodaysNearbyEventsArgs, 'latitude' | 'longitude'>
