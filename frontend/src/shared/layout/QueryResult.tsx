@@ -20,7 +20,7 @@ export const QueryResult = <T, V extends OperationVariables>({ queryResult, rend
       </Card>
     );
   }
-  if (queryResult.loading) {
+  if (queryResult.loading && !queryResult.data) {
     return (
       <Flex justify="center" alignItems="center" width="100%">
         <Spinner size="xl" />
