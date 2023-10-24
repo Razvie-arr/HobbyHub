@@ -1,6 +1,6 @@
 import 'cross-fetch/polyfill';
 
-import { ReactNode, useCallback } from 'react';
+import { ReactNode, useCallback, useMemo } from 'react';
 import { ApolloClient, ApolloLink, ApolloProvider, createHttpLink, from, InMemoryCache } from '@apollo/client';
 import { GraphQLErrors, NetworkError } from '@apollo/client/errors';
 import { onError } from '@apollo/client/link/error';
@@ -41,20 +41,26 @@ export function EnhancedApolloProvider({ children }: Props) {
     }
   });
 
-  const client = new ApolloClient({
-    link: from([logoutLink, authLink, httpLink]),
-    cache: new InMemoryCache({
-      typePolicies: {
-        Query: {
-          fields: {
-            events: offsetLimitPagination(),
-            todaysNearbyEvents: offsetLimitPagination(),
-            interestingNearbyEvents: offsetLimitPagination(),
-            newlyCreatedNearbyEvents: offsetLimitPagination(),
+  const cache = useMemo(
+    () =>
+      new InMemoryCache({
+        typePolicies: {
+          Query: {
+            fields: {
+              events: offsetLimitPagination(),
+              todaysNearbyEvents: offsetLimitPagination(),
+              interestingNearbyEvents: offsetLimitPagination(),
+              newlyCreatedNearbyEvents: offsetLimitPagination(),
+            },
           },
         },
-      },
-    }),
+      }),
+    [],
+  );
+
+  const client = new ApolloClient({
+    link: from([logoutLink, authLink, httpLink]),
+    cache,
     defaultOptions: {
       watchQuery: {
         fetchPolicy: 'cache-and-network',
