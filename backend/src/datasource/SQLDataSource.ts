@@ -27,6 +27,43 @@ export class SQLDataSource extends BatchedSQLDataSource {
     getById: this.createGetByIdQuery(tableName),
     getByIds: this.createGetByIdsQuery(tableName),
   });
+  public getEventsWithSameTypeExceptCity = (
+    eventId: number,
+    eventTypeIds: Array<number>,
+    city: string,
+    offset: number,
+    limit: number,
+  ) =>
+    this.db.query
+      .select('Event.*')
+      .from('Event')
+      .join('Event_EventType', 'Event.id', 'Event_EventType.event_id')
+      .join('EventType', 'Event_EventType.event_type_id', 'EventType.id')
+      .join('Location', 'Event.location_id', 'Location.id')
+      .whereNot('Location.city', city)
+      .whereNot('Event.id', eventId)
+      .whereIn('EventType.id', eventTypeIds)
+      .offset(offset)
+      .limit(limit);
+
+  public getEventsWithSameTypeInCity = (
+    eventId: number,
+    eventTypeIds: Array<number>,
+    city: string,
+    offset: number,
+    limit: number,
+  ) =>
+    this.db.query
+      .select('Event.*')
+      .from('Event')
+      .join('Event_EventType', 'Event.id', 'Event_EventType.event_id')
+      .join('EventType', 'Event_EventType.event_type_id', 'EventType.id')
+      .join('Location', 'Event.location_id', 'Location.id')
+      .where('Location.city', city)
+      .whereNot('Event.id', eventId)
+      .whereIn('EventType.id', eventTypeIds)
+      .offset(offset)
+      .limit(limit);
 
   events = {
     // @ts-ignore, no actual type error but ts-node is erroneously detecting errors
@@ -47,4 +84,3 @@ export class SQLDataSource extends BatchedSQLDataSource {
   // @ts-ignore, no actual type error but ts-node is erroneously detecting errors
   users = this.createBaseQueries('User');
 }
-

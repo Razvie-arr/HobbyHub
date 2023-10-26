@@ -27,5 +27,6 @@ extend type Query {
   newlyCreatedNearbyEvents(longitude: Float!, latitude: Float!, offset: Int, limit: Int): [Event!]!
   todaysNearbyEvents(longitude: Float!, latitude: Float!, offset: Int, limit: Int): [Event!]!
   interestingNearbyEvents(longitude: Float!, latitude: Float!, userId: Int!, offset: Int, limit: Int): [Event!]!
+  similarEvents(eventId: Int!, city: String!, eventTypeIds: [Int!]!, offset: Int, limit: Int): [Event!]!
 }
 

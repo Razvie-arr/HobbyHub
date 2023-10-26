@@ -10,6 +10,7 @@ import {
   QueryEventsArgs,
   QueryInterestingNearbyEventsArgs,
   QueryNewlyCreatedNearbyEventsArgs,
+  QuerySimilarEventsArgs,
   QueryTodaysNearbyEventsArgs,
   User,
 } from '../../../types';
@@ -31,6 +32,7 @@ const HAVERSINE_FORMULA = ` (
     )`;
 const DEFAULT_DISTANCE = 20;
 const DEFAULT_LIMIT = 5;
+const MINIMUM_COUNT_SIMILAR_EVENTS = 3;
 
 export const eventsResolver: ContextualResolver<Array<Event>, QueryEventsArgs> = async (
   _,
@@ -139,3 +141,34 @@ export const interestingNearbyEventsResolver = async (
   return limit ? result.limit(limit) : result.limit(DEFAULT_LIMIT);
 };
 
+export const similarEventsResolver = async (
+  _: unknown,
+  { eventId, city, eventTypeIds, offset, limit }: QuerySimilarEventsArgs,
+  { dataSources }: CustomContext,
+): Promise<Array<Event>> => {
+  offset = offset ?? 0;
+  limit = limit ?? DEFAULT_LIMIT;
+
+  const similarEventsWithinSameCity: Array<Event> = await dataSources.sql.getEventsWithSameTypeInCity(
+    eventId,
+    eventTypeIds,
+    city,
+    offset,
+    limit,
+  );
+
+  const similarEventsCount = similarEventsWithinSameCity.length;
+
+  if (similarEventsCount < MINIMUM_COUNT_SIMILAR_EVENTS) {
+    const similarEventsOutsideCity = await dataSources.sql.getEventsWithSameTypeExceptCity(
+      eventId,
+      eventTypeIds,
+      city,
+      0,
+      limit - similarEventsCount,
+    );
+    return [...similarEventsWithinSameCity, ...similarEventsOutsideCity];
+  }
+
+  return similarEventsWithinSameCity;
+};

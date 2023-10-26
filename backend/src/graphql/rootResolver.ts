@@ -9,6 +9,7 @@ import {
   eventsResolver,
   interestingNearbyEventsResolver,
   newlyCreatedNearbyEventsResolver,
+  similarEventsResolver,
   todaysNearbyEventsResolver,
 } from './modules/event/eventResolvers';
 import { eventTypeResolver, eventTypesResolver } from './modules/eventType/eventTypeResolvers';
@@ -35,6 +36,7 @@ export const rootResolver: Resolvers = {
     newlyCreatedNearbyEvents: newlyCreatedNearbyEventsResolver,
     todaysNearbyEvents: todaysNearbyEventsResolver,
     interestingNearbyEvents: interestingNearbyEventsResolver,
+    similarEvents: similarEventsResolver,
   },
 
   Event: {
@@ -52,4 +54,3 @@ export const rootResolver: Resolvers = {
     resetPassword: resetPasswordResolver,
   },
 };
-
