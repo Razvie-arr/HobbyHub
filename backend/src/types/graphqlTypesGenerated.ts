@@ -122,6 +122,7 @@ export type Query = {
   locations?: Maybe<Array<Maybe<Location>>>;
   locationsByIds?: Maybe<Array<Maybe<Location>>>;
   newlyCreatedNearbyEvents: Array<Event>;
+  similarEvents: Array<Event>;
   todaysNearbyEvents: Array<Event>;
   userById?: Maybe<User>;
   users?: Maybe<Array<Maybe<User>>>;
@@ -173,6 +174,14 @@ export type QueryNewlyCreatedNearbyEventsArgs = {
   latitude: Scalars['Float']['input'];
   limit?: InputMaybe<Scalars['Int']['input']>;
   longitude: Scalars['Float']['input'];
+  offset?: InputMaybe<Scalars['Int']['input']>;
+};
+
+export type QuerySimilarEventsArgs = {
+  city: Scalars['String']['input'];
+  eventId: Scalars['Int']['input'];
+  eventTypeIds: Array<Scalars['Int']['input']>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
 };
 
@@ -455,6 +464,12 @@ export type QueryResolvers<
     ParentType,
     ContextType,
     RequireFields<QueryNewlyCreatedNearbyEventsArgs, 'latitude' | 'longitude'>
+  >;
+  similarEvents?: Resolver<
+    Array<ResolversTypes['Event']>,
+    ParentType,
+    ContextType,
+    RequireFields<QuerySimilarEventsArgs, 'city' | 'eventId' | 'eventTypeIds'>
   >;
   todaysNearbyEvents?: Resolver<
     Array<ResolversTypes['Event']>,
