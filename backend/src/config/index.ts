@@ -7,3 +7,5 @@ export const DB_PORT = process.env.DB_PORT ? parseInt(process.env.DB_PORT, 10) :
 export const { DB_USER } = process.env;
 export const { DB_PASSWORD } = process.env;
 export const { DB_NAME } = process.env;
+export const { GOOGLE_API_KEY } = process.env;
+

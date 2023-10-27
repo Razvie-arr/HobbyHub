@@ -20,6 +20,15 @@ input LocationInput {
   longitude: Float!
 }
 
+input LocationInputWithoutCoords {
+  id: Int
+  country: String!
+  city: String!
+  street_name: String!
+  street_number: String!
+  additional_information: String
+}
+
 extend type Query {
   locations: [Location]
   locationById(id: Int!): Location
@@ -27,8 +36,8 @@ extend type Query {
 }
 
 extend type Mutation {
-  createLocation(location: LocationInput!): Location
-  editLocation(location: LocationInput!): Location
+  createLocation(location: LocationInputWithoutCoords!): Location
+  editLocation(location: LocationInputWithoutCoords!): Location
   deleteLocation(id: Int!): String!
 }
 

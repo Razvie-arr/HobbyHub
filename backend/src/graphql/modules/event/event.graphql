@@ -10,8 +10,8 @@ extend type Query {
 }
 
 extend type Mutation {
-  createEvent(event: EventInput!, location: LocationInput!): Event!
-  editEvent(event: EventInput!, location: LocationInput!): Event!
+  createEvent(event: EventInput!, location: LocationInputWithoutCoords!): Event!
+  editEvent(event: EventInput!, location: LocationInputWithoutCoords!): Event!
   deleteEvent(event_id: Int!, location_id: Int!): String!
 }
 
@@ -44,7 +44,7 @@ input EventInput {
   description: String
   author_id: Int
   group_id: Int
-  capacity: Int!,
+  capacity: Int!
   allow_waitlist: Boolean!
   image_filePath: String
   start_datetime: String!

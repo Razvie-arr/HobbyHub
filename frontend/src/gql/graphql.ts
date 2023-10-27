@@ -100,6 +100,15 @@ export type LocationInput = {
   street_number: Scalars['String']['input'];
 };
 
+export type LocationInputWithoutCoords = {
+  additional_information?: InputMaybe<Scalars['String']['input']>;
+  city: Scalars['String']['input'];
+  country: Scalars['String']['input'];
+  id?: InputMaybe<Scalars['Int']['input']>;
+  street_name: Scalars['String']['input'];
+  street_number: Scalars['String']['input'];
+};
+
 export type Mutation = {
   __typename?: 'Mutation';
   _empty?: Maybe<Scalars['String']['output']>;
@@ -122,11 +131,11 @@ export type Mutation_EmptyArgs = {
 
 export type MutationCreateEventArgs = {
   event: EventInput;
-  location: LocationInput;
+  location: LocationInputWithoutCoords;
 };
 
 export type MutationCreateLocationArgs = {
-  location: LocationInput;
+  location: LocationInputWithoutCoords;
 };
 
 export type MutationDeleteEventArgs = {
@@ -140,11 +149,11 @@ export type MutationDeleteLocationArgs = {
 
 export type MutationEditEventArgs = {
   event: EventInput;
-  location: LocationInput;
+  location: LocationInputWithoutCoords;
 };
 
 export type MutationEditLocationArgs = {
-  location: LocationInput;
+  location: LocationInputWithoutCoords;
 };
 
 export type MutationRequestResetPasswordArgs = {

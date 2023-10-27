@@ -8,6 +8,7 @@ type AuthUser {
   event_types: [EventType!]!
   id: Int!
   location: Location
+  location_id: Int!
   name: String!
   password: String!
   verified: Boolean!
@@ -16,12 +17,13 @@ type AuthUser {
 type Event {
   allow_waitlist: Boolean!
   author: User!
-  author_id: Int!
+  author_id: Int
   capacity: Int!
   created_at: String!
   description: String
   end_datetime: String!
   event_types: [EventType!]!
+  group_id: Int
   id: Int!
   image_filePath: String
   location: Location!
@@ -32,10 +34,25 @@ type Event {
   summary: String!
 }
 
+input EventInput {
+  allow_waitlist: Boolean!
+  author_id: Int
+  capacity: Int!
+  description: String
+  end_datetime: String!
+  group_id: Int
+  id: Int
+  image_filePath: String
+  location_id: Int
+  name: String!
+  start_datetime: String!
+  summary: String!
+}
+
 type EventType {
+  category: String!
   id: Int!
   name: String!
-  category: String!
 }
 
 type Location {
@@ -49,8 +66,34 @@ type Location {
   street_number: String!
 }
 
+input LocationInput {
+  additional_information: String
+  city: String!
+  country: String!
+  id: Int
+  latitude: Float!
+  longitude: Float!
+  street_name: String!
+  street_number: String!
+}
+
+input LocationInputWithoutCoords {
+  additional_information: String
+  city: String!
+  country: String!
+  id: Int
+  street_name: String!
+  street_number: String!
+}
+
 type Mutation {
   _empty(nothing: String): String
+  createEvent(event: EventInput!, location: LocationInputWithoutCoords!): Event!
+  createLocation(location: LocationInputWithoutCoords!): Location
+  deleteEvent(event_id: Int!, location_id: Int!): String!
+  deleteLocation(id: Int!): String!
+  editEvent(event: EventInput!, location: LocationInputWithoutCoords!): Event!
+  editLocation(location: LocationInputWithoutCoords!): Location
   requestResetPassword(email: String!): Boolean!
   resetPassword(password: String!, token: String!): Boolean!
   signIn(email: String!, password: String!): AuthInfo!
@@ -71,6 +114,7 @@ type Query {
   locations: [Location]
   locationsByIds(ids: [Int!]!): [Location]
   newlyCreatedNearbyEvents(latitude: Float!, limit: Int, longitude: Float!, offset: Int): [Event!]!
+  searchEvents(limit: Int, offset: Int, text: String!): [Event!]!
   similarEvents(city: String!, eventId: Int!, eventTypeIds: [Int!]!, limit: Int, offset: Int): [Event!]!
   todaysNearbyEvents(latitude: Float!, limit: Int, longitude: Float!, offset: Int): [Event!]!
   userById(id: Int!): User
@@ -83,33 +127,6 @@ type User {
   event_types: [EventType!]!
   id: Int!
   location: Location
+  location_id: Int!
   name: String!
 }
-
-input EventInput {
-  id: Int
-  name: String!
-  summary: String!
-  description: String
-  author_id: Int
-  group_id: Int
-  capacity: Int!
-  allow_waitlist: Boolean!
-  image_filePath: String
-  start_datetime: String!
-  end_datetime: String!
-
-  location_id: Int
-}
-
-input LocationInput {
-  id: Int
-  country: String!
-  city: String!
-  street_name: String!
-  street_number: String!
-  additional_information: String
-  latitude: Float!
-  longitude: Float!
-}
-

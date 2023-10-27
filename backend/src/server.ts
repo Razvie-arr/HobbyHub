@@ -4,6 +4,7 @@ import { StandaloneServerContextFunctionArgument, startStandaloneServer } from '
 import { rootResolver } from './graphql/rootResolver';
 import { rootTypeDefs } from './graphql/rootTypeDefs';
 import { getConnection } from './libs/dbConnection';
+import { getGoogleMapsClient } from './libs/googleMaps';
 import { CustomContext } from './types/types';
 import { PORT } from './config';
 import { getSQLDataSource } from './datasource';
@@ -22,6 +23,7 @@ const init = async () => {
       dataSources: {
         sql: getSQLDataSource(),
       },
+      googleMapsClient: getGoogleMapsClient(),
       auth,
     };
   };

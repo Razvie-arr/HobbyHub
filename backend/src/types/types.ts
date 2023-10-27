@@ -1,3 +1,4 @@
+import { Client } from '@googlemaps/google-maps-services-js';
 import { Connection } from 'mariadb';
 
 import { SQLDataSource } from '../datasource';
@@ -7,6 +8,7 @@ export interface CustomContext {
   dataSources: {
     sql: SQLDataSource;
   };
+  googleMapsClient: Client;
   auth: string | string[];
 }
 
@@ -21,3 +23,4 @@ export type ContextualNullableResolver<R, A = unknown> = (
   args: A,
   context: CustomContext,
 ) => Promise<R | null>;
+
