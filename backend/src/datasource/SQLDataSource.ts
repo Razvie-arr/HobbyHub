@@ -65,6 +65,19 @@ export class SQLDataSource extends BatchedSQLDataSource {
       .offset(offset)
       .limit(limit);
 
+  public executeSearchByEventNameAuthorName = (text: string, offset: number, limit: number) => {
+    const textLowerCase = text.toLowerCase();
+    return this.db.query
+      .select('Event.*')
+      .from('Event')
+      .join('User', 'Event.author_id', 'User.id')
+      .whereRaw('LOWER(Event.name) like ?', `%${textLowerCase}%`)
+      .or.whereRaw('LOWER(User.name) like ?', `%${textLowerCase}%`)
+      .orderBy('start_datetime', 'desc')
+      .offset(offset)
+      .limit(limit);
+  };
+
   events = {
     // @ts-ignore, no actual type error but ts-node is erroneously detecting errors
     ...this.createBaseQueries('Event'),
