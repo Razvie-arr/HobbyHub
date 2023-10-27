@@ -17,6 +17,7 @@ import {
 } from './modules/event/eventResolvers';
 import { eventTypeResolver, eventTypesResolver } from './modules/eventType/eventTypeResolvers';
 import { locationResolver, locationsResolver } from './modules/location/locationResolvers';
+import { searchEventsResolver } from './modules/search/searchResolver';
 import {
   authUserEventTypesResolver,
   requestResetPasswordResolver,
@@ -41,6 +42,8 @@ export const rootResolver: Resolvers = {
     todaysNearbyEvents: todaysNearbyEventsResolver,
     interestingNearbyEvents: interestingNearbyEventsResolver,
     similarEvents: similarEventsResolver,
+
+    searchEvents: searchEventsResolver,
   },
 
   AuthUser: {

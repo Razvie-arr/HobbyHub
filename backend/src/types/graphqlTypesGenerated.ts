@@ -185,6 +185,7 @@ export type Query = {
   locations?: Maybe<Array<Maybe<Location>>>;
   locationsByIds?: Maybe<Array<Maybe<Location>>>;
   newlyCreatedNearbyEvents: Array<Event>;
+  searchEvents: Array<Event>;
   similarEvents: Array<Event>;
   todaysNearbyEvents: Array<Event>;
   userById?: Maybe<User>;
@@ -238,6 +239,12 @@ export type QueryNewlyCreatedNearbyEventsArgs = {
   limit?: InputMaybe<Scalars['Int']['input']>;
   longitude: Scalars['Float']['input'];
   offset?: InputMaybe<Scalars['Int']['input']>;
+};
+
+export type QuerySearchEventsArgs = {
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  text: Scalars['String']['input'];
 };
 
 export type QuerySimilarEventsArgs = {
@@ -573,6 +580,12 @@ export type QueryResolvers<
     ParentType,
     ContextType,
     RequireFields<QueryNewlyCreatedNearbyEventsArgs, 'latitude' | 'longitude'>
+  >;
+  searchEvents?: Resolver<
+    Array<ResolversTypes['Event']>,
+    ParentType,
+    ContextType,
+    RequireFields<QuerySearchEventsArgs, 'text'>
   >;
   similarEvents?: Resolver<
     Array<ResolversTypes['Event']>,
