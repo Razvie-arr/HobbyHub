@@ -25,8 +25,6 @@ export const EventTypeIcon = ({ eventTypeName }: EventTypeIconProps) => {
   switch (eventTypeName) {
     case 'Football':
       return <Icon as={MdSportsSoccer} />;
-    case 'Games':
-      return <Icon as={MdSportsVolleyball} />;
     case 'Basketball':
       return <Icon as={MdSportsBaseball} />;
     case 'Volleyball':

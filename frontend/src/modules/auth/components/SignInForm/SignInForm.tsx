@@ -32,6 +32,7 @@ export const SignInForm = ({ disclosure, signUpModalDisclosure }: SignInFormProp
   const [signInRequest, signInRequestState] = useMutation(SIGN_IN_MUTATION, {
     onCompleted: ({ signIn: { user, token } }) => {
       disclosure.onClose();
+      // @ts-expect-error
       auth.signIn({ token, user });
       navigate('/');
     },
