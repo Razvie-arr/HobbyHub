@@ -1,6 +1,6 @@
 import { Route, Routes as RouterRoutes } from 'react-router-dom';
 
-import { DefaultEventsPage, EventsPage } from 'src/modules/events';
+import { DefaultEventsPage, EventForm, EventsPage } from 'src/modules/events';
 import { NotFoundPage } from 'src/shared/navigation';
 
 import { VerifyUserPage } from './modules/auth';
@@ -10,6 +10,7 @@ export const Routes = () => (
   <RouterRoutes>
     <Route path={route.home()} element={<DefaultEventsPage />} />
     <Route path={route.events()} element={<EventsPage />} />
+    <Route path={route.createEvent()} element={<EventForm />} />
     <Route path={route.verifyUser()} element={<VerifyUserPage />} />
     <Route path="*" element={<NotFoundPage />} />
   </RouterRoutes>
