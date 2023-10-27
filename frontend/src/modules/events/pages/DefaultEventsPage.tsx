@@ -120,7 +120,7 @@ const LocationUnawareEvents = () => (
 export const DefaultEventsPage = () => {
   const { geolocation, isLoading } = useGeolocation();
   const { user } = useAuth();
-  console.log(geolocation);
+
   if (!geolocation && isLoading) {
     return (
       <Flex justify="center" alignItems="center" width="100%" p="8">
