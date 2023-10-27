@@ -38,12 +38,13 @@ export type Event = {
   __typename?: 'Event';
   allow_waitlist: Scalars['Boolean']['output'];
   author: User;
-  author_id: Scalars['Int']['output'];
+  author_id?: Maybe<Scalars['Int']['output']>;
   capacity: Scalars['Int']['output'];
   created_at: Scalars['String']['output'];
   description?: Maybe<Scalars['String']['output']>;
   end_datetime: Scalars['String']['output'];
   event_types: Array<EventType>;
+  group_id?: Maybe<Scalars['Int']['output']>;
   id: Scalars['Int']['output'];
   image_filePath?: Maybe<Scalars['String']['output']>;
   location: Location;
@@ -52,6 +53,21 @@ export type Event = {
   participants: Array<User>;
   start_datetime: Scalars['String']['output'];
   summary: Scalars['String']['output'];
+};
+
+export type EventInput = {
+  allow_waitlist: Scalars['Boolean']['input'];
+  author_id?: InputMaybe<Scalars['Int']['input']>;
+  capacity: Scalars['Int']['input'];
+  description?: InputMaybe<Scalars['String']['input']>;
+  end_datetime: Scalars['String']['input'];
+  group_id?: InputMaybe<Scalars['Int']['input']>;
+  id?: InputMaybe<Scalars['Int']['input']>;
+  image_filePath?: InputMaybe<Scalars['String']['input']>;
+  location_id?: InputMaybe<Scalars['Int']['input']>;
+  name: Scalars['String']['input'];
+  start_datetime: Scalars['String']['input'];
+  summary: Scalars['String']['input'];
 };
 
 export type EventType = {
@@ -73,9 +89,26 @@ export type Location = {
   street_number: Scalars['String']['output'];
 };
 
+export type LocationInput = {
+  additional_information?: InputMaybe<Scalars['String']['input']>;
+  city: Scalars['String']['input'];
+  country: Scalars['String']['input'];
+  id?: InputMaybe<Scalars['Int']['input']>;
+  latitude: Scalars['Float']['input'];
+  longitude: Scalars['Float']['input'];
+  street_name: Scalars['String']['input'];
+  street_number: Scalars['String']['input'];
+};
+
 export type Mutation = {
   __typename?: 'Mutation';
   _empty?: Maybe<Scalars['String']['output']>;
+  createEvent: Event;
+  createLocation?: Maybe<Location>;
+  deleteEvent: Scalars['String']['output'];
+  deleteLocation: Scalars['String']['output'];
+  editEvent: Event;
+  editLocation?: Maybe<Location>;
   requestResetPassword: Scalars['Boolean']['output'];
   resetPassword: Scalars['Boolean']['output'];
   signIn: AuthInfo;
@@ -85,6 +118,33 @@ export type Mutation = {
 
 export type Mutation_EmptyArgs = {
   nothing?: InputMaybe<Scalars['String']['input']>;
+};
+
+export type MutationCreateEventArgs = {
+  event: EventInput;
+  location: LocationInput;
+};
+
+export type MutationCreateLocationArgs = {
+  location: LocationInput;
+};
+
+export type MutationDeleteEventArgs = {
+  event_id: Scalars['Int']['input'];
+  location_id: Scalars['Int']['input'];
+};
+
+export type MutationDeleteLocationArgs = {
+  id: Scalars['Int']['input'];
+};
+
+export type MutationEditEventArgs = {
+  event: EventInput;
+  location: LocationInput;
+};
+
+export type MutationEditLocationArgs = {
+  location: LocationInput;
 };
 
 export type MutationRequestResetPasswordArgs = {
@@ -288,10 +348,12 @@ export type ResolversTypes = {
   AuthUser: ResolverTypeWrapper<AuthUser>;
   Boolean: ResolverTypeWrapper<Scalars['Boolean']['output']>;
   Event: ResolverTypeWrapper<Event>;
+  EventInput: EventInput;
   EventType: ResolverTypeWrapper<EventType>;
   Float: ResolverTypeWrapper<Scalars['Float']['output']>;
   Int: ResolverTypeWrapper<Scalars['Int']['output']>;
   Location: ResolverTypeWrapper<Location>;
+  LocationInput: LocationInput;
   Mutation: ResolverTypeWrapper<{}>;
   Query: ResolverTypeWrapper<{}>;
   String: ResolverTypeWrapper<Scalars['String']['output']>;
@@ -304,10 +366,12 @@ export type ResolversParentTypes = {
   AuthUser: AuthUser;
   Boolean: Scalars['Boolean']['output'];
   Event: Event;
+  EventInput: EventInput;
   EventType: EventType;
   Float: Scalars['Float']['output'];
   Int: Scalars['Int']['output'];
   Location: Location;
+  LocationInput: LocationInput;
   Mutation: {};
   Query: {};
   String: Scalars['String']['output'];
@@ -343,12 +407,13 @@ export type EventResolvers<
 > = {
   allow_waitlist?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
   author?: Resolver<ResolversTypes['User'], ParentType, ContextType>;
-  author_id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  author_id?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
   capacity?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   created_at?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   description?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   end_datetime?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   event_types?: Resolver<Array<ResolversTypes['EventType']>, ParentType, ContextType>;
+  group_id?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
   id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   image_filePath?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   location?: Resolver<ResolversTypes['Location'], ParentType, ContextType>;
@@ -390,6 +455,42 @@ export type MutationResolvers<
   ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation'],
 > = {
   _empty?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType, Partial<Mutation_EmptyArgs>>;
+  createEvent?: Resolver<
+    ResolversTypes['Event'],
+    ParentType,
+    ContextType,
+    RequireFields<MutationCreateEventArgs, 'event' | 'location'>
+  >;
+  createLocation?: Resolver<
+    Maybe<ResolversTypes['Location']>,
+    ParentType,
+    ContextType,
+    RequireFields<MutationCreateLocationArgs, 'location'>
+  >;
+  deleteEvent?: Resolver<
+    ResolversTypes['String'],
+    ParentType,
+    ContextType,
+    RequireFields<MutationDeleteEventArgs, 'event_id' | 'location_id'>
+  >;
+  deleteLocation?: Resolver<
+    ResolversTypes['String'],
+    ParentType,
+    ContextType,
+    RequireFields<MutationDeleteLocationArgs, 'id'>
+  >;
+  editEvent?: Resolver<
+    ResolversTypes['Event'],
+    ParentType,
+    ContextType,
+    RequireFields<MutationEditEventArgs, 'event' | 'location'>
+  >;
+  editLocation?: Resolver<
+    Maybe<ResolversTypes['Location']>,
+    ParentType,
+    ContextType,
+    RequireFields<MutationEditLocationArgs, 'location'>
+  >;
   requestResetPassword?: Resolver<
     ResolversTypes['Boolean'],
     ParentType,
