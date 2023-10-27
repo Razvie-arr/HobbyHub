@@ -20,8 +20,8 @@ export const EventCard = ({ event, simplified: simpleUI }: EventCardProps) => {
     <Card
       flexBasis={{ '2xl': '24%', lg: '32%', md: '48%' }}
       backgroundColor="white"
-      mb="20"
-      shadow="none"
+      mb="12"
+      shadow="sm"
       borderRadius="none"
     >
       <CardBody p="0" display="flex" flexDirection="column">

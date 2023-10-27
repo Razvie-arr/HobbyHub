@@ -44,15 +44,7 @@ export function TopNavigation() {
   );
 
   return (
-    <Box
-      bg="purple.50"
-      position="sticky"
-      top={0}
-      width="100%"
-      zIndex="1"
-      borderBottomWidth="1px"
-      borderColor="purple.100"
-    >
+    <Box bg="white" position="sticky" top={0} width="100%" zIndex="1" borderBottomWidth="1px" borderColor="purple.100">
       <Container maxWidth="8xl" mx="auto">
         <HStack py={{ base: 2 }} align="center" spacing="4">
           <IconButton
