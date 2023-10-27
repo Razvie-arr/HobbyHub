@@ -12,8 +12,11 @@ import {
   Textarea,
 } from '@chakra-ui/react';
 import { FaFile } from 'react-icons/fa6';
+import { NavLink } from 'react-router-dom';
 
 import { Form, InputField, MultiSelectField } from 'src/shared/forms';
+
+import { route } from '../../../route';
 
 import { FormStack } from './FormStack';
 
@@ -41,7 +44,7 @@ export const EventForm = () => (
         </Flex>
         <Spacer />
         <Flex gap={2} mt={3} align="end">
-          <Button colorScheme="purple" variant="outline" bg="white" flex={1}>
+          <Button as={NavLink} to={route.home()} colorScheme="purple" variant="outline" bg="white" flex={1}>
             Cancel
           </Button>
           <Button colorScheme="purple" flex={1}>
