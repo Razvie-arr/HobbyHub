@@ -3,40 +3,13 @@ import { Box, Button, Flex, HStack, VStack } from '@chakra-ui/react';
 import { FormProvider, useForm } from 'react-hook-form';
 
 import { getAddressName } from '../../utils/googleMaps';
+import { eventTypes } from '../constants';
 import { AddressInputField, DatePickerField, SelectField } from '../forms';
 import { useLngLatGeocoding } from '../hooks/useLngLatGeocoding';
 import { ContentContainer } from '../layout';
 
 import { useFilterSearchParams } from './hooks/useFilterSearchParams';
 import { ActivityFilter } from './ActivityFilter';
-
-const sports = [
-  { name: 'Beach volleyball', id: 2 },
-  { name: 'Volleyball', id: 4 },
-  { name: 'Football', id: 1 },
-  { name: 'Floorball', id: 17 },
-  { name: 'Hockey', id: 3 },
-  { name: 'Badminton', id: 18 },
-  { name: 'Squash', id: 5 },
-  { name: 'Biking', id: 16 },
-  { name: 'Yoga', id: 7 },
-  { name: 'Golf', id: 19 },
-];
-
-const games = [
-  { name: 'Poker', id: 10 },
-  { name: 'eGaming', id: 8 },
-  { name: 'Board games', id: 9 },
-];
-
-const other = [
-  { name: 'Walking', id: 6 },
-  { name: 'Meet new people', id: 11 },
-  { name: 'Hiking', id: 12 },
-  { name: 'Ferata', id: 13 },
-  { name: 'Walking the dog', id: 14 },
-  { name: 'Strollering', id: 15 },
-];
 
 const inputProps = {
   bg: 'gray.200',
@@ -81,9 +54,9 @@ export const MainFilters = () => {
               <ContentContainer p="6">
                 <Flex w="100%" justifyContent="center">
                   <HStack spacing="4">
-                    <ActivityFilter label="Sports" fieldName="sports" eventTypes={sports} />
-                    <ActivityFilter label="Games" fieldName="games" eventTypes={games} />
-                    <ActivityFilter label="Other" fieldName="other" eventTypes={other} />
+                    <ActivityFilter label="Sports" fieldName="sports" eventTypes={eventTypes.sports} />
+                    <ActivityFilter label="Games" fieldName="games" eventTypes={eventTypes.games} />
+                    <ActivityFilter label="Other" fieldName="other" eventTypes={eventTypes.other} />
                   </HStack>
                 </Flex>
               </ContentContainer>
