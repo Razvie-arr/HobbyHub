@@ -11,7 +11,7 @@ import { NoEvents } from './NoEvents';
 
 interface EventsSectionProps {
   events: Array<EventProps> | null | undefined;
-  title: ReactNode;
+  title?: ReactNode;
   handleSeeAllEvents?: () => void;
 }
 
@@ -19,7 +19,7 @@ export const EventsSection = ({ events, handleSeeAllEvents, title }: EventsSecti
   <Box>
     <Stack spacing="8">
       <HStack justifyContent="space-between">
-        <Heading as="h2">{title}</Heading>{' '}
+        {title ? <Heading as="h2">{title}</Heading> : null}{' '}
         {handleSeeAllEvents ? (
           <Button size="md" variant="link" colorScheme="purple" onClick={handleSeeAllEvents}>
             See all events
