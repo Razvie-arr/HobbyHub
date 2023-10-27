@@ -4,19 +4,11 @@ import { type CustomContext } from '../../../types/types';
 export const eventTypesResolver = async (
   _: unknown,
   __: unknown,
-  { dbConnection }: CustomContext,
-): Promise<Array<EventType>> => {
-  const eventTypes = await dbConnection.query<Array<EventType>>(`SELECT * from EventType LIMIT 100`);
-
-  return eventTypes;
-};
+  { dataSources }: CustomContext,
+): Promise<Array<EventType>> => await dataSources.sql.eventTypes.getAll(0, 100);
 
 export const eventTypeResolver = async (
   _: unknown,
   { id }: { id: number },
-  { dbConnection }: CustomContext,
-): Promise<EventType | null> => {
-  const eventType = await dbConnection.query<Array<EventType>>(`SELECT * from EventType where id = ?`, [id]);
-
-  return eventType[0] ?? null;
-};
+  { dataSources }: CustomContext,
+): Promise<EventType | null> => await dataSources.sql.eventTypes.getById(id);

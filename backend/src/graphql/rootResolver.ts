@@ -1,6 +1,9 @@
 import { Resolvers } from '../types';
 
 import {
+  createEventResolver,
+  deleteEventResolver,
+  editEventResolver,
   eventAuthorResolver,
   eventByIdResolver,
   eventEventTypesResolver,
@@ -57,6 +60,10 @@ export const rootResolver: Resolvers = {
     verify: verifyUserResolver,
     requestResetPassword: requestResetPasswordResolver,
     resetPassword: resetPasswordResolver,
+
+    createEvent: createEventResolver,
+    editEvent: editEventResolver,
+    deleteEvent: deleteEventResolver,
   },
 };
 

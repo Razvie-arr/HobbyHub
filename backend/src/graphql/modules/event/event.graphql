@@ -1,3 +1,20 @@
+extend type Query {
+  events(offset: Int, limit: Int): [Event!]!
+  eventById(id: Int!): Event
+  eventByIds(ids: [Int!]!): [Event!]!
+
+  newlyCreatedNearbyEvents(longitude: Float!, latitude: Float!, offset: Int, limit: Int): [Event!]!
+  todaysNearbyEvents(longitude: Float!, latitude: Float!, offset: Int, limit: Int): [Event!]!
+  interestingNearbyEvents(longitude: Float!, latitude: Float!, userId: Int!, offset: Int, limit: Int): [Event!]!
+  similarEvents(eventId: Int!, city: String!, eventTypeIds: [Int!]!, offset: Int, limit: Int): [Event!]!
+}
+
+extend type Mutation {
+  createEvent(event: EventInput!, location: LocationInput!): Event!
+  editEvent(event: EventInput!, location: LocationInput!): Event!
+  deleteEvent(event_id: Int!, location_id: Int!): String!
+}
+
 type Event {
   id: Int!
   name: String!
@@ -10,7 +27,8 @@ type Event {
   allow_waitlist: Boolean!
   created_at: String!
 
-  author_id: Int!
+  author_id: Int
+  group_id: Int
   location_id: Int!
 
   author: User!
@@ -19,14 +37,19 @@ type Event {
   participants: [User!]!
 }
 
-extend type Query {
-  events(offset: Int, limit: Int): [Event!]!
-  eventById(id: Int!): Event
-  eventByIds(ids: [Int!]!): [Event!]!
+input EventInput {
+  id: Int
+  name: String!
+  summary: String!
+  description: String
+  author_id: Int
+  group_id: Int
+  capacity: Int!,
+  allow_waitlist: Boolean!
+  image_filePath: String
+  start_datetime: String!
+  end_datetime: String!
 
-  newlyCreatedNearbyEvents(longitude: Float!, latitude: Float!, offset: Int, limit: Int): [Event!]!
-  todaysNearbyEvents(longitude: Float!, latitude: Float!, offset: Int, limit: Int): [Event!]!
-  interestingNearbyEvents(longitude: Float!, latitude: Float!, userId: Int!, offset: Int, limit: Int): [Event!]!
-  similarEvents(eventId: Int!, city: String!, eventTypeIds: [Int!]!, offset: Int, limit: Int): [Event!]!
+  location_id: Int
 }
 

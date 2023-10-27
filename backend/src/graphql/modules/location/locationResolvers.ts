@@ -4,20 +4,11 @@ import { type CustomContext } from '../../../types/types';
 export const locationsResolver = async (
   _: unknown,
   __: unknown,
-  { dbConnection }: CustomContext,
-): Promise<Array<Location>> => {
-  const locations = await dbConnection.query(`SELECT * from Location LIMIT 100`);
-
-  return locations;
-};
+  { dataSources }: CustomContext,
+): Promise<Array<Location>> => await dataSources.sql.locations.getAll(0, 100);
 
 export const locationResolver = async (
   _: unknown,
   { id }: QueryLocationByIdArgs,
-  { dbConnection }: CustomContext,
-): Promise<Location | null> => {
-  const locations = await dbConnection.query(`SELECT * from EventType where id = ?`, [id]);
-
-  return locations[0] ?? null;
-};
-
+  { dataSources }: CustomContext,
+): Promise<Location | null> => await dataSources.sql.locations.getById(id);

@@ -1,11 +1,18 @@
+import { GraphQLError } from 'graphql/error';
+
 import {
   ContextualNullableResolver,
   ContextualResolver,
   ContextualResolverWithParent,
   CustomContext,
   Event,
+  EventInput,
   EventType,
   Location,
+  LocationInput,
+  MutationCreateEventArgs,
+  MutationDeleteEventArgs,
+  MutationEditEventArgs,
   QueryEventByIdArgs,
   QueryEventsArgs,
   QueryInterestingNearbyEventsArgs,
@@ -41,7 +48,9 @@ export const eventsResolver: ContextualResolver<Array<Event>, QueryEventsArgs> =
 ) => await dataSources.sql.events.getAll(offset, limit);
 
 export const eventAuthorResolver: ContextualResolverWithParent<User, Event> = async (parent, _, { dataSources }) =>
-  (await dataSources.sql.users.getById(parent.author_id)) as unknown as User;
+  parent.author_id
+    ? ((await dataSources.sql.users.getById(parent.author_id)) as unknown as User)
+    : (null as unknown as User);
 
 export const eventLocationResolver: ContextualResolverWithParent<Location, Event> = async (
   parent,
@@ -172,3 +181,123 @@ export const similarEventsResolver = async (
 
   return similarEventsWithinSameCity;
 };
+export const createEventResolver = async (
+  _: unknown,
+  { location, event }: MutationCreateEventArgs,
+  { dataSources }: CustomContext,
+) => {
+  if (event.author_id && event.group_id) {
+    throw new GraphQLError("Event can't have both author_id and group_id!");
+  }
+
+  const dbLocationResponse = await dataSources.sql.db.write('Location').insert(createLocationInput(location));
+  if (!dbLocationResponse[0]) {
+    throw new GraphQLError(`Error while creating location!`);
+  }
+
+  event.location_id = dbLocationResponse[0];
+
+  const dbResponse = await dataSources.sql.db.write('Event').insert(createEventInput(event));
+  if (!dbResponse[0]) {
+    throw new GraphQLError(`Error while creating event!`);
+  }
+
+  const dbResult = await dataSources.sql.events.getById(dbResponse[0]);
+
+  if (!dbResult) {
+    throw new GraphQLError(`Error while querying just created event - it should exist but doesn't!`);
+  }
+
+  return dbResult;
+};
+
+export const editEventResolver = async (
+  _: unknown,
+  { location, event }: MutationEditEventArgs,
+  { dataSources }: CustomContext,
+) => {
+  if (event.author_id && event.group_id) {
+    throw new GraphQLError("Event can't have both author_id and group_id!");
+  }
+  if (!location.id) {
+    throw new GraphQLError('Location ID needs to be filled in order to update!');
+  }
+  const dbLocationResponse = await dataSources.sql.db
+    .write('Location')
+    .where('id', '=', location.id)
+    .update(createLocationInput(location));
+
+  if (!dbLocationResponse) {
+    throw new GraphQLError(`Error while updating location!`);
+  }
+
+  if (!event.id) {
+    throw new GraphQLError('Event ID needs to be filled in order to update!');
+  }
+  const dbResponse = await dataSources.sql.db.write('Event').where('id', '=', event.id).update(createEventInput(event));
+
+  if (!dbResponse) {
+    throw new GraphQLError(`Error while updating event!`);
+  }
+
+  const dbResult = await dataSources.sql.events.getById(event.id);
+
+  if (!dbResult) {
+    throw new GraphQLError(`Error while querying just created event - it should exist but doesn't!`);
+  }
+
+  return dbResult;
+};
+
+export const deleteEventResolver = async (
+  _: unknown,
+  { event_id, location_id }: MutationDeleteEventArgs,
+  { dataSources }: CustomContext,
+) => {
+  const dbLocationResult = await dataSources.sql.db.write('Location').where('id', location_id).delete();
+
+  if (!dbLocationResult) {
+    throw new GraphQLError(`Error while deleting location!`);
+  }
+
+  const dbEventResult = await dataSources.sql.db.write('Event').where('id', event_id).delete();
+
+  if (!dbEventResult) {
+    throw new GraphQLError(`Error while deleting event!`);
+  }
+  return 'Event and location deleted!';
+};
+
+function createEventInput(event: EventInput) {
+  return {
+    name: getValue(event.name),
+    summary: getValue(event.summary),
+    description: getValue(event.description),
+    image_filePath: getValue(event.image_filePath),
+    start_datetime: getValue(event.start_datetime),
+    end_datetime: getValue(event.end_datetime),
+    capacity: getValue(event.capacity),
+    allow_waitlist: getValue(event.allow_waitlist),
+
+    author_id: getValue(event.author_id),
+    group_id: getValue(event.group_id),
+    location_id: getValue(event.location_id),
+  };
+}
+
+function createLocationInput(location: LocationInput) {
+  return {
+    id: getValue(location.id),
+    country: getValue(location.country),
+    city: getValue(location.city),
+    street_name: getValue(location.street_name),
+    street_number: getValue(location.street_number),
+    additional_information: getValue(location.additional_information),
+    latitude: getValue(location.latitude),
+    longitude: getValue(location.longitude),
+  };
+}
+
+function getValue<Type>(input: Type) {
+  return input ? input : undefined;
+}

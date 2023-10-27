@@ -84,3 +84,30 @@ type User {
   location: Location
   name: String!
 }
+
+input EventInput {
+  id: Int
+  name: String!
+  summary: String!
+  description: String
+  author_id: Int
+  group_id: Int
+  capacity: Int!,
+  allow_waitlist: Boolean!
+  image_filePath: String
+  start_datetime: String!
+  end_datetime: String!
+
+  location_id: Int
+}
+
+input LocationInput {
+  id: Int
+  country: String!
+  city: String!
+  street_name: String!
+  street_number: String!
+  additional_information: String
+  latitude: Float!
+  longitude: Float!
+}

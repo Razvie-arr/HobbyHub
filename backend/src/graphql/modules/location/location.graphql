@@ -9,9 +9,26 @@ type Location {
   longitude: Float!
 }
 
+input LocationInput {
+  id: Int
+  country: String!
+  city: String!
+  street_name: String!
+  street_number: String!
+  additional_information: String
+  latitude: Float!
+  longitude: Float!
+}
+
 extend type Query {
   locations: [Location]
   locationById(id: Int!): Location
   locationsByIds(ids: [Int!]!): [Location]
+}
+
+extend type Mutation {
+  createLocation(location: LocationInput!): Location
+  editLocation(location: LocationInput!): Location
+  deleteLocation(id: Int!): String!
 }
 

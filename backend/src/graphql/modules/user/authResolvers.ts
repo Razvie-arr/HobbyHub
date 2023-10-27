@@ -23,11 +23,11 @@ const SUBJECT_RESET_PASSWORD = 'Reset password link';
 export const signInResolver = async (
   _: unknown,
   { email: rawEmail, password }: MutationSignInArgs,
-  { dbConnection }: CustomContext,
+  { dataSources }: CustomContext,
 ): Promise<AuthInfo> => {
   const email = rawEmail.toLocaleLowerCase();
 
-  const dbResponse = await dbConnection.query(`SELECT * FROM User WHERE email = ?`, [email]);
+  const dbResponse = await dataSources.sql.db.query.raw(`SELECT * FROM User WHERE email = ?`, [email]);
 
   if (dbResponse.length === 0) {
     throw new GraphQLError('User not with that email was not found.');
@@ -54,11 +54,11 @@ export const authUserEventTypesResolver: ContextualResolverWithParent<Array<Even
 export const signUpResolver = async (
   _: unknown,
   { email: rawEmail, password, name }: MutationSignUpArgs,
-  { dbConnection }: CustomContext,
+  { dataSources }: CustomContext,
 ): Promise<AuthInfo> => {
   const email = rawEmail.toLocaleLowerCase();
 
-  const userByEmail = (await dbConnection.query(`SELECT * FROM User WHERE email = ?`, [email]))[0];
+  const userByEmail = (await dataSources.sql.db.query.raw(`SELECT * FROM User WHERE email = ?`, [email]))[0];
 
   if (userByEmail) {
     throw new GraphQLError('Email already registered');
@@ -66,7 +66,7 @@ export const signUpResolver = async (
 
   const passwordHash = await argon2.hash(password);
 
-  const dbResponse = await dbConnection.query(
+  const dbResponse = await dataSources.sql.db.write.raw(
     `INSERT INTO User (id, email, password, name)
     VALUES (NULL, ?, ?, ?);`,
     [email, passwordHash, name],
@@ -76,12 +76,12 @@ export const signUpResolver = async (
 
   const token = createToken({ id });
 
-  const { affectedRows } = await dbConnection.query(`UPDATE User SET token = ? WHERE id=?;`, [
+  const dbUpdateResponse = await dataSources.sql.db.write.raw(`UPDATE User SET token = ? WHERE id=?;`, [
     token,
     dbResponse.insertId,
   ]);
 
-  if (affectedRows === 0) {
+  if (!dbUpdateResponse) {
     throw new GraphQLError(`Error while registering user with id: ${dbResponse.insertId}`);
   }
 
@@ -112,12 +112,12 @@ export const signUpResolver = async (
 export const verifyUserResolver = async (
   _: unknown,
   { token }: MutationVerifyArgs,
-  { dbConnection }: CustomContext,
+  { dataSources }: CustomContext,
 ): Promise<string> => {
-  const { affectedRows } = await dbConnection.query(`UPDATE User SET verified = 1, token = NULL WHERE token = ?`, [
+  const dbResult = await dataSources.sql.db.write.raw(`UPDATE User SET verified = 1, token = NULL WHERE token = ?`, [
     token,
   ]);
-  if (affectedRows === 0) {
+  if (!dbResult) {
     throw new GraphQLError('User not found!');
   }
 
@@ -127,20 +127,23 @@ export const verifyUserResolver = async (
 export const requestResetPasswordResolver = async (
   _: unknown,
   { email: rawEmail }: MutationRequestResetPasswordArgs,
-  { dbConnection }: CustomContext,
+  { dataSources }: CustomContext,
 ): Promise<boolean> => {
   const email = rawEmail.toLocaleLowerCase();
 
-  const user = (await dbConnection.query(`SELECT * FROM User WHERE email = ?`, [email]))[0];
+  const user = (await dataSources.sql.db.query.raw(`SELECT * FROM User WHERE email = ?`, [email]))[0];
   if (!user) {
     throw new GraphQLError('User not found');
   }
 
   const resetToken = createTokenWithExpirationTime({ id: user.id }, tokenExpirationTime);
 
-  const { affectedRows } = await dbConnection.query('UPDATE User SET token = ? WHERE email = ?', [resetToken, email]);
+  const dbUpdateResponse = await dataSources.sql.db.write.raw('UPDATE User SET token = ? WHERE email = ?', [
+    resetToken,
+    email,
+  ]);
 
-  if (affectedRows === 0) {
+  if (!dbUpdateResponse) {
     throw new GraphQLError("Reset token wasn't updated");
   }
 
@@ -162,9 +165,9 @@ export const requestResetPasswordResolver = async (
 export const resetPasswordResolver = async (
   _: unknown,
   { password, token }: MutationResetPasswordArgs,
-  { dbConnection }: CustomContext,
+  { dataSources }: CustomContext,
 ): Promise<boolean> => {
-  const user = (await dbConnection.query(`SELECT * FROM User WHERE token = ?`, [token]))[0];
+  const user = (await dataSources.sql.db.query.raw(`SELECT * FROM User WHERE token = ?`, [token]))[0];
   if (!user) {
     throw new GraphQLError('Token is incorrect');
   }
@@ -177,15 +180,14 @@ export const resetPasswordResolver = async (
 
   const passwordHash = await argon2.hash(password);
 
-  const { affectedRows } = await dbConnection.query('UPDATE User SET password = ? WHERE id = ?', [
+  const dbUpdateResponse = await dataSources.sql.db.write.raw('UPDATE User SET password = ? WHERE id = ?', [
     passwordHash,
     user.id,
   ]);
 
-  if (affectedRows === 0) {
+  if (!dbUpdateResponse) {
     throw new GraphQLError('Password not changed');
   }
 
   return true;
 };
-
