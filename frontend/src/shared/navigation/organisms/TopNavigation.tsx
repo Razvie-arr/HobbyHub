@@ -29,7 +29,7 @@ export function TopNavigation() {
 
   const menuLinks = useMemo(
     () => [
-      { to: route.home(), title: 'Events' },
+      { to: route.events(), title: 'Events' },
       { to: route.groups(), title: 'Groups' },
     ],
     [],
@@ -69,9 +69,11 @@ export function TopNavigation() {
           />
 
           <Image boxSize={{ base: '40px', md: '50px' }} src={logoImageUrl} alt="logo" borderRadius="base" />
-          <Text as="b" mr={5} fontSize={{ base: 'md', md: 'lg' }} fontFamily="heading" color="blackAlpha.900">
-            HobbyHub
-          </Text>
+          <NavLink to={route.home()}>
+            <Text as="b" mr={5} fontSize={{ base: 'md', md: 'lg' }} fontFamily="heading" color="blackAlpha.900">
+              HobbyHub
+            </Text>
+          </NavLink>
 
           <HStack display={{ base: 'none', md: 'flex' }} spacing="4">
             {menuLinks.map(({ to, title }) => (
