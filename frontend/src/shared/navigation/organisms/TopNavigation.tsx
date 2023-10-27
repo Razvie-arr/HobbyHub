@@ -1,7 +1,18 @@
 import { useEffect, useMemo } from 'react';
-import { Avatar, Container, Divider, HStack, Menu, MenuButton, MenuItem, MenuList, Text } from '@chakra-ui/react';
+import {
+  Avatar,
+  Button,
+  Container,
+  Divider,
+  HStack,
+  Menu,
+  MenuButton,
+  MenuItem,
+  MenuList,
+  Text,
+} from '@chakra-ui/react';
 import { FaBars, FaRegBell, FaRegComment, FaXmark } from 'react-icons/fa6';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { NavLink, useLocation, useNavigate } from 'react-router-dom';
 
 import logoImageUrl from 'src/assets/icon/logo.png';
 import { AuthModalButtons, useAuth } from 'src/modules/auth';
@@ -74,6 +85,9 @@ export function TopNavigation() {
 
           {user ? (
             <>
+              <Button as={NavLink} to={route.createEvent()} colorScheme="purple">
+                Create event
+              </Button>
               <IconButton
                 color="purple.600"
                 _hover={{ bg: 'purple.50' }}
