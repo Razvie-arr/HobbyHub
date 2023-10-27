@@ -7,9 +7,11 @@ export const useGeolocation = () => {
     if ('geolocation' in navigator) {
       navigator.geolocation.getCurrentPosition((position) => {
         setGeolocation(position);
+        setIsLoading(false);
       });
+    } else {
+      setIsLoading(false);
     }
-    setIsLoading(false);
   }, []);
   return { geolocation, isLoading };
 };
