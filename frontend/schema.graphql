@@ -56,7 +56,6 @@ type EventType {
 }
 
 type Location {
-  additional_information: String
   city: String!
   country: String!
   id: Int!
@@ -67,7 +66,6 @@ type Location {
 }
 
 input LocationInput {
-  additional_information: String
   city: String!
   country: String!
   id: Int
@@ -78,7 +76,6 @@ input LocationInput {
 }
 
 input LocationInputWithoutCoords {
-  additional_information: String
   city: String!
   country: String!
   id: Int
@@ -130,3 +127,4 @@ type User {
   location_id: Int!
   name: String!
 }
+

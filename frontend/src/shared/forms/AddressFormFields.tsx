@@ -14,8 +14,8 @@ export const AddressFormFields = () => {
         <AddressInput
           onPlaceSelected={(places) => {
             const addressComponents = pipe(
-              places.address_components,
-              getAddressComponents,
+              Option.fromNullable(places?.address_components),
+              Option.flatMap(getAddressComponents),
               Option.getOrElse(() => null),
             );
             if (addressComponents) {
@@ -28,10 +28,10 @@ export const AddressFormFields = () => {
           }}
         />
       </Field>
-      <InputField name="streetName" label="Street name" />
-      <InputField name="streetNumber" label="Street number" />
-      <InputField name="city" label="City" />
-      <InputField name="country" label="Country" />
+      <InputField name="streetName" label="Street name" isRequired />
+      <InputField name="streetNumber" label="Street number" isRequired />
+      <InputField name="city" label="City" isRequired />
+      <InputField name="country" label="Country" isRequired />
     </>
   );
 };

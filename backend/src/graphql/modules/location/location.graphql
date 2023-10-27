@@ -4,7 +4,6 @@ type Location {
   city: String!
   street_name: String!
   street_number: String!
-  additional_information: String
   latitude: Float!
   longitude: Float!
 }
@@ -15,7 +14,6 @@ input LocationInput {
   city: String!
   street_name: String!
   street_number: String!
-  additional_information: String
   latitude: Float!
   longitude: Float!
 }
@@ -26,7 +24,6 @@ input LocationInputWithoutCoords {
   city: String!
   street_name: String!
   street_number: String!
-  additional_information: String
 }
 
 extend type Query {

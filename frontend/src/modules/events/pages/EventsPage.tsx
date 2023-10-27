@@ -12,9 +12,7 @@ export const EventsPage = () => (
     <MainFilters />
     <ContentContainer>
       <QueryResult
-        queryResult={useQuery(EVENTS, {
-          variables: { offset: 0, limit: 10 },
-        })}
+        queryResult={useQuery(EVENTS)}
         render={(data) => (
           <>
             <EventsMapButton events={data.events.map(toFragmentData)} position="fixed" bottom="8" right="8" />

@@ -29,8 +29,7 @@ declare module 'knex/types/tables' {
     location_composite: Knex.CompositeTableType<
       Location,
       Partial<Omit<Location, 'id'>> &
-        Pick<Location, 'longitude' | 'latitude' | 'city' | 'street_number' | 'street_name' | 'country'> &
-        Partial<Pick<Location, 'additional_information'>>,
+        Pick<Location, 'longitude' | 'latitude' | 'city' | 'street_number' | 'street_name' | 'country'>,
       Partial<Omit<Location, 'id'>>
     >;
   }

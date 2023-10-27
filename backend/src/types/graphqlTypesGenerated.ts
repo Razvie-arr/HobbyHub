@@ -80,7 +80,6 @@ export type EventType = {
 
 export type Location = {
   __typename?: 'Location';
-  additional_information?: Maybe<Scalars['String']['output']>;
   city: Scalars['String']['output'];
   country: Scalars['String']['output'];
   id: Scalars['Int']['output'];
@@ -91,7 +90,6 @@ export type Location = {
 };
 
 export type LocationInput = {
-  additional_information?: InputMaybe<Scalars['String']['input']>;
   city: Scalars['String']['input'];
   country: Scalars['String']['input'];
   id?: InputMaybe<Scalars['Int']['input']>;
@@ -102,7 +100,6 @@ export type LocationInput = {
 };
 
 export type LocationInputWithoutCoords = {
-  additional_information?: InputMaybe<Scalars['String']['input']>;
   city: Scalars['String']['input'];
   country: Scalars['String']['input'];
   id?: InputMaybe<Scalars['Int']['input']>;
@@ -460,7 +457,6 @@ export type LocationResolvers<
   ContextType = CustomContext,
   ParentType extends ResolversParentTypes['Location'] = ResolversParentTypes['Location'],
 > = {
-  additional_information?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   city?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   country?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;

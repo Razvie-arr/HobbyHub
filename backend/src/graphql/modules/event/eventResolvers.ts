@@ -94,7 +94,6 @@ const locationAwareEventAttributes = [
   'city',
   'street_name',
   'street_number',
-  'additional_information',
   'latitude',
   'longitude',
 ];
@@ -329,7 +328,6 @@ function createLocationInput(location: LocationInput) {
     city: getValue(location.city),
     street_name: getValue(location.street_name),
     street_number: getValue(location.street_number),
-    additional_information: getValue(location.additional_information),
     latitude: getValue(location.latitude),
     longitude: getValue(location.longitude),
   };
