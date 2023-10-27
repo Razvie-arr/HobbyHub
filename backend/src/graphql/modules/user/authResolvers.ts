@@ -5,7 +5,10 @@ import { createToken, createTokenWithExpirationTime, verifyTokenWithExpirationTi
 import { sendVerificationEmail } from '../../../libs/nodeMailer';
 import {
   type AuthInfo,
+  AuthUser,
+  ContextualResolverWithParent,
   type CustomContext,
+  EventType,
   type MutationRequestResetPasswordArgs,
   type MutationResetPasswordArgs,
   type MutationSignInArgs,
@@ -41,6 +44,12 @@ export const signInResolver = async (
   }
   throw new GraphQLError('User email and password do not match.');
 };
+
+export const authUserEventTypesResolver: ContextualResolverWithParent<Array<EventType>, AuthUser> = async (
+  parent,
+  _,
+  { dataSources },
+) => await dataSources.sql.users.getUserEventTypes(parent.id);
 
 export const signUpResolver = async (
   _: unknown,
@@ -82,6 +91,7 @@ export const signUpResolver = async (
     name: name,
     password: passwordHash,
     verified: false,
+    event_types: [],
   };
 
   const verificationTextMessage = `Please verify your account via this link!\nhttps://frontend-team01-vse.handson.p.pro/auth/verifyUser?token=${token}">`;

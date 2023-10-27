@@ -5,7 +5,9 @@ type AuthInfo {
 
 type AuthUser {
   email: String!
+  event_types: [EventType!]!
   id: Int!
+  location: Location
   name: String!
   password: String!
   verified: Boolean!
@@ -68,6 +70,7 @@ type Query {
   locations: [Location]
   locationsByIds(ids: [Int!]!): [Location]
   newlyCreatedNearbyEvents(latitude: Float!, limit: Int, longitude: Float!, offset: Int): [Event!]!
+  similarEvents(city: String!, eventId: Int!, eventTypeIds: [Int!]!, limit: Int, offset: Int): [Event!]!
   todaysNearbyEvents(latitude: Float!, limit: Int, longitude: Float!, offset: Int): [Event!]!
   userById(id: Int!): User
   users: [User]
@@ -76,6 +79,8 @@ type Query {
 
 type User {
   email: String!
+  event_types: [EventType!]!
   id: Int!
+  location: Location
   name: String!
 }

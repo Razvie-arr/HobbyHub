@@ -1,0 +1,26 @@
+import { useEffect, useState } from 'react';
+
+interface LngLat {
+  lng?: number | null;
+  lat?: number | null;
+}
+
+export const useLngLatGeocoding = ({ lng, lat }: LngLat) => {
+  const [location, setLocation] = useState<google.maps.places.PlaceResult | null>(null);
+  useEffect(() => {
+    const getPlace = async () => {
+      if (lng && lat) {
+        const result = await fetch(
+          `https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${lng}&result_type=street_address&key=${
+            import.meta.env.VITE_GOOGLE_API_KEY
+          }`,
+        );
+        const json = await result.json();
+        setLocation(json.results[0] ?? null);
+      }
+    };
+    void getPlace();
+  }, [lng, lat]);
+  return location;
+};
+

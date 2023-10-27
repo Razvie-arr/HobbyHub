@@ -10,7 +10,7 @@ export const useGeolocation = () => {
       });
     }
     setIsLoading(false);
-  }, [geolocation]);
+  }, []);
   return { geolocation, isLoading };
 };
 

@@ -26,7 +26,9 @@ export type AuthInfo = {
 export type AuthUser = {
   __typename?: 'AuthUser';
   email: Scalars['String']['output'];
+  event_types: Array<EventType>;
   id: Scalars['Int']['output'];
+  location?: Maybe<Location>;
   name: Scalars['String']['output'];
   password: Scalars['String']['output'];
   verified: Scalars['Boolean']['output'];
@@ -54,6 +56,7 @@ export type Event = {
 
 export type EventType = {
   __typename?: 'EventType';
+  category: Scalars['String']['output'];
   id: Scalars['Int']['output'];
   name: Scalars['String']['output'];
 };
@@ -203,7 +206,9 @@ export type QueryUsersByIdsArgs = {
 export type User = {
   __typename?: 'User';
   email: Scalars['String']['output'];
+  event_types: Array<EventType>;
   id: Scalars['Int']['output'];
+  location?: Maybe<Location>;
   name: Scalars['String']['output'];
 };
 
@@ -323,7 +328,9 @@ export type AuthUserResolvers<
   ParentType extends ResolversParentTypes['AuthUser'] = ResolversParentTypes['AuthUser'],
 > = {
   email?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  event_types?: Resolver<Array<ResolversTypes['EventType']>, ParentType, ContextType>;
   id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  location?: Resolver<Maybe<ResolversTypes['Location']>, ParentType, ContextType>;
   name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   password?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   verified?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
@@ -357,6 +364,7 @@ export type EventTypeResolvers<
   ContextType = CustomContext,
   ParentType extends ResolversParentTypes['EventType'] = ResolversParentTypes['EventType'],
 > = {
+  category?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
@@ -492,7 +500,9 @@ export type UserResolvers<
   ParentType extends ResolversParentTypes['User'] = ResolversParentTypes['User'],
 > = {
   email?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  event_types?: Resolver<Array<ResolversTypes['EventType']>, ParentType, ContextType>;
   id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  location?: Resolver<Maybe<ResolversTypes['Location']>, ParentType, ContextType>;
   name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };

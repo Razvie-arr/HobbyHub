@@ -16,12 +16,26 @@ export interface WithEvents {
 
 export type EventTypeName =
   | 'Football'
-  | 'Games'
   | 'Basketball'
+  | 'Beach volleyball'
+  | 'Floorball'
+  | 'Biking'
+  | 'Squash'
+  | 'Yoga'
+  | 'Badminton'
   | 'Volleyball'
   | 'Tennis'
   | 'Running'
   | 'Golf'
   | 'Playstation'
-  | 'Board games';
+  | 'Hockey'
+  | 'Poker'
+  | 'eGaming'
+  | 'Board games'
+  | 'Walking'
+  | 'Meet new people'
+  | 'Hiking'
+  | 'Ferata'
+  | 'Walking the dog'
+  | 'Strollering';
 

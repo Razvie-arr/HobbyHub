@@ -15,6 +15,7 @@ import {
 import { eventTypeResolver, eventTypesResolver } from './modules/eventType/eventTypeResolvers';
 import { locationResolver, locationsResolver } from './modules/location/locationResolvers';
 import {
+  authUserEventTypesResolver,
   requestResetPasswordResolver,
   resetPasswordResolver,
   signInResolver,
@@ -39,6 +40,10 @@ export const rootResolver: Resolvers = {
     similarEvents: similarEventsResolver,
   },
 
+  AuthUser: {
+    event_types: authUserEventTypesResolver,
+  },
+
   Event: {
     author: eventAuthorResolver,
     location: eventLocationResolver,
@@ -54,3 +59,4 @@ export const rootResolver: Resolvers = {
     resetPassword: resetPasswordResolver,
   },
 };
+

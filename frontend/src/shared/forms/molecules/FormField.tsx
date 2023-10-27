@@ -1,18 +1,18 @@
 import { type ReactNode } from 'react';
 import { type ControllerRenderProps, useController } from 'react-hook-form';
 
-import { Field, type FieldProps } from 'src/shared/design-system';
+import { Field, type FieldProps, FormControlProps } from 'src/shared/design-system';
 
 type BaseProps = Pick<FieldProps, 'id' | 'label' | 'isRequired'> & {
   name: string;
 };
 
 export type FormFieldBaseProps<TInputProps> = BaseProps &
-  Omit<TInputProps, keyof BaseProps>;
+  Omit<TInputProps, keyof BaseProps> & { formControlProps?: FormControlProps };
 
-export type FormFieldProps = BaseProps & {
+export interface FormFieldProps extends BaseProps, Omit<FormControlProps, 'label' | 'children'> {
   children: (controller: ControllerRenderProps) => ReactNode;
-};
+}
 
 export function FormField({ name, children, ...restProps }: FormFieldProps) {
   const controller = useController({ name });
@@ -25,3 +25,4 @@ export function FormField({ name, children, ...restProps }: FormFieldProps) {
     </Field>
   );
 }
+

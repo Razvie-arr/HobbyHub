@@ -7,6 +7,11 @@ export const SIGN_IN_MUTATION = gql(/* GraphQL */ `
         id
         name
         email
+        event_types {
+          id
+          name
+          category
+        }
       }
       token
     }

@@ -1,11 +1,10 @@
 import { Card, CardBody, Heading, HStack, Image, Link, Stack, Tag, Text, Tooltip } from '@chakra-ui/react';
 
 import postcardBackgroundImageUrl from 'src/assets/img/event-image-placeholder.jpg';
-import { Button } from 'src/shared/design-system';
+import { Button, EventTypeIcon } from 'src/shared/design-system';
 
 import { EventTypeName, WithEvent } from '../../types';
 import { EventStatusTag } from '../EventStatusTag';
-import { EventTypeIcon } from '../EventTypeIcon';
 
 import { EventAddress } from './EventAddress';
 import { EventDateTime } from './EventDateTime';

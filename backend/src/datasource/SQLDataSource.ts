@@ -81,6 +81,15 @@ export class SQLDataSource extends BatchedSQLDataSource {
   eventTypes = this.createBaseQueries('EventType');
   // @ts-ignore, no actual type error but ts-node is erroneously detecting errors
   locations = this.createBaseQueries('Location');
-  // @ts-ignore, no actual type error but ts-node is erroneously detecting errors
-  users = this.createBaseQueries('User');
+
+  users = {
+    // @ts-ignore, no actual type error but ts-node is erroneously detecting errors
+    ...this.createBaseQueries('User'),
+    getUserEventTypes: (userId: number) =>
+      this.db
+        .query('User_EventType')
+        .innerJoin('EventType', 'User_EventType.event_type_id', 'EventType.id')
+        .where('user_id', userId),
+  };
 }
+

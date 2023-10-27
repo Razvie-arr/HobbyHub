@@ -1,8 +1,8 @@
 import { type ReactNode } from 'react';
 
-import { FormControl, FormErrorMessage, FormLabel } from '../atoms';
+import { FormControl, FormControlProps, FormErrorMessage, FormLabel } from '../atoms';
 
-export interface FieldProps {
+export interface FieldProps extends Omit<FormControlProps, 'label'> {
   id?: string;
   label?: ReactNode;
   isRequired?: boolean;
@@ -10,12 +10,11 @@ export interface FieldProps {
   children: ReactNode;
 }
 
-export function Field({ id, label, isRequired, error, children }: FieldProps) {
-  return (
-    <FormControl id={id} isRequired={isRequired} isInvalid={!!error}>
-      <FormLabel>{label}</FormLabel>
-      {children}
-      <FormErrorMessage>{error}</FormErrorMessage>
-    </FormControl>
-  );
-}
+export const Field = ({ id, label, isRequired, error, children, ...formControlProps }: FieldProps) => (
+  <FormControl {...formControlProps} id={id} isRequired={isRequired} isInvalid={!!error}>
+    {label ? <FormLabel>{label}</FormLabel> : null}
+    {children}
+    <FormErrorMessage>{error}</FormErrorMessage>
+  </FormControl>
+);
+

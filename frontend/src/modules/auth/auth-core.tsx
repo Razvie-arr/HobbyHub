@@ -1,13 +1,10 @@
 import { createContext, type ReactNode, useCallback, useContext, useMemo, useState } from 'react';
 
+import { AuthUser } from '../../gql/graphql';
+
 interface AuthState {
   token: string | null;
   user: AuthUser | null;
-}
-
-export interface AuthUser {
-  id: number;
-  name: string;
 }
 
 const LOCAL_STORAGE_AUTH_KEY = 'project-auth';

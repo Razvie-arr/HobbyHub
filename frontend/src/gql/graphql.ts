@@ -25,7 +25,9 @@ export type AuthInfo = {
 export type AuthUser = {
   __typename?: 'AuthUser';
   email: Scalars['String']['output'];
+  event_types: Array<EventType>;
   id: Scalars['Int']['output'];
+  location?: Maybe<Location>;
   name: Scalars['String']['output'];
   password: Scalars['String']['output'];
   verified: Scalars['Boolean']['output'];
@@ -53,6 +55,7 @@ export type Event = {
 
 export type EventType = {
   __typename?: 'EventType';
+  category: Scalars['String']['output'];
   id: Scalars['Int']['output'];
   name: Scalars['String']['output'];
 };
@@ -121,6 +124,7 @@ export type Query = {
   locations?: Maybe<Array<Maybe<Location>>>;
   locationsByIds?: Maybe<Array<Maybe<Location>>>;
   newlyCreatedNearbyEvents: Array<Event>;
+  similarEvents: Array<Event>;
   todaysNearbyEvents: Array<Event>;
   userById?: Maybe<User>;
   users?: Maybe<Array<Maybe<User>>>;
@@ -175,6 +179,14 @@ export type QueryNewlyCreatedNearbyEventsArgs = {
   offset?: InputMaybe<Scalars['Int']['input']>;
 };
 
+export type QuerySimilarEventsArgs = {
+  city: Scalars['String']['input'];
+  eventId: Scalars['Int']['input'];
+  eventTypeIds: Array<Scalars['Int']['input']>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+};
+
 export type QueryTodaysNearbyEventsArgs = {
   latitude: Scalars['Float']['input'];
   limit?: InputMaybe<Scalars['Int']['input']>;
@@ -193,7 +205,9 @@ export type QueryUsersByIdsArgs = {
 export type User = {
   __typename?: 'User';
   email: Scalars['String']['output'];
+  event_types: Array<EventType>;
   id: Scalars['Int']['output'];
+  location?: Maybe<Location>;
   name: Scalars['String']['output'];
 };
 
@@ -207,7 +221,13 @@ export type SignInMutation = {
   signIn: {
     __typename?: 'AuthInfo';
     token: string;
-    user: { __typename?: 'AuthUser'; id: number; name: string; email: string };
+    user: {
+      __typename?: 'AuthUser';
+      id: number;
+      name: string;
+      email: string;
+      event_types: Array<{ __typename?: 'EventType'; id: number; name: string; category: string }>;
+    };
   };
 };
 
@@ -452,6 +472,18 @@ export const SignInDocument = {
                       { kind: 'Field', name: { kind: 'Name', value: 'id' } },
                       { kind: 'Field', name: { kind: 'Name', value: 'name' } },
                       { kind: 'Field', name: { kind: 'Name', value: 'email' } },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'event_types' },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                            { kind: 'Field', name: { kind: 'Name', value: 'name' } },
+                            { kind: 'Field', name: { kind: 'Name', value: 'category' } },
+                          ],
+                        },
+                      },
                     ],
                   },
                 },

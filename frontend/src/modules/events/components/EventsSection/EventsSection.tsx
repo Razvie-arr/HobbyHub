@@ -12,16 +12,19 @@ import { NoEvents } from './NoEvents';
 interface EventsSectionProps {
   events: Array<EventProps> | null | undefined;
   title: ReactNode;
+  handleSeeAllEvents?: () => void;
 }
 
-export const EventsSection = ({ events, title }: EventsSectionProps) => (
+export const EventsSection = ({ events, handleSeeAllEvents, title }: EventsSectionProps) => (
   <Box>
     <Stack spacing="8">
       <HStack justifyContent="space-between">
         <Heading as="h2">{title}</Heading>{' '}
-        <Button size="md" variant="ghost" colorScheme="purple">
-          See all events
-        </Button>
+        {handleSeeAllEvents ? (
+          <Button size="md" variant="link" colorScheme="purple" onClick={handleSeeAllEvents}>
+            See all events
+          </Button>
+        ) : null}
       </HStack>
       {pipe(
         events,

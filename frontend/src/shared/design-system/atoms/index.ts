@@ -1,3 +1,4 @@
+export { EventTypeIcon } from './EventTypeIcon';
 export { Link, type LinkProps } from './Link';
 export { NavLink, type NavLinkProps } from './NavLink';
 export {
@@ -56,3 +57,4 @@ export {
   Textarea,
   type TextareaProps,
 } from '@chakra-ui/react';
+
