@@ -4,12 +4,13 @@ export const getAddressComponents = flow(
   (addressComponents?: google.maps.places.PlaceResult['address_components'] | null) => addressComponents,
   Option.fromNullable,
   Option.map((value) => {
+    const country = value.find(({ types }) => types.includes('country'));
     const city = value.find(({ types }) => types.includes('administrative_area_level_2'));
     const cityFallback = value.find(({ types }) => types.includes('postal_town'));
     const streetName = value.find(({ types }) => types.includes('route'));
     const streetNumber = value.find(({ types }) => types.includes('street_number'));
     const premise = value.find(({ types }) => types.includes('premise'));
-    return { city, cityFallback, streetName, streetNumber, premise };
+    return { country, city, cityFallback, streetName, streetNumber, premise };
   }),
 );
 

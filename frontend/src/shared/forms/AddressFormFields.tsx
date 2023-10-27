@@ -1,0 +1,38 @@
+import { Option, pipe } from 'effect';
+import { useFormContext } from 'react-hook-form';
+
+import { getAddressComponents } from '../../utils/googleMaps';
+import { Field } from '../design-system';
+
+import { AddressInput, InputField } from './molecules';
+
+export const AddressFormFields = () => {
+  const { setValue } = useFormContext();
+  return (
+    <>
+      <Field label="Search address">
+        <AddressInput
+          onPlaceSelected={(places) => {
+            const addressComponents = pipe(
+              places.address_components,
+              getAddressComponents,
+              Option.getOrElse(() => null),
+            );
+            if (addressComponents) {
+              const { country, city, cityFallback, streetName, streetNumber } = addressComponents;
+              setValue('streetName', streetName?.short_name ?? '');
+              setValue('streetNumber', streetNumber?.short_name ?? '');
+              setValue('city', city?.short_name ?? cityFallback?.short_name ?? '');
+              setValue('country', country?.long_name ?? '');
+            }
+          }}
+        />
+      </Field>
+      <InputField name="streetName" label="Street name" />
+      <InputField name="streetNumber" label="Street number" />
+      <InputField name="city" label="City" />
+      <InputField name="country" label="Country" />
+    </>
+  );
+};
+

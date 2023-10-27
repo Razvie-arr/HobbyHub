@@ -14,16 +14,13 @@ import {
 import { FaFile } from 'react-icons/fa6';
 import { NavLink } from 'react-router-dom';
 
-import { Form, InputField, MultiSelectField } from 'src/shared/forms';
+import { AddressFormFields, Form, InputField, MultiSelectField } from 'src/shared/forms';
 
 import { route } from '../../../route';
 
 import { FormStack } from './FormStack';
 
-// interface EventFormProps {
-//
-// }
-export const activityOptions = [
+const activityOptions = [
   { value: 'volleyball', label: 'Volleyball', color: '#0052CC' },
   { value: 'basketball', label: 'Basketball', color: '#5243AA' },
   { value: 'athletics', label: 'Athletics', color: '#FF5630' },
@@ -40,7 +37,7 @@ export const EventForm = () => (
           <Text fontSize="3xl" fontWeight="bold" color="purple.500">
             Create event
           </Text>
-          <Text>Efficeintly coordinate your events or gatherings.</Text>
+          <Text>Efficiently coordinate your events or gatherings.</Text>
         </Flex>
         <Spacer />
         <Flex gap={2} mt={3} align="end">
@@ -92,7 +89,7 @@ export const EventForm = () => (
             <InputField name="timeFrom" label="Start time" type="time"></InputField>
             <InputField name="timeTo opening hours" label="End time" type="time"></InputField>
           </Flex>
-          <InputField name="address" label="Address" placeholder="Enter address"></InputField>
+          <AddressFormFields />
         </FormStack>
 
         <FormStack title="Event information">
