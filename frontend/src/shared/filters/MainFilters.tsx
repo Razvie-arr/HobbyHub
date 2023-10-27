@@ -25,16 +25,16 @@ export const MainFilters = () => {
       sports: params.sports,
       games: params.games,
       other: params.other,
-      address: null,
+      address: '',
       distance: '',
       dates: params.startDate && params.endDate ? [new Date(params.startDate), new Date(params.endDate)] : [],
-      sortBy: params.sortBy,
+      sortBy: params.sortBy ?? '',
     },
   });
 
   useEffect(() => {
     const values = methods.getValues();
-    if (location && values.address === null) {
+    if (location && values.address === '') {
       // @ts-expect-error
       methods.setValue('address', location);
     }

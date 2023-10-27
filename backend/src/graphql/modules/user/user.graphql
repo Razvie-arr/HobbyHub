@@ -17,6 +17,9 @@ type User { # Public info about user
   name: String!
   email: String!
   event_types: [EventType!]!
+
+  location_id: Int!
+
   location: Location
 }
 
@@ -27,6 +30,9 @@ type AuthUser { # Private info about user (e.g. with email address, ...)
   password: String!
   verified: Boolean!
   event_types: [EventType!]!
+
+  location_id: Int!
+
   location: Location
 }
 

@@ -37,7 +37,7 @@ const HAVERSINE_FORMULA = ` (
         )
       )
     )`;
-const DEFAULT_DISTANCE = 20;
+const DEFAULT_DISTANCE = 100;
 const DEFAULT_LIMIT = 5;
 const MINIMUM_COUNT_SIMILAR_EVENTS = 3;
 
@@ -301,3 +301,4 @@ function createLocationInput(location: LocationInput) {
 function getValue<Type>(input: Type) {
   return input ? input : undefined;
 }
+

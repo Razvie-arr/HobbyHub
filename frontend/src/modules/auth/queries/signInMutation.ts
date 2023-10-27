@@ -12,6 +12,10 @@ export const SIGN_IN_MUTATION = gql(/* GraphQL */ `
           name
           category
         }
+        location {
+          longitude
+          latitude
+        }
       }
       token
     }

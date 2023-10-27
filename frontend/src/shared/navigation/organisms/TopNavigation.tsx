@@ -120,7 +120,6 @@ export function TopNavigation() {
                     onClick={() => {
                       signOut();
                       navigate(route.home());
-                      window.location.reload();
                     }}
                   >
                     Sign out

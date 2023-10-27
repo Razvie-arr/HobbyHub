@@ -20,6 +20,7 @@ import { locationResolver, locationsResolver } from './modules/location/location
 import { searchEventsResolver } from './modules/search/searchResolver';
 import {
   authUserEventTypesResolver,
+  authUserLocationResolver,
   requestResetPasswordResolver,
   resetPasswordResolver,
   signInResolver,
@@ -48,6 +49,7 @@ export const rootResolver: Resolvers = {
 
   AuthUser: {
     event_types: authUserEventTypesResolver,
+    location: authUserLocationResolver,
   },
 
   Event: {

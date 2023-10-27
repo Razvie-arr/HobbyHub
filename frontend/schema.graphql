@@ -35,6 +35,7 @@ type Event {
 type EventType {
   id: Int!
   name: String!
+  category: String!
 }
 
 type Location {
@@ -92,7 +93,7 @@ input EventInput {
   description: String
   author_id: Int
   group_id: Int
-  capacity: Int!,
+  capacity: Int!
   allow_waitlist: Boolean!
   image_filePath: String
   start_datetime: String!
@@ -111,3 +112,4 @@ input LocationInput {
   latitude: Float!
   longitude: Float!
 }
+

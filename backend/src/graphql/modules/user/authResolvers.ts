@@ -9,6 +9,7 @@ import {
   ContextualResolverWithParent,
   type CustomContext,
   EventType,
+  Location,
   type MutationRequestResetPasswordArgs,
   type MutationResetPasswordArgs,
   type MutationSignInArgs,
@@ -33,7 +34,8 @@ export const signInResolver = async (
     throw new GraphQLError('User not with that email was not found.');
   }
 
-  const user = dbResponse[0];
+  const user = dbResponse[0][0];
+
   if (await argon2.verify(user.password, password)) {
     const token = createToken({ id: user.id });
 
@@ -50,6 +52,12 @@ export const authUserEventTypesResolver: ContextualResolverWithParent<Array<Even
   _,
   { dataSources },
 ) => await dataSources.sql.users.getUserEventTypes(parent.id);
+
+export const authUserLocationResolver: ContextualResolverWithParent<Location, AuthUser> = async (
+  parent,
+  _,
+  { dataSources },
+) => (await dataSources.sql.locations.getById(parent.location_id)) as unknown as Location;
 
 export const signUpResolver = async (
   _: unknown,
@@ -92,6 +100,7 @@ export const signUpResolver = async (
     password: passwordHash,
     verified: false,
     event_types: [],
+    location_id: 0,
   };
 
   const verificationTextMessage = `Please verify your account via this link!\nhttps://frontend-team01-vse.handson.p.pro/auth/verifyUser?token=${token}">`;
@@ -191,3 +200,4 @@ export const resetPasswordResolver = async (
 
   return true;
 };
+

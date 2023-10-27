@@ -1,5 +1,5 @@
 import { useQuery } from '@apollo/client';
-import { Stack } from '@chakra-ui/react';
+import { Flex, Spinner, Stack } from '@chakra-ui/react';
 import { Option, pipe, ReadonlyArray } from 'effect';
 import { createSearchParams, useNavigate } from 'react-router-dom';
 
@@ -14,7 +14,7 @@ import { EVENTS, LOCATION_AWARE_EVENTS } from '../queries';
 import { EventProps } from '../types';
 
 interface LocationAwareEventsProps {
-  geolocation: GeolocationPosition;
+  geolocation: Pick<GeolocationPosition['coords'], 'longitude' | 'latitude'>;
   user: AuthUser;
 }
 
@@ -28,9 +28,7 @@ const eventTypesToSearchParams = (eventTypes: Array<EventType>, eventTypeCategor
 const LocationAwareEvents = ({ geolocation, user }: LocationAwareEventsProps) => {
   const navigate = useNavigate();
 
-  const {
-    coords: { latitude, longitude },
-  } = geolocation;
+  const { latitude, longitude } = geolocation;
 
   const result = useQuery(LOCATION_AWARE_EVENTS, {
     variables: { offset: 0, limit: 4, longitude, latitude, userId: user.id },
@@ -109,7 +107,7 @@ const LocationAwareEvents = ({ geolocation, user }: LocationAwareEventsProps) =>
 const LocationUnawareEvents = () => (
   <QueryResult
     queryResult={useQuery(EVENTS, {
-      variables: { offset: 0, limit: 4 },
+      variables: { offset: 0, limit: 10 },
     })}
     render={(data) => (
       <Stack spacing="8" mt="8">
@@ -122,12 +120,23 @@ const LocationUnawareEvents = () => (
 export const DefaultEventsPage = () => {
   const { geolocation, isLoading } = useGeolocation();
   const { user } = useAuth();
-  if (isLoading) {
-    return null;
+  console.log(geolocation);
+  if (!geolocation && isLoading) {
+    return (
+      <Flex justify="center" alignItems="center" width="100%" p="8">
+        <Spinner size="xl" />
+      </Flex>
+    );
   }
+
   return geolocation && user ? (
     <ContentContainer>
-      <LocationAwareEvents geolocation={geolocation} user={user} />
+      <LocationAwareEvents
+        geolocation={
+          user.location ? { latitude: user.location.latitude, longitude: user.location.longitude } : geolocation.coords
+        }
+        user={user}
+      />
     </ContentContainer>
   ) : (
     <ContentContainer>

@@ -28,6 +28,7 @@ export type AuthUser = {
   event_types: Array<EventType>;
   id: Scalars['Int']['output'];
   location?: Maybe<Location>;
+  location_id: Scalars['Int']['output'];
   name: Scalars['String']['output'];
   password: Scalars['String']['output'];
   verified: Scalars['Boolean']['output'];
@@ -37,12 +38,13 @@ export type Event = {
   __typename?: 'Event';
   allow_waitlist: Scalars['Boolean']['output'];
   author: User;
-  author_id: Scalars['Int']['output'];
+  author_id?: Maybe<Scalars['Int']['output']>;
   capacity: Scalars['Int']['output'];
   created_at: Scalars['String']['output'];
   description?: Maybe<Scalars['String']['output']>;
   end_datetime: Scalars['String']['output'];
   event_types: Array<EventType>;
+  group_id?: Maybe<Scalars['Int']['output']>;
   id: Scalars['Int']['output'];
   image_filePath?: Maybe<Scalars['String']['output']>;
   location: Location;
@@ -51,6 +53,21 @@ export type Event = {
   participants: Array<User>;
   start_datetime: Scalars['String']['output'];
   summary: Scalars['String']['output'];
+};
+
+export type EventInput = {
+  allow_waitlist: Scalars['Boolean']['input'];
+  author_id?: InputMaybe<Scalars['Int']['input']>;
+  capacity: Scalars['Int']['input'];
+  description?: InputMaybe<Scalars['String']['input']>;
+  end_datetime: Scalars['String']['input'];
+  group_id?: InputMaybe<Scalars['Int']['input']>;
+  id?: InputMaybe<Scalars['Int']['input']>;
+  image_filePath?: InputMaybe<Scalars['String']['input']>;
+  location_id?: InputMaybe<Scalars['Int']['input']>;
+  name: Scalars['String']['input'];
+  start_datetime: Scalars['String']['input'];
+  summary: Scalars['String']['input'];
 };
 
 export type EventType = {
@@ -72,9 +89,26 @@ export type Location = {
   street_number: Scalars['String']['output'];
 };
 
+export type LocationInput = {
+  additional_information?: InputMaybe<Scalars['String']['input']>;
+  city: Scalars['String']['input'];
+  country: Scalars['String']['input'];
+  id?: InputMaybe<Scalars['Int']['input']>;
+  latitude: Scalars['Float']['input'];
+  longitude: Scalars['Float']['input'];
+  street_name: Scalars['String']['input'];
+  street_number: Scalars['String']['input'];
+};
+
 export type Mutation = {
   __typename?: 'Mutation';
   _empty?: Maybe<Scalars['String']['output']>;
+  createEvent: Event;
+  createLocation?: Maybe<Location>;
+  deleteEvent: Scalars['String']['output'];
+  deleteLocation: Scalars['String']['output'];
+  editEvent: Event;
+  editLocation?: Maybe<Location>;
   requestResetPassword: Scalars['Boolean']['output'];
   resetPassword: Scalars['Boolean']['output'];
   signIn: AuthInfo;
@@ -84,6 +118,33 @@ export type Mutation = {
 
 export type Mutation_EmptyArgs = {
   nothing?: InputMaybe<Scalars['String']['input']>;
+};
+
+export type MutationCreateEventArgs = {
+  event: EventInput;
+  location: LocationInput;
+};
+
+export type MutationCreateLocationArgs = {
+  location: LocationInput;
+};
+
+export type MutationDeleteEventArgs = {
+  event_id: Scalars['Int']['input'];
+  location_id: Scalars['Int']['input'];
+};
+
+export type MutationDeleteLocationArgs = {
+  id: Scalars['Int']['input'];
+};
+
+export type MutationEditEventArgs = {
+  event: EventInput;
+  location: LocationInput;
+};
+
+export type MutationEditLocationArgs = {
+  location: LocationInput;
 };
 
 export type MutationRequestResetPasswordArgs = {
@@ -124,6 +185,7 @@ export type Query = {
   locations?: Maybe<Array<Maybe<Location>>>;
   locationsByIds?: Maybe<Array<Maybe<Location>>>;
   newlyCreatedNearbyEvents: Array<Event>;
+  searchEvents: Array<Event>;
   similarEvents: Array<Event>;
   todaysNearbyEvents: Array<Event>;
   userById?: Maybe<User>;
@@ -179,6 +241,12 @@ export type QueryNewlyCreatedNearbyEventsArgs = {
   offset?: InputMaybe<Scalars['Int']['input']>;
 };
 
+export type QuerySearchEventsArgs = {
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  text: Scalars['String']['input'];
+};
+
 export type QuerySimilarEventsArgs = {
   city: Scalars['String']['input'];
   eventId: Scalars['Int']['input'];
@@ -208,6 +276,7 @@ export type User = {
   event_types: Array<EventType>;
   id: Scalars['Int']['output'];
   location?: Maybe<Location>;
+  location_id: Scalars['Int']['output'];
   name: Scalars['String']['output'];
 };
 
@@ -227,6 +296,7 @@ export type SignInMutation = {
       name: string;
       email: string;
       event_types: Array<{ __typename?: 'EventType'; id: number; name: string; category: string }>;
+      location?: { __typename?: 'Location'; longitude: number; latitude: number } | null;
     };
   };
 };
@@ -481,6 +551,17 @@ export const SignInDocument = {
                             { kind: 'Field', name: { kind: 'Name', value: 'id' } },
                             { kind: 'Field', name: { kind: 'Name', value: 'name' } },
                             { kind: 'Field', name: { kind: 'Name', value: 'category' } },
+                          ],
+                        },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'location' },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            { kind: 'Field', name: { kind: 'Name', value: 'longitude' } },
+                            { kind: 'Field', name: { kind: 'Name', value: 'latitude' } },
                           ],
                         },
                       },

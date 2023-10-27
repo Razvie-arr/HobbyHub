@@ -11,6 +11,7 @@ declare module 'knex/types/tables' {
 
     Event_EventType: { event_id: number; event_type_id: number };
     Event_User: { event_id: number; user_id: number };
+    User_Location: { user_id: number; location_id: number };
     User_EventType: { user_id: number; event_type_id: number };
 
     //https://knexjs.org/guide/#typescript
@@ -34,3 +35,4 @@ declare module 'knex/types/tables' {
     >;
   }
 }
+

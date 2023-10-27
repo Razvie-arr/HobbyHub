@@ -29,6 +29,7 @@ export type AuthUser = {
   event_types: Array<EventType>;
   id: Scalars['Int']['output'];
   location?: Maybe<Location>;
+  location_id: Scalars['Int']['output'];
   name: Scalars['String']['output'];
   password: Scalars['String']['output'];
   verified: Scalars['Boolean']['output'];
@@ -276,6 +277,7 @@ export type User = {
   event_types: Array<EventType>;
   id: Scalars['Int']['output'];
   location?: Maybe<Location>;
+  location_id: Scalars['Int']['output'];
   name: Scalars['String']['output'];
 };
 
@@ -402,6 +404,7 @@ export type AuthUserResolvers<
   event_types?: Resolver<Array<ResolversTypes['EventType']>, ParentType, ContextType>;
   id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   location?: Resolver<Maybe<ResolversTypes['Location']>, ParentType, ContextType>;
+  location_id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   password?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   verified?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
@@ -617,6 +620,7 @@ export type UserResolvers<
   event_types?: Resolver<Array<ResolversTypes['EventType']>, ParentType, ContextType>;
   id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   location?: Resolver<Maybe<ResolversTypes['Location']>, ParentType, ContextType>;
+  location_id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
