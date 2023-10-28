@@ -52,3 +52,11 @@ export const NEWLY_CREATED_NEARBY_EVENTS = gql(`
   }
 `);
 
+export const FILTERED_EVENTS = gql(`
+  query FilterEvents($offset: Int, $limit: Int, $eventTypeIds: [Int!], $startDatetime: String, $endDatetime: String, $filterLocation: FilterLocationInput, $sort: SortType) {
+    filterEvents(offset: $offset, limit: $limit, eventTypeIds: $eventTypeIds, start_datetime: $startDatetime, end_datetime: $endDatetime, filterLocation: $filterLocation, sort: $sort) {
+      ...EventFragment
+    }
+  }
+`);
+

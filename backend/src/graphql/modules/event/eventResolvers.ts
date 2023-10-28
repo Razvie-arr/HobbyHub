@@ -126,7 +126,7 @@ export const interestingNearbyEventsResolver = async (
 ): Promise<Array<Event>> => {
   const distance = dataSources.sql.db.query.raw(HAVERSINE_FORMULA, [latitude, longitude, latitude]);
   const result = dataSources.sql.db.query
-    .select(...locationAwareEventAttributes)
+    .distinct(...locationAwareEventAttributes)
     .from('Event')
     .join('Event_EventType', 'Event.id', 'Event_EventType.event_id')
     .join('User_EventType', 'Event_EventType.event_type_id', 'User_EventType.event_type_id')

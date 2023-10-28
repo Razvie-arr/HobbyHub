@@ -2,119 +2,135 @@ import { useEffect } from 'react';
 import { Box, Button, Flex, HStack, VStack } from '@chakra-ui/react';
 import { FormProvider, useForm } from 'react-hook-form';
 
+import { SortType } from '../../gql/graphql';
 import { getAddressName } from '../../utils/googleMaps';
 import { eventTypes } from '../constants';
 import { AddressInputField, DatePickerField, SelectField } from '../forms';
 import { useLngLatGeocoding } from '../hooks/useLngLatGeocoding';
 import { ContentContainer } from '../layout';
 
-import { useFilterSearchParams } from './hooks/useFilterSearchParams';
 import { ActivityFilter } from './ActivityFilter';
+import { useFilterSearchParams } from './hooks';
+import { createFilterValuesFromParams } from './utils';
 
 const inputProps = {
   bg: 'gray.200',
   borderRadius: 'full',
 };
 
-export const MainFilters = () => {
+export interface MainFiltersValues {
+  sports: number[];
+  games: number[];
+  other: number[];
+  address: google.maps.places.PlaceResult | null;
+  distance: string;
+  dates: readonly [Date | null, Date | null];
+  sortBy: SortType;
+}
+
+interface MainFiltersProps {
+  handleSubmit: (values: MainFiltersValues) => void;
+}
+
+export const MainFilters = ({ handleSubmit }: MainFiltersProps) => {
   const { params, setParams } = useFilterSearchParams();
   const location = useLngLatGeocoding({ lng: params.lng, lat: params.lat });
 
   const methods = useForm({
-    defaultValues: {
-      sports: params.sports,
-      games: params.games,
-      other: params.other,
-      address: '',
-      distance: '',
-      dates: params.startDate && params.endDate ? [new Date(params.startDate), new Date(params.endDate)] : [],
-      sortBy: params.sortBy ?? '',
-    },
+    defaultValues: createFilterValuesFromParams(params),
   });
 
   useEffect(() => {
     const values = methods.getValues();
-    if (location && values.address === '') {
+    if (location && values.address === null) {
       // @ts-expect-error
       methods.setValue('address', location);
     }
   }, [location, methods]);
 
   return (
-    <Box position="sticky" top="67px" zIndex={1}>
-      <FormProvider {...methods}>
-        <form
-          onSubmit={methods.handleSubmit((values) => {
-            setParams(values);
-          })}
-          noValidate
-        >
-          <VStack spacing="0" boxShadow="sm" mb="4">
-            <Box bg="purple.100" w="100%">
-              <ContentContainer p="6">
-                <Flex w="100%" justifyContent="center">
-                  <HStack spacing="4">
-                    <ActivityFilter label="Sports" fieldName="sports" eventTypes={eventTypes.sports} />
-                    <ActivityFilter label="Games" fieldName="games" eventTypes={eventTypes.games} />
-                    <ActivityFilter label="Other" fieldName="other" eventTypes={eventTypes.other} />
+    <>
+      <Box position="sticky" top="67px" zIndex={1}>
+        <FormProvider {...methods}>
+          <form
+            onSubmit={methods.handleSubmit(({ address, ...values }) => {
+              if (address && 'name' in address) {
+                setParams({ address: null, ...values });
+                handleSubmit({ address: null, ...values });
+              } else {
+                setParams({ address, ...values });
+                handleSubmit({ address, ...values });
+              }
+            })}
+            noValidate
+          >
+            <VStack spacing="0" boxShadow="sm" mb="4">
+              <Box bg="purple.100" w="100%">
+                <ContentContainer p="6">
+                  <Flex w="100%" justifyContent="center">
+                    <HStack spacing="4">
+                      <ActivityFilter label="Sports" fieldName="sports" eventTypes={eventTypes.sports} />
+                      <ActivityFilter label="Games" fieldName="games" eventTypes={eventTypes.games} />
+                      <ActivityFilter label="Other" fieldName="other" eventTypes={eventTypes.other} />
+                    </HStack>
+                  </Flex>
+                </ContentContainer>
+              </Box>
+              <Box bg="purple.50" w="100%" py="6">
+                <ContentContainer>
+                  <HStack>
+                    <AddressInputField
+                      name="address"
+                      formControlProps={{ flexBasis: '30%' }}
+                      defaultValue={location ? getAddressName(location.address_components) : ''}
+                      borderRadius="full"
+                      bg="gray.200"
+                    />
+                    <SelectField
+                      name="distance"
+                      formControlProps={{ flexBasis: '15%' }}
+                      placeholder="Distance"
+                      {...inputProps}
+                    >
+                      <option value="5">Within 5 km</option>
+                      <option value="10">Within 10 km</option>
+                      <option value="20">Within 20 km</option>
+                      <option value="50">Within 50 km</option>
+                      <option value="100">Within 100 km</option>
+                    </SelectField>
+                    <DatePickerField
+                      name="dates"
+                      formControlProps={{ flexBasis: '20%' }}
+                      datePickerProps={{
+                        selectsRange: true,
+                        isClearable: true,
+                        placeholderText: 'Select dates',
+                      }}
+                      inputProps={inputProps}
+                    />
+                    <SelectField
+                      name="sortBy"
+                      formControlProps={{ flexBasis: '13%' }}
+                      placeholder="Sort by:"
+                      {...inputProps}
+                    >
+                      <option value={SortType.Date}>Sort by: Date</option>
+                      <option value={SortType.Distance}>Sort by: Distance</option>
+                    </SelectField>
+                    <Button colorScheme="purple" borderRadius="full" width="100%" flexBasis="10%" type="submit">
+                      Apply filters
+                    </Button>
+                    <Button colorScheme="purple" flexBasis="10%" variant="link">
+                      Reset filters
+                    </Button>
                   </HStack>
-                </Flex>
-              </ContentContainer>
-            </Box>
-            <Box bg="purple.50" w="100%" py="6">
-              <ContentContainer>
-                <HStack>
-                  <AddressInputField
-                    name="address"
-                    formControlProps={{ flexBasis: '39%' }}
-                    defaultValue={location ? getAddressName(location.address_components) : ''}
-                    borderRadius="full"
-                    bg="gray.200"
-                  />
-                  <SelectField
-                    name="distance"
-                    formControlProps={{ flexBasis: '11%' }}
-                    placeholder="Distance"
-                    {...inputProps}
-                  >
-                    <option value="5">Within 5 km</option>
-                    <option value="10">Within 10 km</option>
-                    <option value="20">Within 20 km</option>
-                    <option value="50">Within 50 km</option>
-                    <option value="100">Within 100 km</option>
-                  </SelectField>
-                  <DatePickerField
-                    name="dates"
-                    formControlProps={{ flexBasis: '16%' }}
-                    datePickerProps={{
-                      selectsRange: true,
-                      isClearable: true,
-                      placeholderText: 'Select dates',
-                    }}
-                    inputProps={inputProps}
-                  />
-                  <SelectField
-                    name="sortBy"
-                    formControlProps={{ flexBasis: '13%' }}
-                    placeholder="Sort by:"
-                    {...inputProps}
-                  >
-                    <option value="date">Sort by: Date</option>
-                    <option value="distance">Sort by: Distance</option>
-                  </SelectField>
-                  <Button colorScheme="purple" borderRadius="full" width="100%" flexBasis="10%" type="submit">
-                    Apply filters
-                  </Button>
-                  <Button colorScheme="purple" flexBasis="10%" variant="link">
-                    Reset filters
-                  </Button>
-                </HStack>
-              </ContentContainer>
-            </Box>
-          </VStack>
-        </form>
-      </FormProvider>
-    </Box>
+                </ContentContainer>
+              </Box>
+            </VStack>
+          </form>
+        </FormProvider>
+      </Box>
+    </>
   );
 };
 

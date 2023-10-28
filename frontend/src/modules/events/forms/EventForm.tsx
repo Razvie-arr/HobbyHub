@@ -76,9 +76,20 @@ const eventFormSchema = zod
     },
   )
   .refine(({ startDatetime, endDatetime }) => endDatetime > startDatetime, {
-    message: 'End time cannot be earlier than start time',
+    message: 'Event cannot end earlier than start time',
     path: ['endDatetime'],
-  });
+  })
+  .refine(
+    ({ startDatetime, endDatetime }) => {
+      const startDate = new Date(startDatetime);
+      const endDate = new Date(endDatetime);
+      return startDate.getDate() === endDate.getDate();
+    },
+    {
+      message: 'Event cannot end on a different day',
+      path: ['endDatetime'],
+    },
+  );
 
 type FormValues = zod.infer<typeof eventFormSchema>;
 

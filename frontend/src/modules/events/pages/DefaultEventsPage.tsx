@@ -3,7 +3,7 @@ import { Flex, Spinner, Stack } from '@chakra-ui/react';
 import { Option, pipe, ReadonlyArray } from 'effect';
 import { createSearchParams, useNavigate } from 'react-router-dom';
 
-import { AuthUser, EventType } from '../../../gql/graphql';
+import { AuthUser, EventType, SortType } from '../../../gql/graphql';
 import { route } from '../../../route';
 import { useGeolocation } from '../../../shared/hooks/useGeolocation';
 import { ContentContainer, QueryResult } from '../../../shared/layout';
@@ -60,8 +60,8 @@ const LocationAwareEvents = ({ geolocation, user }: LocationAwareEventsProps) =>
                     search: createSearchParams({
                       lat: latitude.toString(),
                       lng: longitude.toString(),
-                      startDate: new Date().toString(),
-                      endDate: new Date().toString(),
+                      startDate: new Date().toLocaleDateString(),
+                      endDate: new Date().toLocaleDateString(),
                     }).toString(),
                   });
                 }}
@@ -75,6 +75,7 @@ const LocationAwareEvents = ({ geolocation, user }: LocationAwareEventsProps) =>
                     search: createSearchParams({
                       lat: latitude.toString(),
                       lng: longitude.toString(),
+                      distance: '20',
                       sports: eventTypesToSearchParams(user.event_types, 'Sports'),
                       games: eventTypesToSearchParams(user.event_types, 'Games'),
                       other: eventTypesToSearchParams(user.event_types, 'Other'),
@@ -91,7 +92,8 @@ const LocationAwareEvents = ({ geolocation, user }: LocationAwareEventsProps) =>
                     search: createSearchParams({
                       lat: latitude.toString(),
                       lng: longitude.toString(),
-                      sortBy: 'date',
+                      distance: '20',
+                      sortBy: SortType.Date,
                     }).toString(),
                   });
                 }}

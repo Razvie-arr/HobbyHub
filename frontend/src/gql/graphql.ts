@@ -77,6 +77,12 @@ export type EventType = {
   name: Scalars['String']['output'];
 };
 
+export type FilterLocationInput = {
+  distance: Scalars['Int']['input'];
+  latitude: Scalars['Float']['input'];
+  longitude: Scalars['Float']['input'];
+};
+
 export type Location = {
   __typename?: 'Location';
   city: Scalars['String']['output'];
@@ -186,6 +192,7 @@ export type Query = {
   eventTypes?: Maybe<Array<Maybe<EventType>>>;
   eventTypesByIds?: Maybe<Array<Maybe<EventType>>>;
   events: Array<Event>;
+  filterEvents?: Maybe<Array<Event>>;
   interestingNearbyEvents: Array<Event>;
   locationById?: Maybe<Location>;
   locations?: Maybe<Array<Maybe<Location>>>;
@@ -222,6 +229,16 @@ export type QueryEventTypesByIdsArgs = {
 export type QueryEventsArgs = {
   limit?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
+};
+
+export type QueryFilterEventsArgs = {
+  end_datetime?: InputMaybe<Scalars['String']['input']>;
+  eventTypeIds?: InputMaybe<Array<Scalars['Int']['input']>>;
+  filterLocation?: InputMaybe<FilterLocationInput>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  sort?: InputMaybe<SortType>;
+  start_datetime?: InputMaybe<Scalars['String']['input']>;
 };
 
 export type QueryInterestingNearbyEventsArgs = {
@@ -275,6 +292,11 @@ export type QueryUserByIdArgs = {
 export type QueryUsersByIdsArgs = {
   ids: Array<Scalars['Int']['input']>;
 };
+
+export enum SortType {
+  Date = 'DATE',
+  Distance = 'DISTANCE',
+}
 
 export type User = {
   __typename?: 'User';
@@ -443,6 +465,23 @@ export type NewlyCreatedNearbyEventsQuery = {
   newlyCreatedNearbyEvents: Array<
     { __typename?: 'Event' } & { ' $fragmentRefs'?: { EventFragmentFragment: EventFragmentFragment } }
   >;
+};
+
+export type FilterEventsQueryVariables = Exact<{
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  eventTypeIds?: InputMaybe<Array<Scalars['Int']['input']> | Scalars['Int']['input']>;
+  startDatetime?: InputMaybe<Scalars['String']['input']>;
+  endDatetime?: InputMaybe<Scalars['String']['input']>;
+  filterLocation?: InputMaybe<FilterLocationInput>;
+  sort?: InputMaybe<SortType>;
+}>;
+
+export type FilterEventsQuery = {
+  __typename?: 'Query';
+  filterEvents?: Array<
+    { __typename?: 'Event' } & { ' $fragmentRefs'?: { EventFragmentFragment: EventFragmentFragment } }
+  > | null;
 };
 
 export const EventFragmentFragmentDoc = {
@@ -1589,3 +1628,170 @@ export const NewlyCreatedNearbyEventsDocument = {
     },
   ],
 } as unknown as DocumentNode<NewlyCreatedNearbyEventsQuery, NewlyCreatedNearbyEventsQueryVariables>;
+export const FilterEventsDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'query',
+      name: { kind: 'Name', value: 'FilterEvents' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'offset' } },
+          type: { kind: 'NamedType', name: { kind: 'Name', value: 'Int' } },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'limit' } },
+          type: { kind: 'NamedType', name: { kind: 'Name', value: 'Int' } },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'eventTypeIds' } },
+          type: {
+            kind: 'ListType',
+            type: { kind: 'NonNullType', type: { kind: 'NamedType', name: { kind: 'Name', value: 'Int' } } },
+          },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'startDatetime' } },
+          type: { kind: 'NamedType', name: { kind: 'Name', value: 'String' } },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'endDatetime' } },
+          type: { kind: 'NamedType', name: { kind: 'Name', value: 'String' } },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'filterLocation' } },
+          type: { kind: 'NamedType', name: { kind: 'Name', value: 'FilterLocationInput' } },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'sort' } },
+          type: { kind: 'NamedType', name: { kind: 'Name', value: 'SortType' } },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'filterEvents' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'offset' },
+                value: { kind: 'Variable', name: { kind: 'Name', value: 'offset' } },
+              },
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'limit' },
+                value: { kind: 'Variable', name: { kind: 'Name', value: 'limit' } },
+              },
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'eventTypeIds' },
+                value: { kind: 'Variable', name: { kind: 'Name', value: 'eventTypeIds' } },
+              },
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'start_datetime' },
+                value: { kind: 'Variable', name: { kind: 'Name', value: 'startDatetime' } },
+              },
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'end_datetime' },
+                value: { kind: 'Variable', name: { kind: 'Name', value: 'endDatetime' } },
+              },
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'filterLocation' },
+                value: { kind: 'Variable', name: { kind: 'Name', value: 'filterLocation' } },
+              },
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'sort' },
+                value: { kind: 'Variable', name: { kind: 'Name', value: 'sort' } },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [{ kind: 'FragmentSpread', name: { kind: 'Name', value: 'EventFragment' } }],
+            },
+          },
+        ],
+      },
+    },
+    {
+      kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'EventFragment' },
+      typeCondition: { kind: 'NamedType', name: { kind: 'Name', value: 'Event' } },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'name' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'start_datetime' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'end_datetime' } },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'event_types' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'name' } },
+              ],
+            },
+          },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'author' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'name' } },
+              ],
+            },
+          },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'location' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'country' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'city' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'street_name' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'street_number' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'longitude' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'latitude' } },
+              ],
+            },
+          },
+          { kind: 'Field', name: { kind: 'Name', value: 'summary' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'description' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'image_filePath' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'capacity' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'allow_waitlist' } },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'participants' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'name' } },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<FilterEventsQuery, FilterEventsQueryVariables>;

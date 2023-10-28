@@ -1,6 +1,8 @@
 import { flow, Number, Option, ReadonlyArray, String } from 'effect';
 import { useSearchParams } from 'react-router-dom';
 
+import { SortType } from '../../../gql/graphql';
+
 const processArraySearchParam = flow(
   (value: string | null) => value,
   Option.fromNullable,
@@ -20,18 +22,20 @@ export const useFilterSearchParams = () => {
   const lng = params.get('lng');
   const lat = params.get('lat');
 
+  const updatedParams = {
+    sports: processArraySearchParam(params.get('sports')),
+    games: processArraySearchParam(params.get('games')),
+    other: processArraySearchParam(params.get('other')),
+    lng: lng ? parseFloat(lng) : null,
+    lat: lat ? parseFloat(lat) : null,
+    startDate: params.get('startDate') ?? null,
+    endDate: params.get('endDate') ?? null,
+    distance: params.get('distance'),
+    sortBy: params.get('sortBy') as SortType,
+  };
+
   return {
-    params: {
-      sports: processArraySearchParam(params.get('sports')),
-      games: processArraySearchParam(params.get('games')),
-      other: processArraySearchParam(params.get('other')),
-      lng: lng ? parseFloat(lng) : null,
-      lat: lat ? parseFloat(lat) : null,
-      startDate: params.get('startDate') ?? null,
-      endDate: params.get('endDate') ?? null,
-      distance: params.get('distance'),
-      sortBy: params.get('sortBy'),
-    },
+    params: updatedParams,
     setParams: (values: {}) => {
       setParams((prevParams) => {
         Object.entries(values)
@@ -72,6 +76,16 @@ export const useFilterSearchParams = () => {
         return prevParams;
       });
     },
+    noParams:
+      ReadonlyArray.isEmptyArray(updatedParams.sports) &&
+      ReadonlyArray.isEmptyArray(updatedParams.games) &&
+      ReadonlyArray.isEmptyArray(updatedParams.other) &&
+      updatedParams.lng === null &&
+      updatedParams.lat === null &&
+      updatedParams.startDate === null &&
+      updatedParams.endDate === null &&
+      updatedParams.distance === null &&
+      updatedParams.sortBy === null,
   };
 };
 
