@@ -11,7 +11,6 @@ declare module 'knex/types/tables' {
 
     Event_EventType: { event_id: number; event_type_id: number };
     Event_User: { event_id: number; user_id: number };
-    User_Location: { user_id: number; location_id: number };
     User_EventType: { user_id: number; event_type_id: number };
 
     //https://knexjs.org/guide/#typescript
@@ -32,6 +31,13 @@ declare module 'knex/types/tables' {
         Pick<Location, 'longitude' | 'latitude' | 'city' | 'street_number' | 'street_name' | 'country'>,
       Partial<Omit<Location, 'id'>>
     >;
+
+    user_composite: Knex.CompositeTableType<
+      User,
+      Partial<Omit<User, 'id'>> &
+        Pick<User, 'email' | 'name' | 'verified'> &
+        Partial<Pick<User, 'location_id' | 'description'>>,
+      Partial<Omit<User, 'id'>>
+    >;
   }
 }
-

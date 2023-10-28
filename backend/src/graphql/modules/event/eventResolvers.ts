@@ -8,15 +8,14 @@ import {
   ContextualResolverWithParent,
   CustomContext,
   Event,
-  EventInput,
   EventType,
   Location,
-  LocationInput,
   MutationCreateEventArgs,
   MutationDeleteEventArgs,
   MutationEditEventArgs,
   QueryEventByIdArgs,
   QueryEventsArgs,
+  QueryEventsByIdsArgs,
   QueryFilterEventsArgs,
   QueryInterestingNearbyEventsArgs,
   QueryNewlyCreatedNearbyEventsArgs,
@@ -24,6 +23,7 @@ import {
   QueryTodaysNearbyEventsArgs,
   User,
 } from '../../../types';
+import { createEventInput, createLocationInput } from '../../../utils/helpers';
 
 const DEFAULT_DISTANCE = 100;
 const DEFAULT_LIMIT = 5;
@@ -63,6 +63,12 @@ export const eventByIdResolver: ContextualNullableResolver<Event, QueryEventById
   { id },
   { dataSources },
 ) => await dataSources.sql.events.getById(id);
+
+export const eventsByIdsResolver: ContextualResolver<Array<Event>, QueryEventsByIdsArgs> = async (
+  _,
+  { ids },
+  { dataSources },
+) => await dataSources.sql.events.getByIds(ids);
 
 const locationAwareEventAttributes = [
   'Event.id as id',
@@ -198,7 +204,7 @@ export const createEventResolver = async (
     .insert(createLocationInput({ ...location, latitude: lat, longitude: lng }));
 
   if (!dbLocationResponse[0]) {
-    throw new GraphQLError(`Error while creating location!`);
+    throw new GraphQLError(`Error while creating Location!`);
   }
 
   event.location_id = dbLocationResponse[0];
@@ -214,6 +220,20 @@ export const createEventResolver = async (
     throw new GraphQLError(`Error while querying just created event - it should exist but doesn't!`);
   }
 
+  const event_id = dbResponse[0];
+  // Use map to create an array of insert promises
+  const insertPromises = event.event_type_ids.map((eventTypeId) =>
+    dataSources.sql.db.write('Event_EventType').insert({ event_id: event_id, event_type_id: eventTypeId }),
+  );
+
+  // Await all insertions
+  const dbEventEventTypeResponses = await Promise.all(insertPromises);
+
+  // Check if any of the insertions failed
+  if (dbEventEventTypeResponses.some((response) => !response)) {
+    throw new GraphQLError(`Error while inserting into Event_EventType table!`);
+  }
+
   return dbResult;
 };
 
@@ -222,11 +242,17 @@ export const editEventResolver = async (
   { location, event }: MutationEditEventArgs,
   { dataSources, googleMapsClient }: CustomContext,
 ) => {
+  if (!event.id) {
+    throw new GraphQLError('Event ID needs to be filled in order to update!');
+  }
   if (event.author_id && event.group_id) {
     throw new GraphQLError("Event can't have both author_id and group_id!");
   }
-  if (!location.id) {
+  if (!location.id && !event.location_id) {
     throw new GraphQLError('Location ID needs to be filled in order to update!');
+  }
+  if (event.event_type_ids.some((eventTypeId) => !eventTypeId)) {
+    throw new GraphQLError('EventTypeId needs to be filled in order to update!');
   }
 
   const geocodeResult = await googleMapsClient.geocode({
@@ -245,18 +271,41 @@ export const editEventResolver = async (
 
   const { lat, lng } = firstAddress.geometry.location;
 
+  const locationId = location.id ? location.id : event.location_id;
   const dbLocationResponse = await dataSources.sql.db
     .write('Location')
-    .where('id', '=', location.id)
+    .where('id', locationId)
     .update(createLocationInput({ ...location, latitude: lat, longitude: lng }));
 
   if (!dbLocationResponse) {
     throw new GraphQLError(`Error while updating location!`);
   }
 
-  if (!event.id) {
-    throw new GraphQLError('Event ID needs to be filled in order to update!');
+  const event_id = event.id;
+  const dbDeleteEventEventTypeResponse = await dataSources.sql.db
+    .write('Event_EventType')
+    .where('event_id', event_id)
+    .delete();
+
+  if (!dbDeleteEventEventTypeResponse) {
+    throw new GraphQLError(`Error while updating Event_EventType table part 1!`);
   }
+  // Use map to create an array of insert promises
+  const insertPromises = event.event_type_ids.map((eventTypeId) =>
+    dataSources.sql.db
+      .write('Event_EventType')
+      .where('event_id', event_id)
+      .insert({ event_id: event_id, event_type_id: eventTypeId }),
+  );
+
+  // Await all insertions
+  const dbEventEventTypeResponses = await Promise.all(insertPromises);
+
+  // Check if any of the insertions failed
+  if (dbEventEventTypeResponses.some((response) => !response)) {
+    throw new GraphQLError(`Error while updating Event_EventType table part 2!`);
+  }
+
   const dbResponse = await dataSources.sql.db.write('Event').where('id', '=', event.id).update(createEventInput(event));
 
   if (!dbResponse) {
@@ -277,16 +326,22 @@ export const deleteEventResolver = async (
   { event_id, location_id }: MutationDeleteEventArgs,
   { dataSources }: CustomContext,
 ) => {
-  const dbLocationResult = await dataSources.sql.db.write('Location').where('id', location_id).delete();
+  const dbEventEventTypeResult = await dataSources.sql.db.write('Event_EventType').where('event_id', event_id).delete();
 
-  if (!dbLocationResult) {
-    throw new GraphQLError(`Error while deleting location!`);
+  if (!dbEventEventTypeResult) {
+    throw new GraphQLError(`Error while deleting event from Event_EventType table!`);
   }
 
   const dbEventResult = await dataSources.sql.db.write('Event').where('id', event_id).delete();
 
   if (!dbEventResult) {
     throw new GraphQLError(`Error while deleting event!`);
+  }
+
+  const dbLocationResult = await dataSources.sql.db.write('Location').where('id', location_id).delete();
+
+  if (!dbLocationResult) {
+    throw new GraphQLError(`Error while deleting location!`);
   }
   return 'Event and location deleted!';
 };
@@ -310,37 +365,4 @@ export const filterEventResolver = async (
   );
   return result;
 };
-
-function createEventInput(event: EventInput) {
-  return {
-    name: getValue(event.name),
-    summary: getValue(event.summary),
-    description: getValue(event.description),
-    image_filePath: getValue(event.image_filePath),
-    start_datetime: getValue(event.start_datetime),
-    end_datetime: getValue(event.end_datetime),
-    capacity: getValue(event.capacity),
-    allow_waitlist: getValue(event.allow_waitlist),
-
-    author_id: getValue(event.author_id),
-    group_id: getValue(event.group_id),
-    location_id: getValue(event.location_id),
-  };
-}
-
-function createLocationInput(location: LocationInput) {
-  return {
-    id: getValue(location.id),
-    country: getValue(location.country),
-    city: getValue(location.city),
-    street_name: getValue(location.street_name),
-    street_number: getValue(location.street_number),
-    latitude: getValue(location.latitude),
-    longitude: getValue(location.longitude),
-  };
-}
-
-function getValue<Type>(input: Type) {
-  return input ? input : undefined;
-}
 

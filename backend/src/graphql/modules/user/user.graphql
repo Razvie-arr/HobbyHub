@@ -1,7 +1,7 @@
 extend type Query {
-  users: [User]
+  users(offset: Int, limit: Int): [User!]!
   userById(id: Int!): User
-  usersByIds(ids: [Int!]!): [User]
+  usersByIds(ids: [Int!]!): [User!]!
 }
 
 extend type Mutation {
@@ -10,16 +10,19 @@ extend type Mutation {
   verify(token: String!): String!
   requestResetPassword(email: String!): Boolean!
   resetPassword(password: String!, token: String!): Boolean!
+  editUser(user: UserInput!, location: LocationInput!): User!
+  deleteUser(id: Int!): String!
 }
 
 type User { # Public info about user
   id: Int!
-  name: String!
   email: String!
+  name: String!
+  verified: Boolean!
+  location_id: Int
+  description: String
+
   event_types: [EventType!]!
-
-  location_id: Int!
-
   location: Location
 }
 
@@ -29,6 +32,7 @@ type AuthUser { # Private info about user (e.g. with email address, ...)
   email: String!
   password: String!
   verified: Boolean!
+
   event_types: [EventType!]!
 
   location_id: Int!
@@ -39,5 +43,16 @@ type AuthUser { # Private info about user (e.g. with email address, ...)
 type AuthInfo {
   user: AuthUser!
   token: String!
+}
+
+input UserInput {
+  id: Int
+  email: String!
+  name: String!
+  verified: Boolean!
+  location_id: Int
+  description: String
+
+  event_type_ids: [Int!]!
 }
 
