@@ -14,18 +14,18 @@ interface EventCardProps extends WithEvent {
   simplified?: boolean;
 }
 
-export const EventCard = ({ event, simplified: simpleUI }: EventCardProps) => {
+export const EventCard = ({ event, simplified }: EventCardProps) => {
   const isFullCapacity = event.participants.length === event.capacity;
   return (
     <Card
       flexBasis={{ '2xl': '24%', lg: '32%', md: '48%' }}
       backgroundColor="white"
-      mb="12"
+      mb={simplified ? '0' : '12'}
       shadow="sm"
       borderRadius="none"
     >
       <CardBody p="0" display="flex" flexDirection="column">
-        {simpleUI ? null : (
+        {simplified ? null : (
           <>
             <EventStatusTag hasWaitlist={event.allow_waitlist} isFullCapacity={isFullCapacity} />
             <Image src={postcardBackgroundImageUrl} borderTopRadius="none" />
