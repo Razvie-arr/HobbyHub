@@ -90,7 +90,7 @@ export class SQLDataSource extends BatchedSQLDataSource {
     filterLocation?: FilterLocationInput | null,
     sort?: String | null,
   ) => {
-    const query = this.db.query.select('Event.*').from('Event');
+    const query = this.db.query.distinct('Event.*').from('Event');
     let distance;
 
     if (filterLocation) {
@@ -153,3 +153,4 @@ export class SQLDataSource extends BatchedSQLDataSource {
         .where('user_id', userId),
   };
 }
+

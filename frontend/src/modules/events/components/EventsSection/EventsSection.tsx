@@ -1,6 +1,6 @@
 import { ReactNode } from 'react';
 import { Button, Divider, Heading, HStack, Stack } from '@chakra-ui/react';
-import { Option, pipe, ReadonlyArray } from 'effect';
+import { ReadonlyArray } from 'effect';
 
 import { Box } from 'src/shared/design-system';
 

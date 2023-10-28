@@ -23,11 +23,14 @@ interface EventsPageProps {
   location: ReturnType<typeof useLngLatGeocoding>;
 }
 
+const DEFAULT_LIMIT = 8;
+
 export const EventsPage = ({ location }: EventsPageProps) => {
   const [getFilteredEvents, queryResult] = useLazyQuery(FILTERED_EVENTS);
   const { params, noParams } = useFilterSearchParams();
 
   const [filterValues, setFilterValues] = useState({ ...createFilterValuesFromParams(params), address: location });
+  const [noMoreResults, setNoMoreResults] = useState(false);
 
   const fetchFilteredEvents = async (values: MainFiltersValues, ownLimit: number) => {
     const [startDate, endDate] = values.dates;
@@ -65,7 +68,7 @@ export const EventsPage = ({ location }: EventsPageProps) => {
 
   useEffect(() => {
     if (!queryResult.data && !queryResult.error && !noParams) {
-      void fetchFilteredEvents(filterValues, 4);
+      void fetchFilteredEvents(filterValues, DEFAULT_LIMIT);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [location]);
@@ -74,8 +77,9 @@ export const EventsPage = ({ location }: EventsPageProps) => {
     <>
       <MainFilters
         handleSubmit={async (values) => {
-          await fetchFilteredEvents(values, 4);
+          await fetchFilteredEvents(values, DEFAULT_LIMIT);
           setFilterValues(values);
+          setNoMoreResults(false);
         }}
       />
       <ContentContainer>
@@ -93,18 +97,26 @@ export const EventsPage = ({ location }: EventsPageProps) => {
                 <Stack spacing="8">
                   <EventsSection events={events} />
                 </Stack>
-                <Center
-                  mb="16"
-                  onClick={async () => {
-                    await queryResult.fetchMore({
-                      variables: {
-                        offset: events.length,
-                      },
-                    });
-                  }}
-                >
-                  <Button colorScheme="purple">Show more</Button>
-                </Center>
+                {ReadonlyArray.isNonEmptyArray(events) ? (
+                  <Center mb="16">
+                    <Button
+                      colorScheme="purple"
+                      isDisabled={noMoreResults}
+                      onClick={async () => {
+                        const result = await queryResult.fetchMore({
+                          variables: {
+                            offset: events.length,
+                          },
+                        });
+                        if ((result.data.filterEvents?.length ?? 0) === 0) {
+                          setNoMoreResults(true);
+                        }
+                      }}
+                    >
+                      {noMoreResults ? 'No more results: Try different filter values' : 'Show more'}
+                    </Button>
+                  </Center>
+                ) : null}
               </>
             );
           }}
