@@ -1,4 +1,5 @@
 import { useMutation } from '@apollo/client';
+import { useToast } from '@chakra-ui/react';
 import { useNavigate } from 'react-router-dom';
 
 import { gql } from '../../../gql';
@@ -38,6 +39,7 @@ export const CreateEventForm = () => {
   const { user } = useAuth();
   const [createEventRequest, createEventRequestState] = useMutation(CREATE_EVENT);
   const navigate = useNavigate();
+  const toast = useToast();
   return (
     <EventForm
       defaultValues={{ ...defaultValues, startDatetime: getCurrentDateTime() }}
@@ -63,6 +65,13 @@ export const CreateEventForm = () => {
               street_number: values.streetNumber,
             },
           },
+        });
+        toast({
+          variant: 'left-accent',
+          status: 'success',
+          position: 'top-right',
+          title: 'Event updated!',
+          description: 'Your event was successfully updated.',
         });
         const id = result.data?.createEvent.id;
         if (id) {

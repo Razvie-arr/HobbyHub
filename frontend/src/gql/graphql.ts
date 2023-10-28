@@ -407,6 +407,13 @@ export type EventByIdQuery = {
     | null;
 };
 
+export type EditEventMutationVariables = Exact<{
+  event: EventInput;
+  location: LocationInputWithoutCoords;
+}>;
+
+export type EditEventMutation = { __typename?: 'Mutation'; editEvent: { __typename?: 'Event'; id: number } };
+
 export type EventFragmentFragment = {
   __typename?: 'Event';
   id: number;
@@ -422,6 +429,7 @@ export type EventFragmentFragment = {
   author: { __typename?: 'User'; id: number; name: string };
   location: {
     __typename?: 'Location';
+    id: number;
     country: string;
     city: string;
     street_name: string;
@@ -565,6 +573,7 @@ export const EventFragmentFragmentDoc = {
             selectionSet: {
               kind: 'SelectionSet',
               selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
                 { kind: 'Field', name: { kind: 'Name', value: 'country' } },
                 { kind: 'Field', name: { kind: 'Name', value: 'city' } },
                 { kind: 'Field', name: { kind: 'Name', value: 'street_name' } },
@@ -907,6 +916,7 @@ export const EventByIdDocument = {
             selectionSet: {
               kind: 'SelectionSet',
               selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
                 { kind: 'Field', name: { kind: 'Name', value: 'country' } },
                 { kind: 'Field', name: { kind: 'Name', value: 'city' } },
                 { kind: 'Field', name: { kind: 'Name', value: 'street_name' } },
@@ -937,6 +947,56 @@ export const EventByIdDocument = {
     },
   ],
 } as unknown as DocumentNode<EventByIdQuery, EventByIdQueryVariables>;
+export const EditEventDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'mutation',
+      name: { kind: 'Name', value: 'EditEvent' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'event' } },
+          type: { kind: 'NonNullType', type: { kind: 'NamedType', name: { kind: 'Name', value: 'EventInput' } } },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'location' } },
+          type: {
+            kind: 'NonNullType',
+            type: { kind: 'NamedType', name: { kind: 'Name', value: 'LocationInputWithoutCoords' } },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'editEvent' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'event' },
+                value: { kind: 'Variable', name: { kind: 'Name', value: 'event' } },
+              },
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'location' },
+                value: { kind: 'Variable', name: { kind: 'Name', value: 'location' } },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [{ kind: 'Field', name: { kind: 'Name', value: 'id' } }],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<EditEventMutation, EditEventMutationVariables>;
 export const GetLocationAwareEventsDocument = {
   kind: 'Document',
   definitions: [
@@ -1111,6 +1171,7 @@ export const GetLocationAwareEventsDocument = {
             selectionSet: {
               kind: 'SelectionSet',
               selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
                 { kind: 'Field', name: { kind: 'Name', value: 'country' } },
                 { kind: 'Field', name: { kind: 'Name', value: 'city' } },
                 { kind: 'Field', name: { kind: 'Name', value: 'street_name' } },
@@ -1225,6 +1286,7 @@ export const EventsDocument = {
             selectionSet: {
               kind: 'SelectionSet',
               selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
                 { kind: 'Field', name: { kind: 'Name', value: 'country' } },
                 { kind: 'Field', name: { kind: 'Name', value: 'city' } },
                 { kind: 'Field', name: { kind: 'Name', value: 'street_name' } },
@@ -1359,6 +1421,7 @@ export const TodaysNearbyEventsDocument = {
             selectionSet: {
               kind: 'SelectionSet',
               selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
                 { kind: 'Field', name: { kind: 'Name', value: 'country' } },
                 { kind: 'Field', name: { kind: 'Name', value: 'city' } },
                 { kind: 'Field', name: { kind: 'Name', value: 'street_name' } },
@@ -1503,6 +1566,7 @@ export const InterestingNearbyEventsDocument = {
             selectionSet: {
               kind: 'SelectionSet',
               selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
                 { kind: 'Field', name: { kind: 'Name', value: 'country' } },
                 { kind: 'Field', name: { kind: 'Name', value: 'city' } },
                 { kind: 'Field', name: { kind: 'Name', value: 'street_name' } },
@@ -1637,6 +1701,7 @@ export const NewlyCreatedNearbyEventsDocument = {
             selectionSet: {
               kind: 'SelectionSet',
               selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
                 { kind: 'Field', name: { kind: 'Name', value: 'country' } },
                 { kind: 'Field', name: { kind: 'Name', value: 'city' } },
                 { kind: 'Field', name: { kind: 'Name', value: 'street_name' } },
@@ -1804,6 +1869,7 @@ export const FilterEventsDocument = {
             selectionSet: {
               kind: 'SelectionSet',
               selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
                 { kind: 'Field', name: { kind: 'Name', value: 'country' } },
                 { kind: 'Field', name: { kind: 'Name', value: 'city' } },
                 { kind: 'Field', name: { kind: 'Name', value: 'street_name' } },
