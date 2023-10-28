@@ -55,13 +55,16 @@ const LocationAwareEvents = ({ geolocation, user }: LocationAwareEventsProps) =>
                 events={todaysNearbyEvents}
                 title="Today around you"
                 handleSeeAllEvents={() => {
+                  const startDate = new Date();
+                  const endDate = new Date();
+                  endDate.setDate(endDate.getDate() + 1);
                   navigate({
                     pathname: route.events(),
                     search: createSearchParams({
                       lat: latitude.toString(),
                       lng: longitude.toString(),
-                      startDate: new Date().toLocaleDateString(),
-                      endDate: new Date().toLocaleDateString(),
+                      startDate: startDate.toLocaleDateString(),
+                      endDate: endDate.toLocaleDateString(),
                     }).toString(),
                   });
                 }}
