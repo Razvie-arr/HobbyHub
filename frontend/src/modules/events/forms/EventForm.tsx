@@ -17,6 +17,7 @@ import { NavLink } from 'react-router-dom';
 
 import {
   AddressFormFields,
+  addressFormFieldsSchema,
   Form,
   InlineCheckboxField,
   InputField,
@@ -39,13 +40,6 @@ const options = [
   { label: 'Games', options: games.map(eventTypeToSelectOption) },
   { label: 'Other', options: other.map(eventTypeToSelectOption) },
 ];
-
-const addressFormFieldsSchema = {
-  streetName: zod.string().min(1, 'You must specify the street name'),
-  streetNumber: zod.string().min(1, 'You must specify the street number'),
-  city: zod.string().min(1, 'You must specify the city'),
-  country: zod.string().min(1, 'You must specify the country'),
-};
 
 const eventFormSchema = zod
   .object({
