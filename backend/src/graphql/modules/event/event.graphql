@@ -7,6 +7,16 @@ extend type Query {
   todaysNearbyEvents(longitude: Float!, latitude: Float!, offset: Int, limit: Int): [Event!]!
   interestingNearbyEvents(longitude: Float!, latitude: Float!, userId: Int!, offset: Int, limit: Int): [Event!]!
   similarEvents(eventId: Int!, city: String!, eventTypeIds: [Int!]!, offset: Int, limit: Int): [Event!]!
+
+  filterEvents(
+    offset: Int
+    limit: Int
+    eventTypeIds: [Int!]
+    start_datetime: String
+    end_datetime: String
+    filterLocation: FilterLocationInput
+    sort: SortType
+  ): [Event!]
 }
 
 extend type Mutation {
@@ -53,3 +63,13 @@ input EventInput {
   location_id: Int
 }
 
+input FilterLocationInput {
+  latitude: Float!
+  longitude: Float!
+  distance: Int!
+}
+
+enum SortType {
+  DISTANCE,
+  DATE
+}

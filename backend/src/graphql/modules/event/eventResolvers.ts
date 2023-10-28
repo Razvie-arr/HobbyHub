@@ -1,6 +1,7 @@
 import { GraphQLError } from 'graphql/error';
 
 import { GOOGLE_API_KEY } from '../../../config';
+import { HAVERSINE_FORMULA } from '../../../sharedConstants';
 import {
   ContextualNullableResolver,
   ContextualResolver,
@@ -16,6 +17,7 @@ import {
   MutationEditEventArgs,
   QueryEventByIdArgs,
   QueryEventsArgs,
+  QueryFilterEventsArgs,
   QueryInterestingNearbyEventsArgs,
   QueryNewlyCreatedNearbyEventsArgs,
   QuerySimilarEventsArgs,
@@ -23,21 +25,6 @@ import {
   User,
 } from '../../../types';
 
-const HAVERSINE_FORMULA = ` (
-      6371 * acos(
-        cos(
-          radians(?)
-        ) * cos(
-          radians(latitude)
-        ) * cos(
-          radians(longitude) - radians(?)
-        ) + sin(
-          radians(?)
-        ) * sin(
-          radians(latitude)
-        )
-      )
-    )`;
 const DEFAULT_DISTANCE = 100;
 const DEFAULT_LIMIT = 5;
 const MINIMUM_COUNT_SIMILAR_EVENTS = 3;
@@ -302,6 +289,26 @@ export const deleteEventResolver = async (
     throw new GraphQLError(`Error while deleting event!`);
   }
   return 'Event and location deleted!';
+};
+
+export const filterEventResolver = async (
+  _: unknown,
+  { eventTypeIds, start_datetime, end_datetime, filterLocation, offset, limit, sort }: QueryFilterEventsArgs,
+  { dataSources }: CustomContext,
+): Promise<Array<Event>> => {
+  offset = offset ?? 0;
+  limit = limit ?? DEFAULT_LIMIT;
+
+  const result = await dataSources.sql.getFilteredEvents(
+    offset,
+    limit,
+    eventTypeIds,
+    start_datetime,
+    end_datetime,
+    filterLocation,
+    sort ? sort.toString() : null,
+  );
+  return result;
 };
 
 function createEventInput(event: EventInput) {
