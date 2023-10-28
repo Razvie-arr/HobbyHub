@@ -10,6 +10,7 @@ import {
   eventLocationResolver,
   eventParticipantsResolver,
   eventsResolver,
+  filterEventResolver,
   interestingNearbyEventsResolver,
   newlyCreatedNearbyEventsResolver,
   similarEventsResolver,
@@ -45,6 +46,8 @@ export const rootResolver: Resolvers = {
     similarEvents: similarEventsResolver,
 
     searchEvents: searchEventsResolver,
+
+    filterEvents: filterEventResolver,
   },
 
   AuthUser: {

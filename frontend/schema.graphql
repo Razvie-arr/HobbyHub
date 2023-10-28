@@ -128,3 +128,25 @@ type User {
   name: String!
 }
 
+input LocationInput {
+  id: Int
+  country: String!
+  city: String!
+  street_name: String!
+  street_number: String!
+  additional_information: String
+  latitude: Float!
+  longitude: Float!
+}
+
+input FilterLocationInput {
+  latitude: Float!
+  longitude: Float!
+  distance: Int!
+}
+
+enum SortType {
+  DISTANCE
+  DATE
+}
+

@@ -78,6 +78,12 @@ export type EventType = {
   name: Scalars['String']['output'];
 };
 
+export type FilterLocationInput = {
+  distance: Scalars['Int']['input'];
+  latitude: Scalars['Float']['input'];
+  longitude: Scalars['Float']['input'];
+};
+
 export type Location = {
   __typename?: 'Location';
   city: Scalars['String']['output'];
@@ -187,6 +193,7 @@ export type Query = {
   eventTypes?: Maybe<Array<Maybe<EventType>>>;
   eventTypesByIds?: Maybe<Array<Maybe<EventType>>>;
   events: Array<Event>;
+  filterEvents?: Maybe<Array<Event>>;
   interestingNearbyEvents: Array<Event>;
   locationById?: Maybe<Location>;
   locations?: Maybe<Array<Maybe<Location>>>;
@@ -223,6 +230,16 @@ export type QueryEventTypesByIdsArgs = {
 export type QueryEventsArgs = {
   limit?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
+};
+
+export type QueryFilterEventsArgs = {
+  end_datetime?: InputMaybe<Scalars['String']['input']>;
+  eventTypeIds?: InputMaybe<Array<Scalars['Int']['input']>>;
+  filterLocation?: InputMaybe<FilterLocationInput>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  sort?: InputMaybe<SortType>;
+  start_datetime?: InputMaybe<Scalars['String']['input']>;
 };
 
 export type QueryInterestingNearbyEventsArgs = {
@@ -276,6 +293,11 @@ export type QueryUserByIdArgs = {
 export type QueryUsersByIdsArgs = {
   ids: Array<Scalars['Int']['input']>;
 };
+
+export enum SortType {
+  Date = 'DATE',
+  Distance = 'DISTANCE',
+}
 
 export type User = {
   __typename?: 'User';
@@ -365,6 +387,7 @@ export type ResolversTypes = {
   Event: ResolverTypeWrapper<Event>;
   EventInput: EventInput;
   EventType: ResolverTypeWrapper<EventType>;
+  FilterLocationInput: FilterLocationInput;
   Float: ResolverTypeWrapper<Scalars['Float']['output']>;
   Int: ResolverTypeWrapper<Scalars['Int']['output']>;
   Location: ResolverTypeWrapper<Location>;
@@ -372,6 +395,7 @@ export type ResolversTypes = {
   LocationInputWithoutCoords: LocationInputWithoutCoords;
   Mutation: ResolverTypeWrapper<{}>;
   Query: ResolverTypeWrapper<{}>;
+  SortType: SortType;
   String: ResolverTypeWrapper<Scalars['String']['output']>;
   User: ResolverTypeWrapper<User>;
 };
@@ -384,6 +408,7 @@ export type ResolversParentTypes = {
   Event: Event;
   EventInput: EventInput;
   EventType: EventType;
+  FilterLocationInput: FilterLocationInput;
   Float: Scalars['Float']['output'];
   Int: Scalars['Int']['output'];
   Location: Location;
@@ -566,6 +591,12 @@ export type QueryResolvers<
     RequireFields<QueryEventTypesByIdsArgs, 'ids'>
   >;
   events?: Resolver<Array<ResolversTypes['Event']>, ParentType, ContextType, Partial<QueryEventsArgs>>;
+  filterEvents?: Resolver<
+    Maybe<Array<ResolversTypes['Event']>>,
+    ParentType,
+    ContextType,
+    Partial<QueryFilterEventsArgs>
+  >;
   interestingNearbyEvents?: Resolver<
     Array<ResolversTypes['Event']>,
     ParentType,
