@@ -20,7 +20,8 @@ export const useLngLatGeocoding = ({ lng, lat }: LngLat) => {
       }
     };
     void getPlace();
-  }, [lng, lat]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
   return location;
 };
 

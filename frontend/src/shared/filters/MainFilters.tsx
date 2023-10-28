@@ -43,7 +43,6 @@ export const MainFilters = ({ handleSubmit }: MainFiltersProps) => {
   useEffect(() => {
     const values = methods.getValues();
     if (location && values.address === null) {
-      // @ts-expect-error
       methods.setValue('address', location);
     }
   }, [location, methods]);

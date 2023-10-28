@@ -10,6 +10,6 @@ export const createFilterValuesFromParams = (params: ReturnType<typeof useFilter
   dates: (params.startDate && params.endDate
     ? ([new Date(params.startDate), new Date(params.endDate)] as const)
     : ([null, null] as const)) as readonly [Date | null, Date | null],
-  sortBy: (params.sortBy ?? SortType.Date) as SortType,
+  sortBy: params.sortBy ?? SortType.Date,
 });
 

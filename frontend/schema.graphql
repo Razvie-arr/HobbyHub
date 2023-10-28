@@ -55,6 +55,12 @@ type EventType {
   name: String!
 }
 
+input FilterLocationInput {
+  distance: Int!
+  latitude: Float!
+  longitude: Float!
+}
+
 type Location {
   city: String!
   country: String!
@@ -106,6 +112,15 @@ type Query {
   eventTypes: [EventType]
   eventTypesByIds(ids: [Int!]!): [EventType]
   events(limit: Int, offset: Int): [Event!]!
+  filterEvents(
+    end_datetime: String
+    eventTypeIds: [Int!]
+    filterLocation: FilterLocationInput
+    limit: Int
+    offset: Int
+    sort: SortType
+    start_datetime: String
+  ): [Event!]
   interestingNearbyEvents(latitude: Float!, limit: Int, longitude: Float!, offset: Int, userId: Int!): [Event!]!
   locationById(id: Int!): Location
   locations: [Location]
@@ -119,6 +134,11 @@ type Query {
   usersByIds(ids: [Int!]!): [User]
 }
 
+enum SortType {
+  DATE
+  DISTANCE
+}
+
 type User {
   email: String!
   event_types: [EventType!]!
@@ -127,26 +147,3 @@ type User {
   location_id: Int!
   name: String!
 }
-
-input LocationInput {
-  id: Int
-  country: String!
-  city: String!
-  street_name: String!
-  street_number: String!
-  additional_information: String
-  latitude: Float!
-  longitude: Float!
-}
-
-input FilterLocationInput {
-  latitude: Float!
-  longitude: Float!
-  distance: Int!
-}
-
-enum SortType {
-  DISTANCE
-  DATE
-}
-

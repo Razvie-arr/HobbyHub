@@ -47,10 +47,10 @@ export function EnhancedApolloProvider({ children }: Props) {
         typePolicies: {
           Query: {
             fields: {
-              events: offsetLimitPagination(),
-              todaysNearbyEvents: offsetLimitPagination(),
-              interestingNearbyEvents: offsetLimitPagination(),
-              newlyCreatedNearbyEvents: offsetLimitPagination(),
+              filterEvents: {
+                ...offsetLimitPagination(),
+                keyArgs: ['filterLocation', 'start_datetime', 'end_datetime', 'sort', 'eventTypeIds'],
+              },
             },
           },
         },
