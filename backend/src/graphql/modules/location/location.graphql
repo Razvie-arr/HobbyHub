@@ -27,9 +27,9 @@ input LocationInputWithoutCoords {
 }
 
 extend type Query {
-  locations: [Location]
+  locations(offset: Int, limit: Int): [Location!]!
   locationById(id: Int!): Location
-  locationsByIds(ids: [Int!]!): [Location]
+  locationsByIds(ids: [Int!]!): [Location!]!
 }
 
 extend type Mutation {

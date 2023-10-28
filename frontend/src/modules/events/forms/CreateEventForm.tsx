@@ -9,7 +9,7 @@ import { useAuth } from '../../auth';
 import { EventForm } from './EventForm';
 
 interface SelectOption {
-  value: string;
+  value: number;
   label: string;
 }
 
@@ -54,6 +54,7 @@ export const CreateEventForm = () => {
               start_datetime: values.startDatetime,
               summary: values.summary,
               author_id: user?.id,
+              event_type_ids: values.eventTypes.map(({ value }) => value),
             },
             location: {
               city: values.city,

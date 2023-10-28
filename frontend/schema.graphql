@@ -40,6 +40,7 @@ input EventInput {
   capacity: Int!
   description: String
   end_datetime: String!
+  event_type_ids: [Int!]!
   group_id: Int
   id: Int
   image_filePath: String
@@ -95,8 +96,10 @@ type Mutation {
   createLocation(location: LocationInputWithoutCoords!): Location
   deleteEvent(event_id: Int!, location_id: Int!): String!
   deleteLocation(id: Int!): String!
+  deleteUser(id: Int!): String!
   editEvent(event: EventInput!, location: LocationInputWithoutCoords!): Event!
   editLocation(location: LocationInputWithoutCoords!): Location
+  editUser(location: LocationInput!, user: UserInput!): User!
   requestResetPassword(email: String!): Boolean!
   resetPassword(password: String!, token: String!): Boolean!
   signIn(email: String!, password: String!): AuthInfo!
@@ -107,11 +110,11 @@ type Mutation {
 type Query {
   _empty(nothing: String): String
   eventById(id: Int!): Event
-  eventByIds(ids: [Int!]!): [Event!]!
   eventTypeById(id: Int!): EventType
-  eventTypes: [EventType]
-  eventTypesByIds(ids: [Int!]!): [EventType]
+  eventTypes(limit: Int, offset: Int): [EventType!]!
+  eventTypesByIds(ids: [Int!]!): [EventType!]!
   events(limit: Int, offset: Int): [Event!]!
+  eventsByIds(ids: [Int!]!): [Event!]!
   filterEvents(
     end_datetime: String
     eventTypeIds: [Int!]
@@ -123,15 +126,15 @@ type Query {
   ): [Event!]
   interestingNearbyEvents(latitude: Float!, limit: Int, longitude: Float!, offset: Int, userId: Int!): [Event!]!
   locationById(id: Int!): Location
-  locations: [Location]
-  locationsByIds(ids: [Int!]!): [Location]
+  locations(limit: Int, offset: Int): [Location!]!
+  locationsByIds(ids: [Int!]!): [Location!]!
   newlyCreatedNearbyEvents(latitude: Float!, limit: Int, longitude: Float!, offset: Int): [Event!]!
   searchEvents(limit: Int, offset: Int, text: String!): [Event!]!
   similarEvents(city: String!, eventId: Int!, eventTypeIds: [Int!]!, limit: Int, offset: Int): [Event!]!
   todaysNearbyEvents(latitude: Float!, limit: Int, longitude: Float!, offset: Int): [Event!]!
   userById(id: Int!): User
-  users: [User]
-  usersByIds(ids: [Int!]!): [User]
+  users(limit: Int, offset: Int): [User!]!
+  usersByIds(ids: [Int!]!): [User!]!
 }
 
 enum SortType {
@@ -140,10 +143,23 @@ enum SortType {
 }
 
 type User {
+  description: String
   email: String!
   event_types: [EventType!]!
   id: Int!
   location: Location
-  location_id: Int!
+  location_id: Int
   name: String!
+  verified: Boolean!
 }
+
+input UserInput {
+  description: String
+  email: String!
+  event_type_ids: [Int!]!
+  id: Int
+  location_id: Int
+  name: String!
+  verified: Boolean!
+}
+

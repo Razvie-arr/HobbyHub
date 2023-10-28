@@ -9,6 +9,7 @@ import {
   eventEventTypesResolver,
   eventLocationResolver,
   eventParticipantsResolver,
+  eventsByIdsResolver,
   eventsResolver,
   filterEventResolver,
   interestingNearbyEventsResolver,
@@ -16,8 +17,12 @@ import {
   similarEventsResolver,
   todaysNearbyEventsResolver,
 } from './modules/event/eventResolvers';
-import { eventTypeResolver, eventTypesResolver } from './modules/eventType/eventTypeResolvers';
-import { locationResolver, locationsResolver } from './modules/location/locationResolvers';
+import {
+  eventTypeByIdResolver,
+  eventTypesByIdsResolver,
+  eventTypesResolver,
+} from './modules/eventType/eventTypeResolvers';
+import { locationByIdResolver, locationsByIdsResolver, locationsResolver } from './modules/location/locationResolvers';
 import { searchEventsResolver } from './modules/search/searchResolver';
 import {
   authUserEventTypesResolver,
@@ -28,17 +33,28 @@ import {
   signUpResolver,
   verifyUserResolver,
 } from './modules/user/authResolvers';
+import {
+  editUserResolver,
+  userByIdResolver,
+  userEventTypesResolver,
+  userLocationResolver,
+  usersByIdsResolver,
+  usersResolver,
+} from './modules/user/userResolvers';
 
 export const rootResolver: Resolvers = {
   Query: {
-    eventById: eventByIdResolver,
     events: eventsResolver,
+    eventById: eventByIdResolver,
+    eventsByIds: eventsByIdsResolver,
 
-    eventTypeById: eventTypeResolver,
     eventTypes: eventTypesResolver,
+    eventTypeById: eventTypeByIdResolver,
+    eventTypesByIds: eventTypesByIdsResolver,
 
-    locationById: locationResolver,
     locations: locationsResolver,
+    locationById: locationByIdResolver,
+    locationsByIds: locationsByIdsResolver,
 
     newlyCreatedNearbyEvents: newlyCreatedNearbyEventsResolver,
     todaysNearbyEvents: todaysNearbyEventsResolver,
@@ -48,6 +64,10 @@ export const rootResolver: Resolvers = {
     searchEvents: searchEventsResolver,
 
     filterEvents: filterEventResolver,
+
+    users: usersResolver,
+    userById: userByIdResolver,
+    usersByIds: usersByIdsResolver,
   },
 
   AuthUser: {
@@ -72,6 +92,12 @@ export const rootResolver: Resolvers = {
     createEvent: createEventResolver,
     editEvent: editEventResolver,
     deleteEvent: deleteEventResolver,
+
+    editUser: editUserResolver,
+  },
+
+  User: {
+    event_types: userEventTypesResolver,
+    location: userLocationResolver,
   },
 };
-

@@ -54,7 +54,9 @@ const eventFormSchema = zod
       .string()
       .min(1, 'Event summary is required')
       .max(300, 'Summary cannot be more than 300 characters long'),
-    eventTypes: zod.array(zod.object({ value: zod.string(), label: zod.string() })),
+    eventTypes: zod
+      .array(zod.object({ value: zod.number(), label: zod.string() }))
+      .nonempty('You must specify at least one event type'),
     capacity: zod.coerce
       .number()
       .int('Fractional people will not be able to come to your event, please input integer numbers')

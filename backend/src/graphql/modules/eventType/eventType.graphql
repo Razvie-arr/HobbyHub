@@ -5,8 +5,8 @@ type EventType {
 }
 
 extend type Query {
-  eventTypes: [EventType]
+  eventTypes(offset: Int, limit: Int): [EventType!]!
   eventTypeById(id: Int!): EventType
-  eventTypesByIds(ids: [Int!]!): [EventType]
+  eventTypesByIds(ids: [Int!]!): [EventType!]!
 }
 

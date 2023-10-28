@@ -61,6 +61,7 @@ export type EventInput = {
   capacity: Scalars['Int']['input'];
   description?: InputMaybe<Scalars['String']['input']>;
   end_datetime: Scalars['String']['input'];
+  event_type_ids: Array<Scalars['Int']['input']>;
   group_id?: InputMaybe<Scalars['Int']['input']>;
   id?: InputMaybe<Scalars['Int']['input']>;
   image_filePath?: InputMaybe<Scalars['String']['input']>;
@@ -119,8 +120,10 @@ export type Mutation = {
   createLocation?: Maybe<Location>;
   deleteEvent: Scalars['String']['output'];
   deleteLocation: Scalars['String']['output'];
+  deleteUser: Scalars['String']['output'];
   editEvent: Event;
   editLocation?: Maybe<Location>;
+  editUser: User;
   requestResetPassword: Scalars['Boolean']['output'];
   resetPassword: Scalars['Boolean']['output'];
   signIn: AuthInfo;
@@ -150,6 +153,10 @@ export type MutationDeleteLocationArgs = {
   id: Scalars['Int']['input'];
 };
 
+export type MutationDeleteUserArgs = {
+  id: Scalars['Int']['input'];
+};
+
 export type MutationEditEventArgs = {
   event: EventInput;
   location: LocationInputWithoutCoords;
@@ -157,6 +164,11 @@ export type MutationEditEventArgs = {
 
 export type MutationEditLocationArgs = {
   location: LocationInputWithoutCoords;
+};
+
+export type MutationEditUserArgs = {
+  location: LocationInput;
+  user: UserInput;
 };
 
 export type MutationRequestResetPasswordArgs = {
@@ -187,23 +199,23 @@ export type Query = {
   __typename?: 'Query';
   _empty?: Maybe<Scalars['String']['output']>;
   eventById?: Maybe<Event>;
-  eventByIds: Array<Event>;
   eventTypeById?: Maybe<EventType>;
-  eventTypes?: Maybe<Array<Maybe<EventType>>>;
-  eventTypesByIds?: Maybe<Array<Maybe<EventType>>>;
+  eventTypes: Array<EventType>;
+  eventTypesByIds: Array<EventType>;
   events: Array<Event>;
+  eventsByIds: Array<Event>;
   filterEvents?: Maybe<Array<Event>>;
   interestingNearbyEvents: Array<Event>;
   locationById?: Maybe<Location>;
-  locations?: Maybe<Array<Maybe<Location>>>;
-  locationsByIds?: Maybe<Array<Maybe<Location>>>;
+  locations: Array<Location>;
+  locationsByIds: Array<Location>;
   newlyCreatedNearbyEvents: Array<Event>;
   searchEvents: Array<Event>;
   similarEvents: Array<Event>;
   todaysNearbyEvents: Array<Event>;
   userById?: Maybe<User>;
-  users?: Maybe<Array<Maybe<User>>>;
-  usersByIds?: Maybe<Array<Maybe<User>>>;
+  users: Array<User>;
+  usersByIds: Array<User>;
 };
 
 export type Query_EmptyArgs = {
@@ -214,12 +226,13 @@ export type QueryEventByIdArgs = {
   id: Scalars['Int']['input'];
 };
 
-export type QueryEventByIdsArgs = {
-  ids: Array<Scalars['Int']['input']>;
-};
-
 export type QueryEventTypeByIdArgs = {
   id: Scalars['Int']['input'];
+};
+
+export type QueryEventTypesArgs = {
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
 };
 
 export type QueryEventTypesByIdsArgs = {
@@ -229,6 +242,10 @@ export type QueryEventTypesByIdsArgs = {
 export type QueryEventsArgs = {
   limit?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
+};
+
+export type QueryEventsByIdsArgs = {
+  ids: Array<Scalars['Int']['input']>;
 };
 
 export type QueryFilterEventsArgs = {
@@ -251,6 +268,11 @@ export type QueryInterestingNearbyEventsArgs = {
 
 export type QueryLocationByIdArgs = {
   id: Scalars['Int']['input'];
+};
+
+export type QueryLocationsArgs = {
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
 };
 
 export type QueryLocationsByIdsArgs = {
@@ -289,6 +311,11 @@ export type QueryUserByIdArgs = {
   id: Scalars['Int']['input'];
 };
 
+export type QueryUsersArgs = {
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+};
+
 export type QueryUsersByIdsArgs = {
   ids: Array<Scalars['Int']['input']>;
 };
@@ -300,12 +327,24 @@ export enum SortType {
 
 export type User = {
   __typename?: 'User';
+  description?: Maybe<Scalars['String']['output']>;
   email: Scalars['String']['output'];
   event_types: Array<EventType>;
   id: Scalars['Int']['output'];
   location?: Maybe<Location>;
-  location_id: Scalars['Int']['output'];
+  location_id?: Maybe<Scalars['Int']['output']>;
   name: Scalars['String']['output'];
+  verified: Scalars['Boolean']['output'];
+};
+
+export type UserInput = {
+  description?: InputMaybe<Scalars['String']['input']>;
+  email: Scalars['String']['input'];
+  event_type_ids: Array<Scalars['Int']['input']>;
+  id?: InputMaybe<Scalars['Int']['input']>;
+  location_id?: InputMaybe<Scalars['Int']['input']>;
+  name: Scalars['String']['input'];
+  verified: Scalars['Boolean']['input'];
 };
 
 export type SignInMutationVariables = Exact<{

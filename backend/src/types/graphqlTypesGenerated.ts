@@ -62,6 +62,7 @@ export type EventInput = {
   capacity: Scalars['Int']['input'];
   description?: InputMaybe<Scalars['String']['input']>;
   end_datetime: Scalars['String']['input'];
+  event_type_ids: Array<Scalars['Int']['input']>;
   group_id?: InputMaybe<Scalars['Int']['input']>;
   id?: InputMaybe<Scalars['Int']['input']>;
   image_filePath?: InputMaybe<Scalars['String']['input']>;
@@ -120,8 +121,10 @@ export type Mutation = {
   createLocation?: Maybe<Location>;
   deleteEvent: Scalars['String']['output'];
   deleteLocation: Scalars['String']['output'];
+  deleteUser: Scalars['String']['output'];
   editEvent: Event;
   editLocation?: Maybe<Location>;
+  editUser: User;
   requestResetPassword: Scalars['Boolean']['output'];
   resetPassword: Scalars['Boolean']['output'];
   signIn: AuthInfo;
@@ -151,6 +154,10 @@ export type MutationDeleteLocationArgs = {
   id: Scalars['Int']['input'];
 };
 
+export type MutationDeleteUserArgs = {
+  id: Scalars['Int']['input'];
+};
+
 export type MutationEditEventArgs = {
   event: EventInput;
   location: LocationInputWithoutCoords;
@@ -158,6 +165,11 @@ export type MutationEditEventArgs = {
 
 export type MutationEditLocationArgs = {
   location: LocationInputWithoutCoords;
+};
+
+export type MutationEditUserArgs = {
+  location: LocationInput;
+  user: UserInput;
 };
 
 export type MutationRequestResetPasswordArgs = {
@@ -188,23 +200,23 @@ export type Query = {
   __typename?: 'Query';
   _empty?: Maybe<Scalars['String']['output']>;
   eventById?: Maybe<Event>;
-  eventByIds: Array<Event>;
   eventTypeById?: Maybe<EventType>;
-  eventTypes?: Maybe<Array<Maybe<EventType>>>;
-  eventTypesByIds?: Maybe<Array<Maybe<EventType>>>;
+  eventTypes: Array<EventType>;
+  eventTypesByIds: Array<EventType>;
   events: Array<Event>;
+  eventsByIds: Array<Event>;
   filterEvents?: Maybe<Array<Event>>;
   interestingNearbyEvents: Array<Event>;
   locationById?: Maybe<Location>;
-  locations?: Maybe<Array<Maybe<Location>>>;
-  locationsByIds?: Maybe<Array<Maybe<Location>>>;
+  locations: Array<Location>;
+  locationsByIds: Array<Location>;
   newlyCreatedNearbyEvents: Array<Event>;
   searchEvents: Array<Event>;
   similarEvents: Array<Event>;
   todaysNearbyEvents: Array<Event>;
   userById?: Maybe<User>;
-  users?: Maybe<Array<Maybe<User>>>;
-  usersByIds?: Maybe<Array<Maybe<User>>>;
+  users: Array<User>;
+  usersByIds: Array<User>;
 };
 
 export type Query_EmptyArgs = {
@@ -215,12 +227,13 @@ export type QueryEventByIdArgs = {
   id: Scalars['Int']['input'];
 };
 
-export type QueryEventByIdsArgs = {
-  ids: Array<Scalars['Int']['input']>;
-};
-
 export type QueryEventTypeByIdArgs = {
   id: Scalars['Int']['input'];
+};
+
+export type QueryEventTypesArgs = {
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
 };
 
 export type QueryEventTypesByIdsArgs = {
@@ -230,6 +243,10 @@ export type QueryEventTypesByIdsArgs = {
 export type QueryEventsArgs = {
   limit?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
+};
+
+export type QueryEventsByIdsArgs = {
+  ids: Array<Scalars['Int']['input']>;
 };
 
 export type QueryFilterEventsArgs = {
@@ -252,6 +269,11 @@ export type QueryInterestingNearbyEventsArgs = {
 
 export type QueryLocationByIdArgs = {
   id: Scalars['Int']['input'];
+};
+
+export type QueryLocationsArgs = {
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
 };
 
 export type QueryLocationsByIdsArgs = {
@@ -290,6 +312,11 @@ export type QueryUserByIdArgs = {
   id: Scalars['Int']['input'];
 };
 
+export type QueryUsersArgs = {
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+};
+
 export type QueryUsersByIdsArgs = {
   ids: Array<Scalars['Int']['input']>;
 };
@@ -301,12 +328,24 @@ export enum SortType {
 
 export type User = {
   __typename?: 'User';
+  description?: Maybe<Scalars['String']['output']>;
   email: Scalars['String']['output'];
   event_types: Array<EventType>;
   id: Scalars['Int']['output'];
   location?: Maybe<Location>;
-  location_id: Scalars['Int']['output'];
+  location_id?: Maybe<Scalars['Int']['output']>;
   name: Scalars['String']['output'];
+  verified: Scalars['Boolean']['output'];
+};
+
+export type UserInput = {
+  description?: InputMaybe<Scalars['String']['input']>;
+  email: Scalars['String']['input'];
+  event_type_ids: Array<Scalars['Int']['input']>;
+  id?: InputMaybe<Scalars['Int']['input']>;
+  location_id?: InputMaybe<Scalars['Int']['input']>;
+  name: Scalars['String']['input'];
+  verified: Scalars['Boolean']['input'];
 };
 
 export type ResolverTypeWrapper<T> = Promise<T> | T;
@@ -398,6 +437,7 @@ export type ResolversTypes = {
   SortType: SortType;
   String: ResolverTypeWrapper<Scalars['String']['output']>;
   User: ResolverTypeWrapper<User>;
+  UserInput: UserInput;
 };
 
 /** Mapping between all available schema types and the resolvers parents */
@@ -418,6 +458,7 @@ export type ResolversParentTypes = {
   Query: {};
   String: Scalars['String']['output'];
   User: User;
+  UserInput: UserInput;
 };
 
 export type AuthInfoResolvers<
@@ -521,6 +562,7 @@ export type MutationResolvers<
     ContextType,
     RequireFields<MutationDeleteLocationArgs, 'id'>
   >;
+  deleteUser?: Resolver<ResolversTypes['String'], ParentType, ContextType, RequireFields<MutationDeleteUserArgs, 'id'>>;
   editEvent?: Resolver<
     ResolversTypes['Event'],
     ParentType,
@@ -532,6 +574,12 @@ export type MutationResolvers<
     ParentType,
     ContextType,
     RequireFields<MutationEditLocationArgs, 'location'>
+  >;
+  editUser?: Resolver<
+    ResolversTypes['User'],
+    ParentType,
+    ContextType,
+    RequireFields<MutationEditUserArgs, 'location' | 'user'>
   >;
   requestResetPassword?: Resolver<
     ResolversTypes['Boolean'],
@@ -571,26 +619,26 @@ export type QueryResolvers<
     ContextType,
     RequireFields<QueryEventByIdArgs, 'id'>
   >;
-  eventByIds?: Resolver<
-    Array<ResolversTypes['Event']>,
-    ParentType,
-    ContextType,
-    RequireFields<QueryEventByIdsArgs, 'ids'>
-  >;
   eventTypeById?: Resolver<
     Maybe<ResolversTypes['EventType']>,
     ParentType,
     ContextType,
     RequireFields<QueryEventTypeByIdArgs, 'id'>
   >;
-  eventTypes?: Resolver<Maybe<Array<Maybe<ResolversTypes['EventType']>>>, ParentType, ContextType>;
+  eventTypes?: Resolver<Array<ResolversTypes['EventType']>, ParentType, ContextType, Partial<QueryEventTypesArgs>>;
   eventTypesByIds?: Resolver<
-    Maybe<Array<Maybe<ResolversTypes['EventType']>>>,
+    Array<ResolversTypes['EventType']>,
     ParentType,
     ContextType,
     RequireFields<QueryEventTypesByIdsArgs, 'ids'>
   >;
   events?: Resolver<Array<ResolversTypes['Event']>, ParentType, ContextType, Partial<QueryEventsArgs>>;
+  eventsByIds?: Resolver<
+    Array<ResolversTypes['Event']>,
+    ParentType,
+    ContextType,
+    RequireFields<QueryEventsByIdsArgs, 'ids'>
+  >;
   filterEvents?: Resolver<
     Maybe<Array<ResolversTypes['Event']>>,
     ParentType,
@@ -609,9 +657,9 @@ export type QueryResolvers<
     ContextType,
     RequireFields<QueryLocationByIdArgs, 'id'>
   >;
-  locations?: Resolver<Maybe<Array<Maybe<ResolversTypes['Location']>>>, ParentType, ContextType>;
+  locations?: Resolver<Array<ResolversTypes['Location']>, ParentType, ContextType, Partial<QueryLocationsArgs>>;
   locationsByIds?: Resolver<
-    Maybe<Array<Maybe<ResolversTypes['Location']>>>,
+    Array<ResolversTypes['Location']>,
     ParentType,
     ContextType,
     RequireFields<QueryLocationsByIdsArgs, 'ids'>
@@ -641,9 +689,9 @@ export type QueryResolvers<
     RequireFields<QueryTodaysNearbyEventsArgs, 'latitude' | 'longitude'>
   >;
   userById?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType, RequireFields<QueryUserByIdArgs, 'id'>>;
-  users?: Resolver<Maybe<Array<Maybe<ResolversTypes['User']>>>, ParentType, ContextType>;
+  users?: Resolver<Array<ResolversTypes['User']>, ParentType, ContextType, Partial<QueryUsersArgs>>;
   usersByIds?: Resolver<
-    Maybe<Array<Maybe<ResolversTypes['User']>>>,
+    Array<ResolversTypes['User']>,
     ParentType,
     ContextType,
     RequireFields<QueryUsersByIdsArgs, 'ids'>
@@ -654,12 +702,14 @@ export type UserResolvers<
   ContextType = CustomContext,
   ParentType extends ResolversParentTypes['User'] = ResolversParentTypes['User'],
 > = {
+  description?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   email?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   event_types?: Resolver<Array<ResolversTypes['EventType']>, ParentType, ContextType>;
   id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   location?: Resolver<Maybe<ResolversTypes['Location']>, ParentType, ContextType>;
-  location_id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  location_id?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
   name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  verified?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
