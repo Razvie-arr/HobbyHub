@@ -1,5 +1,17 @@
 import { useEffect, useMemo } from 'react';
-import { Avatar, Container, Divider, HStack, Icon, Menu, MenuButton, MenuItem, MenuList, Text } from '@chakra-ui/react';
+import {
+  Avatar,
+  Container,
+  Divider,
+  HStack,
+  Icon,
+  Menu,
+  MenuButton,
+  MenuItem,
+  MenuList,
+  Text,
+  Tooltip,
+} from '@chakra-ui/react';
 import { FaBars, FaRegBell, FaRegComment, FaRegSquarePlus, FaXmark } from 'react-icons/fa6';
 import { NavLink, useLocation, useNavigate } from 'react-router-dom';
 
@@ -70,15 +82,17 @@ export function TopNavigation() {
             <>
               <HStack>
                 <SearchEventBar />
-                <IconButton
-                  aria-label="Create event"
-                  as={NavLink}
-                  to={route.createEvent()}
-                  colorScheme="purple"
-                  fontSize="xl"
-                  icon={<Icon as={FaRegSquarePlus} />}
-                  variant="ghost"
-                />
+                <Tooltip label="Create event">
+                  <IconButton
+                    aria-label="Create event"
+                    as={NavLink}
+                    to={route.createEvent()}
+                    colorScheme="purple"
+                    fontSize="xl"
+                    icon={<Icon as={FaRegSquarePlus} />}
+                    variant="ghost"
+                  />
+                </Tooltip>
                 <IconButton
                   color="purple.600"
                   _hover={{ bg: 'purple.50' }}
