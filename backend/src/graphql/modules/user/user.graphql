@@ -12,6 +12,7 @@ extend type Mutation {
   resetPassword(password: String!, token: String!): Boolean!
   editUser(user: UserInput!, location: LocationInput!): User!
   deleteUser(id: Int!): String!
+  onboardUser(user: UserInput!, location: LocationInput!): User!
 }
 
 type User { # Public info about user
