@@ -65,7 +65,7 @@ export const EventCard = ({ event, simplified }: EventCardProps) => {
               Edit event
             </Button>
           ) : null}
-          {user ? (
+          {user && user.id !== event.author.id ? (
             <Button
               borderRadius="full"
               size="sm"
