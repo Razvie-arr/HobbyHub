@@ -12,7 +12,7 @@ import {
   Text,
   Tooltip,
 } from '@chakra-ui/react';
-import { FaBars, FaRegBell, FaRegComment, FaRegSquarePlus, FaXmark } from 'react-icons/fa6';
+import { FaBars, FaPlus, FaRegBell, FaRegComment, FaXmark } from 'react-icons/fa6';
 import { NavLink, useLocation, useNavigate } from 'react-router-dom';
 
 import logoImageUrl from 'src/assets/icon/logo.png';
@@ -89,8 +89,8 @@ export function TopNavigation() {
                     to={route.createEvent()}
                     colorScheme="purple"
                     fontSize="xl"
-                    icon={<Icon as={FaRegSquarePlus} />}
-                    variant="ghost"
+                    size="sm"
+                    icon={<Icon as={FaPlus} />}
                   />
                 </Tooltip>
                 <IconButton

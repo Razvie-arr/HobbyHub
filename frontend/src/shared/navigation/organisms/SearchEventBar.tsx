@@ -32,9 +32,11 @@ export const SearchEventBar = () => {
       />
       <InputRightElement>
         <IconButton
-          size="sm"
+          borderLeftRadius="none"
           aria-label="Search event"
           icon={<Icon as={MdSearch} />}
+          variant="ghost"
+          colorScheme="purple"
           onClick={() => {
             navigateToSearchResults();
           }}
