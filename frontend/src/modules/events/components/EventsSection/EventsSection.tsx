@@ -26,7 +26,7 @@ export const EventsSection = ({ events, handleSeeAllEvents, title }: EventsSecti
           </Button>
         ) : null}
       </HStack>
-      {title ? <Divider /> : null}
+      {title ? <Divider borderColor="purple.200" /> : null}
       {ReadonlyArray.isNonEmptyArray(events) ? <EventsCardList events={events} /> : <NoEvents />}
     </Stack>
   </Box>

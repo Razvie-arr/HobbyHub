@@ -37,7 +37,7 @@ export const SearchEventsPage = () => {
             <>
               <EventsMapButton events={events} position="fixed" bottom="8" right="8" />
               <Stack spacing="8" mt="8">
-                <EventsSection events={events} title="Search result:" />
+                <EventsSection events={events} title="Search results" />
               </Stack>
               {ReadonlyArray.isNonEmptyArray(events) ? (
                 <Center mb="16">
