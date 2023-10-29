@@ -40,6 +40,8 @@ const documents = {
     types.QueryDocument,
   '\n  query FilterEvents($offset: Int, $limit: Int, $eventTypeIds: [Int!], $startDatetime: String, $endDatetime: String, $filterLocation: FilterLocationInput, $sort: SortType) {\n    filterEvents(offset: $offset, limit: $limit, eventTypeIds: $eventTypeIds, start_datetime: $startDatetime, end_datetime: $endDatetime, filterLocation: $filterLocation, sort: $sort) {\n      ...EventFragment\n    }\n  }\n':
     types.FilterEventsDocument,
+  '\n  query SimilarEvents($eventId: Int!, $city: String!, $eventTypeIds: [Int!]!) {\n    similarEvents(eventId: $eventId, city: $city, eventTypeIds: $eventTypeIds) {\n      ...EventFragment\n    }\n  }\n':
+    types.SimilarEventsDocument,
 };
 
 /**
@@ -140,6 +142,12 @@ export function gql(
 export function gql(
   source: '\n  query FilterEvents($offset: Int, $limit: Int, $eventTypeIds: [Int!], $startDatetime: String, $endDatetime: String, $filterLocation: FilterLocationInput, $sort: SortType) {\n    filterEvents(offset: $offset, limit: $limit, eventTypeIds: $eventTypeIds, start_datetime: $startDatetime, end_datetime: $endDatetime, filterLocation: $filterLocation, sort: $sort) {\n      ...EventFragment\n    }\n  }\n',
 ): (typeof documents)['\n  query FilterEvents($offset: Int, $limit: Int, $eventTypeIds: [Int!], $startDatetime: String, $endDatetime: String, $filterLocation: FilterLocationInput, $sort: SortType) {\n    filterEvents(offset: $offset, limit: $limit, eventTypeIds: $eventTypeIds, start_datetime: $startDatetime, end_datetime: $endDatetime, filterLocation: $filterLocation, sort: $sort) {\n      ...EventFragment\n    }\n  }\n'];
+/**
+ * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function gql(
+  source: '\n  query SimilarEvents($eventId: Int!, $city: String!, $eventTypeIds: [Int!]!) {\n    similarEvents(eventId: $eventId, city: $city, eventTypeIds: $eventTypeIds) {\n      ...EventFragment\n    }\n  }\n',
+): (typeof documents)['\n  query SimilarEvents($eventId: Int!, $city: String!, $eventTypeIds: [Int!]!) {\n    similarEvents(eventId: $eventId, city: $city, eventTypeIds: $eventTypeIds) {\n      ...EventFragment\n    }\n  }\n'];
 
 export function gql(source: string) {
   return (documents as any)[source] ?? {};

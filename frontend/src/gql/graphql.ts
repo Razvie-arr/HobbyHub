@@ -552,6 +552,19 @@ export type FilterEventsQuery = {
   > | null;
 };
 
+export type SimilarEventsQueryVariables = Exact<{
+  eventId: Scalars['Int']['input'];
+  city: Scalars['String']['input'];
+  eventTypeIds: Array<Scalars['Int']['input']> | Scalars['Int']['input'];
+}>;
+
+export type SimilarEventsQuery = {
+  __typename?: 'Query';
+  similarEvents: Array<
+    { __typename?: 'Event' } & { ' $fragmentRefs'?: { EventFragmentFragment: EventFragmentFragment } }
+  >;
+};
+
 export const EventFragmentFragmentDoc = {
   kind: 'Document',
   definitions: [
@@ -2054,3 +2067,136 @@ export const FilterEventsDocument = {
     },
   ],
 } as unknown as DocumentNode<FilterEventsQuery, FilterEventsQueryVariables>;
+export const SimilarEventsDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'query',
+      name: { kind: 'Name', value: 'SimilarEvents' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'eventId' } },
+          type: { kind: 'NonNullType', type: { kind: 'NamedType', name: { kind: 'Name', value: 'Int' } } },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'city' } },
+          type: { kind: 'NonNullType', type: { kind: 'NamedType', name: { kind: 'Name', value: 'String' } } },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'eventTypeIds' } },
+          type: {
+            kind: 'NonNullType',
+            type: {
+              kind: 'ListType',
+              type: { kind: 'NonNullType', type: { kind: 'NamedType', name: { kind: 'Name', value: 'Int' } } },
+            },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'similarEvents' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'eventId' },
+                value: { kind: 'Variable', name: { kind: 'Name', value: 'eventId' } },
+              },
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'city' },
+                value: { kind: 'Variable', name: { kind: 'Name', value: 'city' } },
+              },
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'eventTypeIds' },
+                value: { kind: 'Variable', name: { kind: 'Name', value: 'eventTypeIds' } },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [{ kind: 'FragmentSpread', name: { kind: 'Name', value: 'EventFragment' } }],
+            },
+          },
+        ],
+      },
+    },
+    {
+      kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'EventFragment' },
+      typeCondition: { kind: 'NamedType', name: { kind: 'Name', value: 'Event' } },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'name' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'start_datetime' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'end_datetime' } },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'event_types' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'name' } },
+              ],
+            },
+          },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'author' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'first_name' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'last_name' } },
+              ],
+            },
+          },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'location' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'country' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'city' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'street_name' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'street_number' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'longitude' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'latitude' } },
+              ],
+            },
+          },
+          { kind: 'Field', name: { kind: 'Name', value: 'summary' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'description' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'image_filePath' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'capacity' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'allow_waitlist' } },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'participants' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'first_name' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'last_name' } },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<SimilarEventsQuery, SimilarEventsQueryVariables>;
