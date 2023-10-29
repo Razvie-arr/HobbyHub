@@ -1,6 +1,7 @@
 export const route = {
   home: () => `/`,
   events: () => `/events`,
+  searchEvents: () => `/searchEvents`,
   createEvent: () => `/createEvent`,
   editEvent: (eventId?: number) => `/editEvent/${eventId ?? ':eventId'}`,
   eventDetails: (eventId?: number) => `/event/${eventId ?? ':eventId'}`,

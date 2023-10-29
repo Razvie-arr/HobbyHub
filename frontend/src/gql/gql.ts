@@ -44,6 +44,8 @@ const documents = {
     types.FilterEventsDocument,
   '\n  query SimilarEvents($eventId: Int!, $city: String!, $eventTypeIds: [Int!]!) {\n    similarEvents(eventId: $eventId, city: $city, eventTypeIds: $eventTypeIds) {\n      ...EventFragment\n    }\n  }\n':
     types.SimilarEventsDocument,
+  '\n  query SearchEvents($text: String!, $offset: Int, $limit: Int) {\n    searchEvents(text: $text, offset: $offset, limit: $limit) {\n      ...EventFragment\n    }\n  }\n':
+    types.SearchEventsDocument,
 };
 
 /**
@@ -156,6 +158,12 @@ export function gql(
 export function gql(
   source: '\n  query SimilarEvents($eventId: Int!, $city: String!, $eventTypeIds: [Int!]!) {\n    similarEvents(eventId: $eventId, city: $city, eventTypeIds: $eventTypeIds) {\n      ...EventFragment\n    }\n  }\n',
 ): (typeof documents)['\n  query SimilarEvents($eventId: Int!, $city: String!, $eventTypeIds: [Int!]!) {\n    similarEvents(eventId: $eventId, city: $city, eventTypeIds: $eventTypeIds) {\n      ...EventFragment\n    }\n  }\n'];
+/**
+ * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function gql(
+  source: '\n  query SearchEvents($text: String!, $offset: Int, $limit: Int) {\n    searchEvents(text: $text, offset: $offset, limit: $limit) {\n      ...EventFragment\n    }\n  }\n',
+): (typeof documents)['\n  query SearchEvents($text: String!, $offset: Int, $limit: Int) {\n    searchEvents(text: $text, offset: $offset, limit: $limit) {\n      ...EventFragment\n    }\n  }\n'];
 
 export function gql(source: string) {
   return (documents as any)[source] ?? {};
