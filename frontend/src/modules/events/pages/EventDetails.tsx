@@ -195,7 +195,7 @@ const EventDetails = ({ eventId }: EventDetailsProps) => {
               <Tabs>
                 <TabList>
                   <Tab>Information</Tab>
-                  <Tab>Participants</Tab>
+                  {user ? <Tab>Participants</Tab> : null}
                   <Tab>Related Events</Tab>
                 </TabList>
                 <TabPanels>
@@ -210,17 +210,19 @@ const EventDetails = ({ eventId }: EventDetailsProps) => {
                       </Stack>
                     </Box>
                   </TabPanel>
-                  <TabPanel>
-                    <Flex justifyContent="space-between" flexWrap="wrap">
-                      {event.participants.map((participant) => (
-                        <EventDetailsParticipants
-                          key={participant.id}
-                          name={`${participant.first_name} ${participant.last_name}`}
-                          primaryButtonText="MESSAGE"
-                        />
-                      ))}
-                    </Flex>
-                  </TabPanel>
+                  {user ? (
+                    <TabPanel>
+                      <Flex justifyContent="space-between" flexWrap="wrap">
+                        {event.participants.map((participant) => (
+                          <EventDetailsParticipants
+                            key={participant.id}
+                            name={`${participant.first_name} ${participant.last_name}`}
+                            primaryButtonText="MESSAGE"
+                          />
+                        ))}
+                      </Flex>
+                    </TabPanel>
+                  ) : null}
                   <TabPanel>
                     <SimilarEvents
                       city={event.location.city}

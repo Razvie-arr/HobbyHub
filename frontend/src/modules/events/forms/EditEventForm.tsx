@@ -48,7 +48,7 @@ const EditEventForm = ({ eventId }: EditEventFormProps) => {
 
         const event = getEventFragmentData(eventFragment);
 
-        if (user && user.id !== event.author.id) {
+        if (!user || (user && user.id !== event.author.id)) {
           return (
             <ContentContainer mt="16">
               <Alert status="error">

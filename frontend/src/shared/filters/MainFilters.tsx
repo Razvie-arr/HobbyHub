@@ -70,7 +70,7 @@ export const MainFilters = ({ defaultValues, handleSubmit }: MainFiltersProps) =
                   <HStack>
                     <AddressInputField
                       name="address"
-                      formControlProps={{ flexBasis: '30%' }}
+                      formControlProps={{ flexBasis: '39%' }}
                       defaultValue={
                         defaultValues.address ? getAddressName(defaultValues.address.address_components) : ''
                       }
@@ -112,9 +112,6 @@ export const MainFilters = ({ defaultValues, handleSubmit }: MainFiltersProps) =
                     </SelectField>
                     <Button colorScheme="purple" borderRadius="full" width="100%" flexBasis="10%" type="submit">
                       Apply filters
-                    </Button>
-                    <Button colorScheme="purple" flexBasis="10%" variant="link">
-                      Reset filters
                     </Button>
                   </HStack>
                 </ContentContainer>

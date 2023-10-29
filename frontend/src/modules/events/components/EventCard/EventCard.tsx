@@ -64,7 +64,8 @@ export const EventCard = ({ event, simplified }: EventCardProps) => {
             >
               Edit event
             </Button>
-          ) : (
+          ) : null}
+          {user ? (
             <Button
               borderRadius="full"
               size="sm"
@@ -73,7 +74,7 @@ export const EventCard = ({ event, simplified }: EventCardProps) => {
             >
               {isFullCapacity && event.allow_waitlist ? 'Join Waitlist' : 'Join Event'}
             </Button>
-          )}
+          ) : null}
         </Stack>
       </CardBody>
     </Card>
