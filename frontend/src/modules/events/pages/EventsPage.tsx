@@ -1,35 +1,50 @@
 import { useEffect, useState } from 'react';
 import { useLazyQuery } from '@apollo/client';
-import { Button, Center, Spinner, Stack } from '@chakra-ui/react';
+import { Button, Center, Flex, Spinner, Stack } from '@chakra-ui/react';
 import { Option, pipe, ReadonlyArray } from 'effect';
 
 import { createFilterValuesFromParams, MainFilters, MainFiltersValues } from '../../../shared/filters';
 import { useFilterSearchParams } from '../../../shared/filters/hooks';
 import { useLngLatGeocoding } from '../../../shared/hooks/useLngLatGeocoding';
 import { ContentContainer, QueryResult } from '../../../shared/layout';
+import { useAuth } from '../../auth';
 import { EventsMapButton, EventsSection } from '../components';
 import { getEventFragmentData } from '../fragments';
 import { FILTERED_EVENTS } from '../queries';
 
-const callIfFunc = (f: number | (() => number)) => (typeof f === 'number' ? f : f());
+const callIfFunction = (f: number | (() => number)) => (typeof f === 'number' ? f : f());
 
 export const EventsPageContainer = () => {
   const { params } = useFilterSearchParams();
-  const location = useLngLatGeocoding({ lng: params.lng, lat: params.lat });
-  return location ? <EventsPage location={location} /> : <Spinner />;
+  const { user } = useAuth();
+
+  const { isLoading, location } = useLngLatGeocoding({
+    lng: params.lng ?? user?.location?.longitude,
+    lat: params.lat ?? user?.location?.latitude,
+  });
+
+  return isLoading ? (
+    <Flex justify="center" alignItems="center" width="100%" p="8">
+      <Spinner size="xl" />
+    </Flex>
+  ) : (
+    <EventsPage location={location} />
+  );
 };
 
 interface EventsPageProps {
-  location: ReturnType<typeof useLngLatGeocoding>;
+  location: ReturnType<typeof useLngLatGeocoding>['location'];
 }
 
 const DEFAULT_LIMIT = 8;
 
 export const EventsPage = ({ location }: EventsPageProps) => {
   const [getFilteredEvents, queryResult] = useLazyQuery(FILTERED_EVENTS);
-  const { params, noParams } = useFilterSearchParams();
+  const { params } = useFilterSearchParams();
 
-  const [filterValues, setFilterValues] = useState({ ...createFilterValuesFromParams(params), address: location });
+  const defaultFilterValues = { ...createFilterValuesFromParams(params), address: location };
+
+  const [filterValues, setFilterValues] = useState(defaultFilterValues);
   const [noMoreResults, setNoMoreResults] = useState(false);
 
   const fetchFilteredEvents = async (values: MainFiltersValues, ownLimit: number) => {
@@ -38,8 +53,8 @@ export const EventsPage = ({ location }: EventsPageProps) => {
       values.address?.geometry?.location,
       Option.fromNullable,
       Option.map(({ lat, lng }) => ({
-        latitude: callIfFunc(lat),
-        longitude: callIfFunc(lng),
+        latitude: callIfFunction(lat),
+        longitude: callIfFunction(lng),
         distance: parseInt(values.distance),
       })),
       Option.getOrUndefined,
@@ -67,7 +82,7 @@ export const EventsPage = ({ location }: EventsPageProps) => {
   }, [location, filterValues]);
 
   useEffect(() => {
-    if (!queryResult.data && !queryResult.error && !noParams) {
+    if (!queryResult.data && !queryResult.error) {
       void fetchFilteredEvents(filterValues, DEFAULT_LIMIT);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -76,6 +91,7 @@ export const EventsPage = ({ location }: EventsPageProps) => {
   return (
     <>
       <MainFilters
+        defaultValues={defaultFilterValues}
         handleSubmit={async (values) => {
           await fetchFilteredEvents(values, DEFAULT_LIMIT);
           setFilterValues(values);
@@ -125,3 +141,4 @@ export const EventsPage = ({ location }: EventsPageProps) => {
     </>
   );
 };
+

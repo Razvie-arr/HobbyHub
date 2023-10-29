@@ -1,4 +1,3 @@
-import { useEffect } from 'react';
 import { Box, Button, Flex, HStack, VStack } from '@chakra-ui/react';
 import { FormProvider, useForm } from 'react-hook-form';
 
@@ -6,12 +5,10 @@ import { SortType } from '../../gql/graphql';
 import { getAddressName } from '../../utils/googleMaps';
 import { eventTypes } from '../constants';
 import { AddressInputField, DatePickerField, SelectField } from '../forms';
-import { useLngLatGeocoding } from '../hooks/useLngLatGeocoding';
 import { ContentContainer } from '../layout';
 
 import { ActivityFilter } from './ActivityFilter';
 import { useFilterSearchParams } from './hooks';
-import { createFilterValuesFromParams } from './utils';
 
 const inputProps = {
   bg: 'gray.200',
@@ -29,23 +26,16 @@ export interface MainFiltersValues {
 }
 
 interface MainFiltersProps {
+  defaultValues: MainFiltersValues;
   handleSubmit: (values: MainFiltersValues) => void;
 }
 
-export const MainFilters = ({ handleSubmit }: MainFiltersProps) => {
-  const { params, setParams } = useFilterSearchParams();
-  const location = useLngLatGeocoding({ lng: params.lng, lat: params.lat });
+export const MainFilters = ({ defaultValues, handleSubmit }: MainFiltersProps) => {
+  const { setParams } = useFilterSearchParams();
 
   const methods = useForm({
-    defaultValues: createFilterValuesFromParams(params),
+    defaultValues,
   });
-
-  useEffect(() => {
-    const values = methods.getValues();
-    if (location && values.address === null) {
-      methods.setValue('address', location);
-    }
-  }, [location, methods]);
 
   return (
     <>
@@ -81,7 +71,9 @@ export const MainFilters = ({ handleSubmit }: MainFiltersProps) => {
                     <AddressInputField
                       name="address"
                       formControlProps={{ flexBasis: '30%' }}
-                      defaultValue={location ? getAddressName(location.address_components) : ''}
+                      defaultValue={
+                        defaultValues.address ? getAddressName(defaultValues.address.address_components) : ''
+                      }
                       borderRadius="full"
                       bg="gray.200"
                     />

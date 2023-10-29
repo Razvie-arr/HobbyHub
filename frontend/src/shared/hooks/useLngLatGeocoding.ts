@@ -6,6 +6,7 @@ interface LngLat {
 }
 
 export const useLngLatGeocoding = ({ lng, lat }: LngLat) => {
+  const [isLoading, setIsLoading] = useState(true);
   const [location, setLocation] = useState<google.maps.places.PlaceResult | null>(null);
   useEffect(() => {
     const getPlace = async () => {
@@ -17,11 +18,14 @@ export const useLngLatGeocoding = ({ lng, lat }: LngLat) => {
         );
         const json = await result.json();
         setLocation(json.results[0] ?? null);
+        setIsLoading(false);
+      } else {
+        setIsLoading(false);
       }
     };
     void getPlace();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-  return location;
+  return { isLoading, location };
 };
 
