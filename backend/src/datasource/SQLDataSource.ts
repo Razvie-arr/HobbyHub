@@ -10,9 +10,11 @@ type TableNames = keyof Tables;
 export class SQLDataSource extends BatchedSQLDataSource {
   private createGetAllQuery =
     <T extends TableNames>(tableName: T) =>
-    async (offset?: number | null, limit?: number | null) => {
-      const result = this.db.query(tableName).offset(offset ?? 0);
-      return limit ? result.limit(limit) : result;
+    async (offset?: number | null, limit?: number | null, orderBy?: { value: string; order: 'desc' | 'asc' }) => {
+      const query = this.db.query(tableName);
+      const sortedResult = orderBy ? query.orderBy(orderBy.value, orderBy.order) : query;
+      const offsetResult = sortedResult.offset(offset ?? 0);
+      return limit ? offsetResult.limit(limit) : offsetResult;
     };
 
   private createGetByIdQuery =
