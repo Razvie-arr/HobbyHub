@@ -1,31 +1,16 @@
 import { useMutation, useQuery } from '@apollo/client';
-import { useToast } from '@chakra-ui/react';
+import { Alert, AlertDescription, AlertIcon, AlertTitle, useToast } from '@chakra-ui/react';
 import { Option, pipe } from 'effect';
 import { useNavigate, useParams } from 'react-router-dom';
 
-import { gql } from '../../../gql';
 import { route } from '../../../route';
-import { QueryResult } from '../../../shared/layout';
+import { ContentContainer, QueryResult } from '../../../shared/layout';
 import { useAuth } from '../../auth';
 import { getEventFragmentData } from '../fragments';
+import { EDIT_EVENT } from '../mutations';
+import { EVENT } from '../queries';
 
 import { EventForm } from './EventForm';
-
-const GET_EVENT = gql(`
-  query EventById($id: Int!) {
-    eventById(id: $id) {
-      ...EventFragment
-    }
-  }
-`);
-
-const EDIT_EVENT = gql(`
-  mutation EditEvent($event: EventInput!, $location: LocationInputWithoutCoords!) {
-    editEvent(event: $event, location: $location) {
-      id
-    }
-}
-`);
 
 export const EditEventFormContainer = () => {
   const { eventId } = useParams();
@@ -45,7 +30,7 @@ interface EditEventFormProps {
 const EditEventForm = ({ eventId }: EditEventFormProps) => {
   const { user } = useAuth();
 
-  const result = useQuery(GET_EVENT, { variables: { id: eventId } });
+  const result = useQuery(EVENT, { variables: { eventId } });
   const [editEventRequest, editEventRequestState] = useMutation(EDIT_EVENT);
 
   const navigate = useNavigate();
@@ -63,9 +48,22 @@ const EditEventForm = ({ eventId }: EditEventFormProps) => {
 
         const event = getEventFragmentData(eventFragment);
 
+        if (user && user.id !== event.author.id) {
+          return (
+            <ContentContainer mt="16">
+              <Alert status="error">
+                <AlertIcon />
+                <AlertTitle>Not authorized!</AlertTitle>
+                <AlertDescription>This is not your event, you cannot edit it.</AlertDescription>
+              </Alert>
+            </ContentContainer>
+          );
+        }
+
         return (
           <EventForm
             defaultValues={{
+              author: `${event.author.first_name} ${event.author.last_name}`,
               allowWaitlist: event.allow_waitlist,
               capacity: event.capacity,
               city: event.location.city,
@@ -78,6 +76,7 @@ const EditEventForm = ({ eventId }: EditEventFormProps) => {
               summary: event.summary,
               // @ts-expect-error NonEmptyArray check
               eventTypes: event.event_types.map(({ id, name }) => ({ value: id, label: name })),
+              description: event.description ?? '',
             }}
             formDescription="Efficiently edit your events or gatherings."
             formTitle="Edit event"
@@ -97,6 +96,7 @@ const EditEventForm = ({ eventId }: EditEventFormProps) => {
                     summary: values.summary,
                     author_id: user?.id,
                     event_type_ids: values.eventTypes.map(({ value }) => value),
+                    description: values.description,
                   },
                   location: {
                     id: event.location.id,
@@ -112,7 +112,7 @@ const EditEventForm = ({ eventId }: EditEventFormProps) => {
                 status: 'success',
                 position: 'top-right',
                 title: 'Event updated!',
-                description: 'Your event was successfully updated.',
+                description: 'Your event was updated successfully.',
               });
               navigate(route.eventDetails(eventId));
             }}

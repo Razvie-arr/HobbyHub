@@ -1,4 +1,4 @@
-import { useQuery } from '@apollo/client';
+import { useMutation, useQuery } from '@apollo/client';
 import {
   Box,
   Button,
@@ -18,19 +18,23 @@ import {
   TabPanels,
   Tabs,
   Text,
+  useToast,
   VStack,
 } from '@chakra-ui/react';
 import { MdAccountCircle, MdCalendarToday, MdGroups, MdInfo, MdLocationOn } from 'react-icons/md';
-import { Link, useParams } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 
 import { EventTypeTag } from 'src/shared/design-system';
 
 import { route } from '../../../route';
 import { ContentContainer, QueryResult } from '../../../shared/layout';
+import { useAuth } from '../../auth';
 import { EventAddress, EventDateTime, EventParticipants } from '../components';
 import { getEventFragmentData } from '../fragments';
+import { DELETE_EVENT } from '../mutations';
 import { EVENT } from '../queries';
 
+import { DeleteEventButton } from './DeleteEventButton';
 import { EventDetailsParticipants } from './EventDetailsParticipants';
 import { SimilarEvents } from './SimilarEvents';
 
@@ -39,9 +43,16 @@ interface EventDetailsProps {
 }
 
 const EventDetails = ({ eventId }: EventDetailsProps) => {
+  const { user } = useAuth();
+
   const eventQueryResult = useQuery(EVENT, {
     variables: { eventId },
   });
+
+  const [deleteEventRequest, deleteEventRequestState] = useMutation(DELETE_EVENT);
+
+  const navigate = useNavigate();
+  const toast = useToast();
 
   return (
     <QueryResult
@@ -82,22 +93,54 @@ const EventDetails = ({ eventId }: EventDetailsProps) => {
                       </HStack>
                       <Box>
                         <ButtonGroup spacing="6">
-                          <Button
-                            as={Link}
-                            to={route.editEvent(eventId)}
-                            width="180px"
-                            colorScheme="purple"
-                            variant="solid"
-                            rounded="full"
-                          >
-                            Edit Event
-                          </Button>
-                          <Button width="180px" colorScheme="purple" variant="solid" rounded="full">
-                            Join Event
-                          </Button>
-                          <Button width="180px" colorScheme="purple" variant="outline" rounded="full" bgColor="white">
-                            Message
-                          </Button>
+                          {user && user.id === event.author.id ? (
+                            <>
+                              <Button
+                                as={Link}
+                                to={route.editEvent(eventId)}
+                                width="180px"
+                                colorScheme="purple"
+                                rounded="full"
+                              >
+                                Edit
+                              </Button>
+                              <DeleteEventButton
+                                handleDelete={async () => {
+                                  await deleteEventRequest({
+                                    variables: {
+                                      eventId,
+                                      locationId: event.location.id,
+                                    },
+                                  });
+                                  toast({
+                                    variant: 'left-accent',
+                                    status: 'success',
+                                    position: 'top-right',
+                                    title: 'Event deleted!',
+                                    description: 'Your event was deleted successfully.',
+                                  });
+                                  navigate(route.home());
+                                }}
+                                isLoading={deleteEventRequestState.loading}
+                              />
+                            </>
+                          ) : null}
+                          {user && user.id !== event.author.id ? (
+                            <>
+                              <Button width="180px" colorScheme="purple" rounded="full">
+                                Join Event
+                              </Button>
+                              <Button
+                                width="180px"
+                                colorScheme="purple"
+                                variant="outline"
+                                rounded="full"
+                                bgColor="white"
+                              >
+                                Message
+                              </Button>
+                            </>
+                          ) : null}
                         </ButtonGroup>
                       </Box>
                     </HStack>

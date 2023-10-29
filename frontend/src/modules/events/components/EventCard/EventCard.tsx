@@ -5,6 +5,7 @@ import { Button, EventTypeTag } from 'src/shared/design-system';
 
 import { route } from '../../../../route';
 import { ReactRouterLink } from '../../../../shared/navigation';
+import { useAuth } from '../../../auth';
 import { WithEvent } from '../../types';
 import { EventStatusTag } from '../EventStatusTag';
 import { EventAddress, EventDateTime, EventParticipants } from '../shared';
@@ -14,6 +15,7 @@ interface EventCardProps extends WithEvent {
 }
 
 export const EventCard = ({ event, simplified }: EventCardProps) => {
+  const { user } = useAuth();
   const isFullCapacity = event.participants.length === event.capacity;
   return (
     <Card
@@ -51,14 +53,27 @@ export const EventCard = ({ event, simplified }: EventCardProps) => {
               <EventParticipants capacity={event.capacity} participants={event.participants} />
             </Stack>
           </Stack>
-          <Button
-            borderRadius="full"
-            size="sm"
-            colorScheme="purple"
-            isDisabled={isFullCapacity && !event.allow_waitlist}
-          >
-            {isFullCapacity && event.allow_waitlist ? 'Join Waitlist' : 'Join Event'}
-          </Button>
+          {user && user.id === event.author.id ? (
+            <Button
+              borderRadius="full"
+              size="sm"
+              colorScheme="purple"
+              as={ReactRouterLink}
+              variant="outline"
+              to={route.editEvent(event.id)}
+            >
+              Edit event
+            </Button>
+          ) : (
+            <Button
+              borderRadius="full"
+              size="sm"
+              colorScheme="purple"
+              isDisabled={isFullCapacity && !event.allow_waitlist}
+            >
+              {isFullCapacity && event.allow_waitlist ? 'Join Waitlist' : 'Join Event'}
+            </Button>
+          )}
         </Stack>
       </CardBody>
     </Card>

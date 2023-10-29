@@ -38,7 +38,7 @@ export class SQLDataSource extends BatchedSQLDataSource {
     limit: number,
   ) =>
     this.db.query
-      .select('Event.*')
+      .distinct('Event.*')
       .from('Event')
       .join('Event_EventType', 'Event.id', 'Event_EventType.event_id')
       .join('EventType', 'Event_EventType.event_type_id', 'EventType.id')
@@ -57,7 +57,7 @@ export class SQLDataSource extends BatchedSQLDataSource {
     limit: number,
   ) =>
     this.db.query
-      .select('Event.*')
+      .distinct('Event.*')
       .from('Event')
       .join('Event_EventType', 'Event.id', 'Event_EventType.event_id')
       .join('EventType', 'Event_EventType.event_type_id', 'EventType.id')
