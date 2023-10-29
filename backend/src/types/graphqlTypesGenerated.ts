@@ -25,12 +25,14 @@ export type AuthInfo = {
 
 export type AuthUser = {
   __typename?: 'AuthUser';
+  description?: Maybe<Scalars['String']['output']>;
   email: Scalars['String']['output'];
   event_types: Array<EventType>;
+  first_name: Scalars['String']['output'];
   id: Scalars['Int']['output'];
+  last_name: Scalars['String']['output'];
   location?: Maybe<Location>;
-  location_id: Scalars['Int']['output'];
-  name: Scalars['String']['output'];
+  location_id?: Maybe<Scalars['Int']['output']>;
   password: Scalars['String']['output'];
   verified: Scalars['Boolean']['output'];
 };
@@ -125,7 +127,7 @@ export type Mutation = {
   editEvent: Event;
   editLocation?: Maybe<Location>;
   editUser: User;
-  onboardUser: User;
+  onboardUser: AuthUser;
   requestResetPassword: Scalars['Boolean']['output'];
   resetPassword: Scalars['Boolean']['output'];
   signIn: AuthInfo;
@@ -169,12 +171,12 @@ export type MutationEditLocationArgs = {
 };
 
 export type MutationEditUserArgs = {
-  location: LocationInput;
+  location: LocationInputWithoutCoords;
   user: UserInput;
 };
 
 export type MutationOnboardUserArgs = {
-  location: LocationInput;
+  location: LocationInputWithoutCoords;
   user: UserInput;
 };
 
@@ -194,7 +196,8 @@ export type MutationSignInArgs = {
 
 export type MutationSignUpArgs = {
   email: Scalars['String']['input'];
-  name: Scalars['String']['input'];
+  first_name: Scalars['String']['input'];
+  last_name: Scalars['String']['input'];
   password: Scalars['String']['input'];
 };
 
@@ -337,10 +340,11 @@ export type User = {
   description?: Maybe<Scalars['String']['output']>;
   email: Scalars['String']['output'];
   event_types: Array<EventType>;
+  first_name: Scalars['String']['output'];
   id: Scalars['Int']['output'];
+  last_name: Scalars['String']['output'];
   location?: Maybe<Location>;
   location_id?: Maybe<Scalars['Int']['output']>;
-  name: Scalars['String']['output'];
   verified: Scalars['Boolean']['output'];
 };
 
@@ -348,9 +352,10 @@ export type UserInput = {
   description?: InputMaybe<Scalars['String']['input']>;
   email: Scalars['String']['input'];
   event_type_ids: Array<Scalars['Int']['input']>;
-  id?: InputMaybe<Scalars['Int']['input']>;
+  first_name: Scalars['String']['input'];
+  id: Scalars['Int']['input'];
+  last_name: Scalars['String']['input'];
   location_id?: InputMaybe<Scalars['Int']['input']>;
-  name: Scalars['String']['input'];
   verified: Scalars['Boolean']['input'];
 };
 
@@ -480,12 +485,14 @@ export type AuthUserResolvers<
   ContextType = CustomContext,
   ParentType extends ResolversParentTypes['AuthUser'] = ResolversParentTypes['AuthUser'],
 > = {
+  description?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   email?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   event_types?: Resolver<Array<ResolversTypes['EventType']>, ParentType, ContextType>;
+  first_name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  last_name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   location?: Resolver<Maybe<ResolversTypes['Location']>, ParentType, ContextType>;
-  location_id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
-  name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  location_id?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
   password?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   verified?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
@@ -588,7 +595,7 @@ export type MutationResolvers<
     RequireFields<MutationEditUserArgs, 'location' | 'user'>
   >;
   onboardUser?: Resolver<
-    ResolversTypes['User'],
+    ResolversTypes['AuthUser'],
     ParentType,
     ContextType,
     RequireFields<MutationOnboardUserArgs, 'location' | 'user'>
@@ -615,7 +622,7 @@ export type MutationResolvers<
     ResolversTypes['AuthInfo'],
     ParentType,
     ContextType,
-    RequireFields<MutationSignUpArgs, 'email' | 'name' | 'password'>
+    RequireFields<MutationSignUpArgs, 'email' | 'first_name' | 'last_name' | 'password'>
   >;
   verify?: Resolver<ResolversTypes['String'], ParentType, ContextType, RequireFields<MutationVerifyArgs, 'token'>>;
 };
@@ -717,10 +724,11 @@ export type UserResolvers<
   description?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   email?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   event_types?: Resolver<Array<ResolversTypes['EventType']>, ParentType, ContextType>;
+  first_name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  last_name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   location?: Resolver<Maybe<ResolversTypes['Location']>, ParentType, ContextType>;
   location_id?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
-  name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   verified?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };

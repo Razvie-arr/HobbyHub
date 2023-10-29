@@ -102,7 +102,7 @@ export const newlyCreatedNearbyEventsResolver = async (
     .from('Event')
     .join('Location', 'Event.location_id', '=', 'Location.id')
     .having(distance, '<', DEFAULT_DISTANCE)
-    .orderBy('created_at')
+    .orderBy('created_at', 'desc')
     .offset(offset ?? 0);
   return limit ? result.limit(limit) : result;
 };

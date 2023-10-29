@@ -6,19 +6,20 @@ extend type Query {
 
 extend type Mutation {
   signIn(email: String!, password: String!): AuthInfo!
-  signUp(email: String!, password: String!, name: String!): AuthInfo!
+  signUp(email: String!, password: String!, first_name: String!, last_name: String!): AuthInfo!
   verify(token: String!): String!
   requestResetPassword(email: String!): Boolean!
   resetPassword(password: String!, token: String!): Boolean!
-  editUser(user: UserInput!, location: LocationInput!): User!
+  editUser(user: UserInput!, location: LocationInputWithoutCoords!): User!
   deleteUser(id: Int!): String!
-  onboardUser(user: UserInput!, location: LocationInput!): User!
+  onboardUser(user: UserInput!, location: LocationInputWithoutCoords!): AuthUser!
 }
 
 type User { # Public info about user
   id: Int!
   email: String!
-  name: String!
+  first_name: String!
+  last_name: String!
   verified: Boolean!
   location_id: Int
   description: String
@@ -29,16 +30,18 @@ type User { # Public info about user
 
 type AuthUser { # Private info about user (e.g. with email address, ...)
   id: Int!
-  name: String!
+  first_name: String!
+  last_name: String!
   email: String!
   password: String!
   verified: Boolean!
 
   event_types: [EventType!]!
 
-  location_id: Int!
-
+  location_id: Int
   location: Location
+
+  description: String
 }
 
 type AuthInfo {
@@ -47,9 +50,10 @@ type AuthInfo {
 }
 
 input UserInput {
-  id: Int
+  id: Int!
   email: String!
-  name: String!
+  first_name: String!
+  last_name: String!
   verified: Boolean!
   location_id: Int
   description: String

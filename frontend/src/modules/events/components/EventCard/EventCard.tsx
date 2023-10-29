@@ -5,6 +5,7 @@ import { Button, EventTypeTag } from 'src/shared/design-system';
 
 import { route } from '../../../../route';
 import { ReactRouterLink } from '../../../../shared/navigation';
+import { useAuth } from '../../../auth';
 import { WithEvent } from '../../types';
 import { EventStatusTag } from '../EventStatusTag';
 import { EventAddress, EventDateTime, EventParticipants } from '../shared';
@@ -14,6 +15,7 @@ interface EventCardProps extends WithEvent {
 }
 
 export const EventCard = ({ event, simplified }: EventCardProps) => {
+  const { user } = useAuth();
   const isFullCapacity = event.participants.length === event.capacity;
   return (
     <Card
@@ -43,7 +45,7 @@ export const EventCard = ({ event, simplified }: EventCardProps) => {
               ))}
             </HStack>
             <Text color="purple.600" as="b">
-              Hosted by: {event.author.name}
+              Hosted by: {event.author.first_name} {event.author.last_name}
             </Text>
             <Stack spacing="2">
               <EventDateTime startDateTime={event.start_datetime} endDateTime={event.end_datetime} />
@@ -51,14 +53,28 @@ export const EventCard = ({ event, simplified }: EventCardProps) => {
               <EventParticipants capacity={event.capacity} participants={event.participants} />
             </Stack>
           </Stack>
-          <Button
-            borderRadius="full"
-            size="sm"
-            colorScheme="purple"
-            isDisabled={isFullCapacity && !event.allow_waitlist}
-          >
-            {isFullCapacity && event.allow_waitlist ? 'Join Waitlist' : 'Join Event'}
-          </Button>
+          {user && user.id === event.author.id ? (
+            <Button
+              borderRadius="full"
+              size="sm"
+              colorScheme="purple"
+              as={ReactRouterLink}
+              variant="outline"
+              to={route.editEvent(event.id)}
+            >
+              Edit event
+            </Button>
+          ) : null}
+          {user && user.id !== event.author.id ? (
+            <Button
+              borderRadius="full"
+              size="sm"
+              colorScheme="purple"
+              isDisabled={isFullCapacity && !event.allow_waitlist}
+            >
+              {isFullCapacity && event.allow_waitlist ? 'Join Waitlist' : 'Join Event'}
+            </Button>
+          ) : null}
         </Stack>
       </CardBody>
     </Card>

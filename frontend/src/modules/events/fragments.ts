@@ -12,7 +12,8 @@ export const EventFragment = gql(/* GraphQL */ `
     }
     author {
       id
-      name
+      first_name
+      last_name
     }
     location {
       id
@@ -30,7 +31,8 @@ export const EventFragment = gql(/* GraphQL */ `
     allow_waitlist
     participants {
       id
-      name
+      first_name
+      last_name
     }
   }
 `);

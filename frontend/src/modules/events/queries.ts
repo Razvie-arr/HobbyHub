@@ -68,3 +68,19 @@ export const FILTERED_EVENTS = gql(`
   }
 `);
 
+export const SIMILAR_EVENTS = gql(`
+  query SimilarEvents($eventId: Int!, $city: String!, $eventTypeIds: [Int!]!) {
+    similarEvents(eventId: $eventId, city: $city, eventTypeIds: $eventTypeIds) {
+      ...EventFragment
+    }
+  }
+`);
+
+export const SEARCH_EVENTS = gql(`
+  query SearchEvents($text: String!, $offset: Int, $limit: Int) {
+    searchEvents(text: $text, offset: $offset, limit: $limit) {
+      ...EventFragment
+    }
+  }
+`);
+

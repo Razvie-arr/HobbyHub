@@ -2,10 +2,10 @@ import { useMutation } from '@apollo/client';
 import { useToast } from '@chakra-ui/react';
 import { useNavigate } from 'react-router-dom';
 
-import { gql } from '../../../gql';
 import { route } from '../../../route';
 import { getCurrentDateTime } from '../../../utils/form';
 import { useAuth } from '../../auth';
+import { CREATE_EVENT } from '../mutations';
 
 import { EventForm } from './EventForm';
 
@@ -25,15 +25,8 @@ const defaultValues = {
   streetNumber: '',
   city: '',
   country: '',
+  description: '',
 };
-
-const CREATE_EVENT = gql(`
-  mutation CreateEvent($event: EventInput!, $location: LocationInputWithoutCoords!) {
-    createEvent(event: $event, location: $location) {
-      id
-    }
-  }
-`);
 
 export const CreateEventForm = () => {
   const { user } = useAuth();
@@ -42,7 +35,11 @@ export const CreateEventForm = () => {
   const toast = useToast();
   return (
     <EventForm
-      defaultValues={{ ...defaultValues, startDatetime: getCurrentDateTime() }}
+      defaultValues={{
+        ...defaultValues,
+        author: `${user?.first_name} ${user?.last_name}`,
+        startDatetime: getCurrentDateTime(),
+      }}
       formTitle="Create event"
       formDescription="Efficiently coordinate your events or gatherings."
       handleCancel={() => {
@@ -60,6 +57,7 @@ export const CreateEventForm = () => {
               summary: values.summary,
               author_id: user?.id,
               event_type_ids: values.eventTypes.map(({ value }) => value),
+              description: values.description,
             },
             location: {
               city: values.city,
@@ -73,12 +71,12 @@ export const CreateEventForm = () => {
           variant: 'left-accent',
           status: 'success',
           position: 'top-right',
-          title: 'Event updated!',
-          description: 'Your event was successfully updated.',
+          title: 'Event created!',
+          description: 'Your event was created successfully.',
         });
         const id = result.data?.createEvent.id;
         if (id) {
-          navigate(route.editEvent(id));
+          navigate(route.eventDetails(id));
         }
       }}
       isLoading={createEventRequestState.loading}

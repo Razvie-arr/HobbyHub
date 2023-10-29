@@ -134,7 +134,7 @@ export const DefaultEventsPage = () => {
     );
   }
 
-  return geolocation && user ? (
+  return geolocation && user && user.event_types.length > 0 && user.location ? (
     <ContentContainer>
       <LocationAwareEvents
         geolocation={

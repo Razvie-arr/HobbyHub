@@ -1,17 +1,5 @@
 import { ReactNode } from 'react';
-import {
-  Box,
-  Button,
-  Container,
-  Divider,
-  Flex,
-  FormLabel,
-  Image,
-  Spacer,
-  Stack,
-  Text,
-  Textarea,
-} from '@chakra-ui/react';
+import { Box, Button, Container, Divider, Flex, FormLabel, Image, Spacer, Stack, Text } from '@chakra-ui/react';
 import { FaFile } from 'react-icons/fa6';
 
 import {
@@ -21,6 +9,7 @@ import {
   InlineCheckboxField,
   InputField,
   MultiSelectField,
+  TextareaField,
   zod,
   zodResolver,
 } from 'src/shared/forms';
@@ -41,6 +30,7 @@ const options = [
 
 const eventFormSchema = zod
   .object({
+    author: zod.string().min(1, 'Event name is required').max(100, 'Name cannot be more than 100 characters long'),
     name: zod.string().min(1, 'Event name is required').max(100, 'Name cannot be more than 100 characters long'),
     summary: zod
       .string()
@@ -138,6 +128,7 @@ export const EventForm = ({
               Select from files
             </Button>
           </Flex>
+          <InputField name="author" label="Author" isRequired isDisabled />
           <InputField name="name" label="Event name" placeholder="Enter a short and clear name" isRequired />
           <MultiSelectField
             name="eventTypes"
@@ -167,10 +158,7 @@ export const EventForm = ({
         </FormStack>
 
         <FormStack title="Event information">
-          <Flex direction="column">
-            <FormLabel>Description</FormLabel>
-            <Textarea placeholder="Everything about the event"></Textarea>
-          </Flex>
+          <TextareaField name="description" label="Description" placeholder="Everything about the event" />
         </FormStack>
       </Stack>
     </Form>

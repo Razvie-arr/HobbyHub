@@ -33,7 +33,8 @@ export function createUserInput(user: UserInput) {
   return {
     id: getValue(user.id),
     email: getValue(user.email),
-    name: getValue(user.name),
+    first_name: getValue(user.first_name),
+    last_name: getValue(user.last_name),
     verified: getValue(user.verified),
     location_id: getValue(user.location_id),
     description: getValue(user.description),
@@ -43,3 +44,4 @@ export function createUserInput(user: UserInput) {
 function getValue<Type>(input: Type) {
   return input ? input : undefined;
 }
+

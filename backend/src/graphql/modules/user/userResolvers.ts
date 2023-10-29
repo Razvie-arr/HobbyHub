@@ -2,6 +2,7 @@ import { GraphQLError } from 'graphql/error';
 
 import { GOOGLE_API_KEY } from '../../../config';
 import {
+  AuthUser,
   ContextualNullableResolver,
   ContextualResolver,
   ContextualResolverWithParent,
@@ -131,7 +132,7 @@ export const onboardUserResolver = async (
   _: unknown,
   { user, location }: MutationOnboardUserArgs,
   { dataSources, googleMapsClient }: CustomContext,
-) => {
+): Promise<AuthUser> => {
   if (user.event_type_ids.some((eventTypeId) => !eventTypeId)) {
     throw new GraphQLError('EventTypeId needs to be filled in order to onboard!');
   }
@@ -161,19 +162,24 @@ export const onboardUserResolver = async (
 
   user.location_id = dbLocationResponse[0];
 
-  const dbInsertUserResponse = await dataSources.sql.db.write('User').insert(createUserInput(user));
+  const dbUpdateUserResponse = await dataSources.sql.db
+    .write('User')
+    .where('id', user.id)
+    .update(createUserInput(user));
 
-  if (!dbInsertUserResponse[0]) {
+  if (!dbUpdateUserResponse) {
     throw new GraphQLError(`Error while updating User!`);
   }
 
-  //TypeScript Shenanigans
-  user.id = dbInsertUserResponse[0];
-  const user_id = dbInsertUserResponse[0];
+  const dbUpdatedUserResponse = await dataSources.sql.users.getById(user.id);
+
+  if (!dbUpdatedUserResponse) {
+    throw new GraphQLError(`Error while fetching User!`);
+  }
 
   // Use map to create an array of insert promises
   const insertPromises = user.event_type_ids.map((eventTypeId) =>
-    dataSources.sql.db.write('User_EventType').insert({ user_id: user_id, event_type_id: eventTypeId }),
+    dataSources.sql.db.write('User_EventType').insert({ user_id: user.id, event_type_id: eventTypeId }),
   );
 
   // Await all insertions
@@ -190,5 +196,8 @@ export const onboardUserResolver = async (
     throw new GraphQLError(`Error while fetching User!`);
   }
 
+  // eslint-disable-next-line @typescript-eslint/prefer-ts-expect-error
+  // @ts-ignore
   return dbUserResponse;
 };
+

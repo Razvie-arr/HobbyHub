@@ -38,7 +38,7 @@ export class SQLDataSource extends BatchedSQLDataSource {
     limit: number,
   ) =>
     this.db.query
-      .select('Event.*')
+      .distinct('Event.*')
       .from('Event')
       .join('Event_EventType', 'Event.id', 'Event_EventType.event_id')
       .join('EventType', 'Event_EventType.event_type_id', 'EventType.id')
@@ -57,7 +57,7 @@ export class SQLDataSource extends BatchedSQLDataSource {
     limit: number,
   ) =>
     this.db.query
-      .select('Event.*')
+      .distinct('Event.*')
       .from('Event')
       .join('Event_EventType', 'Event.id', 'Event_EventType.event_id')
       .join('EventType', 'Event_EventType.event_type_id', 'EventType.id')
@@ -75,7 +75,8 @@ export class SQLDataSource extends BatchedSQLDataSource {
       .from('Event')
       .join('User', 'Event.author_id', 'User.id')
       .whereRaw('LOWER(Event.name) like ?', `%${textLowerCase}%`)
-      .or.whereRaw('LOWER(User.name) like ?', `%${textLowerCase}%`)
+      .or.whereRaw('LOWER(User.first_name) like ?', `%${textLowerCase}%`)
+      .or.whereRaw('LOWER(User.last_name) like ?', `%${textLowerCase}%`)
       .orderBy('start_datetime', 'desc')
       .offset(offset)
       .limit(limit);

@@ -51,6 +51,10 @@ export function EnhancedApolloProvider({ children }: Props) {
                 ...offsetLimitPagination(),
                 keyArgs: ['filterLocation', 'start_datetime', 'end_datetime', 'sort', 'eventTypeIds'],
               },
+              searchEvents: {
+                ...offsetLimitPagination(),
+                keyArgs: ['text'],
+              },
             },
           },
         },

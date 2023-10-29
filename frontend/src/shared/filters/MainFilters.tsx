@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { Box, Button, Flex, HStack, IconButton, Stack, useDisclosure, VStack } from '@chakra-ui/react';
+import { Box, Button, Flex, HStack, Stack, useDisclosure, VStack } from '@chakra-ui/react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { FaFilter, FaXmark } from 'react-icons/fa6';
 import { useLocation } from 'react-router-dom';
@@ -80,12 +80,23 @@ export const MainFilters = ({ defaultValues, handleSubmit }: MainFiltersProps) =
                 </ContentContainer>
               </Box>
               <Box bg="purple.50" w="100%" py="6">
-                <Button alignSelf="right" colorScheme="purple" mx={4} my={2} variant="outline" display={{ base: 'flex', md: 'none' }} rightIcon={mobileNav.isOpen ? <FaXmark /> : <FaFilter />} onClick={mobileNav.onToggle}>Filter</Button>
+                <Button
+                  alignSelf="right"
+                  colorScheme="purple"
+                  mx={4}
+                  my={2}
+                  variant="outline"
+                  display={{ base: 'flex', md: 'none' }}
+                  rightIcon={mobileNav.isOpen ? <FaXmark /> : <FaFilter />}
+                  onClick={mobileNav.onToggle}
+                >
+                  Filter
+                </Button>
                 <ContentContainer display={{ base: mobileNav.isOpen ? 'flex' : 'none', md: 'flex' }}>
                   <Stack direction={{ base: 'column', md: 'row' }} width="100%">
                     <AddressInputField
                       name="address"
-                      formControlProps={{ flexBasis: '30%' }}
+                      formControlProps={{ flexBasis: '39%' }}
                       defaultValue={
                         defaultValues.address ? getAddressName(defaultValues.address.address_components) : ''
                       }
@@ -125,11 +136,14 @@ export const MainFilters = ({ defaultValues, handleSubmit }: MainFiltersProps) =
                       <option value={SortType.Date}>Sort by: Date</option>
                       <option value={SortType.Distance}>Sort by: Distance</option>
                     </SelectField>
-                    <Button colorScheme="purple" borderRadius="full" width="100%" flexBasis={{base: "none", md: "10%"}} type="submit">
+                    <Button
+                      colorScheme="purple"
+                      borderRadius="full"
+                      width="100%"
+                      flexBasis={{ base: 'none', md: '10%' }}
+                      type="submit"
+                    >
                       Apply filters
-                    </Button>
-                    <Button colorScheme="purple" flexBasis="10%" variant="link">
-                      Reset filters
                     </Button>
                   </Stack>
                 </ContentContainer>

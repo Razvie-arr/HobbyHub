@@ -35,9 +35,10 @@ declare module 'knex/types/tables' {
     user_composite: Knex.CompositeTableType<
       User,
       Partial<Omit<User, 'id'>> &
-        Pick<User, 'email' | 'name' | 'verified'> &
+        Pick<User, 'email' | 'first_name' | 'last_name' | 'verified'> &
         Partial<Pick<User, 'location_id' | 'description'>>,
       Partial<Omit<User, 'id'>>
     >;
   }
 }
+

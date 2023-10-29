@@ -1,15 +1,12 @@
 import { InputField } from 'src/shared/forms';
 
-export const NameField = () => (
-  <InputField
-    name="name"
-    label="Name"
-    type="text"
-    isRequired
-    autoFocus
-    autoComplete="on"
-    autoCorrect="off"
-    autoCapitalize="off"
-  />
+interface NameFieldProps {
+  label: string;
+  name: string;
+  autoFocus?: boolean;
+}
+
+export const NameField = (props: NameFieldProps) => (
+  <InputField {...props} type="text" isRequired autoComplete="on" autoCorrect="off" autoCapitalize="off" />
 );
 
