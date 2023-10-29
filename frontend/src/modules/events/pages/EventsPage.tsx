@@ -8,7 +8,7 @@ import { useFilterSearchParams } from '../../../shared/filters/hooks';
 import { useLngLatGeocoding } from '../../../shared/hooks/useLngLatGeocoding';
 import { ContentContainer, QueryResult } from '../../../shared/layout';
 import { EventsMapButton, EventsSection } from '../components';
-import { toFragmentData } from '../fragments';
+import { getEventFragmentData } from '../fragments';
 import { FILTERED_EVENTS } from '../queries';
 
 const callIfFunc = (f: number | (() => number)) => (typeof f === 'number' ? f : f());
@@ -90,7 +90,7 @@ export const EventsPage = ({ location }: EventsPageProps) => {
             if (!eventFragments) {
               return null;
             }
-            const events = eventFragments.map(toFragmentData);
+            const events = eventFragments.map(getEventFragmentData);
             return (
               <>
                 <EventsMapButton events={events} position="fixed" bottom="8" right="8" />
@@ -125,4 +125,3 @@ export const EventsPage = ({ location }: EventsPageProps) => {
     </>
   );
 };
-

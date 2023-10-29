@@ -1,14 +1,13 @@
-import { Card, CardBody, Heading, HStack, Image, Link, Stack, Tag, Text, Tooltip } from '@chakra-ui/react';
+import { Card, CardBody, Heading, HStack, Image, Link, Stack, Text } from '@chakra-ui/react';
 
 import postcardBackgroundImageUrl from 'src/assets/img/event-image-placeholder.jpg';
-import { Button, EventTypeIcon } from 'src/shared/design-system';
+import { Button, EventTypeTag } from 'src/shared/design-system';
 
-import { EventTypeName, WithEvent } from '../../types';
+import { route } from '../../../../route';
+import { ReactRouterLink } from '../../../../shared/navigation';
+import { WithEvent } from '../../types';
 import { EventStatusTag } from '../EventStatusTag';
-
-import { EventAddress } from './EventAddress';
-import { EventDateTime } from './EventDateTime';
-import { EventParticipants } from './EventParticipants';
+import { EventAddress, EventDateTime, EventParticipants } from '../shared';
 
 interface EventCardProps extends WithEvent {
   simplified?: boolean;
@@ -34,15 +33,13 @@ export const EventCard = ({ event, simplified }: EventCardProps) => {
         <Stack justifyContent="space-between" flex="1" spacing="2" p="4">
           <Stack>
             <Heading size="md" noOfLines={3} lineHeight="initial">
-              <Link>{event.name}</Link>
+              <Link to={route.eventDetails(event.id)} as={ReactRouterLink}>
+                {event.name}
+              </Link>
             </Heading>
             <HStack>
-              {event.event_types.map(({ name }) => (
-                <Tooltip key={name} label={name}>
-                  <Tag colorScheme="purple" size="lg">
-                    <EventTypeIcon eventTypeName={name as EventTypeName} />
-                  </Tag>
-                </Tooltip>
+              {event.event_types.map((eventType) => (
+                <EventTypeTag eventType={eventType} />
               ))}
             </HStack>
             <Text color="purple.600" as="b">

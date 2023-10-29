@@ -15,7 +15,7 @@ import {
   MdStroller,
 } from 'react-icons/md';
 
-import { EventTypeName } from '../../../modules/events/types';
+import { EventTypeName } from '../../types';
 
 interface EventTypeIconProps {
   eventTypeName: EventTypeName;

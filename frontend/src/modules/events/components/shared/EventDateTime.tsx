@@ -1,4 +1,4 @@
-import { Icon, Stack, Text } from '@chakra-ui/react';
+import { Icon, Stack, Text, TypographyProps } from '@chakra-ui/react';
 import { FaCalendar } from 'react-icons/fa6';
 
 const localeTimeStringOptions = {
@@ -8,18 +8,20 @@ const localeTimeStringOptions = {
 } as const;
 
 interface EventDateTimeProps {
+  noIcon?: boolean;
+  fontSize?: TypographyProps['fontSize'];
   startDateTime: string;
   endDateTime: string;
 }
 
-export const EventDateTime = ({ startDateTime, endDateTime }: EventDateTimeProps) => {
+export const EventDateTime = ({ noIcon, fontSize = 'sm', startDateTime, endDateTime }: EventDateTimeProps) => {
   const { locale } = Intl.DateTimeFormat().resolvedOptions();
   const eventStartDate = new Date(startDateTime);
   const eventEndDate = new Date(endDateTime);
   return (
     <Stack direction="row">
-      <Icon as={FaCalendar} color="purple.500" />
-      <Text fontSize="sm" fontWeight="medium">
+      {noIcon ? null : <Icon as={FaCalendar} color="purple.500" />}
+      <Text fontSize={fontSize} fontWeight="medium">
         {eventStartDate.toLocaleString(locale, { day: '2-digit', month: 'long', weekday: 'short' }).toLocaleUpperCase()}{' '}
         {' • '}
         {eventStartDate.toLocaleTimeString(locale, localeTimeStringOptions)}
@@ -29,4 +31,3 @@ export const EventDateTime = ({ startDateTime, endDateTime }: EventDateTimeProps
     </Stack>
   );
 };
-

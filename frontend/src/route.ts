@@ -3,6 +3,7 @@ export const route = {
   events: () => `/events`,
   createEvent: () => `/createEvent`,
   editEvent: (eventId?: number) => `/editEvent/${eventId ?? ':eventId'}`,
+  eventDetails: (eventId?: number) => `/event/${eventId ?? ':eventId'}`,
   onboarding: () => `/onboarding`,
   signIn: () => `/auth/signin`,
   signUp: () => `/auth/signup`,
