@@ -26,10 +26,11 @@ export type AuthUser = {
   __typename?: 'AuthUser';
   email: Scalars['String']['output'];
   event_types: Array<EventType>;
+  first_name: Scalars['String']['output'];
   id: Scalars['Int']['output'];
+  last_name: Scalars['String']['output'];
   location?: Maybe<Location>;
   location_id: Scalars['Int']['output'];
-  name: Scalars['String']['output'];
   password: Scalars['String']['output'];
   verified: Scalars['Boolean']['output'];
 };
@@ -193,7 +194,8 @@ export type MutationSignInArgs = {
 
 export type MutationSignUpArgs = {
   email: Scalars['String']['input'];
-  name: Scalars['String']['input'];
+  first_name: Scalars['String']['input'];
+  last_name: Scalars['String']['input'];
   password: Scalars['String']['input'];
 };
 
@@ -336,10 +338,11 @@ export type User = {
   description?: Maybe<Scalars['String']['output']>;
   email: Scalars['String']['output'];
   event_types: Array<EventType>;
+  first_name: Scalars['String']['output'];
   id: Scalars['Int']['output'];
+  last_name: Scalars['String']['output'];
   location?: Maybe<Location>;
   location_id?: Maybe<Scalars['Int']['output']>;
-  name: Scalars['String']['output'];
   verified: Scalars['Boolean']['output'];
 };
 
@@ -347,9 +350,10 @@ export type UserInput = {
   description?: InputMaybe<Scalars['String']['input']>;
   email: Scalars['String']['input'];
   event_type_ids: Array<Scalars['Int']['input']>;
+  first_name: Scalars['String']['input'];
   id?: InputMaybe<Scalars['Int']['input']>;
+  last_name: Scalars['String']['input'];
   location_id?: InputMaybe<Scalars['Int']['input']>;
-  name: Scalars['String']['input'];
   verified: Scalars['Boolean']['input'];
 };
 
@@ -366,7 +370,6 @@ export type SignInMutation = {
     user: {
       __typename?: 'AuthUser';
       id: number;
-      name: string;
       email: string;
       event_types: Array<{ __typename?: 'EventType'; id: number; name: string; category: string }>;
       location?: { __typename?: 'Location'; longitude: number; latitude: number } | null;
@@ -376,7 +379,8 @@ export type SignInMutation = {
 
 export type SignUpMutationVariables = Exact<{
   email: Scalars['String']['input'];
-  name: Scalars['String']['input'];
+  first_name: Scalars['String']['input'];
+  last_name: Scalars['String']['input'];
   password: Scalars['String']['input'];
 }>;
 
@@ -385,7 +389,7 @@ export type SignUpMutation = {
   signUp: {
     __typename?: 'AuthInfo';
     token: string;
-    user: { __typename?: 'AuthUser'; id: number; name: string; email: string };
+    user: { __typename?: 'AuthUser'; id: number; first_name: string; last_name: string; email: string };
   };
 };
 
@@ -432,7 +436,7 @@ export type EventFragmentFragment = {
   capacity: number;
   allow_waitlist: boolean;
   event_types: Array<{ __typename?: 'EventType'; id: number; name: string }>;
-  author: { __typename?: 'User'; id: number; name: string };
+  author: { __typename?: 'User'; id: number; first_name: string; last_name: string };
   location: {
     __typename?: 'Location';
     id: number;
@@ -443,7 +447,7 @@ export type EventFragmentFragment = {
     longitude: number;
     latitude: number;
   };
-  participants: Array<{ __typename?: 'User'; id: number; name: string }>;
+  participants: Array<{ __typename?: 'User'; id: number; first_name: string; last_name: string }>;
 } & { ' $fragmentName'?: 'EventFragmentFragment' };
 
 export type GetLocationAwareEventsQueryVariables = Exact<{
@@ -580,7 +584,8 @@ export const EventFragmentFragmentDoc = {
               kind: 'SelectionSet',
               selections: [
                 { kind: 'Field', name: { kind: 'Name', value: 'id' } },
-                { kind: 'Field', name: { kind: 'Name', value: 'name' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'first_name' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'last_name' } },
               ],
             },
           },
@@ -612,7 +617,8 @@ export const EventFragmentFragmentDoc = {
               kind: 'SelectionSet',
               selections: [
                 { kind: 'Field', name: { kind: 'Name', value: 'id' } },
-                { kind: 'Field', name: { kind: 'Name', value: 'name' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'first_name' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'last_name' } },
               ],
             },
           },
@@ -668,7 +674,6 @@ export const SignInDocument = {
                     kind: 'SelectionSet',
                     selections: [
                       { kind: 'Field', name: { kind: 'Name', value: 'id' } },
-                      { kind: 'Field', name: { kind: 'Name', value: 'name' } },
                       { kind: 'Field', name: { kind: 'Name', value: 'email' } },
                       {
                         kind: 'Field',
@@ -720,7 +725,12 @@ export const SignUpDocument = {
         },
         {
           kind: 'VariableDefinition',
-          variable: { kind: 'Variable', name: { kind: 'Name', value: 'name' } },
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'first_name' } },
+          type: { kind: 'NonNullType', type: { kind: 'NamedType', name: { kind: 'Name', value: 'String' } } },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'last_name' } },
           type: { kind: 'NonNullType', type: { kind: 'NamedType', name: { kind: 'Name', value: 'String' } } },
         },
         {
@@ -743,8 +753,13 @@ export const SignUpDocument = {
               },
               {
                 kind: 'Argument',
-                name: { kind: 'Name', value: 'name' },
-                value: { kind: 'Variable', name: { kind: 'Name', value: 'name' } },
+                name: { kind: 'Name', value: 'first_name' },
+                value: { kind: 'Variable', name: { kind: 'Name', value: 'first_name' } },
+              },
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'last_name' },
+                value: { kind: 'Variable', name: { kind: 'Name', value: 'last_name' } },
               },
               {
                 kind: 'Argument',
@@ -762,7 +777,8 @@ export const SignUpDocument = {
                     kind: 'SelectionSet',
                     selections: [
                       { kind: 'Field', name: { kind: 'Name', value: 'id' } },
-                      { kind: 'Field', name: { kind: 'Name', value: 'name' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'first_name' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'last_name' } },
                       { kind: 'Field', name: { kind: 'Name', value: 'email' } },
                     ],
                   },
@@ -923,7 +939,8 @@ export const EventByIdDocument = {
               kind: 'SelectionSet',
               selections: [
                 { kind: 'Field', name: { kind: 'Name', value: 'id' } },
-                { kind: 'Field', name: { kind: 'Name', value: 'name' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'first_name' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'last_name' } },
               ],
             },
           },
@@ -955,7 +972,8 @@ export const EventByIdDocument = {
               kind: 'SelectionSet',
               selections: [
                 { kind: 'Field', name: { kind: 'Name', value: 'id' } },
-                { kind: 'Field', name: { kind: 'Name', value: 'name' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'first_name' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'last_name' } },
               ],
             },
           },
@@ -1178,7 +1196,8 @@ export const GetLocationAwareEventsDocument = {
               kind: 'SelectionSet',
               selections: [
                 { kind: 'Field', name: { kind: 'Name', value: 'id' } },
-                { kind: 'Field', name: { kind: 'Name', value: 'name' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'first_name' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'last_name' } },
               ],
             },
           },
@@ -1210,7 +1229,8 @@ export const GetLocationAwareEventsDocument = {
               kind: 'SelectionSet',
               selections: [
                 { kind: 'Field', name: { kind: 'Name', value: 'id' } },
-                { kind: 'Field', name: { kind: 'Name', value: 'name' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'first_name' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'last_name' } },
               ],
             },
           },
@@ -1293,7 +1313,8 @@ export const EventsDocument = {
               kind: 'SelectionSet',
               selections: [
                 { kind: 'Field', name: { kind: 'Name', value: 'id' } },
-                { kind: 'Field', name: { kind: 'Name', value: 'name' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'first_name' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'last_name' } },
               ],
             },
           },
@@ -1325,7 +1346,8 @@ export const EventsDocument = {
               kind: 'SelectionSet',
               selections: [
                 { kind: 'Field', name: { kind: 'Name', value: 'id' } },
-                { kind: 'Field', name: { kind: 'Name', value: 'name' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'first_name' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'last_name' } },
               ],
             },
           },
@@ -1428,7 +1450,8 @@ export const TodaysNearbyEventsDocument = {
               kind: 'SelectionSet',
               selections: [
                 { kind: 'Field', name: { kind: 'Name', value: 'id' } },
-                { kind: 'Field', name: { kind: 'Name', value: 'name' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'first_name' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'last_name' } },
               ],
             },
           },
@@ -1460,7 +1483,8 @@ export const TodaysNearbyEventsDocument = {
               kind: 'SelectionSet',
               selections: [
                 { kind: 'Field', name: { kind: 'Name', value: 'id' } },
-                { kind: 'Field', name: { kind: 'Name', value: 'name' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'first_name' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'last_name' } },
               ],
             },
           },
@@ -1573,7 +1597,8 @@ export const InterestingNearbyEventsDocument = {
               kind: 'SelectionSet',
               selections: [
                 { kind: 'Field', name: { kind: 'Name', value: 'id' } },
-                { kind: 'Field', name: { kind: 'Name', value: 'name' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'first_name' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'last_name' } },
               ],
             },
           },
@@ -1605,7 +1630,8 @@ export const InterestingNearbyEventsDocument = {
               kind: 'SelectionSet',
               selections: [
                 { kind: 'Field', name: { kind: 'Name', value: 'id' } },
-                { kind: 'Field', name: { kind: 'Name', value: 'name' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'first_name' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'last_name' } },
               ],
             },
           },
@@ -1708,7 +1734,8 @@ export const NewlyCreatedNearbyEventsDocument = {
               kind: 'SelectionSet',
               selections: [
                 { kind: 'Field', name: { kind: 'Name', value: 'id' } },
-                { kind: 'Field', name: { kind: 'Name', value: 'name' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'first_name' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'last_name' } },
               ],
             },
           },
@@ -1740,7 +1767,8 @@ export const NewlyCreatedNearbyEventsDocument = {
               kind: 'SelectionSet',
               selections: [
                 { kind: 'Field', name: { kind: 'Name', value: 'id' } },
-                { kind: 'Field', name: { kind: 'Name', value: 'name' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'first_name' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'last_name' } },
               ],
             },
           },
@@ -1813,7 +1841,8 @@ export const QueryDocument = {
               kind: 'SelectionSet',
               selections: [
                 { kind: 'Field', name: { kind: 'Name', value: 'id' } },
-                { kind: 'Field', name: { kind: 'Name', value: 'name' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'first_name' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'last_name' } },
               ],
             },
           },
@@ -1845,7 +1874,8 @@ export const QueryDocument = {
               kind: 'SelectionSet',
               selections: [
                 { kind: 'Field', name: { kind: 'Name', value: 'id' } },
-                { kind: 'Field', name: { kind: 'Name', value: 'name' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'first_name' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'last_name' } },
               ],
             },
           },
@@ -1981,7 +2011,8 @@ export const FilterEventsDocument = {
               kind: 'SelectionSet',
               selections: [
                 { kind: 'Field', name: { kind: 'Name', value: 'id' } },
-                { kind: 'Field', name: { kind: 'Name', value: 'name' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'first_name' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'last_name' } },
               ],
             },
           },
@@ -2013,7 +2044,8 @@ export const FilterEventsDocument = {
               kind: 'SelectionSet',
               selections: [
                 { kind: 'Field', name: { kind: 'Name', value: 'id' } },
-                { kind: 'Field', name: { kind: 'Name', value: 'name' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'first_name' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'last_name' } },
               ],
             },
           },

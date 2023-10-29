@@ -70,7 +70,7 @@ const EventDetails = ({ eventId }: EventDetailsProps) => {
                   <VStack spacing="0.5" alignItems="start">
                     <Text>Hosted by:</Text>
                     <Heading as="h2" size="md">
-                      {event.author.name}
+                      {event.author.first_name} {event.author.last_name}
                     </Heading>
                   </VStack>
                 </HStack>
@@ -159,7 +159,11 @@ const EventDetails = ({ eventId }: EventDetailsProps) => {
             <TabPanel>
               <Flex justifyContent="space-between" flexWrap="wrap">
                 {event.participants.map((participant) => (
-                  <EventDetailsParticipants key={participant.id} name={participant.name} primaryButtonText="MESSAGE" />
+                  <EventDetailsParticipants
+                    key={participant.id}
+                    name={`${participant.first_name} ${participant.last_name}`}
+                    primaryButtonText="MESSAGE"
+                  />
                 ))}
               </Flex>
             </TabPanel>

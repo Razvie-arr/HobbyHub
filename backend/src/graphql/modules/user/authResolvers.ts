@@ -61,24 +61,26 @@ export const authUserLocationResolver: ContextualResolverWithParent<Location, Au
 
 export const signUpResolver = async (
   _: unknown,
-  { email: rawEmail, password, name }: MutationSignUpArgs,
+  { email: rawEmail, password, first_name, last_name }: MutationSignUpArgs,
   { dataSources }: CustomContext,
 ): Promise<AuthInfo> => {
   const email = rawEmail.toLocaleLowerCase();
 
   const userByEmail = (await dataSources.sql.db.query.raw(`SELECT * FROM User WHERE email = ?`, [email]))[0];
 
-  if (userByEmail) {
+  if (userByEmail.length !== 0) {
     throw new GraphQLError('Email already registered');
   }
 
   const passwordHash = await argon2.hash(password);
 
-  const dbResponse = await dataSources.sql.db.write.raw(
-    `INSERT INTO User (id, email, password, name)
-    VALUES (NULL, ?, ?, ?);`,
-    [email, passwordHash, name],
-  );
+  const dbResponse = (
+    await dataSources.sql.db.write.raw(
+      `INSERT INTO User (id, email, password, first_name, last_name)
+    VALUES (NULL, ?, ?, ?, ?);`,
+      [email, passwordHash, first_name, last_name],
+    )
+  )[0];
 
   const id = Number(dbResponse.insertId);
 
@@ -96,7 +98,8 @@ export const signUpResolver = async (
   const userObject = {
     id,
     email,
-    name: name,
+    first_name,
+    last_name,
     password: passwordHash,
     verified: false,
     event_types: [],

@@ -43,7 +43,7 @@ export const EventCard = ({ event, simplified }: EventCardProps) => {
               ))}
             </HStack>
             <Text color="purple.600" as="b">
-              Hosted by: {event.author.name}
+              Hosted by: {event.author.first_name} {event.author.last_name}
             </Text>
             <Stack spacing="2">
               <EventDateTime startDateTime={event.start_datetime} endDateTime={event.end_datetime} />

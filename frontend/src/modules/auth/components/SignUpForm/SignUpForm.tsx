@@ -11,7 +11,8 @@ import { EmailVerificationModal } from './EmailVerificationModal';
 const schema = zod
   .object({
     email: zod.string().email().min(1),
-    name: zod.string().min(1, { message: 'Name is required' }),
+    first_name: zod.string().min(1, { message: 'First name is required' }),
+    last_name: zod.string().min(1, { message: 'Last name is required' }),
     password: zod.string().min(1, { message: 'Password is required' }),
     passwordConfirmation: zod.string().min(1, { message: 'Password confirmation is required' }),
   })
@@ -24,7 +25,8 @@ type FormValues = zod.infer<typeof schema>;
 
 const initialValues: FormValues = {
   email: '',
-  name: '',
+  first_name: '',
+  last_name: '',
   password: '',
   passwordConfirmation: '',
 };
@@ -60,7 +62,8 @@ export const SignUpForm = ({ disclosure }: WithDisclosure) => {
           text: 'Sign up',
         }}
       >
-        <NameField />
+        <NameField name="first_name" label="First name" autoFocus />
+        <NameField name="last_name" label="Last name" />
         <EmailField />
         <PasswordField confirmPassword />
       </ModalForm>

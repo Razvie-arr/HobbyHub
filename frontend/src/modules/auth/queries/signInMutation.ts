@@ -5,7 +5,6 @@ export const SIGN_IN_MUTATION = gql(/* GraphQL */ `
     signIn(email: $email, password: $password) {
       user {
         id
-        name
         email
         event_types {
           id

@@ -107,9 +107,9 @@ export function TopNavigation() {
                 <MenuButton ml="2">
                   <Flex align="center" gap="2">
                     <Text display={{ base: 'none', md: 'flex' }} as="b">
-                      {user?.name}
+                      {user?.first_name}
                     </Text>
-                    <Avatar size="sm" name={user?.name} src="" bg="purple.300" />
+                    <Avatar size="sm" name={user?.first_name} src="" bg="purple.300" />
                   </Flex>
                 </MenuButton>
                 <MenuList>
