@@ -152,7 +152,7 @@ const EventDetails = ({ eventId }: EventDetailsProps) => {
                   <Text>{event.summary}</Text>
                   <Divider />
                   <Heading fontSize="ml">Description</Heading>
-                  <Text>{event.description}</Text>
+                  <Text whiteSpace="pre-line">{event.description}</Text>
                 </Stack>
               </Box>
             </TabPanel>
@@ -181,4 +181,3 @@ export const EventDetailsContainer = () => {
 
   return param.eventId ? <EventDetails eventId={parseInt(param.eventId)} /> : null;
 };
-
