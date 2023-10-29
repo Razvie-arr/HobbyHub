@@ -39,7 +39,7 @@ export const EventCard = ({ event, simplified }: EventCardProps) => {
             </Heading>
             <HStack>
               {event.event_types.map((eventType) => (
-                <EventTypeTag eventType={eventType} />
+                <EventTypeTag key={eventType.id} eventType={eventType} />
               ))}
             </HStack>
             <Text color="purple.600" as="b">

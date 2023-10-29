@@ -100,7 +100,7 @@ const EventDetails = ({ eventId }: EventDetailsProps) => {
               <HStack spacing={4}>
                 <Icon as={MdInfo} boxSize={10} color="purple.500" />
                 {event.event_types.map((eventType) => (
-                  <EventTypeTag eventType={eventType} />
+                  <EventTypeTag key={eventType.id} eventType={eventType} />
                 ))}
               </HStack>
               <HStack spacing={4}>
@@ -168,3 +168,4 @@ export const EventDetailsContainer = () => {
 
   return param.eventId ? <EventDetails eventId={parseInt(param.eventId)} /> : null;
 };
+
