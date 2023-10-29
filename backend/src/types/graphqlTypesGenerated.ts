@@ -125,6 +125,7 @@ export type Mutation = {
   editEvent: Event;
   editLocation?: Maybe<Location>;
   editUser: User;
+  onboardUser: User;
   requestResetPassword: Scalars['Boolean']['output'];
   resetPassword: Scalars['Boolean']['output'];
   signIn: AuthInfo;
@@ -168,6 +169,11 @@ export type MutationEditLocationArgs = {
 };
 
 export type MutationEditUserArgs = {
+  location: LocationInput;
+  user: UserInput;
+};
+
+export type MutationOnboardUserArgs = {
   location: LocationInput;
   user: UserInput;
 };
@@ -580,6 +586,12 @@ export type MutationResolvers<
     ParentType,
     ContextType,
     RequireFields<MutationEditUserArgs, 'location' | 'user'>
+  >;
+  onboardUser?: Resolver<
+    ResolversTypes['User'],
+    ParentType,
+    ContextType,
+    RequireFields<MutationOnboardUserArgs, 'location' | 'user'>
   >;
   requestResetPassword?: Resolver<
     ResolversTypes['Boolean'],

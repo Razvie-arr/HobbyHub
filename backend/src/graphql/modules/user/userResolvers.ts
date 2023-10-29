@@ -9,6 +9,7 @@ import {
   EventType,
   Location,
   MutationEditUserArgs,
+  MutationOnboardUserArgs,
   QueryUserByIdArgs,
   QueryUsersArgs,
   QueryUsersByIdsArgs,
@@ -53,9 +54,11 @@ export const editUserResolver = async (
   if (!user.id) {
     throw new GraphQLError('User id must be filled!');
   }
-
-  if (!user.location_id) {
-    throw new GraphQLError('User location_id must be filled!');
+  if (!user.location_id && !location.id) {
+    throw new GraphQLError('Location id must be filled!');
+  }
+  if (user.event_type_ids.some((eventTypeId) => !eventTypeId)) {
+    throw new GraphQLError('EventTypeId needs to be filled in order to update!');
   }
 
   const geocodeResult = await googleMapsClient.geocode({
@@ -74,11 +77,13 @@ export const editUserResolver = async (
 
   const { lat, lng } = firstAddress.geometry.location;
 
+  const locationId = location.id ? location.id : user.location_id;
   const dbLocationResponse = await dataSources.sql.db
     .write('Location')
-    .insert(createLocationInput({ ...location, latitude: lat, longitude: lng }));
+    .where('id', locationId)
+    .update(createLocationInput({ ...location, latitude: lat, longitude: lng }));
 
-  if (!dbLocationResponse[0]) {
+  if (!dbLocationResponse) {
     throw new GraphQLError(`Error while updating Location!`);
   }
 
@@ -111,6 +116,72 @@ export const editUserResolver = async (
 
   if (!dbUpdateUserResponse) {
     throw new GraphQLError(`Error while updating User!`);
+  }
+
+  const dbUserResponse = await dataSources.sql.users.getById(user.id);
+
+  if (!dbUserResponse) {
+    throw new GraphQLError(`Error while fetching User!`);
+  }
+
+  return dbUserResponse;
+};
+
+export const onboardUserResolver = async (
+  _: unknown,
+  { user, location }: MutationOnboardUserArgs,
+  { dataSources, googleMapsClient }: CustomContext,
+) => {
+  if (user.event_type_ids.some((eventTypeId) => !eventTypeId)) {
+    throw new GraphQLError('EventTypeId needs to be filled in order to onboard!');
+  }
+
+  const geocodeResult = await googleMapsClient.geocode({
+    params: {
+      address: `${location.street_name} ${location.street_number} ${location.city} ${location.country}`,
+      // @ts-expect-error
+      key: GOOGLE_API_KEY,
+    },
+  });
+
+  const firstAddress = geocodeResult.data.results[0];
+
+  if (!firstAddress) {
+    throw new GraphQLError(`Error while looking up location coordinates!`);
+  }
+
+  const { lat, lng } = firstAddress.geometry.location;
+  const dbLocationResponse = await dataSources.sql.db
+    .write('Location')
+    .insert(createLocationInput({ ...location, latitude: lat, longitude: lng }));
+
+  if (!dbLocationResponse[0]) {
+    throw new GraphQLError(`Error while inserting Location!`);
+  }
+
+  user.location_id = dbLocationResponse[0];
+
+  const dbInsertUserResponse = await dataSources.sql.db.write('User').insert(createUserInput(user));
+
+  if (!dbInsertUserResponse[0]) {
+    throw new GraphQLError(`Error while updating User!`);
+  }
+
+  //TypeScript Shenanigans
+  user.id = dbInsertUserResponse[0];
+  const user_id = dbInsertUserResponse[0];
+
+  // Use map to create an array of insert promises
+  const insertPromises = user.event_type_ids.map((eventTypeId) =>
+    dataSources.sql.db.write('User_EventType').insert({ user_id: user_id, event_type_id: eventTypeId }),
+  );
+
+  // Await all insertions
+  const dbUserEventTypeResponses = await Promise.all(insertPromises);
+
+  // Check if any of the insertions failed
+  if (dbUserEventTypeResponses.some((response) => !response)) {
+    throw new GraphQLError(`Error while inserting into User_EventType table!`);
   }
 
   const dbUserResponse = await dataSources.sql.users.getById(user.id);

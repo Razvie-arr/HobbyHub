@@ -35,6 +35,7 @@ import {
 } from './modules/user/authResolvers';
 import {
   editUserResolver,
+  onboardUserResolver,
   userByIdResolver,
   userEventTypesResolver,
   userLocationResolver,
@@ -92,6 +93,7 @@ export const rootResolver: Resolvers = {
     createEvent: createEventResolver,
     editEvent: editEventResolver,
     deleteEvent: deleteEventResolver,
+    onboardUser: onboardUserResolver,
 
     editUser: editUserResolver,
   },
