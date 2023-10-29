@@ -1,11 +1,11 @@
+import { useState } from 'react';
 import { useQuery } from '@apollo/client';
-import { Flex, Spinner, Stack } from '@chakra-ui/react';
+import { Button, Center, Stack } from '@chakra-ui/react';
 import { Option, pipe, ReadonlyArray } from 'effect';
 import { createSearchParams, useNavigate } from 'react-router-dom';
 
 import { AuthUser, EventType, SortType } from '../../../gql/graphql';
 import { route } from '../../../route';
-import { useGeolocation } from '../../../shared/hooks/useGeolocation';
 import { ContentContainer, QueryResult } from '../../../shared/layout';
 import { useAuth } from '../../auth';
 import { EventsMapButton, EventsSection } from '../components';
@@ -109,37 +109,57 @@ const LocationAwareEvents = ({ geolocation, user }: LocationAwareEventsProps) =>
   );
 };
 
-const LocationUnawareEvents = () => (
-  <QueryResult
-    queryResult={useQuery(EVENTS, {
-      variables: { offset: 0, limit: 10 },
-    })}
-    render={(data) => (
-      <Stack spacing="8" mt="8">
-        <EventsSection events={data.events.map(getEventFragmentData)} title="Events" />
-      </Stack>
-    )}
-  />
-);
+const LocationUnawareEvents = () => {
+  const queryResult = useQuery(EVENTS, {
+    variables: { offset: 0, limit: 8 },
+  });
+
+  const [noMoreResults, setNoMoreResults] = useState(false);
+
+  return (
+    <QueryResult
+      queryResult={queryResult}
+      render={(data) => {
+        const events = data.events.map(getEventFragmentData);
+        return (
+          <>
+            <Stack spacing="8" mt="8">
+              <EventsSection events={events} title="Events" />
+            </Stack>
+            {ReadonlyArray.isNonEmptyArray(events) ? (
+              <Center mb="16">
+                <Button
+                  colorScheme="purple"
+                  isDisabled={noMoreResults}
+                  onClick={async () => {
+                    const result = await queryResult.fetchMore({
+                      variables: {
+                        offset: events.length,
+                      },
+                    });
+                    if ((result.data.events.length ?? 0) === 0) {
+                      setNoMoreResults(true);
+                    }
+                  }}
+                >
+                  {noMoreResults ? 'No more results: Try different filter values' : 'Show more'}
+                </Button>
+              </Center>
+            ) : null}
+          </>
+        );
+      }}
+    />
+  );
+};
 
 export const DefaultEventsPage = () => {
-  const { geolocation, isLoading } = useGeolocation();
   const { user } = useAuth();
 
-  if (!geolocation && isLoading) {
-    return (
-      <Flex justify="center" alignItems="center" width="100%" p="8">
-        <Spinner size="xl" />
-      </Flex>
-    );
-  }
-
-  return geolocation && user && user.event_types.length > 0 && user.location ? (
+  return user && user.event_types.length > 0 && user.location ? (
     <ContentContainer>
       <LocationAwareEvents
-        geolocation={
-          user.location ? { latitude: user.location.latitude, longitude: user.location.longitude } : geolocation.coords
-        }
+        geolocation={{ latitude: user.location.latitude, longitude: user.location.longitude }}
         user={user}
       />
     </ContentContainer>

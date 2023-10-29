@@ -33,7 +33,7 @@ export const eventsResolver: ContextualResolver<Array<Event>, QueryEventsArgs> =
   _,
   { offset, limit },
   { dataSources },
-) => await dataSources.sql.events.getAll(offset, limit);
+) => await dataSources.sql.events.getAll(offset, limit, { value: 'created_at', order: 'desc' });
 
 export const eventAuthorResolver: ContextualResolverWithParent<User, Event> = async (parent, _, { dataSources }) =>
   parent.author_id

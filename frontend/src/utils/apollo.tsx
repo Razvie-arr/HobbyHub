@@ -47,6 +47,7 @@ export function EnhancedApolloProvider({ children }: Props) {
         typePolicies: {
           Query: {
             fields: {
+              events: offsetLimitPagination(),
               filterEvents: {
                 ...offsetLimitPagination(),
                 keyArgs: ['filterLocation', 'start_datetime', 'end_datetime', 'sort', 'eventTypeIds'],
