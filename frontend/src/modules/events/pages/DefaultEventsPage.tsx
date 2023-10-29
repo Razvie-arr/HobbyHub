@@ -9,7 +9,7 @@ import { useGeolocation } from '../../../shared/hooks/useGeolocation';
 import { ContentContainer, QueryResult } from '../../../shared/layout';
 import { useAuth } from '../../auth';
 import { EventsMapButton, EventsSection } from '../components';
-import { toFragmentData } from '../fragments';
+import { getEventFragmentData } from '../fragments';
 import { EVENTS, LOCATION_AWARE_EVENTS } from '../queries';
 import { EventProps } from '../types';
 
@@ -38,9 +38,9 @@ const LocationAwareEvents = ({ geolocation, user }: LocationAwareEventsProps) =>
     <QueryResult
       queryResult={result}
       render={(data) => {
-        const todaysNearbyEvents = data.todaysNearbyEvents.map(toFragmentData);
-        const interestingNearbyEvents = data.interestingNearbyEvents.map(toFragmentData);
-        const newlyCreatedNearbyEvents = data.newlyCreatedNearbyEvents.map(toFragmentData);
+        const todaysNearbyEvents = data.todaysNearbyEvents.map(getEventFragmentData);
+        const interestingNearbyEvents = data.interestingNearbyEvents.map(getEventFragmentData);
+        const newlyCreatedNearbyEvents = data.newlyCreatedNearbyEvents.map(getEventFragmentData);
 
         const allEvents: Array<EventProps> = ReadonlyArray.dedupeWith(
           [...todaysNearbyEvents, ...interestingNearbyEvents, ...newlyCreatedNearbyEvents],
@@ -116,7 +116,7 @@ const LocationUnawareEvents = () => (
     })}
     render={(data) => (
       <Stack spacing="8" mt="8">
-        <EventsSection events={data.events.map(toFragmentData)} title="Events" />
+        <EventsSection events={data.events.map(getEventFragmentData)} title="Events" />
       </Stack>
     )}
   />

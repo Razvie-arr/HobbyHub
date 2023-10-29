@@ -14,28 +14,3 @@ export interface WithEvents {
   events: Array<EventProps>;
 }
 
-export type EventTypeName =
-  | 'Football'
-  | 'Basketball'
-  | 'Beach volleyball'
-  | 'Floorball'
-  | 'Biking'
-  | 'Squash'
-  | 'Yoga'
-  | 'Badminton'
-  | 'Volleyball'
-  | 'Tennis'
-  | 'Running'
-  | 'Golf'
-  | 'Playstation'
-  | 'Hockey'
-  | 'Poker'
-  | 'eGaming'
-  | 'Board games'
-  | 'Walking'
-  | 'Meet new people'
-  | 'Hiking'
-  | 'Ferata'
-  | 'Walking the dog'
-  | 'Strollering';
-

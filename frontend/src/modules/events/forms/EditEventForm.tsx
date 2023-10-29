@@ -6,7 +6,7 @@ import { useParams } from 'react-router-dom';
 import { gql } from '../../../gql';
 import { QueryResult } from '../../../shared/layout';
 import { useAuth } from '../../auth';
-import { toFragmentData } from '../fragments';
+import { getEventFragmentData } from '../fragments';
 
 import { EventForm } from './EventForm';
 
@@ -56,7 +56,7 @@ const EditEventForm = ({ eventId }: EditEventFormProps) => {
           return null;
         }
 
-        const event = toFragmentData(eventFragment);
+        const event = getEventFragmentData(eventFragment);
 
         return (
           <EventForm
@@ -115,4 +115,3 @@ const EditEventForm = ({ eventId }: EditEventFormProps) => {
     />
   );
 };
-
