@@ -88,6 +88,8 @@ export const MainFilters = ({ defaultValues, handleSubmit }: MainFiltersProps) =
                       <option value="20">Within 20 km</option>
                       <option value="50">Within 50 km</option>
                       <option value="100">Within 100 km</option>
+                      <option value="200">Within 200 km</option>
+                      <option value="500">Within 500 km</option>
                     </SelectField>
                     <DatePickerField
                       name="dates"

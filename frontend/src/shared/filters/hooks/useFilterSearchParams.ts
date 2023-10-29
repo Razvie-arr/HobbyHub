@@ -70,7 +70,7 @@ export const useFilterSearchParams = () => {
                 prevParams.set('endDate', endDate);
               }
             } else {
-              prevParams.set(fieldName, JSON.stringify(value));
+              prevParams.set(fieldName, value as string);
             }
           });
         return prevParams;
