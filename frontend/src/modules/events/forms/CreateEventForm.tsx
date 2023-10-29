@@ -45,6 +45,9 @@ export const CreateEventForm = () => {
       defaultValues={{ ...defaultValues, startDatetime: getCurrentDateTime() }}
       formTitle="Create event"
       formDescription="Efficiently coordinate your events or gatherings."
+      handleCancel={() => {
+        navigate(route.home());
+      }}
       handleSubmit={async (values) => {
         const result = await createEventRequest({
           variables: {

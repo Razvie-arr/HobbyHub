@@ -13,7 +13,6 @@ import {
   Textarea,
 } from '@chakra-ui/react';
 import { FaFile } from 'react-icons/fa6';
-import { NavLink } from 'react-router-dom';
 
 import {
   AddressFormFields,
@@ -26,7 +25,6 @@ import {
   zodResolver,
 } from 'src/shared/forms';
 
-import { route } from '../../../route';
 import { eventTypes } from '../../../shared/constants';
 import { getCurrentDateTime } from '../../../utils/form';
 import { FormStack } from '../components/FormStack';
@@ -93,6 +91,7 @@ interface EventFormProps {
   defaultValues: FormValues;
   formTitle: ReactNode;
   formDescription: ReactNode;
+  handleCancel: () => void;
   handleSubmit: (values: FormValues) => Promise<unknown>;
   isLoading: boolean;
   submitButtonLabel: ReactNode;
@@ -103,6 +102,7 @@ export const EventForm = ({
   formTitle,
   formDescription,
   handleSubmit,
+  handleCancel,
   isLoading,
   submitButtonLabel,
 }: EventFormProps) => (
@@ -118,7 +118,7 @@ export const EventForm = ({
           </Flex>
           <Spacer />
           <Flex gap={2} mt={3} align="end">
-            <Button as={NavLink} to={route.home()} colorScheme="purple" variant="outline" bg="white" flex={1}>
+            <Button onClick={handleCancel} colorScheme="purple" variant="outline" bg="white" flex={1}>
               Cancel
             </Button>
             <Button colorScheme="purple" flex={1} type="submit" isLoading={isLoading}>

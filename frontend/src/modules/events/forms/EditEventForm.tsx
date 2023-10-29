@@ -1,9 +1,10 @@
 import { useMutation, useQuery } from '@apollo/client';
 import { useToast } from '@chakra-ui/react';
 import { Option, pipe } from 'effect';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 
 import { gql } from '../../../gql';
+import { route } from '../../../route';
 import { QueryResult } from '../../../shared/layout';
 import { useAuth } from '../../auth';
 import { getEventFragmentData } from '../fragments';
@@ -43,9 +44,13 @@ interface EditEventFormProps {
 
 const EditEventForm = ({ eventId }: EditEventFormProps) => {
   const { user } = useAuth();
+
   const result = useQuery(GET_EVENT, { variables: { id: eventId } });
   const [editEventRequest, editEventRequestState] = useMutation(EDIT_EVENT);
+
+  const navigate = useNavigate();
   const toast = useToast();
+
   return (
     <QueryResult
       queryResult={result}
@@ -76,6 +81,9 @@ const EditEventForm = ({ eventId }: EditEventFormProps) => {
             }}
             formDescription="Efficiently edit your events or gatherings."
             formTitle="Edit event"
+            handleCancel={() => {
+              navigate(route.eventDetails(eventId));
+            }}
             handleSubmit={async (values) => {
               await editEventRequest({
                 variables: {
@@ -106,6 +114,7 @@ const EditEventForm = ({ eventId }: EditEventFormProps) => {
                 title: 'Event updated!',
                 description: 'Your event was successfully updated.',
               });
+              navigate(route.eventDetails(eventId));
             }}
             isLoading={editEventRequestState.loading}
             submitButtonLabel="Edit"
@@ -115,3 +124,4 @@ const EditEventForm = ({ eventId }: EditEventFormProps) => {
     />
   );
 };
+

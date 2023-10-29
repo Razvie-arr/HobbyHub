@@ -21,10 +21,11 @@ import {
   VStack,
 } from '@chakra-ui/react';
 import { MdAccountCircle, MdCalendarToday, MdGroups, MdInfo, MdLocationOn } from 'react-icons/md';
-import { useParams } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 
 import { EventTypeTag } from 'src/shared/design-system';
 
+import { route } from '../../../route';
 import { ContentContainer } from '../../../shared/layout';
 import { EventAddress, EventDateTime, EventParticipants } from '../components';
 import { getEventFragmentData } from '../fragments';
@@ -50,40 +51,52 @@ const EventDetails = ({ eventId }: EventDetailsProps) => {
     <Stack spacing="8">
       <Flex width="100%" bgColor="white" shadow="md" position="sticky" top="67px" zIndex={1} p={3}>
         <ContentContainer>
-          <Heading as="h1" size="lg">
-            {event.name}
-          </Heading>
-          <Flex>
-            <HStack justifyContent="space-between" bgColor="white" flexBasis="100%">
-              <HStack>
-                <IconButton
-                  isRound={true}
-                  color="purple.500"
-                  bgColor="white"
-                  alignSelf="center"
-                  aria-label="Profile"
-                  icon={<MdAccountCircle />}
-                  fontSize="40"
-                />
-                <VStack p={1} spacing="1px">
-                  <Text>Hosted By:</Text>
-                  <Heading as="h2" size="md">
-                    {event.author.name}
-                  </Heading>
-                </VStack>
+          <VStack alignItems="start" spacing="4">
+            <Heading as="h1" size="lg">
+              {event.name}
+            </Heading>
+            <Flex w="100%">
+              <HStack justifyContent="space-between" bgColor="white" flexBasis="100%">
+                <HStack spacing={4}>
+                  <IconButton
+                    isRound={true}
+                    color="purple.500"
+                    bgColor="white"
+                    alignSelf="center"
+                    aria-label="Profile"
+                    icon={<MdAccountCircle />}
+                    fontSize="40"
+                  />
+                  <VStack spacing="0.5" alignItems="start">
+                    <Text>Hosted by:</Text>
+                    <Heading as="h2" size="md">
+                      {event.author.name}
+                    </Heading>
+                  </VStack>
+                </HStack>
+                <Box>
+                  <ButtonGroup spacing="6">
+                    <Button
+                      as={Link}
+                      to={route.editEvent(eventId)}
+                      width="180px"
+                      colorScheme="purple"
+                      variant="solid"
+                      rounded="full"
+                    >
+                      Edit Event
+                    </Button>
+                    <Button width="180px" colorScheme="purple" variant="solid" rounded="full">
+                      Join Event
+                    </Button>
+                    <Button width="180px" colorScheme="purple" variant="outline" rounded="full" bgColor="white">
+                      Message
+                    </Button>
+                  </ButtonGroup>
+                </Box>
               </HStack>
-              <Box>
-                <ButtonGroup spacing="6">
-                  <Button width="180px" colorScheme="purple" variant="solid" rounded="full">
-                    Join Event
-                  </Button>
-                  <Button width="180px" colorScheme="purple" variant="outline" rounded="full" bgColor="white">
-                    Message
-                  </Button>
-                </ButtonGroup>
-              </Box>
-            </HStack>
-          </Flex>
+            </Flex>
+          </VStack>
         </ContentContainer>
       </Flex>
       <ContentContainer>
@@ -146,7 +159,7 @@ const EventDetails = ({ eventId }: EventDetailsProps) => {
             <TabPanel>
               <Flex justifyContent="space-between" flexWrap="wrap">
                 {event.participants.map((participant) => (
-                  <EventDetailsParticipants name={participant.name} primaryButtonText="MESSAGE" />
+                  <EventDetailsParticipants key={participant.id} name={participant.name} primaryButtonText="MESSAGE" />
                 ))}
               </Flex>
             </TabPanel>
