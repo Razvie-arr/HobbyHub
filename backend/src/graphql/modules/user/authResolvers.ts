@@ -31,10 +31,14 @@ export const signInResolver = async (
   const dbResponse = await dataSources.sql.db.query.raw(`SELECT * FROM User WHERE email = ?`, [email]);
 
   if (dbResponse.length === 0) {
-    throw new GraphQLError('User not with that email was not found.');
+    throw new GraphQLError('User with that email was not found.');
   }
 
   const user = dbResponse[0][0];
+
+  if (!user.verified) {
+    throw new GraphQLError('Please verify your account with the link sent to your email address.');
+  }
 
   if (await argon2.verify(user.password, password)) {
     const token = createToken({ id: user.id });
@@ -53,11 +57,12 @@ export const authUserEventTypesResolver: ContextualResolverWithParent<Array<Even
   { dataSources },
 ) => await dataSources.sql.users.getUserEventTypes(parent.id);
 
-export const authUserLocationResolver: ContextualResolverWithParent<Location, AuthUser> = async (
+export const authUserLocationResolver: ContextualResolverWithParent<Location | null, AuthUser> = async (
   parent,
   _,
   { dataSources },
-) => (await dataSources.sql.locations.getById(parent.location_id)) as unknown as Location;
+) =>
+  parent.location_id ? ((await dataSources.sql.locations.getById(parent.location_id)) as unknown as Location) : null;
 
 export const signUpResolver = async (
   _: unknown,

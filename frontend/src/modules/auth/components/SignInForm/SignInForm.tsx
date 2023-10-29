@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { Disclosure, Link, WithDisclosure } from 'src/shared/design-system';
 import { ModalForm, zod, zodResolver } from 'src/shared/forms';
 
+import { route } from '../../../../route';
 import { useAuth } from '../../auth-core';
 import { SIGN_IN_MUTATION } from '../../queries';
 import { EmailField, PasswordField } from '../fields';
@@ -34,7 +35,11 @@ export const SignInForm = ({ disclosure, signUpModalDisclosure }: SignInFormProp
       disclosure.onClose();
       // @ts-expect-error
       auth.signIn({ token, user });
-      navigate('/');
+      if (user.event_types.length === 0 || !user.location) {
+        navigate(route.onboarding());
+      } else {
+        navigate(route.home());
+      }
     },
     onError: () => {},
   });

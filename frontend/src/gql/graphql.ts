@@ -24,13 +24,14 @@ export type AuthInfo = {
 
 export type AuthUser = {
   __typename?: 'AuthUser';
+  description?: Maybe<Scalars['String']['output']>;
   email: Scalars['String']['output'];
   event_types: Array<EventType>;
   first_name: Scalars['String']['output'];
   id: Scalars['Int']['output'];
   last_name: Scalars['String']['output'];
   location?: Maybe<Location>;
-  location_id: Scalars['Int']['output'];
+  location_id?: Maybe<Scalars['Int']['output']>;
   password: Scalars['String']['output'];
   verified: Scalars['Boolean']['output'];
 };
@@ -125,7 +126,7 @@ export type Mutation = {
   editEvent: Event;
   editLocation?: Maybe<Location>;
   editUser: User;
-  onboardUser: User;
+  onboardUser: AuthUser;
   requestResetPassword: Scalars['Boolean']['output'];
   resetPassword: Scalars['Boolean']['output'];
   signIn: AuthInfo;
@@ -169,12 +170,12 @@ export type MutationEditLocationArgs = {
 };
 
 export type MutationEditUserArgs = {
-  location: LocationInput;
+  location: LocationInputWithoutCoords;
   user: UserInput;
 };
 
 export type MutationOnboardUserArgs = {
-  location: LocationInput;
+  location: LocationInputWithoutCoords;
   user: UserInput;
 };
 
@@ -351,7 +352,7 @@ export type UserInput = {
   email: Scalars['String']['input'];
   event_type_ids: Array<Scalars['Int']['input']>;
   first_name: Scalars['String']['input'];
-  id?: InputMaybe<Scalars['Int']['input']>;
+  id: Scalars['Int']['input'];
   last_name: Scalars['String']['input'];
   location_id?: InputMaybe<Scalars['Int']['input']>;
   verified: Scalars['Boolean']['input'];
@@ -371,8 +372,22 @@ export type SignInMutation = {
       __typename?: 'AuthUser';
       id: number;
       email: string;
+      first_name: string;
+      last_name: string;
+      verified: boolean;
+      location_id?: number | null;
+      description?: string | null;
+      location?: {
+        __typename?: 'Location';
+        id: number;
+        country: string;
+        city: string;
+        street_name: string;
+        street_number: string;
+        latitude: number;
+        longitude: number;
+      } | null;
       event_types: Array<{ __typename?: 'EventType'; id: number; name: string; category: string }>;
-      location?: { __typename?: 'Location'; longitude: number; latitude: number } | null;
     };
   };
 };
@@ -423,6 +438,37 @@ export type EditEventMutationVariables = Exact<{
 }>;
 
 export type EditEventMutation = { __typename?: 'Mutation'; editEvent: { __typename?: 'Event'; id: number } };
+
+export type OnboardUserMutationVariables = Exact<{
+  user: UserInput;
+  location: LocationInputWithoutCoords;
+}>;
+
+export type OnboardUserMutation = {
+  __typename?: 'Mutation';
+  onboardUser: {
+    __typename?: 'AuthUser';
+    id: number;
+    email: string;
+    first_name: string;
+    last_name: string;
+    verified: boolean;
+    location_id?: number | null;
+    description?: string | null;
+    password: string;
+    location?: {
+      __typename?: 'Location';
+      id: number;
+      country: string;
+      city: string;
+      street_name: string;
+      street_number: string;
+      latitude: number;
+      longitude: number;
+    } | null;
+    event_types: Array<{ __typename?: 'EventType'; id: number; name: string; category: string }>;
+  };
+};
 
 export type EventFragmentFragment = {
   __typename?: 'Event';
@@ -688,6 +734,27 @@ export const SignInDocument = {
                     selections: [
                       { kind: 'Field', name: { kind: 'Name', value: 'id' } },
                       { kind: 'Field', name: { kind: 'Name', value: 'email' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'first_name' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'last_name' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'verified' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'location_id' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'description' } },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'location' },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                            { kind: 'Field', name: { kind: 'Name', value: 'country' } },
+                            { kind: 'Field', name: { kind: 'Name', value: 'city' } },
+                            { kind: 'Field', name: { kind: 'Name', value: 'street_name' } },
+                            { kind: 'Field', name: { kind: 'Name', value: 'street_number' } },
+                            { kind: 'Field', name: { kind: 'Name', value: 'latitude' } },
+                            { kind: 'Field', name: { kind: 'Name', value: 'longitude' } },
+                          ],
+                        },
+                      },
                       {
                         kind: 'Field',
                         name: { kind: 'Name', value: 'event_types' },
@@ -697,17 +764,6 @@ export const SignInDocument = {
                             { kind: 'Field', name: { kind: 'Name', value: 'id' } },
                             { kind: 'Field', name: { kind: 'Name', value: 'name' } },
                             { kind: 'Field', name: { kind: 'Name', value: 'category' } },
-                          ],
-                        },
-                      },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'location' },
-                        selectionSet: {
-                          kind: 'SelectionSet',
-                          selections: [
-                            { kind: 'Field', name: { kind: 'Name', value: 'longitude' } },
-                            { kind: 'Field', name: { kind: 'Name', value: 'latitude' } },
                           ],
                         },
                       },
@@ -1045,6 +1101,93 @@ export const EditEventDocument = {
     },
   ],
 } as unknown as DocumentNode<EditEventMutation, EditEventMutationVariables>;
+export const OnboardUserDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'mutation',
+      name: { kind: 'Name', value: 'OnboardUser' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'user' } },
+          type: { kind: 'NonNullType', type: { kind: 'NamedType', name: { kind: 'Name', value: 'UserInput' } } },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'location' } },
+          type: {
+            kind: 'NonNullType',
+            type: { kind: 'NamedType', name: { kind: 'Name', value: 'LocationInputWithoutCoords' } },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'onboardUser' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'user' },
+                value: { kind: 'Variable', name: { kind: 'Name', value: 'user' } },
+              },
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'location' },
+                value: { kind: 'Variable', name: { kind: 'Name', value: 'location' } },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'email' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'first_name' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'last_name' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'verified' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'location_id' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'description' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'password' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'location' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'country' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'city' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'street_name' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'street_number' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'latitude' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'longitude' } },
+                    ],
+                  },
+                },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'event_types' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'name' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'category' } },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<OnboardUserMutation, OnboardUserMutationVariables>;
 export const GetLocationAwareEventsDocument = {
   kind: 'Document',
   definitions: [

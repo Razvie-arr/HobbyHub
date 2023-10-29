@@ -10,9 +10,9 @@ extend type Mutation {
   verify(token: String!): String!
   requestResetPassword(email: String!): Boolean!
   resetPassword(password: String!, token: String!): Boolean!
-  editUser(user: UserInput!, location: LocationInput!): User!
+  editUser(user: UserInput!, location: LocationInputWithoutCoords!): User!
   deleteUser(id: Int!): String!
-  onboardUser(user: UserInput!, location: LocationInput!): User!
+  onboardUser(user: UserInput!, location: LocationInputWithoutCoords!): AuthUser!
 }
 
 type User { # Public info about user
@@ -38,9 +38,10 @@ type AuthUser { # Private info about user (e.g. with email address, ...)
 
   event_types: [EventType!]!
 
-  location_id: Int!
-
+  location_id: Int
   location: Location
+
+  description: String
 }
 
 type AuthInfo {
@@ -49,7 +50,7 @@ type AuthInfo {
 }
 
 input UserInput {
-  id: Int
+  id: Int!
   email: String!
   first_name: String!
   last_name: String!

@@ -1,24 +1,40 @@
-import { Box, Center, Spinner } from '@chakra-ui/react';
+import { Box, Center, Heading, HStack, Icon, Spinner, Text, VStack } from '@chakra-ui/react';
+import { GiPartyPopper } from 'react-icons/gi';
 
+import { ContentContainer } from '../../../shared/layout';
 import { useTokenVerification } from '../hooks';
 
 export const VerifyUserPage = () => {
   const { isVerified, verifyUserState } = useTokenVerification();
 
   return (
-    <Box>
-      <Center>
+    <ContentContainer>
+      <Box p={8}>
         {verifyUserState.loading ? (
-          <>
-            <Spinner /> Verifying user...
-          </>
+          <Center>
+            <HStack spacing="4">
+              <Spinner size="lg" />
+              <Text fontSize="2xl">Verifying user...</Text>
+            </HStack>
+          </Center>
         ) : isVerified ? (
-          'User successfully verified'
+          <VStack spacing={8}>
+            <Heading as="h1">Email is successfully verified!</Heading>
+            <Icon as={GiPartyPopper} boxSize={32} color="purple.500" />
+            <VStack spacing="0.5">
+              <Text as="b" color="purple.500" fontSize="xl">
+                Unlock a Personalized Experience!
+              </Text>
+              <Text fontSize="xl">Sign in now to complete your profile and enhance your journey with us.</Text>
+            </VStack>
+          </VStack>
         ) : (
-          'User is not verified.'
+          <Center>
+            <Text fontSize="xl">We were unable to verify you, please request a new verification link.</Text>
+          </Center>
         )}
-      </Center>
-    </Box>
+      </Box>
+    </ContentContainer>
   );
 };
 

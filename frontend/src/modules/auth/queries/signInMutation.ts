@@ -6,14 +6,24 @@ export const SIGN_IN_MUTATION = gql(/* GraphQL */ `
       user {
         id
         email
+        first_name
+        last_name
+        verified
+        location_id
+        description
+        location {
+          id
+          country
+          city
+          street_name
+          street_number
+          latitude
+          longitude
+        }
         event_types {
           id
           name
           category
-        }
-        location {
-          longitude
-          latitude
         }
       }
       token

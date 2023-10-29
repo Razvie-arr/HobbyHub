@@ -13,6 +13,7 @@ type AuthUser {
   location_id: Int!
   password: String!
   verified: Boolean!
+  description: String
 }
 
 type Event {
@@ -100,8 +101,8 @@ type Mutation {
   deleteUser(id: Int!): String!
   editEvent(event: EventInput!, location: LocationInputWithoutCoords!): Event!
   editLocation(location: LocationInputWithoutCoords!): Location
-  editUser(location: LocationInput!, user: UserInput!): User!
-  onboardUser(location: LocationInput!, user: UserInput!): User!
+  editUser(location: LocationInputWithoutCoords!, user: UserInput!): User!
+  onboardUser(location: LocationInputWithoutCoords!, user: UserInput!): AuthUser!
   requestResetPassword(email: String!): Boolean!
   resetPassword(password: String!, token: String!): Boolean!
   signIn(email: String!, password: String!): AuthInfo!
@@ -165,3 +166,4 @@ input UserInput {
   name: String!
   verified: Boolean!
 }
+

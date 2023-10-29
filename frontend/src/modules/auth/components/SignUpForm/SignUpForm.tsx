@@ -35,7 +35,8 @@ export const SignUpForm = ({ disclosure }: WithDisclosure) => {
   const emailVerificationModalDisclosure = useDisclosure();
 
   const [signUpRequest, signUpRequestState] = useMutation(SIGN_UP_MUTATION, {
-    onCompleted: () => {
+    onCompleted: ({ signUp }) => {
+      const { id } = signUp.user;
       disclosure.onClose();
       emailVerificationModalDisclosure.onOpen();
     },
