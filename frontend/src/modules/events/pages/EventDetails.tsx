@@ -1,4 +1,4 @@
-import { useMutation, useQuery } from '@apollo/client';
+import { useQuery } from '@apollo/client';
 import {
   Box,
   Button,
@@ -18,11 +18,10 @@ import {
   TabPanels,
   Tabs,
   Text,
-  useToast,
   VStack,
 } from '@chakra-ui/react';
 import { MdAccountCircle, MdCalendarToday, MdGroups, MdInfo, MdLocationOn } from 'react-icons/md';
-import { Link, useNavigate, useParams } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 
 import { EventTypeTag } from 'src/shared/design-system';
 
@@ -31,7 +30,6 @@ import { ContentContainer, QueryResult } from '../../../shared/layout';
 import { useAuth } from '../../auth';
 import { EventAddress, EventDateTime, EventParticipants, EventsMapButton } from '../components';
 import { getEventFragmentData } from '../fragments';
-import { DELETE_EVENT } from '../mutations';
 import { EVENT } from '../queries';
 
 import { DeleteEventButton } from './DeleteEventButton';
@@ -48,11 +46,6 @@ const EventDetails = ({ eventId }: EventDetailsProps) => {
   const eventQueryResult = useQuery(EVENT, {
     variables: { eventId },
   });
-
-  const [deleteEventRequest, deleteEventRequestState] = useMutation(DELETE_EVENT);
-
-  const navigate = useNavigate();
-  const toast = useToast();
 
   return (
     <QueryResult
@@ -110,23 +103,10 @@ const EventDetails = ({ eventId }: EventDetailsProps) => {
                                   Edit
                                 </Button>
                                 <DeleteEventButton
-                                  handleDelete={async () => {
-                                    await deleteEventRequest({
-                                      variables: {
-                                        eventId,
-                                        locationId: event.location.id,
-                                      },
-                                    });
-                                    toast({
-                                      variant: 'left-accent',
-                                      status: 'success',
-                                      position: 'top-right',
-                                      title: 'Event deleted!',
-                                      description: 'Your event was deleted successfully.',
-                                    });
-                                    navigate(route.home());
-                                  }}
-                                  isLoading={deleteEventRequestState.loading}
+                                  event={event}
+                                  colorScheme="purple"
+                                  rounded="full"
+                                  variant="outline"
                                 />
                               </>
                             ) : null}
@@ -135,7 +115,7 @@ const EventDetails = ({ eventId }: EventDetailsProps) => {
                                 <Button colorScheme="purple" rounded="full">
                                   Join Event
                                 </Button>
-                                <Button colorScheme="purple" variant="outline" rounded="full" bgColor="white">
+                                <Button colorScheme="purple" rounded="full" variant="outline" bgColor="white">
                                   Message
                                 </Button>
                               </>

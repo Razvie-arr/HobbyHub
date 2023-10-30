@@ -1,4 +1,5 @@
 import { useRef } from 'react';
+import { useMutation } from '@apollo/client';
 import {
   AlertDialog,
   AlertDialogBody,
@@ -7,28 +8,45 @@ import {
   AlertDialogHeader,
   AlertDialogOverlay,
   Button,
+  ButtonProps,
   useDisclosure,
+  useToast,
 } from '@chakra-ui/react';
+import { useNavigate } from 'react-router-dom';
 
-interface DeleteEventButtonProps {
-  handleDelete: () => Promise<void>;
-  isLoading?: boolean;
-}
+import { route } from '../../../route';
+import { DELETE_EVENT } from '../mutations';
+import { WithEvent } from '../types';
 
-export const DeleteEventButton = ({ handleDelete, isLoading }: DeleteEventButtonProps) => {
+export const DeleteEventButton = ({ event, ...buttonProps }: WithEvent & ButtonProps) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const cancelRef = useRef(null);
 
+  const [deleteEventRequest, deleteEventRequestState] = useMutation(DELETE_EVENT);
+
+  const navigate = useNavigate();
+  const toast = useToast();
+
+  const handleDelete = async () => {
+    await deleteEventRequest({
+      variables: {
+        eventId: event.id,
+        locationId: event.location.id,
+      },
+    });
+    toast({
+      variant: 'left-accent',
+      status: 'success',
+      position: 'top-right',
+      title: 'Event deleted!',
+      description: 'Your event was deleted successfully.',
+    });
+    navigate(route.home());
+  };
+
   return (
     <>
-      <Button
-        width="180px"
-        colorScheme="purple"
-        variant="outline"
-        rounded="full"
-        onClick={onOpen}
-        isLoading={isLoading}
-      >
+      <Button {...buttonProps} onClick={onOpen} isLoading={deleteEventRequestState.loading}>
         Delete
       </Button>
 
@@ -42,7 +60,7 @@ export const DeleteEventButton = ({ handleDelete, isLoading }: DeleteEventButton
             <AlertDialogBody>Are you sure? You can't undo this action afterwards.</AlertDialogBody>
 
             <AlertDialogFooter>
-              <Button ref={cancelRef} onClick={onClose}>
+              <Button colorScheme="purple" variant="outline" ref={cancelRef} onClick={onClose}>
                 Cancel
               </Button>
               <Button colorScheme="purple" onClick={handleDelete} ml={3}>

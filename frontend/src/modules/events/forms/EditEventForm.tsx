@@ -8,6 +8,7 @@ import { ContentContainer, QueryResult } from '../../../shared/layout';
 import { useAuth } from '../../auth';
 import { getEventFragmentData } from '../fragments';
 import { EDIT_EVENT } from '../mutations';
+import { DeleteEventButton } from '../pages/DeleteEventButton';
 import { EVENT } from '../queries';
 
 import { EventForm } from './EventForm';
@@ -62,6 +63,7 @@ const EditEventForm = ({ eventId }: EditEventFormProps) => {
 
         return (
           <EventForm
+            additionalButton={<DeleteEventButton event={event} colorScheme="purple" flex={1} />}
             defaultValues={{
               author: `${event.author.first_name} ${event.author.last_name}`,
               allowWaitlist: event.allow_waitlist,

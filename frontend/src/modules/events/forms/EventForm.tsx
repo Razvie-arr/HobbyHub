@@ -78,6 +78,7 @@ const eventFormSchema = zod
 type FormValues = zod.infer<typeof eventFormSchema>;
 
 interface EventFormProps {
+  additionalButton: ReactNode;
   defaultValues: FormValues;
   formTitle: ReactNode;
   formDescription: ReactNode;
@@ -88,6 +89,7 @@ interface EventFormProps {
 }
 
 export const EventForm = ({
+  additionalButton,
   defaultValues,
   formTitle,
   formDescription,
@@ -98,7 +100,7 @@ export const EventForm = ({
 }: EventFormProps) => (
   <Container maxW="3xl">
     <Form onSubmit={handleSubmit} defaultValues={defaultValues} resolver={zodResolver(eventFormSchema)} noValidate>
-      <Box position="sticky" top="67px" width="100%" zIndex={2} bg="purple.50" pt="6">
+      <Box position="sticky" top={{ base: '57px', md: '67px' }} width="100%" zIndex={2} bg="purple.50" pt="6">
         <Flex direction={{ base: 'column', md: 'row' }}>
           <Flex direction="column">
             <Text fontSize="3xl" fontWeight="bold" color="purple.500">
@@ -114,6 +116,7 @@ export const EventForm = ({
             <Button colorScheme="purple" flex={1} type="submit" isLoading={isLoading}>
               {submitButtonLabel}
             </Button>
+            {additionalButton}
           </Flex>
         </Flex>
         <Divider borderColor="purple.500" my={5} />
