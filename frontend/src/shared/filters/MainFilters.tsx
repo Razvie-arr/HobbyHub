@@ -53,7 +53,7 @@ export const MainFilters = ({ defaultValues, handleSubmit }: MainFiltersProps) =
 
   return (
     <>
-      <Box position="sticky" top="67px" zIndex={1}>
+      <Box position="sticky" top={{ base: '57px', md: '67px' }} zIndex={1}>
         <FormProvider {...methods}>
           <form
             onSubmit={methods.handleSubmit(({ address, ...values }) => {
@@ -86,14 +86,14 @@ export const MainFilters = ({ defaultValues, handleSubmit }: MainFiltersProps) =
                   mx={4}
                   my={2}
                   variant="outline"
-                  display={{ base: 'flex', md: 'none' }}
+                  display={{ base: 'flex', lg: 'none' }}
                   rightIcon={mobileNav.isOpen ? <FaXmark /> : <FaFilter />}
                   onClick={mobileNav.onToggle}
                 >
                   Filter
                 </Button>
-                <ContentContainer display={{ base: mobileNav.isOpen ? 'flex' : 'none', md: 'flex' }}>
-                  <Stack direction={{ base: 'column', md: 'row' }} width="100%">
+                <ContentContainer display={{ base: mobileNav.isOpen ? 'flex' : 'none', lg: 'flex' }}>
+                  <Stack direction={{ base: 'column', lg: 'row' }} width="100%">
                     <AddressInputField
                       name="address"
                       formControlProps={{ flexBasis: '39%' }}
@@ -140,7 +140,7 @@ export const MainFilters = ({ defaultValues, handleSubmit }: MainFiltersProps) =
                       colorScheme="purple"
                       borderRadius="full"
                       width="100%"
-                      flexBasis={{ base: 'none', md: '10%' }}
+                      flexBasis={{ base: 'none', lg: '10%' }}
                       type="submit"
                     >
                       Apply filters

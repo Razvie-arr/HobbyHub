@@ -22,7 +22,7 @@ export const ActivityFilter = ({ eventTypes, fieldName, label }: ActivityFilterP
       render={({ field }) => (
         <Popover>
           <ActivityFilterTrigger label={label} selectedEventTypes={field.value} />
-          <PopoverContent w="3xl">
+          <PopoverContent w={{ base: 'xs', md: 'sm', lg: '3xl' }}>
             <PopoverArrow />
             <PopoverCloseButton />
             <PopoverBody py="8" px="6">

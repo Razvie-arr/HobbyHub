@@ -1,5 +1,5 @@
 import { ReactNode } from 'react';
-import { Button, Divider, Heading, HStack, Stack } from '@chakra-ui/react';
+import { Button, Divider, Heading, Stack } from '@chakra-ui/react';
 import { ReadonlyArray } from 'effect';
 
 import { Box } from 'src/shared/design-system';
@@ -18,14 +18,18 @@ interface EventsSectionProps {
 export const EventsSection = ({ events, handleSeeAllEvents, title }: EventsSectionProps) => (
   <Box>
     <Stack spacing="4">
-      <HStack justifyContent="space-between">
+      <Stack
+        justifyContent="space-between"
+        direction={{ base: 'column', lg: 'row' }}
+        alignItems={{ base: 'start', lg: 'center' }}
+      >
         {title ? <Heading as="h2">{title}</Heading> : null}{' '}
         {handleSeeAllEvents ? (
           <Button size="md" variant="link" colorScheme="purple" onClick={handleSeeAllEvents}>
             See all events
           </Button>
         ) : null}
-      </HStack>
+      </Stack>
       {title ? <Divider borderColor="purple.200" /> : null}
       {ReadonlyArray.isNonEmptyArray(events) ? <EventsCardList events={events} /> : <NoEvents />}
     </Stack>

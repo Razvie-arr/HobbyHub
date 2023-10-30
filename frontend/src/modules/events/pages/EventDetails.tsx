@@ -66,7 +66,15 @@ const EventDetails = ({ eventId }: EventDetailsProps) => {
 
         return (
           <Stack spacing="8">
-            <Flex width="100%" bgColor="white" shadow="md" position="sticky" top="67px" zIndex={1} p={3}>
+            <Flex
+              width="100%"
+              bgColor="white"
+              shadow="md"
+              position="sticky"
+              top={{ base: '57px', md: '67px' }}
+              zIndex={1}
+              p={3}
+            >
               <ContentContainer>
                 <VStack alignItems="start" spacing="4">
                   <Heading as="h1" size="lg">
@@ -93,54 +101,56 @@ const EventDetails = ({ eventId }: EventDetailsProps) => {
                       </HStack>
                       <Box>
                         <ButtonGroup spacing="6">
-                          {user && user.id === event.author.id ? (
-                            <>
-                              <Button
-                                as={Link}
-                                to={route.editEvent(eventId)}
-                                width="180px"
-                                colorScheme="purple"
-                                rounded="full"
-                              >
-                                Edit
-                              </Button>
-                              <DeleteEventButton
-                                handleDelete={async () => {
-                                  await deleteEventRequest({
-                                    variables: {
-                                      eventId,
-                                      locationId: event.location.id,
-                                    },
-                                  });
-                                  toast({
-                                    variant: 'left-accent',
-                                    status: 'success',
-                                    position: 'top-right',
-                                    title: 'Event deleted!',
-                                    description: 'Your event was deleted successfully.',
-                                  });
-                                  navigate(route.home());
-                                }}
-                                isLoading={deleteEventRequestState.loading}
-                              />
-                            </>
-                          ) : null}
-                          {user && user.id !== event.author.id ? (
-                            <>
-                              <Button width="180px" colorScheme="purple" rounded="full">
-                                Join Event
-                              </Button>
-                              <Button
-                                width="180px"
-                                colorScheme="purple"
-                                variant="outline"
-                                rounded="full"
-                                bgColor="white"
-                              >
-                                Message
-                              </Button>
-                            </>
-                          ) : null}
+                          <Stack direction={{ base: 'column', lg: 'row' }}>
+                            {user && user.id === event.author.id ? (
+                              <>
+                                <Button
+                                  as={Link}
+                                  to={route.editEvent(eventId)}
+                                  width="180px"
+                                  colorScheme="purple"
+                                  rounded="full"
+                                >
+                                  Edit
+                                </Button>
+                                <DeleteEventButton
+                                  handleDelete={async () => {
+                                    await deleteEventRequest({
+                                      variables: {
+                                        eventId,
+                                        locationId: event.location.id,
+                                      },
+                                    });
+                                    toast({
+                                      variant: 'left-accent',
+                                      status: 'success',
+                                      position: 'top-right',
+                                      title: 'Event deleted!',
+                                      description: 'Your event was deleted successfully.',
+                                    });
+                                    navigate(route.home());
+                                  }}
+                                  isLoading={deleteEventRequestState.loading}
+                                />
+                              </>
+                            ) : null}
+                            {user && user.id !== event.author.id ? (
+                              <>
+                                <Button width="180px" colorScheme="purple" rounded="full">
+                                  Join Event
+                                </Button>
+                                <Button
+                                  width="180px"
+                                  colorScheme="purple"
+                                  variant="outline"
+                                  rounded="full"
+                                  bgColor="white"
+                                >
+                                  Message
+                                </Button>
+                              </>
+                            ) : null}
+                          </Stack>
                         </ButtonGroup>
                       </Box>
                     </HStack>
@@ -149,7 +159,7 @@ const EventDetails = ({ eventId }: EventDetailsProps) => {
               </ContentContainer>
             </Flex>
             <ContentContainer>
-              <HStack spacing={4} justifyContent="center">
+              <Stack spacing={4} justifyContent="center" direction={{ base: 'column', lg: 'row' }}>
                 <Image
                   w="550px"
                   h="320px"
@@ -189,7 +199,7 @@ const EventDetails = ({ eventId }: EventDetailsProps) => {
                     </HStack>
                   </VStack>
                 </Card>
-              </HStack>
+              </Stack>
             </ContentContainer>
             <ContentContainer>
               <Tabs>

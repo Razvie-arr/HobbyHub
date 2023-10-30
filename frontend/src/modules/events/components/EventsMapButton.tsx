@@ -6,6 +6,7 @@ import {
   ModalCloseButton,
   ModalContent,
   ModalOverlay,
+  useBreakpoint,
   useDisclosure,
 } from '@chakra-ui/react';
 import { FaMapLocationDot } from 'react-icons/fa6';
@@ -16,7 +17,11 @@ import { EventsMap } from './EventsMap';
 
 export const EventsMapButton = ({ events, ...buttonProps }: ButtonProps & WithEvents) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const breakpoint = useBreakpoint();
 
+  if (breakpoint === 'base' || breakpoint === 'xs' || breakpoint === 'sm') {
+    return null;
+  }
   return (
     <>
       <Button
