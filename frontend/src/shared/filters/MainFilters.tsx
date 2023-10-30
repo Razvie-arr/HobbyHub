@@ -96,7 +96,7 @@ export const MainFilters = ({ defaultValues, handleSubmit }: MainFiltersProps) =
                   <Stack direction={{ base: 'column', lg: 'row' }} width="100%">
                     <AddressInputField
                       name="address"
-                      formControlProps={{ flexBasis: '39%' }}
+                      formControlProps={{ flexBasis: { base: 'none', lg: '39%' } }}
                       defaultValue={
                         defaultValues.address ? getAddressName(defaultValues.address.address_components) : ''
                       }
@@ -119,7 +119,7 @@ export const MainFilters = ({ defaultValues, handleSubmit }: MainFiltersProps) =
                     </SelectField>
                     <DatePickerField
                       name="dates"
-                      formControlProps={{ flexBasis: '20%' }}
+                      formControlProps={{ flexBasis: { base: 'none', lg: '20%' } }}
                       datePickerProps={{
                         selectsRange: true,
                         isClearable: true,
@@ -129,7 +129,7 @@ export const MainFilters = ({ defaultValues, handleSubmit }: MainFiltersProps) =
                     />
                     <SelectField
                       name="sortBy"
-                      formControlProps={{ flexBasis: '13%' }}
+                      formControlProps={{ flexBasis: { base: 'none', lg: '13%' } }}
                       placeholder="Sort by:"
                       {...inputProps}
                     >
