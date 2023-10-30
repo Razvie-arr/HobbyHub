@@ -78,7 +78,7 @@ const eventFormSchema = zod
 type FormValues = zod.infer<typeof eventFormSchema>;
 
 interface EventFormProps {
-  additionalButton: ReactNode;
+  additionalButton?: ReactNode;
   defaultValues: FormValues;
   formTitle: ReactNode;
   formDescription: ReactNode;
