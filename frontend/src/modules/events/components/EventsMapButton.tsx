@@ -15,11 +15,16 @@ import { WithEvents } from '../types';
 
 import { EventsMap } from './EventsMap';
 
-export const EventsMapButton = ({ events, ...buttonProps }: ButtonProps & WithEvents) => {
+interface EventsMapButtonProps extends ButtonProps, WithEvents {
+  iconOnly?: boolean;
+  forceRender?: boolean;
+}
+
+export const EventsMapButton = ({ events, forceRender, iconOnly, ...buttonProps }: EventsMapButtonProps) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const breakpoint = useBreakpoint();
 
-  if (breakpoint === 'base' || breakpoint === 'xs' || breakpoint === 'sm') {
+  if (!forceRender && (breakpoint === 'base' || breakpoint === 'xs' || breakpoint === 'sm')) {
     return null;
   }
   return (
@@ -27,16 +32,16 @@ export const EventsMapButton = ({ events, ...buttonProps }: ButtonProps & WithEv
       <Button
         onClick={onOpen}
         m={4}
-        {...buttonProps}
         colorScheme="purple"
         borderRadius="full"
         size="lg"
         zIndex="1"
         borderWidth="1px"
         borderColor="purple.100"
+        {...buttonProps}
       >
-        <Icon as={FaMapLocationDot} mr="2" />
-        View on map
+        <Icon as={FaMapLocationDot} mr={iconOnly ? 0 : 2} />
+        {iconOnly ? null : 'View on map'}
       </Button>
       <Modal onClose={onClose} size="6xl" isOpen={isOpen}>
         <ModalOverlay />

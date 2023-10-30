@@ -29,7 +29,7 @@ import { EventTypeTag } from 'src/shared/design-system';
 import { route } from '../../../route';
 import { ContentContainer, QueryResult } from '../../../shared/layout';
 import { useAuth } from '../../auth';
-import { EventAddress, EventDateTime, EventParticipants } from '../components';
+import { EventAddress, EventDateTime, EventParticipants, EventsMapButton } from '../components';
 import { getEventFragmentData } from '../fragments';
 import { DELETE_EVENT } from '../mutations';
 import { EVENT } from '../queries';
@@ -73,12 +73,13 @@ const EventDetails = ({ eventId }: EventDetailsProps) => {
               position="sticky"
               top={{ base: '57px', md: '67px' }}
               zIndex={1}
-              p={3}
+              py={4}
             >
               <ContentContainer>
                 <VStack alignItems="start" spacing="4">
                   <Heading as="h1" size="lg">
-                    {event.name}
+                    {event.name}{' '}
+                    <EventsMapButton events={[event]} size="md" m="0" ml={{ base: 0, md: 2 }} forceRender iconOnly />
                   </Heading>
                   <Flex w="100%">
                     <HStack justifyContent="space-between" bgColor="white" flexBasis="100%">
@@ -91,6 +92,7 @@ const EventDetails = ({ eventId }: EventDetailsProps) => {
                           aria-label="Profile"
                           icon={<MdAccountCircle />}
                           fontSize="40"
+                          display={{ base: 'none', lg: 'initial' }}
                         />
                         <VStack spacing="0.5" alignItems="start">
                           <Text>Hosted by:</Text>
@@ -104,13 +106,7 @@ const EventDetails = ({ eventId }: EventDetailsProps) => {
                           <Stack direction={{ base: 'column', lg: 'row' }}>
                             {user && user.id === event.author.id ? (
                               <>
-                                <Button
-                                  as={Link}
-                                  to={route.editEvent(eventId)}
-                                  width="180px"
-                                  colorScheme="purple"
-                                  rounded="full"
-                                >
+                                <Button as={Link} to={route.editEvent(eventId)} colorScheme="purple" rounded="full">
                                   Edit
                                 </Button>
                                 <DeleteEventButton
@@ -136,16 +132,10 @@ const EventDetails = ({ eventId }: EventDetailsProps) => {
                             ) : null}
                             {user && user.id !== event.author.id ? (
                               <>
-                                <Button width="180px" colorScheme="purple" rounded="full">
+                                <Button colorScheme="purple" rounded="full">
                                   Join Event
                                 </Button>
-                                <Button
-                                  width="180px"
-                                  colorScheme="purple"
-                                  variant="outline"
-                                  rounded="full"
-                                  bgColor="white"
-                                >
+                                <Button colorScheme="purple" variant="outline" rounded="full" bgColor="white">
                                   Message
                                 </Button>
                               </>

@@ -25,8 +25,8 @@ import {
 } from '../../../types';
 import { createEventInput, createLocationInput } from '../../../utils/helpers';
 
-const DEFAULT_DISTANCE = 100;
-const DEFAULT_LIMIT = 5;
+const DEFAULT_DISTANCE = 20;
+const DEFAULT_LIMIT = 4;
 const MINIMUM_COUNT_SIMILAR_EVENTS = 3;
 
 export const eventsResolver: ContextualResolver<Array<Event>, QueryEventsArgs> = async (
