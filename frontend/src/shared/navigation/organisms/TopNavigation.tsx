@@ -11,6 +11,7 @@ import {
   MenuList,
   Text,
   Tooltip,
+  useBreakpoint,
 } from '@chakra-ui/react';
 import { FaBars, FaPlus, FaRegBell, FaRegComment, FaXmark } from 'react-icons/fa6';
 import { NavLink, useLocation, useNavigate } from 'react-router-dom';
@@ -28,6 +29,7 @@ export function TopNavigation() {
   const { user, signOut } = useAuth();
   const navigate = useNavigate();
   const mobileNav = useDisclosure();
+  const breakpoint = useBreakpoint();
   const location = useLocation();
 
   const menuLinks = useMemo(
@@ -50,7 +52,8 @@ export function TopNavigation() {
     <Box bg="white" position="sticky" top={0} width="100%" zIndex={2} borderBottomWidth="1px" borderColor="purple.100">
       <Container maxWidth="8xl" mx="auto">
         <HStack py={{ base: 2 }} align="center" justifyContent="space-between">
-          <HStack display={{ base: 'none', md: 'flex' }} spacing="4">
+          <HStack>
+            <Image boxSize={{ base: '40px', md: '50px' }} src={logoImageUrl} alt="logo" borderRadius="base" />
             <IconButton
               color="purple.600"
               _hover={{ bg: 'purple.50' }}
@@ -64,24 +67,24 @@ export function TopNavigation() {
               onClick={mobileNav.onToggle}
             />
 
-            <Image boxSize={{ base: '40px', md: '50px' }} src={logoImageUrl} alt="logo" borderRadius="base" />
-            <NavLink to={route.home()}>
-              <Text as="b" mr={5} fontSize={{ base: 'md', md: 'lg' }} fontFamily="heading" color="blackAlpha.900">
-                HobbyHub
-              </Text>
-            </NavLink>
+            <HStack display={{ base: 'none', md: 'flex' }} spacing="4">
+              <NavLink to={route.home()}>
+                <Text as="b" mr={5} fontSize={{ base: 'md', md: 'lg' }} fontFamily="heading" color="blackAlpha.900">
+                  HobbyHub
+                </Text>
+              </NavLink>
 
-            {menuLinks.map(({ to, title }) => (
-              <RouterNavLink to={to} key={to} fontWeight="medium">
-                {title}
-              </RouterNavLink>
-            ))}
+              {menuLinks.map(({ to, title }) => (
+                <RouterNavLink to={to} key={to} fontWeight="medium">
+                  {title}
+                </RouterNavLink>
+              ))}
+            </HStack>
           </HStack>
-
           {user ? (
             <>
               <HStack>
-                <SearchEventsBar />
+                {breakpoint === 'base' ? null : <SearchEventsBar />}
                 <Tooltip label="Create event">
                   <IconButton
                     aria-label="Create event"
