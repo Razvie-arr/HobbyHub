@@ -12,6 +12,11 @@ export const AddressFormFields = () => {
     <>
       <Field label="Search address">
         <AddressInput
+          onKeyDown={(event) => {
+            if (event.key === 'Enter') {
+              event.preventDefault();
+            }
+          }}
           onPlaceSelected={(places) => {
             const addressComponents = pipe(
               Option.fromNullable(places?.address_components),

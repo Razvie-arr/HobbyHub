@@ -22,7 +22,7 @@ import { Box, Flex, IconButton, Image, Stack, useDisclosure } from 'src/shared/d
 
 import { RouterNavLink } from '../atoms';
 
-import { SearchEventBar } from './SearchEventBar';
+import { SearchEventsBar } from './SearchEventsBar';
 
 export function TopNavigation() {
   const { user, signOut } = useAuth();
@@ -81,7 +81,7 @@ export function TopNavigation() {
           {user ? (
             <>
               <HStack>
-                <SearchEventBar />
+                <SearchEventsBar />
                 <Tooltip label="Create event">
                   <IconButton
                     aria-label="Create event"

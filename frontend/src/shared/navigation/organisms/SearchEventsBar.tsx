@@ -5,7 +5,7 @@ import { createSearchParams, useNavigate } from 'react-router-dom';
 
 import { route } from '../../../route';
 
-export const SearchEventBar = () => {
+export const SearchEventsBar = () => {
   const [searchValue, setSearchValue] = useState('');
   const navigate = useNavigate();
 
