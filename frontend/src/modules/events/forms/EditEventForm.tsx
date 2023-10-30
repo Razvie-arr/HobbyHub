@@ -119,7 +119,7 @@ const EditEventForm = ({ eventId }: EditEventFormProps) => {
               navigate(route.eventDetails(eventId));
             }}
             isLoading={editEventRequestState.loading}
-            submitButtonLabel="Edit"
+            submitButtonLabel="Save"
           />
         );
       }}
