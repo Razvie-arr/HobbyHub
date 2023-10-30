@@ -42,7 +42,8 @@ const eventFormSchema = zod
     capacity: zod.coerce
       .number()
       .int('Fractional people will not be able to come to your event, please input integer numbers')
-      .min(2, 'Capacity must be at least 2'),
+      .min(2, 'Capacity must be at least 2')
+      .max(100, 'Capacity must be more than 100'),
     allowWaitlist: zod.boolean(),
     startDatetime: zod.string().min(1, 'Start time is required'),
     endDatetime: zod.string().min(1, 'End time is required'),
