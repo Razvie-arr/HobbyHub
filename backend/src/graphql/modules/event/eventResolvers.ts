@@ -1,6 +1,7 @@
 import { GraphQLError } from 'graphql/error';
 
 import { GOOGLE_API_KEY } from '../../../config';
+import { getSQLDataSource } from '../../../datasource';
 import { HAVERSINE_FORMULA } from '../../../sharedConstants';
 import {
   ContextualNullableResolver,
@@ -349,20 +350,20 @@ export const deleteEventResolver = async (
 export const filterEventResolver = async (
   _: unknown,
   { eventTypeIds, start_datetime, end_datetime, filterLocation, offset, limit, sort }: QueryFilterEventsArgs,
-  { dataSources }: CustomContext,
+  { dbConnection }: CustomContext,
 ): Promise<Array<Event>> => {
   offset = offset ?? 0;
   limit = limit ?? DEFAULT_LIMIT;
 
-  const result = await dataSources.sql.getFilteredEvents(
-    offset,
-    limit,
-    eventTypeIds,
-    start_datetime,
-    end_datetime,
-    filterLocation,
-    sort ? sort.toString() : null,
+  return await dbConnection.query(
+    getSQLDataSource().getFilteredEvents(
+      offset,
+      limit,
+      eventTypeIds,
+      start_datetime,
+      end_datetime,
+      filterLocation,
+      sort ? sort.toString() : null,
+    ),
   );
-  return result;
 };
-
