@@ -18,7 +18,7 @@ const defaultValues = {
   name: '',
   eventTypes: [] as unknown as [SelectOption, ...SelectOption[]],
   summary: '',
-  capacity: 2,
+  capacity: 1,
   allowWaitlist: false,
   endDatetime: '',
   streetName: '',

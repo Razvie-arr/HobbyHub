@@ -123,6 +123,7 @@ const LocationUnawareEvents = () => {
         const events = data.events.map(getEventFragmentData);
         return (
           <>
+            <EventsMapButton events={events} position="fixed" bottom="8" right="8" />
             <Stack spacing="8" mt="8">
               <EventsSection events={events} title="Events" />
             </Stack>
