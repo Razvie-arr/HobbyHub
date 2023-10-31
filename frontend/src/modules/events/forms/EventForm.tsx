@@ -33,9 +33,9 @@ import {
 import { DEFAULT_EVENT_IMAGE_PATH, eventTypes } from '../../../shared/constants';
 import { Field } from '../../../shared/design-system';
 import { getCurrentDateTime } from '../../../utils/form';
-import { FormStack } from './FormStack';
 import { UPLOAD_EVENT_IMAGE } from '../mutations';
 
+import { FormStack } from './FormStack';
 import { eventTypeToSelectOption } from './utils';
 
 const { sports, games, other } = eventTypes;
@@ -207,7 +207,12 @@ export const EventForm = ({
                 </Field>
               )}
             />
-            <Image h="300px" objectFit="cover" alt="Event Image" src={imageFilePath ?? DEFAULT_EVENT_IMAGE_PATH} />
+            <Image
+              aspectRatio="16/9"
+              objectFit="cover"
+              alt="Event Image"
+              src={imageFilePath ?? DEFAULT_EVENT_IMAGE_PATH}
+            />
             <TextareaField
               name="description"
               label="Description"

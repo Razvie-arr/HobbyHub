@@ -5,7 +5,11 @@ import { GoogleMap, InfoWindowF, MarkerF, useLoadScript } from '@react-google-ma
 import { EventProps, WithEvents } from '../../types';
 import { EventCard } from '../EventCard/EventCard';
 
-export const EventsMap = (props: WithEvents) => {
+interface EventsMapProps extends WithEvents {
+  height?: string;
+}
+
+export const EventsMap = ({ height = '79vh', events }: EventsMapProps) => {
   const { isLoaded } = useLoadScript({
     googleMapsApiKey: import.meta.env.VITE_GOOGLE_API_KEY,
   });
@@ -15,7 +19,7 @@ export const EventsMap = (props: WithEvents) => {
   const [infoWindowData, setInfoWindowData] = useState<EventProps>();
 
   return (
-    <Box h="79vh" w="100%" borderRadius="base">
+    <Box h={height} w="100%" borderRadius="base">
       {!isLoaded ? (
         <h1>Loading...</h1>
       ) : (
@@ -27,12 +31,12 @@ export const EventsMap = (props: WithEvents) => {
           onLoad={(map) => {
             setMapRef(map);
             const bounds = new google.maps.LatLngBounds();
-            props.events.forEach(({ location }) => bounds.extend({ lat: location.latitude, lng: location.longitude }));
+            events.forEach(({ location }) => bounds.extend({ lat: location.latitude, lng: location.longitude }));
             map.fitBounds(bounds);
           }}
           onClick={() => setIsOpen(false)}
         >
-          {props.events.map(({ location, ...rest }, index) => {
+          {events.map(({ location, ...rest }, index) => {
             const position = { lat: location.latitude, lng: location.longitude };
             return (
               <MarkerF

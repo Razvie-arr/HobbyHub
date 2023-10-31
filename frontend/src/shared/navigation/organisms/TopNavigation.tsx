@@ -1,7 +1,6 @@
 import { useEffect, useMemo } from 'react';
 import {
   Avatar,
-  Container,
   Divider,
   HStack,
   Icon,
@@ -21,6 +20,7 @@ import { route } from 'src/route';
 import { Box, Flex, IconButton, Image, Stack, useDisclosure } from 'src/shared/design-system';
 
 import { LOGO_PATH } from '../../constants';
+import { ContentContainer } from '../../layout';
 import { RouterNavLink } from '../atoms';
 
 import { SearchEventsBar } from './SearchEventsBar';
@@ -50,7 +50,7 @@ export function TopNavigation() {
 
   return (
     <Box bg="white" position="sticky" top={0} width="100%" zIndex={2} borderBottomWidth="1px" borderColor="purple.100">
-      <Container maxWidth="8xl" mx="auto">
+      <ContentContainer>
         <HStack py={{ base: 2 }} align="center" justifyContent="space-between">
           <HStack>
             <Image boxSize={{ base: '40px', md: '50px' }} src={LOGO_PATH} alt="logo" borderRadius="base" />
@@ -165,7 +165,7 @@ export function TopNavigation() {
             </Stack>
           </Flex>
         </Box>
-      </Container>
+      </ContentContainer>
     </Box>
   );
 }

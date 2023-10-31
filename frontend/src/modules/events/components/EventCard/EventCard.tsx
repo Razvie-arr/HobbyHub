@@ -7,19 +7,20 @@ import { DEFAULT_EVENT_IMAGE_PATH } from '../../../../shared/constants';
 import { ReactRouterLink } from '../../../../shared/navigation';
 import { useAuth } from '../../../auth';
 import { WithEvent } from '../../types';
-import { EventStatusTag } from '../shared/EventStatusTag';
 import { EventAddress, EventDateTime, EventParticipants } from '../shared';
+import { EventStatusTag } from '../shared/EventStatusTag';
 
 interface EventCardProps extends WithEvent {
   simplified?: boolean;
+  maxFlexBasis?: string;
 }
 
-export const EventCard = ({ event, simplified }: EventCardProps) => {
+export const EventCard = ({ event, simplified, maxFlexBasis = '24%' }: EventCardProps) => {
   const { user } = useAuth();
   const isFullCapacity = event.participants.length === event.capacity;
   return (
     <Card
-      flexBasis={{ '2xl': '24%', lg: '32%', md: '48%' }}
+      flexBasis={{ '2xl': maxFlexBasis, lg: '32%', md: '48%' }}
       backgroundColor="white"
       mb={simplified ? '0' : '12'}
       shadow="sm"
@@ -30,7 +31,7 @@ export const EventCard = ({ event, simplified }: EventCardProps) => {
           <>
             <EventStatusTag hasWaitlist={event.allow_waitlist} isFullCapacity={isFullCapacity} />
             <Image
-              h="190px"
+              aspectRatio="16/9"
               objectFit="cover"
               src={event.image_filepath ?? DEFAULT_EVENT_IMAGE_PATH}
               borderTopRadius="none"

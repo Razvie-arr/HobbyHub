@@ -27,7 +27,7 @@ export const SimilarEvents = ({ eventId, eventTypeIds, city }: SimilarEventsProp
           return null;
         }
         const events = similarEvents.map(getEventFragmentData);
-        return <EventsSection events={events} />;
+        return <EventsSection events={events} maxColumnCount={3} />;
       }}
     />
   );
