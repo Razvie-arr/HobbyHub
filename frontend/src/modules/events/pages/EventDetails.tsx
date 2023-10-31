@@ -26,6 +26,7 @@ import { Link, useParams } from 'react-router-dom';
 import { EventTypeTag } from 'src/shared/design-system';
 
 import { route } from '../../../route';
+import { DEFAULT_EVENT_IMAGE_PATH } from '../../../shared/constants';
 import { ContentContainer, QueryResult } from '../../../shared/layout';
 import { useAuth } from '../../auth';
 import { EventAddress, EventDateTime, EventParticipants, EventsMapButton } from '../components';
@@ -131,12 +132,11 @@ const EventDetails = ({ eventId }: EventDetailsProps) => {
             <ContentContainer>
               <Stack spacing={4} justifyContent="center" direction={{ base: 'column', lg: 'row' }}>
                 <Image
-                  w="550px"
+                  w="680px"
                   h="320px"
                   objectFit="cover"
                   alt="Event Image"
-                  src={event.image_filepath ?? ''}
-                  fallbackSrc="https://via.placeholder.com/150"
+                  src={event.image_filepath ?? DEFAULT_EVENT_IMAGE_PATH}
                 />
                 <Card p={8} boxShadow="sm">
                   <VStack alignItems="start" spacing={8}>
