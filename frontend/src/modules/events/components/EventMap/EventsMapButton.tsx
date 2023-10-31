@@ -11,7 +11,7 @@ import {
 } from '@chakra-ui/react';
 import { FaMapLocationDot } from 'react-icons/fa6';
 
-import { WithEvents } from '../types';
+import { WithEvents } from '../../types';
 
 import { EventsMap } from './EventsMap';
 

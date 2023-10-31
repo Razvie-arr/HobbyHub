@@ -33,7 +33,7 @@ import {
 import { DEFAULT_EVENT_IMAGE_PATH, eventTypes } from '../../../shared/constants';
 import { Field } from '../../../shared/design-system';
 import { getCurrentDateTime } from '../../../utils/form';
-import { FormStack } from '../components/FormStack';
+import { FormStack } from './FormStack';
 import { UPLOAD_EVENT_IMAGE } from '../mutations';
 
 import { eventTypeToSelectOption } from './utils';

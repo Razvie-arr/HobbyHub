@@ -6,9 +6,9 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { route } from '../../../route';
 import { ContentContainer, QueryResult } from '../../../shared/layout';
 import { useAuth } from '../../auth';
+import { DeleteEventButton } from '../components';
 import { getEventFragmentData } from '../fragments';
 import { EDIT_EVENT } from '../mutations';
-import { DeleteEventButton } from '../pages/DeleteEventButton';
 import { EVENT } from '../queries';
 
 import { EventForm } from './EventForm';

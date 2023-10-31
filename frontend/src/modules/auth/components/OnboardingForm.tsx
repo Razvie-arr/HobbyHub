@@ -19,10 +19,9 @@ import { AddressFormFields, addressFormFieldsSchema, Form, TextareaField, zod, z
 
 import { gql } from '../../../gql';
 import { route } from '../../../route';
-import { useAuth } from '../../auth';
-import { FormStack } from '../components/FormStack';
-
-import { eventTypeToSelectOption } from './utils';
+import { FormStack } from '../../events/forms/FormStack';
+import { eventTypeToSelectOption } from '../../events/forms/utils';
+import { useAuth } from '..';
 
 const { sports, games, other } = eventTypes;
 

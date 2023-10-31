@@ -2,9 +2,8 @@ import { useState } from 'react';
 import { Box } from '@chakra-ui/react';
 import { GoogleMap, InfoWindowF, MarkerF, useLoadScript } from '@react-google-maps/api';
 
-import { EventProps, WithEvents } from '../types';
-
-import { EventCard } from './EventCard/EventCard';
+import { EventProps, WithEvents } from '../../types';
+import { EventCard } from '../EventCard/EventCard';
 
 export const EventsMap = (props: WithEvents) => {
   const { isLoaded } = useLoadScript({

@@ -7,7 +7,7 @@ import { DEFAULT_EVENT_IMAGE_PATH } from '../../../../shared/constants';
 import { ReactRouterLink } from '../../../../shared/navigation';
 import { useAuth } from '../../../auth';
 import { WithEvent } from '../../types';
-import { EventStatusTag } from '../EventStatusTag';
+import { EventStatusTag } from '../shared/EventStatusTag';
 import { EventAddress, EventDateTime, EventParticipants } from '../shared';
 
 interface EventCardProps extends WithEvent {

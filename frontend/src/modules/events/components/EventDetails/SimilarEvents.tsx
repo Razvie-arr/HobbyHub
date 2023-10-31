@@ -1,9 +1,9 @@
 import { useQuery } from '@apollo/client';
 
-import { QueryResult } from '../../../shared/layout';
-import { EventsSection } from '../components';
-import { getEventFragmentData } from '../fragments';
-import { SIMILAR_EVENTS } from '../queries';
+import { QueryResult } from '../../../../shared/layout';
+import { getEventFragmentData } from '../../fragments';
+import { SIMILAR_EVENTS } from '../../queries';
+import { EventsSection } from '..';
 
 interface SimilarEventsProps {
   eventId: number;

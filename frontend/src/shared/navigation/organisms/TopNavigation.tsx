@@ -16,11 +16,11 @@ import {
 import { FaBars, FaPlus, FaRegBell, FaRegComment, FaXmark } from 'react-icons/fa6';
 import { NavLink, useLocation, useNavigate } from 'react-router-dom';
 
-import logoImageUrl from 'src/assets/icon/logo.png';
 import { AuthModalButtons, useAuth } from 'src/modules/auth';
 import { route } from 'src/route';
 import { Box, Flex, IconButton, Image, Stack, useDisclosure } from 'src/shared/design-system';
 
+import { LOGO_PATH } from '../../constants';
 import { RouterNavLink } from '../atoms';
 
 import { SearchEventsBar } from './SearchEventsBar';
@@ -53,7 +53,7 @@ export function TopNavigation() {
       <Container maxWidth="8xl" mx="auto">
         <HStack py={{ base: 2 }} align="center" justifyContent="space-between">
           <HStack>
-            <Image boxSize={{ base: '40px', md: '50px' }} src={logoImageUrl} alt="logo" borderRadius="base" />
+            <Image boxSize={{ base: '40px', md: '50px' }} src={LOGO_PATH} alt="logo" borderRadius="base" />
             <IconButton
               color="purple.600"
               _hover={{ bg: 'purple.50' }}

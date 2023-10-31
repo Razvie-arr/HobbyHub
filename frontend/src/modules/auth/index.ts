@@ -1,4 +1,4 @@
 export { AuthProvider, useAuth } from './auth-core';
-export { AuthModalButtons } from './components';
+export { AuthModalButtons, OnboardingForm } from './components';
 export { VerifyUserPage } from './pages';
 
