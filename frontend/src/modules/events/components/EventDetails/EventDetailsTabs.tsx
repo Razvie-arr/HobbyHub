@@ -9,11 +9,19 @@ import { SimilarEvents } from './SimilarEvents';
 export const EventDetailsTabs = ({ event }: WithEvent) => {
   const { user } = useAuth();
   return (
-    <Tabs w="100%">
+    <Tabs w="100%" colorScheme="purple">
       <TabList>
-        <Tab pl="0">Description</Tab>
-        {user ? <Tab>Participants</Tab> : null}
-        <Tab>Similar</Tab>
+        <Tab>
+          <Text as="b">Description</Text>
+        </Tab>
+        {user ? (
+          <Tab>
+            <Text as="b">Participants</Text>
+          </Tab>
+        ) : null}
+        <Tab>
+          <Text as="b">Similar</Text>
+        </Tab>
       </TabList>
       <TabPanels>
         <TabPanel px="0">
