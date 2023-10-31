@@ -49,7 +49,9 @@ const LocationAwareEvents = ({ geolocation, user }: LocationAwareEventsProps) =>
 
         return (
           <>
-            <EventsMapButton events={allEvents} position="fixed" bottom="8" right="8" />
+            {ReadonlyArray.isNonEmptyArray(allEvents) ? (
+              <EventsMapButton events={allEvents} position="fixed" bottom="8" right="8" />
+            ) : null}
             <Stack spacing="8" mt="8">
               <EventsSection
                 events={todaysNearbyEvents}
@@ -123,7 +125,9 @@ const LocationUnawareEvents = () => {
         const events = data.events.map(getEventFragmentData);
         return (
           <>
-            <EventsMapButton events={events} position="fixed" bottom="8" right="8" />
+            {ReadonlyArray.isNonEmptyArray(events) ? (
+              <EventsMapButton events={events} position="fixed" bottom="8" right="8" />
+            ) : null}
             <Stack spacing="8" mt="8">
               <EventsSection events={events} title="Events" />
             </Stack>
