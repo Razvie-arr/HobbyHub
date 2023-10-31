@@ -32,7 +32,7 @@ const DEFAULT_DISTANCE = 20;
 const DEFAULT_LIMIT = 4;
 const MINIMUM_COUNT_SIMILAR_EVENTS = 3;
 
-const FRONTEND_PROFILE_IMAGE_RELATIVE_PATH = 'uploads/event-image';
+const FRONTEND_PROFILE_IMAGE_RELATIVE_PATH = 'uploads/event_image';
 
 export const eventsResolver: ContextualResolver<Array<Event>, QueryEventsArgs> = async (
   _,
