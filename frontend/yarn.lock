@@ -22,7 +22,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@apollo/client@npm:^3.8.2":
+"@apollo/client@npm:^3.7.0, @apollo/client@npm:^3.8.2":
   version: 3.8.6
   resolution: "@apollo/client@npm:3.8.6"
   dependencies:
@@ -4645,6 +4645,17 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/apollo-upload-client@npm:^17.0.4":
+  version: 17.0.4
+  resolution: "@types/apollo-upload-client@npm:17.0.4"
+  dependencies:
+    "@apollo/client": ^3.7.0
+    "@types/extract-files": "*"
+    graphql: 14 - 16
+  checksum: b2673e039f7631ae1602cff68db486dff824aa7d7b23ee61a5c846b99daf71cf113fc1831bbba76a38b98638a1ccd431af5834b2e70c79de685e298a18c97534
+  languageName: node
+  linkType: hard
+
 "@types/babel__core@npm:^7.20.2":
   version: 7.20.3
   resolution: "@types/babel__core@npm:7.20.3"
@@ -4699,6 +4710,13 @@ __metadata:
   version: 4.3.9
   resolution: "@types/chai@npm:4.3.9"
   checksum: 2300a2c7abd4cb590349927a759b3d0172211a69f363db06e585faf7874a47f125ef3b364cce4f6190e3668147587fc11164c791c9560cf9bce8478fb7019610
+  languageName: node
+  linkType: hard
+
+"@types/extract-files@npm:*":
+  version: 8.1.2
+  resolution: "@types/extract-files@npm:8.1.2"
+  checksum: dcc84f6a7ec31937780d04815d97a12aeeedb39e2d12821974a7ec5e5bf422b78d12c64e041b994683f6cd2c02333ec47183d413f7f4554559d1cddf5155885a
   languageName: node
   linkType: hard
 
@@ -5467,6 +5485,18 @@ __metadata:
   version: 6.2.1
   resolution: "ansi-styles@npm:6.2.1"
   checksum: ef940f2f0ced1a6347398da88a91da7930c33ecac3c77b72c5905f8b8fe402c52e6fde304ff5347f616e27a742da3f1dc76de98f6866c69251ad0b07a66776d9
+  languageName: node
+  linkType: hard
+
+"apollo-upload-client@npm:^17.0.0":
+  version: 17.0.0
+  resolution: "apollo-upload-client@npm:17.0.0"
+  dependencies:
+    extract-files: ^11.0.0
+  peerDependencies:
+    "@apollo/client": ^3.0.0
+    graphql: 14 - 16
+  checksum: e5aee12ae36f7d268a8bcd7f0d8c1f7cbb94b4a19f266185a5afb52f63a41c4bb9d6bc4edbdc437a953e697c5ebcac1a44cb2c8e863b96f4323df0060b976be6
   languageName: node
   linkType: hard
 
@@ -7793,6 +7823,7 @@ __metadata:
     "@hookform/resolvers": ^3.3.2
     "@parcel/watcher": ^2.3.0
     "@react-google-maps/api": ^2.19.2
+    "@types/apollo-upload-client": ^17.0.4
     "@types/node": ^20.5.9
     "@types/react": ^18.2.21
     "@types/react-datepicker": ^4.19.1
@@ -7800,6 +7831,7 @@ __metadata:
     "@typescript-eslint/eslint-plugin": ^6.6.0
     "@typescript-eslint/parser": ^6.6.0
     "@vitejs/plugin-react": ^4.0.3
+    apollo-upload-client: ^17.0.0
     chakra-react-select: ^4.7.5
     cross-fetch: ^4.0.0
     dotenv-flow: ^3.3.0
@@ -8166,7 +8198,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"graphql@npm:^16.8.1":
+"graphql@npm:14 - 16, graphql@npm:^16.8.1":
   version: 16.8.1
   resolution: "graphql@npm:16.8.1"
   checksum: 8d304b7b6f708c8c5cc164b06e92467dfe36aff6d4f2cf31dd19c4c2905a0e7b89edac4b7e225871131fd24e21460836b369de0c06532644d15b461d55b1ccc0

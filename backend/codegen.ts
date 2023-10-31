@@ -5,9 +5,20 @@ const config: CodegenConfig = {
   schema: 'src/graphql/**/*.graphql',
   generates: {
     './src/types/graphqlTypesGenerated.ts': {
-      plugins: ['typescript', 'typescript-resolvers'],
+      plugins: [
+        'typescript',
+        'typescript-resolvers',
+        {
+          add: {
+            content: `import type { FileUpload } from 'graphql-upload/Upload';`,
+          },
+        },
+      ],
       config: {
         contextType: './types#CustomContext',
+        scalars: {
+          Upload: 'Promise<FileUpload>',
+        },
       },
     },
   },

@@ -23,6 +23,7 @@ extend type Mutation {
   createEvent(event: EventInput!, location: LocationInputWithoutCoords!): Event!
   editEvent(event: EventInput!, location: LocationInputWithoutCoords!): Event!
   deleteEvent(event_id: Int!, location_id: Int!): String!
+  uploadEventImage(event_image: Upload): String
 }
 
 type Event {
@@ -30,7 +31,7 @@ type Event {
   name: String!
   summary: String!
   description: String
-  image_filePath: String
+  image_filepath: String
   start_datetime: String!
   end_datetime: String!
   capacity: Int!
@@ -56,9 +57,10 @@ input EventInput {
   group_id: Int
   capacity: Int!
   allow_waitlist: Boolean!
-  image_filePath: String
   start_datetime: String!
   end_datetime: String!
+
+  image_filepath: String
 
   location_id: Int
   event_type_ids: [Int!]!
@@ -71,6 +73,7 @@ input FilterLocationInput {
 }
 
 enum SortType {
-  DISTANCE,
+  DISTANCE
   DATE
 }
+

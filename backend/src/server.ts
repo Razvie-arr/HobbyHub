@@ -1,5 +1,11 @@
 import { ApolloServer } from '@apollo/server';
-import { StandaloneServerContextFunctionArgument, startStandaloneServer } from '@apollo/server/standalone';
+import { expressMiddleware } from '@apollo/server/express4';
+import { ApolloServerPluginDrainHttpServer } from '@apollo/server/plugin/drainHttpServer';
+import { StandaloneServerContextFunctionArgument } from '@apollo/server/standalone';
+import cors from 'cors';
+import express from 'express';
+import graphqlUploadExpress from 'graphql-upload/graphqlUploadExpress.js';
+import http from 'http';
 
 import { rootResolver } from './graphql/rootResolver';
 import { rootTypeDefs } from './graphql/rootTypeDefs';
@@ -10,10 +16,17 @@ import { PORT } from './config';
 import { getSQLDataSource } from './datasource';
 
 const init = async () => {
+  const app = express();
+
+  const httpServer = http.createServer(app);
+
   const server = new ApolloServer({
     typeDefs: [rootTypeDefs],
     resolvers: rootResolver,
+    plugins: [ApolloServerPluginDrainHttpServer({ httpServer })],
   });
+
+  await server.start();
 
   const customContext = async ({ req }: StandaloneServerContextFunctionArgument): Promise<CustomContext> => {
     const auth = req.headers.Authorization || '';
@@ -28,15 +41,20 @@ const init = async () => {
     };
   };
 
-  const { url } = await startStandaloneServer(server, {
-    listen: {
-      port: PORT,
-    },
-    context: customContext,
-  });
+  app.use(
+    '/', //path to graphql server
+    cors<cors.CorsRequest>(), // accepts all origins ('*'), not support cookies
+    express.json(), // req.body parser
+    graphqlUploadExpress(), // graphql upload middleware
+    expressMiddleware(server, {
+      context: customContext,
+    }), // expressMiddleware by apollo adding the GraphQL server
+  );
 
-  // eslint-disable-next-line no-console
-  console.log('Server listening at: ' + url);
+  httpServer.listen({ port: PORT }, () => {
+    // eslint-disable-next-line no-console
+    console.log(`Server listening on port: ${PORT}`);
+  });
 };
 
 void init();

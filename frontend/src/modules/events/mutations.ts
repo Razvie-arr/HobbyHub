@@ -18,7 +18,13 @@ export const EDIT_EVENT = gql(`
 
 export const DELETE_EVENT = gql(`
   mutation DeleteEvent($eventId: Int!, $locationId: Int!) {
-    deleteEvent(event_id: $eventId, location_id: $locationId)
+    deleteEvent(event_id: $eventId, location_id: $locationId) 
   }
+`);
+
+export const UPLOAD_EVENT_IMAGE = gql(`
+  mutation UploadEventImage($eventImage: Upload) {
+    uploadEventImage(event_image: $eventImage)
+}
 `);
 

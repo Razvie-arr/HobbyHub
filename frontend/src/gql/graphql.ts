@@ -14,6 +14,8 @@ export type Scalars = {
   Boolean: { input: boolean; output: boolean };
   Int: { input: number; output: number };
   Float: { input: number; output: number };
+  /** The `Upload` scalar type represents a file upload. */
+  Upload: { input: any; output: any };
 };
 
 export type AuthInfo = {
@@ -48,7 +50,7 @@ export type Event = {
   event_types: Array<EventType>;
   group_id?: Maybe<Scalars['Int']['output']>;
   id: Scalars['Int']['output'];
-  image_filePath?: Maybe<Scalars['String']['output']>;
+  image_filepath?: Maybe<Scalars['String']['output']>;
   location: Location;
   location_id: Scalars['Int']['output'];
   name: Scalars['String']['output'];
@@ -66,7 +68,7 @@ export type EventInput = {
   event_type_ids: Array<Scalars['Int']['input']>;
   group_id?: InputMaybe<Scalars['Int']['input']>;
   id?: InputMaybe<Scalars['Int']['input']>;
-  image_filePath?: InputMaybe<Scalars['String']['input']>;
+  image_filepath?: InputMaybe<Scalars['String']['input']>;
   location_id?: InputMaybe<Scalars['Int']['input']>;
   name: Scalars['String']['input'];
   start_datetime: Scalars['String']['input'];
@@ -131,6 +133,7 @@ export type Mutation = {
   resetPassword: Scalars['Boolean']['output'];
   signIn: AuthInfo;
   signUp: AuthInfo;
+  uploadEventImage?: Maybe<Scalars['String']['output']>;
   verify: Scalars['String']['output'];
 };
 
@@ -198,6 +201,10 @@ export type MutationSignUpArgs = {
   first_name: Scalars['String']['input'];
   last_name: Scalars['String']['input'];
   password: Scalars['String']['input'];
+};
+
+export type MutationUploadEventImageArgs = {
+  event_image?: InputMaybe<Scalars['Upload']['input']>;
 };
 
 export type MutationVerifyArgs = {
@@ -453,7 +460,7 @@ export type EventFragmentFragment = {
   end_datetime: string;
   summary: string;
   description?: string | null;
-  image_filePath?: string | null;
+  image_filepath?: string | null;
   capacity: number;
   allow_waitlist: boolean;
   event_types: Array<{ __typename?: 'EventType'; id: number; name: string }>;
@@ -491,6 +498,12 @@ export type DeleteEventMutationVariables = Exact<{
 }>;
 
 export type DeleteEventMutation = { __typename?: 'Mutation'; deleteEvent: string };
+
+export type UploadEventImageMutationVariables = Exact<{
+  eventImage?: InputMaybe<Scalars['Upload']['input']>;
+}>;
+
+export type UploadEventImageMutation = { __typename?: 'Mutation'; uploadEventImage?: string | null };
 
 export type GetLocationAwareEventsQueryVariables = Exact<{
   userId: Scalars['Int']['input'];
@@ -675,7 +688,7 @@ export const EventFragmentFragmentDoc = {
           },
           { kind: 'Field', name: { kind: 'Name', value: 'summary' } },
           { kind: 'Field', name: { kind: 'Name', value: 'description' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'image_filePath' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'image_filepath' } },
           { kind: 'Field', name: { kind: 'Name', value: 'capacity' } },
           { kind: 'Field', name: { kind: 'Name', value: 'allow_waitlist' } },
           {
@@ -1133,6 +1146,39 @@ export const DeleteEventDocument = {
     },
   ],
 } as unknown as DocumentNode<DeleteEventMutation, DeleteEventMutationVariables>;
+export const UploadEventImageDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'mutation',
+      name: { kind: 'Name', value: 'UploadEventImage' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'eventImage' } },
+          type: { kind: 'NamedType', name: { kind: 'Name', value: 'Upload' } },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'uploadEventImage' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'event_image' },
+                value: { kind: 'Variable', name: { kind: 'Name', value: 'eventImage' } },
+              },
+            ],
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<UploadEventImageMutation, UploadEventImageMutationVariables>;
 export const GetLocationAwareEventsDocument = {
   kind: 'Document',
   definitions: [
@@ -1320,7 +1366,7 @@ export const GetLocationAwareEventsDocument = {
           },
           { kind: 'Field', name: { kind: 'Name', value: 'summary' } },
           { kind: 'Field', name: { kind: 'Name', value: 'description' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'image_filePath' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'image_filepath' } },
           { kind: 'Field', name: { kind: 'Name', value: 'capacity' } },
           { kind: 'Field', name: { kind: 'Name', value: 'allow_waitlist' } },
           {
@@ -1437,7 +1483,7 @@ export const EventsDocument = {
           },
           { kind: 'Field', name: { kind: 'Name', value: 'summary' } },
           { kind: 'Field', name: { kind: 'Name', value: 'description' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'image_filePath' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'image_filepath' } },
           { kind: 'Field', name: { kind: 'Name', value: 'capacity' } },
           { kind: 'Field', name: { kind: 'Name', value: 'allow_waitlist' } },
           {
@@ -1574,7 +1620,7 @@ export const TodaysNearbyEventsDocument = {
           },
           { kind: 'Field', name: { kind: 'Name', value: 'summary' } },
           { kind: 'Field', name: { kind: 'Name', value: 'description' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'image_filePath' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'image_filepath' } },
           { kind: 'Field', name: { kind: 'Name', value: 'capacity' } },
           { kind: 'Field', name: { kind: 'Name', value: 'allow_waitlist' } },
           {
@@ -1721,7 +1767,7 @@ export const InterestingNearbyEventsDocument = {
           },
           { kind: 'Field', name: { kind: 'Name', value: 'summary' } },
           { kind: 'Field', name: { kind: 'Name', value: 'description' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'image_filePath' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'image_filepath' } },
           { kind: 'Field', name: { kind: 'Name', value: 'capacity' } },
           { kind: 'Field', name: { kind: 'Name', value: 'allow_waitlist' } },
           {
@@ -1858,7 +1904,7 @@ export const NewlyCreatedNearbyEventsDocument = {
           },
           { kind: 'Field', name: { kind: 'Name', value: 'summary' } },
           { kind: 'Field', name: { kind: 'Name', value: 'description' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'image_filePath' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'image_filepath' } },
           { kind: 'Field', name: { kind: 'Name', value: 'capacity' } },
           { kind: 'Field', name: { kind: 'Name', value: 'allow_waitlist' } },
           {
@@ -1965,7 +2011,7 @@ export const QueryDocument = {
           },
           { kind: 'Field', name: { kind: 'Name', value: 'summary' } },
           { kind: 'Field', name: { kind: 'Name', value: 'description' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'image_filePath' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'image_filepath' } },
           { kind: 'Field', name: { kind: 'Name', value: 'capacity' } },
           { kind: 'Field', name: { kind: 'Name', value: 'allow_waitlist' } },
           {
@@ -2135,7 +2181,7 @@ export const FilterEventsDocument = {
           },
           { kind: 'Field', name: { kind: 'Name', value: 'summary' } },
           { kind: 'Field', name: { kind: 'Name', value: 'description' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'image_filePath' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'image_filepath' } },
           { kind: 'Field', name: { kind: 'Name', value: 'capacity' } },
           { kind: 'Field', name: { kind: 'Name', value: 'allow_waitlist' } },
           {
@@ -2268,7 +2314,7 @@ export const SimilarEventsDocument = {
           },
           { kind: 'Field', name: { kind: 'Name', value: 'summary' } },
           { kind: 'Field', name: { kind: 'Name', value: 'description' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'image_filePath' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'image_filepath' } },
           { kind: 'Field', name: { kind: 'Name', value: 'capacity' } },
           { kind: 'Field', name: { kind: 'Name', value: 'allow_waitlist' } },
           {
@@ -2395,7 +2441,7 @@ export const SearchEventsDocument = {
           },
           { kind: 'Field', name: { kind: 'Name', value: 'summary' } },
           { kind: 'Field', name: { kind: 'Name', value: 'description' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'image_filePath' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'image_filepath' } },
           { kind: 'Field', name: { kind: 'Name', value: 'capacity' } },
           { kind: 'Field', name: { kind: 'Name', value: 'allow_waitlist' } },
           {

@@ -64,6 +64,7 @@ const EditEventForm = ({ eventId }: EditEventFormProps) => {
         return (
           <EventForm
             additionalButton={<DeleteEventButton event={event} colorScheme="purple" flex={1} />}
+            defaultImagePath={event.image_filepath}
             defaultValues={{
               author: `${event.author.first_name} ${event.author.last_name}`,
               allowWaitlist: event.allow_waitlist,
@@ -78,6 +79,7 @@ const EditEventForm = ({ eventId }: EditEventFormProps) => {
               summary: event.summary,
               // @ts-expect-error NonEmptyArray check
               eventTypes: event.event_types.map(({ id, name }) => ({ value: id, label: name })),
+              eventImagePath: event.image_filepath,
               description: event.description ?? '',
             }}
             formDescription="Efficiently edit your events or gatherings."
@@ -98,6 +100,7 @@ const EditEventForm = ({ eventId }: EditEventFormProps) => {
                     summary: values.summary,
                     author_id: user?.id,
                     event_type_ids: values.eventTypes.map(({ value }) => value),
+                    image_filepath: values.eventImagePath,
                     description: values.description,
                   },
                   location: {
