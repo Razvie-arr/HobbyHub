@@ -15,6 +15,7 @@ interface SelectOption {
 }
 
 const defaultValues = {
+  eventImage: null,
   name: '',
   eventTypes: [] as unknown as [SelectOption, ...SelectOption[]],
   summary: '',
@@ -51,13 +52,14 @@ export const CreateEventForm = () => {
             event: {
               allow_waitlist: values.allowWaitlist,
               capacity: values.capacity,
+              description: values.description,
               end_datetime: values.endDatetime,
+              image_filepath: values.eventImagePath,
               name: values.name,
               start_datetime: values.startDatetime,
               summary: values.summary,
               author_id: user?.id,
               event_type_ids: values.eventTypes.map(({ value }) => value),
-              description: values.description,
             },
             location: {
               city: values.city,

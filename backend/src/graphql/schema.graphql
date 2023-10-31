@@ -6,3 +6,5 @@ type Mutation {
   _empty(nothing: String): String
 }
 
+scalar Upload
+

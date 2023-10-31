@@ -26,7 +26,7 @@ export const EventFragment = gql(/* GraphQL */ `
     }
     summary
     description
-    image_filePath
+    image_filepath
     capacity
     allow_waitlist
     participants {

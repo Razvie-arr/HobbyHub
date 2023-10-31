@@ -4,16 +4,16 @@ type AuthInfo {
 }
 
 type AuthUser {
+  description: String
   email: String!
   event_types: [EventType!]!
   first_name: String!
   id: Int!
   last_name: String!
   location: Location
-  location_id: Int!
+  location_id: Int
   password: String!
   verified: Boolean!
-  description: String
 }
 
 type Event {
@@ -27,7 +27,7 @@ type Event {
   event_types: [EventType!]!
   group_id: Int
   id: Int!
-  image_filePath: String
+  image_filepath: String
   location: Location!
   location_id: Int!
   name: String!
@@ -45,7 +45,7 @@ input EventInput {
   event_type_ids: [Int!]!
   group_id: Int
   id: Int
-  image_filePath: String
+  image_filepath: String
   location_id: Int
   name: String!
   start_datetime: String!
@@ -107,6 +107,7 @@ type Mutation {
   resetPassword(password: String!, token: String!): Boolean!
   signIn(email: String!, password: String!): AuthInfo!
   signUp(email: String!, first_name: String!, last_name: String!, password: String!): AuthInfo!
+  uploadEventImage(event_image: Upload): String
   verify(token: String!): String!
 }
 
@@ -145,6 +146,11 @@ enum SortType {
   DISTANCE
 }
 
+"""
+The `Upload` scalar type represents a file upload.
+"""
+scalar Upload
+
 type User {
   description: String
   email: String!
@@ -161,9 +167,9 @@ input UserInput {
   description: String
   email: String!
   event_type_ids: [Int!]!
-  id: Int
+  first_name: String!
+  id: Int!
+  last_name: String!
   location_id: Int
-  name: String!
   verified: Boolean!
 }
-

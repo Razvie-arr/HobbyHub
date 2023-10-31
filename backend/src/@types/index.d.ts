@@ -21,7 +21,7 @@ declare module 'knex/types/tables' {
           Event,
           'name' | 'summary' | 'capacity' | 'allow_waitlist' | 'start_datetime' | 'end_datetime' | 'location'
         > &
-        Partial<Pick<Event, 'description' | 'image_filePath' | 'author_id' | 'group_id'>>,
+        Partial<Pick<Event, 'description' | 'image_filepath' | 'author_id' | 'group_id'>>,
       Partial<Omit<Event, 'id' | 'created_at' | 'author_id' | 'group_id'>>
     >;
 

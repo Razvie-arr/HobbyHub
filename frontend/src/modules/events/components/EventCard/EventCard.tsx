@@ -1,9 +1,9 @@
 import { Card, CardBody, Heading, HStack, Image, Link, Stack, Text } from '@chakra-ui/react';
 
-import postcardBackgroundImageUrl from 'src/assets/img/event-image-placeholder.jpg';
 import { Button, EventTypeTag } from 'src/shared/design-system';
 
 import { route } from '../../../../route';
+import { DEFAULT_EVENT_IMAGE_PATH } from '../../../../shared/constants';
 import { ReactRouterLink } from '../../../../shared/navigation';
 import { useAuth } from '../../../auth';
 import { WithEvent } from '../../types';
@@ -29,7 +29,12 @@ export const EventCard = ({ event, simplified }: EventCardProps) => {
         {simplified ? null : (
           <>
             <EventStatusTag hasWaitlist={event.allow_waitlist} isFullCapacity={isFullCapacity} />
-            <Image src={postcardBackgroundImageUrl} borderTopRadius="none" />
+            <Image
+              h="190px"
+              objectFit="cover"
+              src={event.image_filepath ?? DEFAULT_EVENT_IMAGE_PATH}
+              borderTopRadius="none"
+            />
           </>
         )}
         <Stack justifyContent="space-between" flex="1" spacing="2" p="4">

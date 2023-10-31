@@ -135,6 +135,7 @@ const EventDetails = ({ eventId }: EventDetailsProps) => {
                   h="320px"
                   objectFit="cover"
                   alt="Event Image"
+                  src={event.image_filepath ?? ''}
                   fallbackSrc="https://via.placeholder.com/150"
                 />
                 <Card p={8} boxShadow="sm">

@@ -1,5 +1,6 @@
-import { GraphQLResolveInfo } from 'graphql';
+import { GraphQLResolveInfo, GraphQLScalarType, GraphQLScalarTypeConfig } from 'graphql';
 import { CustomContext } from './types';
+import type { FileUpload } from 'graphql-upload/Upload';
 export type Maybe<T> = T | null;
 export type InputMaybe<T> = Maybe<T>;
 export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
@@ -15,6 +16,7 @@ export type Scalars = {
   Boolean: { input: boolean; output: boolean };
   Int: { input: number; output: number };
   Float: { input: number; output: number };
+  Upload: { input: Promise<FileUpload>; output: Promise<FileUpload> };
 };
 
 export type AuthInfo = {
@@ -49,7 +51,7 @@ export type Event = {
   event_types: Array<EventType>;
   group_id?: Maybe<Scalars['Int']['output']>;
   id: Scalars['Int']['output'];
-  image_filePath?: Maybe<Scalars['String']['output']>;
+  image_filepath?: Maybe<Scalars['String']['output']>;
   location: Location;
   location_id: Scalars['Int']['output'];
   name: Scalars['String']['output'];
@@ -67,7 +69,7 @@ export type EventInput = {
   event_type_ids: Array<Scalars['Int']['input']>;
   group_id?: InputMaybe<Scalars['Int']['input']>;
   id?: InputMaybe<Scalars['Int']['input']>;
-  image_filePath?: InputMaybe<Scalars['String']['input']>;
+  image_filepath?: InputMaybe<Scalars['String']['input']>;
   location_id?: InputMaybe<Scalars['Int']['input']>;
   name: Scalars['String']['input'];
   start_datetime: Scalars['String']['input'];
@@ -132,6 +134,7 @@ export type Mutation = {
   resetPassword: Scalars['Boolean']['output'];
   signIn: AuthInfo;
   signUp: AuthInfo;
+  uploadEventImage?: Maybe<Scalars['String']['output']>;
   verify: Scalars['String']['output'];
 };
 
@@ -199,6 +202,10 @@ export type MutationSignUpArgs = {
   first_name: Scalars['String']['input'];
   last_name: Scalars['String']['input'];
   password: Scalars['String']['input'];
+};
+
+export type MutationUploadEventImageArgs = {
+  event_image?: InputMaybe<Scalars['Upload']['input']>;
 };
 
 export type MutationVerifyArgs = {
@@ -447,6 +454,7 @@ export type ResolversTypes = {
   Query: ResolverTypeWrapper<{}>;
   SortType: SortType;
   String: ResolverTypeWrapper<Scalars['String']['output']>;
+  Upload: ResolverTypeWrapper<Scalars['Upload']['output']>;
   User: ResolverTypeWrapper<User>;
   UserInput: UserInput;
 };
@@ -468,6 +476,7 @@ export type ResolversParentTypes = {
   Mutation: {};
   Query: {};
   String: Scalars['String']['output'];
+  Upload: Scalars['Upload']['output'];
   User: User;
   UserInput: UserInput;
 };
@@ -512,7 +521,7 @@ export type EventResolvers<
   event_types?: Resolver<Array<ResolversTypes['EventType']>, ParentType, ContextType>;
   group_id?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
   id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
-  image_filePath?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  image_filepath?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   location?: Resolver<ResolversTypes['Location'], ParentType, ContextType>;
   location_id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
@@ -624,6 +633,12 @@ export type MutationResolvers<
     ContextType,
     RequireFields<MutationSignUpArgs, 'email' | 'first_name' | 'last_name' | 'password'>
   >;
+  uploadEventImage?: Resolver<
+    Maybe<ResolversTypes['String']>,
+    ParentType,
+    ContextType,
+    Partial<MutationUploadEventImageArgs>
+  >;
   verify?: Resolver<ResolversTypes['String'], ParentType, ContextType, RequireFields<MutationVerifyArgs, 'token'>>;
 };
 
@@ -717,6 +732,10 @@ export type QueryResolvers<
   >;
 };
 
+export interface UploadScalarConfig extends GraphQLScalarTypeConfig<ResolversTypes['Upload'], any> {
+  name: 'Upload';
+}
+
 export type UserResolvers<
   ContextType = CustomContext,
   ParentType extends ResolversParentTypes['User'] = ResolversParentTypes['User'],
@@ -741,5 +760,6 @@ export type Resolvers<ContextType = CustomContext> = {
   Location?: LocationResolvers<ContextType>;
   Mutation?: MutationResolvers<ContextType>;
   Query?: QueryResolvers<ContextType>;
+  Upload?: GraphQLScalarType;
   User?: UserResolvers<ContextType>;
 };
