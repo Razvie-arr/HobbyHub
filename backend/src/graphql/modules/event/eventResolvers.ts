@@ -185,15 +185,14 @@ export const uploadEventImageResolver = async (_: unknown, { event_image }: Muta
   const eventImageFile = await event_image;
 
   if (eventImageFile) {
-    const { filename, createReadStream } = eventImageFile;
     const { fileDirectoryPath, filePath, relativeFileUrl } = getPublicStorageFilePath({
-      filename,
+      filename: eventImageFile.filename,
       relativeDirectory: FRONTEND_PROFILE_IMAGE_RELATIVE_PATH,
     });
 
     await fsPromises.mkdir(fileDirectoryPath, { recursive: true });
 
-    const stream = createReadStream();
+    const stream = eventImageFile.createReadStream();
     stream.pipe(fs.createWriteStream(filePath));
 
     eventImageUrl = relativeFileUrl;

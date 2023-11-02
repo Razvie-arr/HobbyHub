@@ -65,9 +65,13 @@ export const useFilterSearchParams = () => {
               const [startDate, endDate] = value;
               if (startDate) {
                 prevParams.set('startDate', startDate);
+              } else {
+                prevParams.delete('startDate');
               }
               if (startDate) {
                 prevParams.set('endDate', endDate);
+              } else {
+                prevParams.delete('endDate');
               }
             } else {
               prevParams.set(fieldName, value as string);

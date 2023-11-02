@@ -24,65 +24,81 @@ export const EventCard = ({ event, simplified, maxFlexBasis = '24%' }: EventCard
       backgroundColor="white"
       mb={simplified ? '0' : '12'}
       shadow="sm"
-      borderRadius="none"
+      role="group"
+      _hover={{ shadow: 'md' }}
+      transition="0.1s ease-in-out"
     >
-      <CardBody p="0" display="flex" flexDirection="column">
-        {simplified ? null : (
-          <>
-            <EventStatusTag hasWaitlist={event.allow_waitlist} isFullCapacity={isFullCapacity} />
-            <Image
-              aspectRatio="16/9"
-              objectFit="cover"
-              src={event.image_filepath ?? DEFAULT_EVENT_IMAGE_PATH}
-              borderTopRadius="none"
-            />
-          </>
-        )}
-        <Stack justifyContent="space-between" flex="1" spacing="2" p="4">
-          <Stack>
-            <Heading size="md" noOfLines={3} lineHeight="initial">
-              <Link to={route.eventDetails(event.id)} as={ReactRouterLink}>
+      <Link to={route.eventDetails(event.id)} as={ReactRouterLink} _groupHover={{ textDecoration: 'none' }} h="100%">
+        <CardBody p="0" display="flex" flexDirection="column" h="100%">
+          {simplified ? null : (
+            <>
+              <EventStatusTag hasWaitlist={event.allow_waitlist} isFullCapacity={isFullCapacity} zIndex={1} />
+              <Image
+                aspectRatio="16/9"
+                objectFit="cover"
+                src={event.image_filepath ?? DEFAULT_EVENT_IMAGE_PATH}
+                borderTopRadius="base"
+                _groupHover={{ opacity: '0.7' }}
+                transition="0.1s ease-in-out"
+              />
+            </>
+          )}
+          <Stack justifyContent="space-between" flex="1" spacing="2" p="4">
+            <Stack>
+              <Heading
+                size="md"
+                noOfLines={3}
+                lineHeight="initial"
+                _groupHover={{ textDecoration: 'underline' }}
+                transition="0.1s ease-in-out"
+              >
                 {event.name}
-              </Link>
-            </Heading>
-            <HStack>
-              {event.event_types.map((eventType) => (
-                <EventTypeTag key={eventType.id} eventType={eventType} />
-              ))}
-            </HStack>
-            <Text color="purple.600" as="b">
-              Hosted by: {event.author.first_name} {event.author.last_name}
-            </Text>
-            <Stack spacing="2">
-              <EventDateTime startDateTime={event.start_datetime} endDateTime={event.end_datetime} />
-              <EventAddress location={event.location} />
-              <EventParticipants capacity={event.capacity} participants={event.participants} />
+              </Heading>
+              <HStack>
+                {event.event_types.map((eventType) => (
+                  <EventTypeTag key={eventType.id} eventType={eventType} />
+                ))}
+              </HStack>
+              <Text color="purple.600" as="b">
+                Hosted by: {event.author.first_name} {event.author.last_name}
+              </Text>
+              <Stack spacing="2">
+                <EventDateTime startDateTime={event.start_datetime} endDateTime={event.end_datetime} />
+                <EventAddress location={event.location} />
+                <EventParticipants capacity={event.capacity} participants={event.participants} />
+              </Stack>
             </Stack>
+            {user && user.id === event.author.id ? (
+              <Button
+                borderRadius="full"
+                size="sm"
+                colorScheme="purple"
+                // as={ReactRouterLink}
+                variant="outline"
+                // to={route.editEvent(event.id)}
+                onClick={(e) => {
+                  e.preventDefault();
+                }}
+              >
+                Edit event
+              </Button>
+            ) : null}
+            {user && user.id !== event.author.id ? (
+              <Button
+                borderRadius="full"
+                size="sm"
+                colorScheme="purple"
+                isDisabled={isFullCapacity && !event.allow_waitlist}
+                onClick={(e) => {
+                  e.preventDefault();
+                }}
+              >
+                {isFullCapacity && event.allow_waitlist ? 'Join Waitlist' : 'Join Event'}
+              </Button>
+            ) : null}
           </Stack>
-          {user && user.id === event.author.id ? (
-            <Button
-              borderRadius="full"
-              size="sm"
-              colorScheme="purple"
-              as={ReactRouterLink}
-              variant="outline"
-              to={route.editEvent(event.id)}
-            >
-              Edit event
-            </Button>
-          ) : null}
-          {user && user.id !== event.author.id ? (
-            <Button
-              borderRadius="full"
-              size="sm"
-              colorScheme="purple"
-              isDisabled={isFullCapacity && !event.allow_waitlist}
-            >
-              {isFullCapacity && event.allow_waitlist ? 'Join Waitlist' : 'Join Event'}
-            </Button>
-          ) : null}
-        </Stack>
-      </CardBody>
+        </CardBody>
+      </Link>
     </Card>
   );
 };

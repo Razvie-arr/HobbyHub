@@ -9,7 +9,7 @@ export const AddressInput = ({ onPlaceSelected, ...inputProps }: AddressInputPro
   const { ref } = usePlacesWidget({
     apiKey: import.meta.env.VITE_GOOGLE_API_KEY,
     options: {
-      types: ['postal_town', 'administrative_area_level_2', 'route', 'street_number', 'premise'],
+      types: [],
       componentRestrictions: { country: 'cz' },
     },
     onPlaceSelected,

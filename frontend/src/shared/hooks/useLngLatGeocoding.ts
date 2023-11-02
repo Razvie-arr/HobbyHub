@@ -12,7 +12,7 @@ export const useLngLatGeocoding = ({ lng, lat }: LngLat) => {
     const getPlace = async () => {
       if (lng && lat) {
         const result = await fetch(
-          `https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${lng}&result_type=street_address&key=${
+          `https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${lng}&key=${
             import.meta.env.VITE_GOOGLE_API_KEY
           }`,
         );
