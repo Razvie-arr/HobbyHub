@@ -32,11 +32,10 @@ import {
 
 import { DEFAULT_EVENT_IMAGE_PATH, eventTypes } from '../../../shared/constants';
 import { Field } from '../../../shared/design-system';
+import { FormStack } from '../../../shared/forms/molecules/FormStack';
+import { eventTypeToSelectOption } from '../../../shared/forms/utils';
 import { getCurrentDateTime } from '../../../utils/form';
 import { UPLOAD_EVENT_IMAGE } from '../mutations';
-
-import { FormStack } from './FormStack';
-import { eventTypeToSelectOption } from './utils';
 
 const { sports, games, other } = eventTypes;
 

@@ -1,0 +1,17 @@
+import { ReactNode } from 'react';
+import { Stack, Text } from '@chakra-ui/react';
+
+export interface FormStackProps {
+  title: string;
+  children: ReactNode;
+}
+
+export const FormStack = ({ title, children }: FormStackProps) => (
+  <Stack bg="white" borderRadius={5} p={6} pb={8} spacing={4}>
+    <Text fontWeight="bold" fontSize="2xl" color="purple.500">
+      {title}
+    </Text>
+    {children}
+  </Stack>
+);
+
