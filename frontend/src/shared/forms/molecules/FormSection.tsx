@@ -6,7 +6,7 @@ export interface FormStackProps {
   children: ReactNode;
 }
 
-export const FormStack = ({ title, children }: FormStackProps) => (
+export const FormSection = ({ title, children }: FormStackProps) => (
   <Stack bg="white" borderRadius={5} p={6} pb={8} spacing={4}>
     <Text fontWeight="bold" fontSize="2xl" color="purple.500">
       {title}

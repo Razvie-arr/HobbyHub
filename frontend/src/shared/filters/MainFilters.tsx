@@ -54,9 +54,9 @@ export const MainFilters = ({ defaultValues, handleSubmit }: MainFiltersProps) =
 
   return (
     <FormProvider {...methods}>
-      <Box position="sticky" top={{ base: '57px', md: '67px' }} zIndex={2} shadow="sm">
+      <Box position="sticky" top={{ base: '57px', md: '67px' }} zIndex={2}>
         <form onSubmit={handleFormSubmit} noValidate>
-          <VStack spacing="0" mb="4">
+          <VStack spacing="0" mb="4" shadow="sm">
             <Box bg="purple.100" w="100%" py="4">
               <Button
                 alignSelf="right"

@@ -32,7 +32,7 @@ import {
 
 import { DEFAULT_EVENT_IMAGE_PATH, eventTypes } from '../../../shared/constants';
 import { Field } from '../../../shared/design-system';
-import { FormStack } from '../../../shared/forms/molecules/FormStack';
+import { FormSection } from '../../../shared/forms/molecules/FormSection';
 import { eventTypeToSelectOption } from '../../../shared/forms/utils';
 import { getCurrentDateTime } from '../../../utils/form';
 import { UPLOAD_EVENT_IMAGE } from '../mutations';
@@ -124,7 +124,7 @@ export const EventForm = ({
   return (
     <Container maxW="3xl">
       <Form onSubmit={handleSubmit} defaultValues={defaultValues} resolver={zodResolver(eventFormSchema)} noValidate>
-        <Box position="sticky" top={{ base: '57px', md: '67px' }} width="100%" zIndex={2} bg="purple.50" pt="6">
+        <Box position="sticky" top={{ base: '57px', md: '67px' }} width="100%" zIndex={2} bg="gray.50" pt="6">
           <Flex direction={{ base: 'column', md: 'row' }}>
             <Flex direction="column">
               <Text fontSize="3xl" fontWeight="bold" color="purple.500">
@@ -146,7 +146,7 @@ export const EventForm = ({
           <Divider borderColor="purple.500" my={5} />
         </Box>
         <Stack spacing={8} pb="8">
-          <FormStack title="Basic information">
+          <FormSection title="Basic information">
             <FormLabel>Event cover image</FormLabel>
             <InputField name="author" label="Author" isRequired isDisabled />
             <InputField name="name" label="Event name" placeholder="Enter a short and clear name" isRequired />
@@ -167,17 +167,17 @@ export const EventForm = ({
               isRequired
             />
             <InlineCheckboxField name="allowWaitlist" label="Allow waitlist" />
-          </FormStack>
+          </FormSection>
 
-          <FormStack title="Time and place">
+          <FormSection title="Time and place">
             <Flex gap={2} direction={{ base: 'column', md: 'row' }}>
               <InputField name="startDatetime" label="Start time" type="datetime-local" isRequired />
               <InputField name="endDatetime" label="End time" type="datetime-local" isRequired />
             </Flex>
             <AddressFormFields />
-          </FormStack>
+          </FormSection>
 
-          <FormStack title="Event information">
+          <FormSection title="Event information">
             <Controller
               name="eventImagePath"
               render={({ field: { onChange, ...field }, fieldState }) => (
@@ -219,7 +219,7 @@ export const EventForm = ({
               resize="vertical"
               rows={20}
             />
-          </FormStack>
+          </FormSection>
         </Stack>
       </Form>
     </Container>

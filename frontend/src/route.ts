@@ -6,9 +6,8 @@ export const route = {
   editEvent: (eventId?: number) => `/editEvent/${eventId ?? ':eventId'}`,
   eventDetails: (eventId?: number) => `/event/${eventId ?? ':eventId'}`,
   onboarding: () => `/onboarding`,
-  signIn: () => `/auth/signin`,
-  signUp: () => `/auth/signup`,
   verifyUser: () => `/auth/verifyUser`,
+  messages: () => `/messages`,
   groups: () => `/groups`,
 };
 

@@ -11,6 +11,7 @@ import {
 } from 'src/modules/events';
 import { NotFoundPage } from 'src/shared/navigation';
 
+import { MessagesPage } from './modules/messages';
 import { route } from './route';
 
 export const Routes = () => (
@@ -23,6 +24,7 @@ export const Routes = () => (
     <Route path={route.eventDetails()} element={<EventDetailsPage />} />
     <Route path={route.onboarding()} element={<OnboardingForm />} />
     <Route path={route.verifyUser()} element={<VerifyUserPage />} />
+    <Route path={route.messages()} element={<MessagesPage />} />
     <Route path="*" element={<NotFoundPage />} />
   </RouterRoutes>
 );

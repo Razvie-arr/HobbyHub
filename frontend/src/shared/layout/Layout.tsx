@@ -1,7 +1,7 @@
 import { PropsWithChildren } from 'react';
 import { HStack, Link, Text } from '@chakra-ui/react';
 
-import { Alert, AlertIcon, Box, Flex } from 'src/shared/design-system';
+import { Alert, AlertIcon, Flex } from 'src/shared/design-system';
 import { Footer, ReactRouterLink, TopNavigation } from 'src/shared/navigation';
 
 import { useAuth } from '../../modules/auth';
@@ -30,9 +30,9 @@ export const Layout = ({ children }: PropsWithChildren) => {
         </Alert>
       ) : null}
       <TopNavigation />
-      <Box bg="gray.50" flexGrow={1}>
+      <Flex bg="gray.50" flexGrow={1} direction="column">
         {children}
-      </Box>
+      </Flex>
       <Footer />
     </Flex>
   );

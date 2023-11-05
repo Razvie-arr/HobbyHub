@@ -22,7 +22,7 @@ import {
   addressFormFieldsSchema,
   eventTypeToSelectOption,
   Form,
-  FormStack,
+  FormSection,
   TextareaField,
   zod,
   zodResolver,
@@ -143,7 +143,7 @@ export const OnboardingForm = () => {
             <Controller
               name="eventTypes"
               render={({ field, fieldState }) => (
-                <FormStack title="Select your interests">
+                <FormSection title="Select your interests">
                   {fieldState.error?.message ? <Text color="red.500">{fieldState.error?.message}</Text> : null}
                   <CheckboxGroup colorScheme="purple">
                     <VStack spacing={6} overflowY="scroll" h="400px">
@@ -174,19 +174,19 @@ export const OnboardingForm = () => {
                       ))}
                     </VStack>
                   </CheckboxGroup>
-                </FormStack>
+                </FormSection>
               )}
             />
 
-            <FormStack title="Select your location">
+            <FormSection title="Select your location">
               <AddressFormFields />
-            </FormStack>
-            <FormStack title="Set your description">
+            </FormSection>
+            <FormSection title="Set your description">
               <TextareaField
                 name="description"
                 placeholder="Tell the world what you're passionate about. Mention activities that you like to do in your free time or your skills. You can change the description in profile settings later."
               ></TextareaField>
-            </FormStack>
+            </FormSection>
             <Flex justifyContent="end">
               <Button colorScheme="purple" type="submit" isLoading={onboardUserRequestState.loading}>
                 Submit
