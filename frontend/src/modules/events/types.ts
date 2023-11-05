@@ -14,3 +14,7 @@ export interface WithEvents {
   events: Array<EventProps>;
 }
 
+export interface WithNonEmptyEvents {
+  events: [EventProps, ...EventProps[]];
+}
+

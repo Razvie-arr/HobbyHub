@@ -14,9 +14,9 @@ import {
 } from '@chakra-ui/react';
 import { useNavigate } from 'react-router-dom';
 
-import { route } from '../../../route';
-import { DELETE_EVENT } from '../mutations';
-import { WithEvent } from '../types';
+import { route } from '../../../../route';
+import { DELETE_EVENT } from '../../mutations';
+import { WithEvent } from '../../types';
 
 export const DeleteEventButton = ({ event, ...buttonProps }: WithEvent & ButtonProps) => {
   const { isOpen, onOpen, onClose } = useDisclosure();

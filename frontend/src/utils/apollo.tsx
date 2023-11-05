@@ -1,10 +1,11 @@
 import 'cross-fetch/polyfill';
 
 import { ReactNode, useCallback, useMemo } from 'react';
-import { ApolloClient, ApolloLink, ApolloProvider, createHttpLink, from, InMemoryCache } from '@apollo/client';
+import { ApolloClient, ApolloLink, ApolloProvider, from, InMemoryCache } from '@apollo/client';
 import { GraphQLErrors, NetworkError } from '@apollo/client/errors';
 import { onError } from '@apollo/client/link/error';
 import { offsetLimitPagination } from '@apollo/client/utilities';
+import { createUploadLink } from 'apollo-upload-client';
 import { useNavigate } from 'react-router-dom';
 
 import { config } from 'src/config';
@@ -64,7 +65,7 @@ export function EnhancedApolloProvider({ children }: Props) {
   );
 
   const client = new ApolloClient({
-    link: from([logoutLink, authLink, httpLink]),
+    link: from([logoutLink, authLink, uploadLink]),
     cache,
     defaultOptions: {
       watchQuery: {
@@ -88,7 +89,10 @@ const hasUnauthenticatedErrorCode = (errors: GraphQLErrors | undefined) =>
 const hasNetworkStatusCode = (error: NetworkError | undefined, code: number) =>
   error && 'statusCode' in error && error.statusCode === code;
 
-const httpLink = createHttpLink({
+const uploadLink = createUploadLink({
   uri: config.GRAPHQL_API,
+  headers: {
+    'Apollo-Require-Preflight': 'ok', // This is for CSRF
+  },
 });
 

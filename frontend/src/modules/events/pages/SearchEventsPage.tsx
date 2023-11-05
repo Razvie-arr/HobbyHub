@@ -35,7 +35,9 @@ export const SearchEventsPage = () => {
           const events = data.searchEvents.map(getEventFragmentData);
           return (
             <>
-              <EventsMapButton events={events} position="fixed" bottom="8" right="8" />
+              {ReadonlyArray.isNonEmptyArray(events) ? (
+                <EventsMapButton events={events} position="fixed" bottom="8" right="8" />
+              ) : null}
               <Stack spacing="8" mt="8">
                 <EventsSection events={events} title="Search results" />
               </Stack>

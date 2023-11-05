@@ -30,7 +30,7 @@ export const Layout = ({ children }: PropsWithChildren) => {
         </Alert>
       ) : null}
       <TopNavigation />
-      <Box bg="purple.50" flexGrow={1}>
+      <Box bg="gray.50" flexGrow={1}>
         {children}
       </Box>
       <Footer />

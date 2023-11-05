@@ -1,0 +1,39 @@
+import { useQuery } from '@apollo/client';
+import { useParams } from 'react-router-dom';
+
+import { QueryResult } from '../../../shared/layout';
+import { EventDetails } from '../components';
+import { getEventFragmentData } from '../fragments';
+import { EVENT } from '../queries';
+
+interface EventDetailsProps {
+  eventId: number;
+}
+
+const EventDetailsPage = ({ eventId }: EventDetailsProps) => {
+  const eventQueryResult = useQuery(EVENT, {
+    variables: { eventId },
+  });
+
+  return (
+    <QueryResult
+      queryResult={eventQueryResult}
+      render={(data) => {
+        const eventFragment = data?.eventById;
+        if (!eventFragment) {
+          return null;
+        }
+        const event = getEventFragmentData(eventFragment);
+
+        return <EventDetails event={event} />;
+      }}
+    />
+  );
+};
+
+export const EventDetailsPageContainer = () => {
+  let param = useParams();
+
+  return param.eventId ? <EventDetailsPage eventId={parseInt(param.eventId)} /> : null;
+};
+

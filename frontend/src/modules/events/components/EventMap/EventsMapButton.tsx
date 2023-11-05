@@ -11,11 +11,11 @@ import {
 } from '@chakra-ui/react';
 import { FaMapLocationDot } from 'react-icons/fa6';
 
-import { WithEvents } from '../types';
+import { WithNonEmptyEvents } from '../../types';
 
 import { EventsMap } from './EventsMap';
 
-interface EventsMapButtonProps extends ButtonProps, WithEvents {
+interface EventsMapButtonProps extends ButtonProps, WithNonEmptyEvents {
   iconOnly?: boolean;
   forceRender?: boolean;
 }

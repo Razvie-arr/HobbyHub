@@ -1,3 +1,5 @@
+import { AuthUser } from '../gql/graphql';
+
 export type EventTypeName =
   | 'Football'
   | 'Basketball'
@@ -22,4 +24,8 @@ export type EventTypeName =
   | 'Ferata'
   | 'Walking the dog'
   | 'Strollering';
+
+export interface WithAuthUser {
+  user: AuthUser;
+}
 

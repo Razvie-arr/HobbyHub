@@ -1,11 +1,11 @@
-import { Tag, Text } from '@chakra-ui/react';
+import { Tag, TagProps, Text } from '@chakra-ui/react';
 
-interface EventStatusTagProps {
+interface EventStatusTagProps extends TagProps {
   hasWaitlist: boolean;
   isFullCapacity: boolean;
 }
 
-export const EventStatusTag = ({ hasWaitlist, isFullCapacity }: EventStatusTagProps) => {
+export const EventStatusTag = ({ hasWaitlist, isFullCapacity, ...tagProps }: EventStatusTagProps) => {
   const commonProps = {
     position: 'absolute',
     top: '4',
@@ -14,6 +14,7 @@ export const EventStatusTag = ({ hasWaitlist, isFullCapacity }: EventStatusTagPr
     borderRadius: 'full',
     lineHeight: '2.4',
     shadow: 'base',
+    ...tagProps,
   } as const;
   if (isFullCapacity && hasWaitlist) {
     return (

@@ -1,5 +1,5 @@
 export { DefaultEventsPage } from './DefaultEventsPage';
-export { EventDetailsContainer as EventDetails } from './EventDetails';
+export { EventDetailsPageContainer as EventDetailsPage } from './EventDetailsPage';
 export { EventsPageContainer as EventsPage } from './EventsPage';
 export { SearchEventsPage } from './SearchEventsPage';
 

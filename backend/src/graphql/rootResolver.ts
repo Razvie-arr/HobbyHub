@@ -1,3 +1,5 @@
+import GraphQLUpload from 'graphql-upload/GraphQLUpload.js';
+
 import { Resolvers } from '../types';
 
 import {
@@ -16,6 +18,7 @@ import {
   newlyCreatedNearbyEventsResolver,
   similarEventsResolver,
   todaysNearbyEventsResolver,
+  uploadEventImageResolver,
 } from './modules/event/eventResolvers';
 import {
   eventTypeByIdResolver,
@@ -93,13 +96,17 @@ export const rootResolver: Resolvers = {
     createEvent: createEventResolver,
     editEvent: editEventResolver,
     deleteEvent: deleteEventResolver,
-    onboardUser: onboardUserResolver,
+    uploadEventImage: uploadEventImageResolver,
 
     editUser: editUserResolver,
+    onboardUser: onboardUserResolver,
   },
+
+  Upload: GraphQLUpload,
 
   User: {
     event_types: userEventTypesResolver,
     location: userLocationResolver,
   },
 };
+

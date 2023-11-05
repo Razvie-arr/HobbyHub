@@ -1,6 +1,22 @@
-import { ReactNode } from 'react';
-import { Box, Button, Container, Divider, Flex, FormLabel, Image, Spacer, Stack, Text } from '@chakra-ui/react';
-import { FaFile } from 'react-icons/fa6';
+import { ReactNode, useState } from 'react';
+import { useMutation } from '@apollo/client';
+import {
+  Box,
+  Button,
+  Container,
+  Divider,
+  Flex,
+  FormLabel,
+  Image,
+  Input,
+  InputGroup,
+  InputRightAddon,
+  Spacer,
+  Spinner,
+  Stack,
+  Text,
+} from '@chakra-ui/react';
+import { Controller } from 'react-hook-form';
 
 import {
   AddressFormFields,
@@ -14,11 +30,12 @@ import {
   zodResolver,
 } from 'src/shared/forms';
 
-import { eventTypes } from '../../../shared/constants';
+import { DEFAULT_EVENT_IMAGE_PATH, eventTypes } from '../../../shared/constants';
+import { Field } from '../../../shared/design-system';
+import { FormStack } from '../../../shared/forms/molecules/FormStack';
+import { eventTypeToSelectOption } from '../../../shared/forms/utils';
 import { getCurrentDateTime } from '../../../utils/form';
-import { FormStack } from '../components/FormStack';
-
-import { eventTypeToSelectOption } from './utils';
+import { UPLOAD_EVENT_IMAGE } from '../mutations';
 
 const { sports, games, other } = eventTypes;
 
@@ -48,6 +65,7 @@ const eventFormSchema = zod
     startDatetime: zod.string().min(1, 'Start time is required'),
     endDatetime: zod.string().min(1, 'End time is required'),
     ...addressFormFieldsSchema,
+    eventImagePath: zod.string().nullish(),
     description: zod.string().nullish(),
   })
   .refine(
@@ -80,6 +98,7 @@ type FormValues = zod.infer<typeof eventFormSchema>;
 
 interface EventFormProps {
   additionalButton?: ReactNode;
+  defaultImagePath?: string | null;
   defaultValues: FormValues;
   formTitle: ReactNode;
   formDescription: ReactNode;
@@ -91,6 +110,7 @@ interface EventFormProps {
 
 export const EventForm = ({
   additionalButton,
+  defaultImagePath,
   defaultValues,
   formTitle,
   formDescription,
@@ -98,74 +118,111 @@ export const EventForm = ({
   handleCancel,
   isLoading,
   submitButtonLabel,
-}: EventFormProps) => (
-  <Container maxW="3xl">
-    <Form onSubmit={handleSubmit} defaultValues={defaultValues} resolver={zodResolver(eventFormSchema)} noValidate>
-      <Box position="sticky" top={{ base: '57px', md: '67px' }} width="100%" zIndex={2} bg="purple.50" pt="6">
-        <Flex direction={{ base: 'column', md: 'row' }}>
-          <Flex direction="column">
-            <Text fontSize="3xl" fontWeight="bold" color="purple.500">
-              {formTitle}
-            </Text>
-            <Text>{formDescription}</Text>
-          </Flex>
-          <Spacer />
-          <Flex gap={2} mt={3} align="end">
-            <Button onClick={handleCancel} colorScheme="purple" variant="outline" bg="white" flex={1}>
-              Cancel
-            </Button>
-            <Button colorScheme="purple" flex={1} type="submit" isLoading={isLoading}>
-              {submitButtonLabel}
-            </Button>
-            {additionalButton}
-          </Flex>
-        </Flex>
-        <Divider borderColor="purple.500" my={5} />
-      </Box>
-      <Stack spacing={8} pb="8">
-        <FormStack title="Basic information">
-          <FormLabel>Event cover image</FormLabel>
-          <Flex direction={{ base: 'column', md: 'row' }} align="end">
-            <Image src="image.png" borderRadius={5} fallbackSrc="https://via.placeholder.com/400x300" />
+}: EventFormProps) => {
+  const [imageFilePath, setImageFilePath] = useState(defaultImagePath ?? DEFAULT_EVENT_IMAGE_PATH);
+  const [uploadEventImageRequest, uploadEventImageRequestState] = useMutation(UPLOAD_EVENT_IMAGE);
+  return (
+    <Container maxW="3xl">
+      <Form onSubmit={handleSubmit} defaultValues={defaultValues} resolver={zodResolver(eventFormSchema)} noValidate>
+        <Box position="sticky" top={{ base: '57px', md: '67px' }} width="100%" zIndex={2} bg="purple.50" pt="6">
+          <Flex direction={{ base: 'column', md: 'row' }}>
+            <Flex direction="column">
+              <Text fontSize="3xl" fontWeight="bold" color="purple.500">
+                {formTitle}
+              </Text>
+              <Text>{formDescription}</Text>
+            </Flex>
             <Spacer />
-            <Button mt={3} colorScheme="purple" variant="outline" leftIcon={<FaFile />}>
-              Select from files
-            </Button>
+            <Flex gap={2} mt={3} align="end">
+              <Button onClick={handleCancel} colorScheme="purple" variant="outline" bg="white" flex={1}>
+                Cancel
+              </Button>
+              <Button colorScheme="purple" flex={1} type="submit" isLoading={isLoading}>
+                {submitButtonLabel}
+              </Button>
+              {additionalButton}
+            </Flex>
           </Flex>
-          <InputField name="author" label="Author" isRequired isDisabled />
-          <InputField name="name" label="Event name" placeholder="Enter a short and clear name" isRequired />
-          <MultiSelectField
-            name="eventTypes"
-            label="Event types"
-            options={options}
-            placeholder="Select your event type"
-            isMulti
-          />
-          <InputField name="summary" label="Summary" placeholder="Tell people what is the event about" isRequired />
-          <InputField
-            name="capacity"
-            label="Event capacity"
-            type="number"
-            min={0}
-            placeholder="How many people can join the event?"
-            isRequired
-          />
-          <InlineCheckboxField name="allowWaitlist" label="Allow waitlist" />
-        </FormStack>
+          <Divider borderColor="purple.500" my={5} />
+        </Box>
+        <Stack spacing={8} pb="8">
+          <FormStack title="Basic information">
+            <FormLabel>Event cover image</FormLabel>
+            <InputField name="author" label="Author" isRequired isDisabled />
+            <InputField name="name" label="Event name" placeholder="Enter a short and clear name" isRequired />
+            <MultiSelectField
+              name="eventTypes"
+              label="Event types"
+              options={options}
+              placeholder="Select your event type"
+              isMulti
+            />
+            <InputField name="summary" label="Summary" placeholder="Tell people what is the event about" isRequired />
+            <InputField
+              name="capacity"
+              label="Event capacity"
+              type="number"
+              min={0}
+              placeholder="How many people can join the event?"
+              isRequired
+            />
+            <InlineCheckboxField name="allowWaitlist" label="Allow waitlist" />
+          </FormStack>
 
-        <FormStack title="Time and place">
-          <Flex gap={2} direction={{ base: 'column', md: 'row' }}>
-            <InputField name="startDatetime" label="Start time" type="datetime-local" isRequired />
-            <InputField name="endDatetime" label="End time" type="datetime-local" isRequired />
-          </Flex>
-          <AddressFormFields />
-        </FormStack>
+          <FormStack title="Time and place">
+            <Flex gap={2} direction={{ base: 'column', md: 'row' }}>
+              <InputField name="startDatetime" label="Start time" type="datetime-local" isRequired />
+              <InputField name="endDatetime" label="End time" type="datetime-local" isRequired />
+            </Flex>
+            <AddressFormFields />
+          </FormStack>
 
-        <FormStack title="Event information">
-          <TextareaField name="description" label="Description" placeholder="Everything about the event" />
-        </FormStack>
-      </Stack>
-    </Form>
-  </Container>
-);
+          <FormStack title="Event information">
+            <Controller
+              name="eventImagePath"
+              render={({ field: { onChange, ...field }, fieldState }) => (
+                <Field label="Event image" error={fieldState.error?.message}>
+                  <InputGroup>
+                    <Input
+                      {...field}
+                      isDisabled={uploadEventImageRequestState.loading}
+                      accept="image/*"
+                      p="4px"
+                      type="file"
+                      value=""
+                      onChange={async (event) => {
+                        const result = await uploadEventImageRequest({
+                          variables: { eventImage: event.target.files?.[0] ?? null },
+                        });
+                        const path = result.data?.uploadEventImage;
+                        if (path) {
+                          setImageFilePath(path);
+                          onChange(path);
+                        }
+                      }}
+                    />
+                    {uploadEventImageRequestState.loading ? <InputRightAddon children={<Spinner />} /> : null}
+                  </InputGroup>
+                </Field>
+              )}
+            />
+            <Image
+              aspectRatio="16/9"
+              objectFit="cover"
+              alt="Event Image"
+              src={imageFilePath ?? DEFAULT_EVENT_IMAGE_PATH}
+            />
+            <TextareaField
+              name="description"
+              label="Description"
+              placeholder="Everything about the event"
+              resize="vertical"
+              rows={20}
+            />
+          </FormStack>
+        </Stack>
+      </Form>
+    </Container>
+  );
+};
 

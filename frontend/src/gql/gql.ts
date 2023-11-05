@@ -20,14 +20,16 @@ const documents = {
   '\n  mutation Mutation($token: String!) {\n    verify(token: $token)\n  }\n': types.MutationDocument,
   '\n  mutation OnboardUser($user: UserInput!, $location: LocationInputWithoutCoords!) {\n    onboardUser(user: $user, location: $location) {\n      id\n      email\n      first_name\n      last_name\n      verified\n      location_id\n      description\n      password\n      location {\n        id\n        country\n        city\n        street_name\n        street_number\n        latitude\n        longitude\n      }\n      event_types {\n        id\n        name\n        category\n      }\n    }\n  }\n':
     types.OnboardUserDocument,
-  '\n  fragment EventFragment on Event {\n    id\n    name\n    start_datetime\n    end_datetime\n    event_types {\n      id\n      name\n    }\n    author {\n      id\n      first_name\n      last_name\n    }\n    location {\n      id\n      country\n      city\n      street_name\n      street_number\n      longitude\n      latitude\n    }\n    summary\n    description\n    image_filePath\n    capacity\n    allow_waitlist\n    participants {\n      id\n      first_name\n      last_name\n    }\n  }\n':
+  '\n  fragment EventFragment on Event {\n    id\n    name\n    start_datetime\n    end_datetime\n    event_types {\n      id\n      name\n    }\n    author {\n      id\n      first_name\n      last_name\n    }\n    location {\n      id\n      country\n      city\n      street_name\n      street_number\n      longitude\n      latitude\n    }\n    summary\n    description\n    image_filepath\n    capacity\n    allow_waitlist\n    participants {\n      id\n      first_name\n      last_name\n    }\n  }\n':
     types.EventFragmentFragmentDoc,
   '\n  mutation CreateEvent($event: EventInput!, $location: LocationInputWithoutCoords!) {\n    createEvent(event: $event, location: $location) {\n      id\n    }\n  }\n':
     types.CreateEventDocument,
   '\n  mutation EditEvent($event: EventInput!, $location: LocationInputWithoutCoords!) {\n    editEvent(event: $event, location: $location) {\n      id\n    }\n}\n':
     types.EditEventDocument,
-  '\n  mutation DeleteEvent($eventId: Int!, $locationId: Int!) {\n    deleteEvent(event_id: $eventId, location_id: $locationId)\n  }\n':
+  '\n  mutation DeleteEvent($eventId: Int!, $locationId: Int!) {\n    deleteEvent(event_id: $eventId, location_id: $locationId) \n  }\n':
     types.DeleteEventDocument,
+  '\n  mutation UploadEventImage($eventImage: Upload) {\n    uploadEventImage(event_image: $eventImage)\n}\n':
+    types.UploadEventImageDocument,
   '\n  query GetLocationAwareEvents($userId: Int!, $longitude: Float!, $latitude: Float!, $offset: Int, $limit: Int) {\n    todaysNearbyEvents(longitude: $longitude, latitude: $latitude, offset: $offset, limit: $limit) {\n      ...EventFragment\n    }\n    interestingNearbyEvents(\n      longitude: $longitude\n      latitude: $latitude\n      userId: $userId\n      offset: $offset\n      limit: $limit\n    ) {\n      ...EventFragment\n    }\n    newlyCreatedNearbyEvents(longitude: $longitude, latitude: $latitude, offset: $offset, limit: $limit) {\n      ...EventFragment\n    }\n  }\n':
     types.GetLocationAwareEventsDocument,
   '\n  query Events($offset: Int, $limit: Int) {\n    events(offset: $offset, limit: $limit) {\n      ...EventFragment\n    }\n  }\n':
@@ -90,8 +92,8 @@ export function gql(
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function gql(
-  source: '\n  fragment EventFragment on Event {\n    id\n    name\n    start_datetime\n    end_datetime\n    event_types {\n      id\n      name\n    }\n    author {\n      id\n      first_name\n      last_name\n    }\n    location {\n      id\n      country\n      city\n      street_name\n      street_number\n      longitude\n      latitude\n    }\n    summary\n    description\n    image_filePath\n    capacity\n    allow_waitlist\n    participants {\n      id\n      first_name\n      last_name\n    }\n  }\n',
-): (typeof documents)['\n  fragment EventFragment on Event {\n    id\n    name\n    start_datetime\n    end_datetime\n    event_types {\n      id\n      name\n    }\n    author {\n      id\n      first_name\n      last_name\n    }\n    location {\n      id\n      country\n      city\n      street_name\n      street_number\n      longitude\n      latitude\n    }\n    summary\n    description\n    image_filePath\n    capacity\n    allow_waitlist\n    participants {\n      id\n      first_name\n      last_name\n    }\n  }\n'];
+  source: '\n  fragment EventFragment on Event {\n    id\n    name\n    start_datetime\n    end_datetime\n    event_types {\n      id\n      name\n    }\n    author {\n      id\n      first_name\n      last_name\n    }\n    location {\n      id\n      country\n      city\n      street_name\n      street_number\n      longitude\n      latitude\n    }\n    summary\n    description\n    image_filepath\n    capacity\n    allow_waitlist\n    participants {\n      id\n      first_name\n      last_name\n    }\n  }\n',
+): (typeof documents)['\n  fragment EventFragment on Event {\n    id\n    name\n    start_datetime\n    end_datetime\n    event_types {\n      id\n      name\n    }\n    author {\n      id\n      first_name\n      last_name\n    }\n    location {\n      id\n      country\n      city\n      street_name\n      street_number\n      longitude\n      latitude\n    }\n    summary\n    description\n    image_filepath\n    capacity\n    allow_waitlist\n    participants {\n      id\n      first_name\n      last_name\n    }\n  }\n'];
 /**
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
@@ -108,8 +110,14 @@ export function gql(
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function gql(
-  source: '\n  mutation DeleteEvent($eventId: Int!, $locationId: Int!) {\n    deleteEvent(event_id: $eventId, location_id: $locationId)\n  }\n',
-): (typeof documents)['\n  mutation DeleteEvent($eventId: Int!, $locationId: Int!) {\n    deleteEvent(event_id: $eventId, location_id: $locationId)\n  }\n'];
+  source: '\n  mutation DeleteEvent($eventId: Int!, $locationId: Int!) {\n    deleteEvent(event_id: $eventId, location_id: $locationId) \n  }\n',
+): (typeof documents)['\n  mutation DeleteEvent($eventId: Int!, $locationId: Int!) {\n    deleteEvent(event_id: $eventId, location_id: $locationId) \n  }\n'];
+/**
+ * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function gql(
+  source: '\n  mutation UploadEventImage($eventImage: Upload) {\n    uploadEventImage(event_image: $eventImage)\n}\n',
+): (typeof documents)['\n  mutation UploadEventImage($eventImage: Upload) {\n    uploadEventImage(event_image: $eventImage)\n}\n'];
 /**
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */

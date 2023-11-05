@@ -1,7 +1,8 @@
+import * as fs from 'fs';
+import * as fsPromises from 'fs/promises';
 import { GraphQLError } from 'graphql/error';
 
 import { GOOGLE_API_KEY } from '../../../config';
-import { getSQLDataSource } from '../../../datasource';
 import { HAVERSINE_FORMULA } from '../../../sharedConstants';
 import {
   ContextualNullableResolver,
@@ -14,6 +15,7 @@ import {
   MutationCreateEventArgs,
   MutationDeleteEventArgs,
   MutationEditEventArgs,
+  MutationUploadEventImageArgs,
   QueryEventByIdArgs,
   QueryEventsArgs,
   QueryEventsByIdsArgs,
@@ -24,11 +26,13 @@ import {
   QueryTodaysNearbyEventsArgs,
   User,
 } from '../../../types';
-import { createEventInput, createLocationInput } from '../../../utils/helpers';
+import { createEventInput, createLocationInput, getPublicStorageFilePath } from '../../../utils/helpers';
 
 const DEFAULT_DISTANCE = 20;
 const DEFAULT_LIMIT = 4;
 const MINIMUM_COUNT_SIMILAR_EVENTS = 3;
+
+const FRONTEND_PROFILE_IMAGE_RELATIVE_PATH = 'uploads/event_image';
 
 export const eventsResolver: ContextualResolver<Array<Event>, QueryEventsArgs> = async (
   _,
@@ -175,6 +179,28 @@ export const similarEventsResolver = async (
 
   return similarEventsWithinSameCity;
 };
+
+export const uploadEventImageResolver = async (_: unknown, { event_image }: MutationUploadEventImageArgs) => {
+  let eventImageUrl = null;
+  const eventImageFile = await event_image;
+
+  if (eventImageFile) {
+    const { fileDirectoryPath, filePath, relativeFileUrl } = getPublicStorageFilePath({
+      filename: eventImageFile.filename,
+      relativeDirectory: FRONTEND_PROFILE_IMAGE_RELATIVE_PATH,
+    });
+
+    await fsPromises.mkdir(fileDirectoryPath, { recursive: true });
+
+    const stream = eventImageFile.createReadStream();
+    stream.pipe(fs.createWriteStream(filePath));
+
+    eventImageUrl = relativeFileUrl;
+  }
+
+  return eventImageUrl;
+};
+
 export const createEventResolver = async (
   _: unknown,
   { location, event }: MutationCreateEventArgs,

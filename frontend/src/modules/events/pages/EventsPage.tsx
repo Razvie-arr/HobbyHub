@@ -109,7 +109,9 @@ export const EventsPage = ({ location }: EventsPageProps) => {
             const events = eventFragments.map(getEventFragmentData);
             return (
               <>
-                <EventsMapButton events={events} position="fixed" bottom="8" right="8" />
+                {ReadonlyArray.isNonEmptyArray(events) ? (
+                  <EventsMapButton events={events} position="fixed" bottom="8" right="8" />
+                ) : null}
                 <Stack spacing="8">
                   <EventsSection events={events} />
                 </Stack>

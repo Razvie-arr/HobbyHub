@@ -1,3 +1,7 @@
+import path from 'path';
+import uniqueSlug from 'unique-slug';
+
+import { FRONTEND_PUBLIC_FOLDER } from '../config';
 import { EventInput, LocationInput, UserInput } from '../types';
 
 export function createEventInput(event: EventInput) {
@@ -5,7 +9,7 @@ export function createEventInput(event: EventInput) {
     name: getValue(event.name),
     summary: getValue(event.summary),
     description: getValue(event.description),
-    image_filePath: getValue(event.image_filePath),
+    image_filepath: getValue(event.image_filepath),
     start_datetime: getValue(event.start_datetime),
     end_datetime: getValue(event.end_datetime),
     capacity: getValue(event.capacity),
@@ -44,4 +48,28 @@ export function createUserInput(user: UserInput) {
 function getValue<Type>(input: Type) {
   return input ? input : undefined;
 }
+
+function safeFilenameString(rawFilename: string): string {
+  return rawFilename.replaceAll(/[^A-Za-z0-9]/g, '-');
+}
+
+export const getPublicStorageFilePath = ({
+  filename,
+  relativeDirectory,
+}: {
+  filename: string;
+  relativeDirectory: string;
+}) => {
+  const { name, ext } = path.parse(filename);
+
+  const uniqueFilename = `${safeFilenameString(name).slice(0, 50)}-${safeFilenameString(uniqueSlug())}${ext}`;
+
+  const fileDirectoryPath = path.resolve(FRONTEND_PUBLIC_FOLDER, relativeDirectory);
+
+  return {
+    fileDirectoryPath,
+    filePath: path.join(fileDirectoryPath, uniqueFilename),
+    relativeFileUrl: `/${path.join(relativeDirectory, uniqueFilename).split(path.sep).join('/')}`,
+  };
+};
 

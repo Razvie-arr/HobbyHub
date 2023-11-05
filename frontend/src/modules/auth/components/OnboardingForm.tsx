@@ -14,15 +14,21 @@ import {
 import { Controller } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 
+import { gql } from 'src/gql';
+import { route } from 'src/route';
 import { eventTypes } from 'src/shared/constants';
-import { AddressFormFields, addressFormFieldsSchema, Form, TextareaField, zod, zodResolver } from 'src/shared/forms';
+import {
+  AddressFormFields,
+  addressFormFieldsSchema,
+  eventTypeToSelectOption,
+  Form,
+  FormStack,
+  TextareaField,
+  zod,
+  zodResolver,
+} from 'src/shared/forms';
 
-import { gql } from '../../../gql';
-import { route } from '../../../route';
-import { useAuth } from '../../auth';
-import { FormStack } from '../components/FormStack';
-
-import { eventTypeToSelectOption } from './utils';
+import { useAuth } from '..';
 
 const { sports, games, other } = eventTypes;
 

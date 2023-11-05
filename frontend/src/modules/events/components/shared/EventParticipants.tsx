@@ -14,7 +14,8 @@ export const EventParticipants = ({ noIcon, fontSize = 'sm', capacity, participa
   <Stack direction="row">
     {noIcon ? null : <Icon as={FaPeopleGroup} color="purple.500" />}
     <Text fontWeight="medium" fontSize={fontSize}>
-      {`${participants.length} participant${participants.length > 1 ? 's' : ''} / ${capacity}`}
+      {`${participants.length} participant${participants.length === 1 ? '' : 's'} / ${capacity}`}
     </Text>
   </Stack>
 );
+

@@ -27,3 +27,4 @@ export const EventDetailsParticipants = ({ name, primaryButtonText }: EventDetai
     </Box>
   </HStack>
 );
+

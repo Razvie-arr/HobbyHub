@@ -1,5 +1,15 @@
 import { useState } from 'react';
-import { Flex, Popover, PopoverArrow, PopoverBody, PopoverCloseButton, PopoverContent, VStack } from '@chakra-ui/react';
+import {
+  Button,
+  ButtonGroup,
+  Flex,
+  Popover,
+  PopoverArrow,
+  PopoverBody,
+  PopoverCloseButton,
+  PopoverContent,
+  Stack,
+} from '@chakra-ui/react';
 import { Controller } from 'react-hook-form';
 
 import { EventType } from '../../../gql/graphql';
@@ -20,13 +30,13 @@ export const ActivityFilter = ({ eventTypes, fieldName, label }: ActivityFilterP
     <Controller
       name={fieldName}
       render={({ field }) => (
-        <Popover>
+        <Popover placement="bottom-start">
           <ActivityFilterTrigger label={label} selectedEventTypes={field.value} />
           <PopoverContent w={{ base: 'xs', md: 'sm', lg: '3xl' }}>
             <PopoverArrow />
             <PopoverCloseButton />
             <PopoverBody py="8" px="6">
-              <VStack>
+              <Stack direction="column">
                 <FilterEventTypes eventTypes={eventTypes} setFilteredEventTypes={setFilteredEventTypes} />
                 <Flex flexWrap="wrap" columnGap="4" width="100%">
                   {filteredEventTypes.map((eventType) => (
@@ -44,7 +54,32 @@ export const ActivityFilter = ({ eventTypes, fieldName, label }: ActivityFilterP
                     />
                   ))}
                 </Flex>
-              </VStack>
+                <Flex justifyContent="end">
+                  <ButtonGroup>
+                    <Button
+                      colorScheme="purple"
+                      variant="outline"
+                      onClick={() => {
+                        field.onChange(
+                          field.value.filter(
+                            (value: number) => !filteredEventTypes.map(({ id }) => id).includes(value),
+                          ),
+                        );
+                      }}
+                    >
+                      Clear all
+                    </Button>
+                    <Button
+                      colorScheme="purple"
+                      onClick={() => {
+                        field.onChange(filteredEventTypes.map(({ id }) => id));
+                      }}
+                    >
+                      Select all
+                    </Button>
+                  </ButtonGroup>
+                </Flex>
+              </Stack>
             </PopoverBody>
           </PopoverContent>
         </Popover>

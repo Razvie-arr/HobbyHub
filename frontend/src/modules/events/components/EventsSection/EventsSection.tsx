@@ -1,21 +1,22 @@
 import { ReactNode } from 'react';
-import { Button, Divider, Heading, Stack } from '@chakra-ui/react';
+import { Button, Divider, Flex, Heading, Stack } from '@chakra-ui/react';
 import { ReadonlyArray } from 'effect';
 
 import { Box } from 'src/shared/design-system';
 
 import { EventProps } from '../../types';
+import { EventCard } from '../EventCard';
 
-import { EventsCardList } from './EventsCardList';
 import { NoEvents } from './NoEvents';
 
 interface EventsSectionProps {
   events: Array<EventProps>;
   title?: ReactNode;
   handleSeeAllEvents?: () => void;
+  maxColumnCount?: 4 | 3;
 }
 
-export const EventsSection = ({ events, handleSeeAllEvents, title }: EventsSectionProps) => (
+export const EventsSection = ({ events, handleSeeAllEvents, title, maxColumnCount = 4 }: EventsSectionProps) => (
   <Box>
     <Stack spacing="4">
       <Stack
@@ -31,7 +32,15 @@ export const EventsSection = ({ events, handleSeeAllEvents, title }: EventsSecti
         ) : null}
       </Stack>
       {title ? <Divider borderColor="purple.200" /> : null}
-      {ReadonlyArray.isNonEmptyArray(events) ? <EventsCardList events={events} /> : <NoEvents />}
+      {ReadonlyArray.isNonEmptyArray(events) ? (
+        <Flex flexWrap="wrap" columnGap="4">
+          {events.map((value) => (
+            <EventCard key={value.id} event={value} maxFlexBasis={maxColumnCount === 4 ? '24%' : ' 32%'} />
+          ))}
+        </Flex>
+      ) : (
+        <NoEvents />
+      )}
     </Stack>
   </Box>
 );

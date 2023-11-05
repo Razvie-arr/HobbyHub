@@ -1,3 +1,3 @@
-export { CreateEventForm, EditEventForm, OnboardingForm } from './forms';
-export { DefaultEventsPage, EventDetails, EventsPage } from './pages';
+export { CreateEventForm, EditEventForm } from './forms';
+export { DefaultEventsPage, EventDetailsPage, EventsPage, SearchEventsPage } from './pages';
 
