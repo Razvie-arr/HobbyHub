@@ -62,8 +62,8 @@ export class SQLDataSource extends BatchedSQLDataSource {
 
     if (start_datetime && end_datetime) {
       stringQuery += stringQuery.includes('WHERE') ? ' AND' : ' WHERE';
-      stringQuery += ` start_datetime >= "${start_datetime.toString()}" 
-      AND end_datetime <= "${end_datetime.toString()}"`;
+      stringQuery += ` DATE(start_datetime) >= "${start_datetime.toString()}" 
+      AND DATE(end_datetime) <= "${end_datetime.toString()}"`;
     }
 
     if (filterLocation) {
@@ -80,7 +80,7 @@ export class SQLDataSource extends BatchedSQLDataSource {
     }
 
     stringQuery += ` LIMIT ${limit} OFFSET ${offset} `;
-    return stringQuery;
+    return this.db.query.raw(stringQuery);
   };
 
   public getEventsWithSameTypeExceptCity = (

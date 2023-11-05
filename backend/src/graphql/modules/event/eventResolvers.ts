@@ -350,20 +350,18 @@ export const deleteEventResolver = async (
 export const filterEventResolver = async (
   _: unknown,
   { eventTypeIds, start_datetime, end_datetime, filterLocation, offset, limit, sort }: QueryFilterEventsArgs,
-  { dbConnection }: CustomContext,
+  { dataSources }: CustomContext,
 ): Promise<Array<Event>> => {
   offset = offset ?? 0;
   limit = limit ?? DEFAULT_LIMIT;
-
-  return await dbConnection.query(
-    getSQLDataSource().getFilteredEvents(
-      offset,
-      limit,
-      eventTypeIds,
-      start_datetime,
-      end_datetime,
-      filterLocation,
-      sort ? sort.toString() : null,
-    ),
+  const events = await dataSources.sql.getFilteredEvents(
+    offset,
+    limit,
+    eventTypeIds,
+    start_datetime,
+    end_datetime,
+    filterLocation,
+    sort ? sort.toString() : null,
   );
+  return events[0];
 };
