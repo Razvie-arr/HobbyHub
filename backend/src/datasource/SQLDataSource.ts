@@ -2,7 +2,6 @@
 import { BatchedSQLDataSource } from '@nic-jennings/sql-datasource';
 import { Tables } from 'knex/types/tables';
 
-import { HAVERSINE_FORMULA } from '../sharedConstants';
 import { FilterLocationInput, SortType } from '../types';
 
 type TableNames = keyof Tables;
@@ -32,6 +31,58 @@ export class SQLDataSource extends BatchedSQLDataSource {
     getById: this.createGetByIdQuery(tableName),
     getByIds: this.createGetByIdsQuery(tableName),
   });
+
+  public getFilteredEvents = (
+    offset: number,
+    limit: number,
+    eventTypeIds?: Array<number> | null,
+    start_datetime?: String | null,
+    end_datetime?: String | null,
+    filterLocation?: FilterLocationInput | null,
+    sort?: String | null,
+  ) => {
+    let stringQuery = 'SELECT DISTINCT Event.*';
+
+    let distanceQuery;
+    if (filterLocation) {
+      distanceQuery = `st_distance_sphere(POINT(loc.latitude, loc.longitude), 
+      POINT(${filterLocation.latitude}, ${filterLocation.longitude})) / 1000`;
+      stringQuery += `, ${distanceQuery} as distance`;
+      stringQuery += ' FROM Event';
+      stringQuery += ' JOIN Location loc ON Event.location_id = loc.id';
+    } else {
+      stringQuery += ' FROM Event';
+    }
+
+    if (eventTypeIds) {
+      stringQuery += ' JOIN Event_EventType ON Event.id = Event_EventType.event_id';
+      stringQuery += ' JOIN EventType ON Event_EventType.event_type_id = EventType.id';
+      stringQuery += ` WHERE EventType.id in (${eventTypeIds.toString()})`;
+    }
+
+    if (start_datetime && end_datetime) {
+      stringQuery += stringQuery.includes('WHERE') ? ' AND' : ' WHERE';
+      stringQuery += ` DATE(start_datetime) >= "${start_datetime.toString()}" 
+      AND DATE(end_datetime) <= "${end_datetime.toString()}"`;
+    }
+
+    if (filterLocation) {
+      stringQuery += stringQuery.includes('WHERE') ? ' AND' : ' WHERE';
+      stringQuery += ` ${distanceQuery} <= ${filterLocation.distance}`;
+    }
+
+    if (sort) {
+      if (sort === SortType.Distance && filterLocation) {
+        stringQuery += ' ORDER BY distance';
+      } else if (SortType.Date) {
+        stringQuery += ' ORDER BY created_at DESC';
+      }
+    }
+
+    stringQuery += ` LIMIT ${limit} OFFSET ${offset} `;
+    return this.db.query.raw(stringQuery);
+  };
+
   public getEventsWithSameTypeExceptCity = (
     eventId: number,
     eventTypeIds: Array<number>,
@@ -84,51 +135,6 @@ export class SQLDataSource extends BatchedSQLDataSource {
       .limit(limit);
   };
 
-  public getFilteredEvents = (
-    offset: number,
-    limit: number,
-    eventTypeIds?: Array<number> | null,
-    start_datetime?: String | null,
-    end_datetime?: String | null,
-    filterLocation?: FilterLocationInput | null,
-    sort?: String | null,
-  ) => {
-    const query = this.db.query.distinct('Event.*').from('Event');
-    let distance;
-
-    if (filterLocation) {
-      distance = this.db.query.raw(HAVERSINE_FORMULA, [
-        filterLocation.latitude,
-        filterLocation.longitude,
-        filterLocation.latitude,
-      ]);
-      void query
-        .join('Location', 'Event.location_id', '=', 'Location.id')
-        .where(distance, '<=', filterLocation.distance);
-    }
-
-    if (eventTypeIds) {
-      void query
-        .join('Event_EventType', 'Event.id', 'Event_EventType.event_id')
-        .join('EventType', 'Event_EventType.event_type_id', 'EventType.id')
-        .whereIn('EventType.id', eventTypeIds);
-    }
-
-    if (start_datetime && end_datetime) {
-      void query.whereRaw('DATE(start_datetime) >= ? AND DATE(end_datetime) <= ?', [start_datetime, end_datetime]);
-    }
-
-    if (sort) {
-      if (sort === SortType.Distance && distance) {
-        void query.orderByRaw(distance);
-      } else if (SortType.Date) {
-        void query.orderBy('created_at', 'DESC');
-      }
-    }
-
-    return query.offset(offset).limit(limit);
-  };
-
   events = {
     // @ts-ignore, no actual type error but ts-node is erroneously detecting errors
     ...this.createBaseQueries('Event'),
@@ -156,4 +162,3 @@ export class SQLDataSource extends BatchedSQLDataSource {
         .where('user_id', userId),
   };
 }
-

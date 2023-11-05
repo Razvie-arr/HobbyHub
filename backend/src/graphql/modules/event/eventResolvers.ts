@@ -380,8 +380,7 @@ export const filterEventResolver = async (
 ): Promise<Array<Event>> => {
   offset = offset ?? 0;
   limit = limit ?? DEFAULT_LIMIT;
-
-  const result = await dataSources.sql.getFilteredEvents(
+  const events = await dataSources.sql.getFilteredEvents(
     offset,
     limit,
     eventTypeIds,
@@ -390,6 +389,5 @@ export const filterEventResolver = async (
     filterLocation,
     sort ? sort.toString() : null,
   );
-  return result;
+  return events[0];
 };
-
