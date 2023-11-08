@@ -161,4 +161,20 @@ export class SQLDataSource extends BatchedSQLDataSource {
         .innerJoin('EventType', 'User_EventType.event_type_id', 'EventType.id')
         .where('user_id', userId),
   };
+
+  threads = {
+    // @ts-ignore, no actual type error but ts-node is erroneously detecting errors
+    ...this.createBaseQueries('Thread'),
+    getAllByUserId: (userId: number) =>
+      this.db
+        .query('User_Thread')
+        .innerJoin('Thread', 'User_Thread.thread_id', 'Thread.id')
+        .where('user_id', userId)
+        .orderBy('last_message_at', 'desc'),
+    getMessages: (threadId: number) => this.db.query('Message').where('thread_id', threadId).orderBy('sent_at'),
+    getLastMessage: (threadId: number) =>
+      this.db.query('Message').where('thread_id', threadId).orderBy('sent_at', 'desc').limit(1),
+    getUsers: (threadId: number) =>
+      this.db.query('User_Thread').innerJoin('User', 'User_Thread.user_id', 'User.id').where('thread_id', threadId),
+  };
 }

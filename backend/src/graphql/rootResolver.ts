@@ -2,6 +2,14 @@ import GraphQLUpload from 'graphql-upload/GraphQLUpload.js';
 
 import { Resolvers } from '../types';
 
+import { messageSenderResolver } from './modules/chat/MessageResolvers';
+import {
+  threadByIdResolver,
+  threadLastMessageResolver,
+  threadMessagesResolver,
+  threadsResolver,
+  threadUsersResolver,
+} from './modules/chat/ThreadResolvers';
 import {
   createEventResolver,
   deleteEventResolver,
@@ -72,6 +80,9 @@ export const rootResolver: Resolvers = {
     users: usersResolver,
     userById: userByIdResolver,
     usersByIds: usersByIdsResolver,
+
+    threads: threadsResolver,
+    threadById: threadByIdResolver,
   },
 
   AuthUser: {
@@ -108,5 +119,14 @@ export const rootResolver: Resolvers = {
     event_types: userEventTypesResolver,
     location: userLocationResolver,
   },
-};
 
+  Thread: {
+    users: threadUsersResolver,
+    messages: threadMessagesResolver,
+    lastMessage: threadLastMessageResolver,
+  },
+
+  Message: {
+    sender: messageSenderResolver,
+  },
+};

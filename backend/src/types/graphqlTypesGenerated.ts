@@ -118,6 +118,16 @@ export type LocationInputWithoutCoords = {
   street_number: Scalars['String']['input'];
 };
 
+export type Message = {
+  __typename?: 'Message';
+  id: Scalars['Int']['output'];
+  sender: User;
+  sender_id: Scalars['Int']['output'];
+  sent_at: Scalars['String']['output'];
+  text: Scalars['String']['output'];
+  thread_id: Scalars['Int']['output'];
+};
+
 export type Mutation = {
   __typename?: 'Mutation';
   _empty?: Maybe<Scalars['String']['output']>;
@@ -229,6 +239,8 @@ export type Query = {
   newlyCreatedNearbyEvents: Array<Event>;
   searchEvents: Array<Event>;
   similarEvents: Array<Event>;
+  threadById?: Maybe<Thread>;
+  threads: Array<Thread>;
   todaysNearbyEvents: Array<Event>;
   userById?: Maybe<User>;
   users: Array<User>;
@@ -317,6 +329,14 @@ export type QuerySimilarEventsArgs = {
   offset?: InputMaybe<Scalars['Int']['input']>;
 };
 
+export type QueryThreadByIdArgs = {
+  id: Scalars['Int']['input'];
+};
+
+export type QueryThreadsArgs = {
+  userId: Scalars['Int']['input'];
+};
+
 export type QueryTodaysNearbyEventsArgs = {
   latitude: Scalars['Float']['input'];
   limit?: InputMaybe<Scalars['Int']['input']>;
@@ -341,6 +361,16 @@ export enum SortType {
   Date = 'DATE',
   Distance = 'DISTANCE',
 }
+
+export type Thread = {
+  __typename?: 'Thread';
+  id: Scalars['Int']['output'];
+  lastMessage: Message;
+  last_message_at: Scalars['String']['output'];
+  messages: Array<Maybe<Message>>;
+  thread_read: Scalars['Boolean']['output'];
+  users: Array<User>;
+};
 
 export type User = {
   __typename?: 'User';
@@ -450,10 +480,12 @@ export type ResolversTypes = {
   Location: ResolverTypeWrapper<Location>;
   LocationInput: LocationInput;
   LocationInputWithoutCoords: LocationInputWithoutCoords;
+  Message: ResolverTypeWrapper<Message>;
   Mutation: ResolverTypeWrapper<{}>;
   Query: ResolverTypeWrapper<{}>;
   SortType: SortType;
   String: ResolverTypeWrapper<Scalars['String']['output']>;
+  Thread: ResolverTypeWrapper<Thread>;
   Upload: ResolverTypeWrapper<Scalars['Upload']['output']>;
   User: ResolverTypeWrapper<User>;
   UserInput: UserInput;
@@ -473,9 +505,11 @@ export type ResolversParentTypes = {
   Location: Location;
   LocationInput: LocationInput;
   LocationInputWithoutCoords: LocationInputWithoutCoords;
+  Message: Message;
   Mutation: {};
   Query: {};
   String: Scalars['String']['output'];
+  Thread: Thread;
   Upload: Scalars['Upload']['output'];
   User: User;
   UserInput: UserInput;
@@ -552,6 +586,19 @@ export type LocationResolvers<
   longitude?: Resolver<ResolversTypes['Float'], ParentType, ContextType>;
   street_name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   street_number?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type MessageResolvers<
+  ContextType = CustomContext,
+  ParentType extends ResolversParentTypes['Message'] = ResolversParentTypes['Message'],
+> = {
+  id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  sender?: Resolver<ResolversTypes['User'], ParentType, ContextType>;
+  sender_id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  sent_at?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  text?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  thread_id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -716,6 +763,18 @@ export type QueryResolvers<
     ContextType,
     RequireFields<QuerySimilarEventsArgs, 'city' | 'eventId' | 'eventTypeIds'>
   >;
+  threadById?: Resolver<
+    Maybe<ResolversTypes['Thread']>,
+    ParentType,
+    ContextType,
+    RequireFields<QueryThreadByIdArgs, 'id'>
+  >;
+  threads?: Resolver<
+    Array<ResolversTypes['Thread']>,
+    ParentType,
+    ContextType,
+    RequireFields<QueryThreadsArgs, 'userId'>
+  >;
   todaysNearbyEvents?: Resolver<
     Array<ResolversTypes['Event']>,
     ParentType,
@@ -730,6 +789,19 @@ export type QueryResolvers<
     ContextType,
     RequireFields<QueryUsersByIdsArgs, 'ids'>
   >;
+};
+
+export type ThreadResolvers<
+  ContextType = CustomContext,
+  ParentType extends ResolversParentTypes['Thread'] = ResolversParentTypes['Thread'],
+> = {
+  id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  lastMessage?: Resolver<ResolversTypes['Message'], ParentType, ContextType>;
+  last_message_at?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  messages?: Resolver<Array<Maybe<ResolversTypes['Message']>>, ParentType, ContextType>;
+  thread_read?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  users?: Resolver<Array<ResolversTypes['User']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
 export interface UploadScalarConfig extends GraphQLScalarTypeConfig<ResolversTypes['Upload'], any> {
@@ -758,8 +830,10 @@ export type Resolvers<ContextType = CustomContext> = {
   Event?: EventResolvers<ContextType>;
   EventType?: EventTypeResolvers<ContextType>;
   Location?: LocationResolvers<ContextType>;
+  Message?: MessageResolvers<ContextType>;
   Mutation?: MutationResolvers<ContextType>;
   Query?: QueryResolvers<ContextType>;
+  Thread?: ThreadResolvers<ContextType>;
   Upload?: GraphQLScalarType;
   User?: UserResolvers<ContextType>;
 };

@@ -36,6 +36,25 @@ type Event {
   summary: String!
 }
 
+type Thread {
+  id: Int!
+  last_message_at: String!
+  thread_read: Boolean!
+
+  users: [User!]!
+  messages: [Message]!
+}
+
+type Message {
+  id: Int!
+  thread_id: Int!
+  sender_id: Int!
+  text: String!
+  sent_at: String!
+
+  sender: User!
+}
+
 input EventInput {
   allow_waitlist: Boolean!
   author_id: Int

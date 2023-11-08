@@ -1,0 +1,9 @@
+type Message {
+  id: Int!
+  thread_id: Int!
+  sender_id: Int!
+  text: String!
+  sent_at: String!
+
+  sender: User!
+}
