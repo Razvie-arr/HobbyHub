@@ -36,8 +36,4 @@ export const threadLastMessageResolver: ContextualResolverWithParent<Message, Th
   parent,
   _,
   { dataSources },
-) => {
-  const message = await dataSources.sql.threads.getLastMessage(parent.id);
-  console.log(message);
-  return message as unknown as Message;
-};
+) => (await dataSources.sql.threads.getLastMessage(parent.id))[0] as unknown as Message;
