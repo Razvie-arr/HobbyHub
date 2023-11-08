@@ -171,7 +171,7 @@ export class SQLDataSource extends BatchedSQLDataSource {
         .innerJoin('Thread', 'User_Thread.thread_id', 'Thread.id')
         .where('user_id', userId)
         .orderBy('last_message_at', 'desc'),
-    getMessages: (threadId: number) => this.db.query('Message').where('thread_id', threadId).orderBy('sent_at'),
+    getMessages: (threadId: number) => this.db.query('Message').where('thread_id', threadId).orderBy('sent_at', 'desc'),
     getLastMessage: (threadId: number) =>
       this.db.query('Message').where('thread_id', threadId).orderBy('sent_at', 'desc').limit(1),
     getUsers: (threadId: number) =>
