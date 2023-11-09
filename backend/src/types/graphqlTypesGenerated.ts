@@ -142,6 +142,7 @@ export type Mutation = {
   onboardUser: AuthUser;
   requestResetPassword: Scalars['Boolean']['output'];
   resetPassword: Scalars['Boolean']['output'];
+  sendMessage: Scalars['String']['output'];
   signIn: AuthInfo;
   signUp: AuthInfo;
   uploadEventImage?: Maybe<Scalars['String']['output']>;
@@ -200,6 +201,13 @@ export type MutationRequestResetPasswordArgs = {
 export type MutationResetPasswordArgs = {
   password: Scalars['String']['input'];
   token: Scalars['String']['input'];
+};
+
+export type MutationSendMessageArgs = {
+  recipientId: Scalars['Int']['input'];
+  senderId: Scalars['Int']['input'];
+  text: Scalars['String']['input'];
+  threadId?: InputMaybe<Scalars['Int']['input']>;
 };
 
 export type MutationSignInArgs = {
@@ -368,7 +376,7 @@ export type Thread = {
   __typename?: 'Thread';
   id: Scalars['Int']['output'];
   lastMessage: Message;
-  last_message_at: Scalars['String']['output'];
+  last_message_at?: Maybe<Scalars['String']['output']>;
   messages: Array<Maybe<Message>>;
   thread_read: Scalars['Boolean']['output'];
   users: Array<User>;
@@ -670,6 +678,12 @@ export type MutationResolvers<
     ContextType,
     RequireFields<MutationResetPasswordArgs, 'password' | 'token'>
   >;
+  sendMessage?: Resolver<
+    ResolversTypes['String'],
+    ParentType,
+    ContextType,
+    RequireFields<MutationSendMessageArgs, 'recipientId' | 'senderId' | 'text'>
+  >;
   signIn?: Resolver<
     ResolversTypes['AuthInfo'],
     ParentType,
@@ -799,7 +813,7 @@ export type ThreadResolvers<
 > = {
   id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   lastMessage?: Resolver<ResolversTypes['Message'], ParentType, ContextType>;
-  last_message_at?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  last_message_at?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   messages?: Resolver<Array<Maybe<ResolversTypes['Message']>>, ParentType, ContextType>;
   thread_read?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
   users?: Resolver<Array<ResolversTypes['User']>, ParentType, ContextType>;

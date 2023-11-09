@@ -2,14 +2,14 @@ import GraphQLUpload from 'graphql-upload/GraphQLUpload.js';
 
 import { Resolvers } from '../types';
 
-import { messageSenderResolver } from './modules/chat/MessageResolvers';
+import { messageSenderResolver, sendMessageResolver } from './modules/chat/messageResolvers';
 import {
   threadByIdResolver,
   threadLastMessageResolver,
   threadMessagesResolver,
   threadsResolver,
   threadUsersResolver,
-} from './modules/chat/ThreadResolvers';
+} from './modules/chat/threadResolvers';
 import {
   createEventResolver,
   deleteEventResolver,
@@ -111,6 +111,8 @@ export const rootResolver: Resolvers = {
 
     editUser: editUserResolver,
     onboardUser: onboardUserResolver,
+
+    sendMessage: sendMessageResolver,
   },
 
   Upload: GraphQLUpload,

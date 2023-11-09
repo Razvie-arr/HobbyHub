@@ -5,7 +5,7 @@ extend type Query {
 
 type Thread {
   id: Int!
-  last_message_at: String!
+  last_message_at: String
   thread_read: Boolean!
 
   users: [User!]!
