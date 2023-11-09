@@ -1,5 +1,5 @@
 extend type Mutation {
-  sendMessage(threadId: Int, senderId: Int!, recipientId: Int!, text: String!): String!
+  sendMessage(senderId: Int!, recipientId: Int!, text: String!): String!
 }
 
 type Message {

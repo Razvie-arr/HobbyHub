@@ -207,7 +207,6 @@ export type MutationSendMessageArgs = {
   recipientId: Scalars['Int']['input'];
   senderId: Scalars['Int']['input'];
   text: Scalars['String']['input'];
-  threadId?: InputMaybe<Scalars['Int']['input']>;
 };
 
 export type MutationSignInArgs = {
