@@ -1,5 +1,5 @@
 extend type Query {
-  threads(userId: Int!): [Thread!]!
+  threads(userId: Int!, offset: Int, limit: Int): [Thread!]!
   threadById(id: Int!): Thread
 }
 

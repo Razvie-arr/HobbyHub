@@ -334,6 +334,8 @@ export type QueryThreadByIdArgs = {
 };
 
 export type QueryThreadsArgs = {
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
   userId: Scalars['Int']['input'];
 };
 

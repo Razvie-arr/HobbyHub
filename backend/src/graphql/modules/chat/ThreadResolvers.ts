@@ -11,9 +11,9 @@ import {
 
 export const threadsResolver: ContextualResolver<Array<Thread>, QueryThreadsArgs> = async (
   _,
-  { userId },
+  { userId, offset, limit },
   { dataSources },
-) => await dataSources.sql.threads.getAllByUserId(userId);
+) => dataSources.sql.threads.getAllByUserId(userId, offset, limit);
 export const threadByIdResolver: ContextualNullableResolver<Thread, QueryThreadByIdArgs> = async (
   _,
   { id },

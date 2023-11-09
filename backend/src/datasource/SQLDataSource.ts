@@ -165,12 +165,15 @@ export class SQLDataSource extends BatchedSQLDataSource {
   threads = {
     // @ts-ignore, no actual type error but ts-node is erroneously detecting errors
     ...this.createBaseQueries('Thread'),
-    getAllByUserId: (userId: number) =>
-      this.db
+    getAllByUserId: (userId: number, offset?: number | null, limit?: number | null) => {
+      const query = this.db
         .query('User_Thread')
         .innerJoin('Thread', 'User_Thread.thread_id', 'Thread.id')
         .where('user_id', userId)
-        .orderBy('last_message_at', 'desc'),
+        .orderBy('last_message_at', 'desc')
+        .offset(offset ?? 0);
+      return limit ? query.limit(limit) : query;
+    },
     getMessages: (threadId: number) => this.db.query('Message').where('thread_id', threadId).orderBy('sent_at', 'desc'),
     getLastMessage: (threadId: number) =>
       this.db.query('Message').where('thread_id', threadId).orderBy('sent_at', 'desc').first('*'),
