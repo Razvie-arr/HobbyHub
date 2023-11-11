@@ -702,6 +702,7 @@ export type GroupFragmentFragment = {
     longitude: number;
     latitude: number;
   };
+  members: Array<{ __typename?: 'User'; id: number; first_name: string; last_name: string }>;
 } & { ' $fragmentName'?: 'GroupFragmentFragment' };
 
 export const EventFragmentFragmentDoc = {
@@ -846,6 +847,18 @@ export const GroupFragmentFragmentDoc = {
                 { kind: 'Field', name: { kind: 'Name', value: 'street_number' } },
                 { kind: 'Field', name: { kind: 'Name', value: 'longitude' } },
                 { kind: 'Field', name: { kind: 'Name', value: 'latitude' } },
+              ],
+            },
+          },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'members' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'first_name' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'last_name' } },
               ],
             },
           },

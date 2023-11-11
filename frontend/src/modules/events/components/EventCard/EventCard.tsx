@@ -1,4 +1,4 @@
-import { InfoCard } from 'src/shared/design-system';
+import { DataCard } from 'src/shared/design-system';
 
 import { route } from '../../../../route';
 import { WithEvent } from '../../../../shared/types';
@@ -11,6 +11,6 @@ interface EventCardProps extends WithEvent {
 
 export const EventCard = ({ event, ...other }: EventCardProps) => {
   const { user } = useAuth();
-  return <InfoCard detailRoute={route.eventDetails(event.id)} user={user} type="event" {...event} {...other} />;
+  return <DataCard detailRoute={route.eventDetails(event.id)} user={user} type="event" data={event} {...other} />;
 };
 

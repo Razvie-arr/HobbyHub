@@ -1,0 +1,2 @@
+export { DataDetails } from './DataDetails';
+

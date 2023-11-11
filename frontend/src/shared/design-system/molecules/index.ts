@@ -5,4 +5,5 @@ export { EventParticipants } from './EventParticipants';
 export { EventStatusTag } from './EventStatusTag';
 export { EventTypeTag } from './EventTypeTag';
 export { Field, type FieldProps } from './Field';
+export { NoData } from './NoData';
 

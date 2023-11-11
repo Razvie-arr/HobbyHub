@@ -10,32 +10,33 @@ import {
   EventStatusTag,
   EventTypeTag,
 } from 'src/shared/design-system';
-import { EventProps, GroupProps, WithAuthUser } from 'src/shared/types';
+import { EventProps, GroupProps, WithNullableAuthUser } from 'src/shared/types';
 
 import { DEFAULT_EVENT_IMAGE_PATH } from '../../constants';
 import { ReactRouterLink } from '../../navigation';
 
-interface CommonProps {
+interface CommonProps extends WithNullableAuthUser {
   simplified?: boolean;
   maxFlexBasis?: string;
   detailRoute: To;
-  user: WithAuthUser['user'] | null;
 }
 
-interface EventInfoCard extends CommonProps, EventProps {
+interface EventDataProps extends CommonProps {
   type: 'event';
+  data: EventProps;
 }
 
-interface GroupInfoCard extends CommonProps, GroupProps {
+interface GroupDataProps extends CommonProps {
   type: 'group';
+  data: GroupProps;
 }
 
-type InfoCardProps = EventInfoCard | GroupInfoCard;
+type DataCardProps = EventDataProps | GroupDataProps;
 
-export const InfoCard = ({ simplified, maxFlexBasis = '24%', detailRoute, user, ...other }: InfoCardProps) => {
+export const DataCard = ({ simplified, maxFlexBasis = '24%', detailRoute, user, ...other }: DataCardProps) => {
   const author = match(other)
-    .with({ type: 'event' }, (event) => event.author)
-    .with({ type: 'group' }, (group) => group.admin)
+    .with({ type: 'event' }, ({ data }) => data.author)
+    .with({ type: 'group' }, ({ data }) => data.admin)
     .exhaustive();
   return (
     <Card
@@ -53,15 +54,15 @@ export const InfoCard = ({ simplified, maxFlexBasis = '24%', detailRoute, user, 
             <>
               {other.type === 'event' ? (
                 <EventStatusTag
-                  hasWaitlist={other.allow_waitlist}
-                  isFullCapacity={other.participants.length === other.capacity}
+                  hasWaitlist={other.data.allow_waitlist}
+                  isFullCapacity={other.data.participants.length === other.data.capacity}
                   zIndex={1}
                 />
               ) : null}
               <Image
                 aspectRatio="16/9"
                 objectFit="cover"
-                src={other.image_filepath ?? DEFAULT_EVENT_IMAGE_PATH}
+                src={other.data.image_filepath ?? DEFAULT_EVENT_IMAGE_PATH}
                 borderTopRadius="base"
                 _groupHover={{ opacity: '0.7' }}
                 transition="0.1s ease-in-out"
@@ -77,10 +78,10 @@ export const InfoCard = ({ simplified, maxFlexBasis = '24%', detailRoute, user, 
                 _groupHover={{ textDecoration: 'underline' }}
                 transition="0.1s ease-in-out"
               >
-                {other.name}
+                {other.data.name}
               </Heading>
               <HStack>
-                {other.event_types.map((eventType) => (
+                {other.data.event_types.map((eventType) => (
                   <EventTypeTag key={eventType.id} eventType={eventType} />
                 ))}
               </HStack>
@@ -88,21 +89,21 @@ export const InfoCard = ({ simplified, maxFlexBasis = '24%', detailRoute, user, 
                 {match(other)
                   .with(
                     { type: 'event' },
-                    (event) =>
+                    ({ data }) =>
                       `Hosted by: ${
-                        event.author ? `${event.author.first_name} ${event.author.last_name}` : event.group?.name
+                        data.author ? `${data.author.first_name} ${data.author.last_name}` : data.group?.name
                       }`,
                   )
-                  .with({ type: 'group' }, (group) => `Admin: ${group.admin.first_name} ${group.admin.last_name}`)
+                  .with({ type: 'group' }, ({ data }) => `Admin: ${data.admin.first_name} ${data.admin.last_name}`)
                   .exhaustive()}
               </Text>
               <Stack spacing="2">
                 {other.type === 'event' ? (
-                  <EventDateTime startDateTime={other.start_datetime} endDateTime={other.end_datetime} />
+                  <EventDateTime startDateTime={other.data.start_datetime} endDateTime={other.data.end_datetime} />
                 ) : null}
-                <AddressInfo location={other.location} />
+                <AddressInfo location={other.data.location} />
                 {other.type === 'event' ? (
-                  <EventParticipants capacity={other.capacity} participants={other.participants} />
+                  <EventParticipants capacity={other.data.capacity} participants={other.data.participants} />
                 ) : null}
               </Stack>
             </Stack>
@@ -127,13 +128,17 @@ export const InfoCard = ({ simplified, maxFlexBasis = '24%', detailRoute, user, 
                 size="sm"
                 colorScheme="purple"
                 isDisabled={
-                  other.type === 'event' && other.participants.length === other.capacity && !other.allow_waitlist
+                  other.type === 'event' &&
+                  other.data.participants.length === other.data.capacity &&
+                  !other.data.allow_waitlist
                 }
                 onClick={(e) => {
                   e.preventDefault();
                 }}
               >
-                {other.type === 'event' && other.participants.length === other.capacity && other.allow_waitlist
+                {other.type === 'event' &&
+                other.data.participants.length === other.data.capacity &&
+                other.data.allow_waitlist
                   ? 'Join Waitlist'
                   : 'Join'}
               </Button>

@@ -1,17 +1,17 @@
 import { useQuery } from '@apollo/client';
 
+import { DataList } from '../../../../shared/design-system/organisms/DataList';
 import { QueryResult } from '../../../../shared/layout';
-import { getEventFragmentData } from '../../../../shared/types';
+import { getEventFragmentData, WithNullableAuthUser } from '../../../../shared/types';
 import { SIMILAR_EVENTS } from '../../queries';
-import { EventsSection } from '..';
 
-interface SimilarEventsProps {
+interface SimilarEventsProps extends WithNullableAuthUser {
   eventId: number;
   city: string;
   eventTypeIds: number[];
 }
 
-export const SimilarEvents = ({ eventId, eventTypeIds, city }: SimilarEventsProps) => {
+export const SimilarEvents = ({ user, eventId, eventTypeIds, city }: SimilarEventsProps) => {
   const similarEventsQueryResult = useQuery(SIMILAR_EVENTS, {
     variables: {
       eventId,
@@ -27,7 +27,7 @@ export const SimilarEvents = ({ eventId, eventTypeIds, city }: SimilarEventsProp
           return null;
         }
         const events = similarEvents.map(getEventFragmentData);
-        return <EventsSection events={events} maxColumnCount={3} />;
+        return <DataList user={user} type="event" dataArray={events} maxColumnCount={3} />;
       }}
     />
   );

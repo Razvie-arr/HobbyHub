@@ -22,6 +22,11 @@ export const GroupFragment = gql(/* GraphQL */ `
       longitude
       latitude
     }
+    members {
+      id
+      first_name
+      last_name
+    }
     summary
     description
     image_filepath

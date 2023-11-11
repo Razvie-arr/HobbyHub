@@ -6,10 +6,11 @@ import { createSearchParams, useNavigate } from 'react-router-dom';
 
 import { AuthUser, EventType, SortType } from '../../../gql/graphql';
 import { route } from '../../../route';
+import { DataList } from '../../../shared/design-system';
+import { DataMapButton } from '../../../shared/design-system/organisms/DataMap';
 import { ContentContainer, QueryResult } from '../../../shared/layout';
 import { EventProps, getEventFragmentData } from '../../../shared/types';
 import { useAuth } from '../../auth';
-import { EventsMapButton, EventsSection } from '../components';
 import { EVENTS, LOCATION_AWARE_EVENTS } from '../queries';
 
 interface LocationAwareEventsProps {
@@ -49,13 +50,20 @@ const LocationAwareEvents = ({ geolocation, user }: LocationAwareEventsProps) =>
         return (
           <>
             {ReadonlyArray.isNonEmptyArray(allEvents) ? (
-              <EventsMapButton events={allEvents} position="fixed" bottom="8" right="8" />
+              <DataMapButton
+                mapInfos={{ user, type: 'event', dataArray: allEvents }}
+                position="fixed"
+                bottom="8"
+                right="8"
+              />
             ) : null}
             <Stack spacing="8" mt="8">
-              <EventsSection
-                events={todaysNearbyEvents}
+              <DataList
+                user={user}
+                type="event"
+                dataArray={todaysNearbyEvents}
                 title="Today around you"
-                handleSeeAllEvents={() => {
+                handleSeeAll={() => {
                   const startDate = new Date();
                   const endDate = new Date();
                   endDate.setDate(endDate.getDate() + 1);
@@ -70,10 +78,12 @@ const LocationAwareEvents = ({ geolocation, user }: LocationAwareEventsProps) =>
                   });
                 }}
               />
-              <EventsSection
-                events={interestingNearbyEvents}
+              <DataList
+                user={user}
+                type="event"
+                dataArray={interestingNearbyEvents}
                 title="Nearby events you might be interested in"
-                handleSeeAllEvents={() => {
+                handleSeeAll={() => {
                   navigate({
                     pathname: route.events(),
                     search: createSearchParams({
@@ -87,10 +97,12 @@ const LocationAwareEvents = ({ geolocation, user }: LocationAwareEventsProps) =>
                   });
                 }}
               />
-              <EventsSection
-                events={newlyCreatedNearbyEvents}
+              <DataList
+                user={user}
+                type="event"
+                dataArray={newlyCreatedNearbyEvents}
                 title="Newly added around you"
-                handleSeeAllEvents={() => {
+                handleSeeAll={() => {
                   navigate({
                     pathname: route.events(),
                     search: createSearchParams({
@@ -125,10 +137,15 @@ const LocationUnawareEvents = () => {
         return (
           <>
             {ReadonlyArray.isNonEmptyArray(events) ? (
-              <EventsMapButton events={events} position="fixed" bottom="8" right="8" />
+              <DataMapButton
+                mapInfos={{ user: null, type: 'event', dataArray: events }}
+                position="fixed"
+                bottom="8"
+                right="8"
+              />
             ) : null}
             <Stack spacing="8" mt="8">
-              <EventsSection events={events} title="Events" />
+              <DataList user={null} type="event" dataArray={events} title="Events" />
             </Stack>
             {ReadonlyArray.isNonEmptyArray(events) ? (
               <Center mb="16">

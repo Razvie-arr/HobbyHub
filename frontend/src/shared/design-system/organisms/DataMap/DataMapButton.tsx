@@ -11,16 +11,16 @@ import {
 } from '@chakra-ui/react';
 import { FaMapLocationDot } from 'react-icons/fa6';
 
-import { WithNonEmptyEvents } from '../../../../shared/types';
+import { DataMap } from './DataMap';
+import { MapDataArray } from './types';
 
-import { EventsMap } from './EventsMap';
-
-interface EventsMapButtonProps extends ButtonProps, WithNonEmptyEvents {
+interface InfoMapButtonProps extends ButtonProps {
   iconOnly?: boolean;
   forceRender?: boolean;
+  mapInfos: MapDataArray;
 }
 
-export const EventsMapButton = ({ events, forceRender, iconOnly, ...buttonProps }: EventsMapButtonProps) => {
+export const DataMapButton = ({ mapInfos, forceRender, iconOnly, ...buttonProps }: InfoMapButtonProps) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const breakpoint = useBreakpoint();
 
@@ -47,7 +47,7 @@ export const EventsMapButton = ({ events, forceRender, iconOnly, ...buttonProps 
         <ModalOverlay />
         <ModalContent>
           <ModalCloseButton position="absolute" top="3" right="16" zIndex="1" size="lg" />
-          <EventsMap events={events} />
+          <DataMap mapDataArray={mapInfos} />
         </ModalContent>
       </Modal>
     </>

@@ -2,11 +2,11 @@ import { Alert, AlertIcon, AlertTitle } from '@chakra-ui/react';
 
 import { Box } from 'src/shared/design-system';
 
-export const NoEvents = () => (
+export const NoData = () => (
   <Alert status="info" mb="8">
     <AlertIcon />
     <Box>
-      <AlertTitle>No events found</AlertTitle>
+      <AlertTitle>No data found</AlertTitle>
     </Box>
   </Alert>
 );

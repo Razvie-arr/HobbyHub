@@ -48,7 +48,7 @@ const documents = {
     types.SearchEventsDocument,
   '\n  fragment EventFragment on Event {\n    id\n    name\n    start_datetime\n    end_datetime\n    event_types {\n      id\n      name\n    }\n    author {\n      id\n      first_name\n      last_name\n    }\n    group {\n      id\n      name\n      admin {\n        id\n      }\n    }\n    location {\n      id\n      country\n      city\n      street_name\n      street_number\n      longitude\n      latitude\n    }\n    summary\n    description\n    image_filepath\n    capacity\n    allow_waitlist\n    participants {\n      id\n      first_name\n      last_name\n    }\n  }\n':
     types.EventFragmentFragmentDoc,
-  '\n  fragment GroupFragment on Group {\n    id\n    name\n    admin {\n      id\n      first_name\n      last_name\n    }\n    event_types {\n      id\n      name\n    }\n    location {\n      id\n      country\n      city\n      street_name\n      street_number\n      longitude\n      latitude\n    }\n    summary\n    description\n    image_filepath\n  }\n':
+  '\n  fragment GroupFragment on Group {\n    id\n    name\n    admin {\n      id\n      first_name\n      last_name\n    }\n    event_types {\n      id\n      name\n    }\n    location {\n      id\n      country\n      city\n      street_name\n      street_number\n      longitude\n      latitude\n    }\n    members {\n      id\n      first_name\n      last_name\n    }\n    summary\n    description\n    image_filepath\n  }\n':
     types.GroupFragmentFragmentDoc,
 };
 
@@ -178,8 +178,8 @@ export function gql(
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function gql(
-  source: '\n  fragment GroupFragment on Group {\n    id\n    name\n    admin {\n      id\n      first_name\n      last_name\n    }\n    event_types {\n      id\n      name\n    }\n    location {\n      id\n      country\n      city\n      street_name\n      street_number\n      longitude\n      latitude\n    }\n    summary\n    description\n    image_filepath\n  }\n',
-): (typeof documents)['\n  fragment GroupFragment on Group {\n    id\n    name\n    admin {\n      id\n      first_name\n      last_name\n    }\n    event_types {\n      id\n      name\n    }\n    location {\n      id\n      country\n      city\n      street_name\n      street_number\n      longitude\n      latitude\n    }\n    summary\n    description\n    image_filepath\n  }\n'];
+  source: '\n  fragment GroupFragment on Group {\n    id\n    name\n    admin {\n      id\n      first_name\n      last_name\n    }\n    event_types {\n      id\n      name\n    }\n    location {\n      id\n      country\n      city\n      street_name\n      street_number\n      longitude\n      latitude\n    }\n    members {\n      id\n      first_name\n      last_name\n    }\n    summary\n    description\n    image_filepath\n  }\n',
+): (typeof documents)['\n  fragment GroupFragment on Group {\n    id\n    name\n    admin {\n      id\n      first_name\n      last_name\n    }\n    event_types {\n      id\n      name\n    }\n    location {\n      id\n      country\n      city\n      street_name\n      street_number\n      longitude\n      latitude\n    }\n    members {\n      id\n      first_name\n      last_name\n    }\n    summary\n    description\n    image_filepath\n  }\n'];
 
 export function gql(source: string) {
   return (documents as any)[source] ?? {};

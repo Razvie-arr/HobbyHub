@@ -3,13 +3,14 @@ import { useLazyQuery } from '@apollo/client';
 import { Button, Center, Flex, Spinner, Stack } from '@chakra-ui/react';
 import { Option, pipe, ReadonlyArray } from 'effect';
 
+import { DataList } from '../../../shared/design-system';
+import { DataMapButton } from '../../../shared/design-system/organisms/DataMap';
 import { createFilterValuesFromParams, MainFilters, MainFiltersValues } from '../../../shared/filters';
 import { useFilterSearchParams } from '../../../shared/filters/hooks';
 import { useLngLatGeocoding } from '../../../shared/hooks/useLngLatGeocoding';
 import { ContentContainer, QueryResult } from '../../../shared/layout';
 import { getEventFragmentData } from '../../../shared/types';
 import { useAuth } from '../../auth';
-import { EventsMapButton, EventsSection } from '../components';
 import { FILTERED_EVENTS } from '../queries';
 
 const callIfFunction = (f: number | (() => number)) => (typeof f === 'number' ? f : f());
@@ -39,6 +40,7 @@ interface EventsPageProps {
 const DEFAULT_LIMIT = 8;
 
 export const EventsPage = ({ location }: EventsPageProps) => {
+  const { user } = useAuth();
   const [getFilteredEvents, queryResult] = useLazyQuery(FILTERED_EVENTS);
   const { params } = useFilterSearchParams();
 
@@ -110,10 +112,15 @@ export const EventsPage = ({ location }: EventsPageProps) => {
             return (
               <>
                 {ReadonlyArray.isNonEmptyArray(events) ? (
-                  <EventsMapButton events={events} position="fixed" bottom="8" right="8" />
+                  <DataMapButton
+                    mapInfos={{ user, type: 'event', dataArray: events }}
+                    position="fixed"
+                    bottom="8"
+                    right="8"
+                  />
                 ) : null}
                 <Stack spacing="8">
-                  <EventsSection events={events} />
+                  <DataList type="event" dataArray={events} user={user} />
                 </Stack>
                 {ReadonlyArray.isNonEmptyArray(events) ? (
                   <Center mb="16">

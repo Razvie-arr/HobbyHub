@@ -1,12 +1,12 @@
 import { Box, Button, HStack, IconButton, Text } from '@chakra-ui/react';
 import { MdAccountCircle } from 'react-icons/md';
 
-interface EventDetailsProps {
+interface MemberItemProps {
   name: string;
   primaryButtonText: string;
 }
 
-export const EventDetailsParticipants = ({ name, primaryButtonText }: EventDetailsProps) => (
+export const MemberItem = ({ name, primaryButtonText }: MemberItemProps) => (
   <HStack justifyContent="space-between" bgColor="white" p={3} flexBasis="45%" borderRadius={10} mb={4}>
     <HStack>
       <IconButton
