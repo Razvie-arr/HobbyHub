@@ -11,6 +11,7 @@ import {
   CustomContext,
   Event,
   EventType,
+  Group,
   Location,
   MutationCreateEventArgs,
   MutationDeleteEventArgs,
@@ -44,6 +45,11 @@ export const eventAuthorResolver: ContextualResolverWithParent<User, Event> = as
   parent.author_id
     ? ((await dataSources.sql.users.getById(parent.author_id)) as unknown as User)
     : (null as unknown as User);
+
+export const eventGroupResolver: ContextualResolverWithParent<Group, Event> = async (parent, _, { dataSources }) =>
+  parent.group_id
+    ? ((await dataSources.sql.groups.getById(parent.group_id)) as unknown as Group)
+    : (null as unknown as Group);
 
 export const eventLocationResolver: ContextualResolverWithParent<Location, Event> = async (
   parent,

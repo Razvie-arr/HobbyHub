@@ -18,13 +18,14 @@ type AuthUser {
 
 type Event {
   allow_waitlist: Boolean!
-  author: User!
+  author: User
   author_id: Int
   capacity: Int!
   created_at: String!
   description: String
   end_datetime: String!
   event_types: [EventType!]!
+  group: Group
   group_id: Int
   id: Int!
   image_filepath: String
@@ -62,6 +63,26 @@ input FilterLocationInput {
   distance: Int!
   latitude: Float!
   longitude: Float!
+}
+
+type Group {
+  admin: User!
+  admin_id: Int!
+  description: String
+  eventTypes: [EventType!]!
+  events: [Event!]!
+  id: Int!
+  image_filepath: String
+  location: Location!
+  location_id: Int!
+  members: [User!]!
+  name: String!
+  summary: String!
+}
+
+enum GroupSortType {
+  DISTANCE
+  NAME
 }
 
 type Location {
@@ -128,6 +149,16 @@ type Query {
     sort: SortType
     start_datetime: String
   ): [Event!]
+  filterGroups(
+    eventTypeIds: [Int!]
+    filterLocation: FilterLocationInput
+    limit: Int
+    offset: Int
+    sort: GroupSortType
+  ): [Group!]!
+  groupById(id: Int!): Group
+  groups(limit: Int, offset: Int): [Group!]!
+  groupsByIds(ids: [Int!]!): [Group!]!
   interestingNearbyEvents(latitude: Float!, limit: Int, longitude: Float!, offset: Int, userId: Int!): [Event!]!
   locationById(id: Int!): Location
   locations(limit: Int, offset: Int): [Location!]!
@@ -155,7 +186,9 @@ type User {
   description: String
   email: String!
   event_types: [EventType!]!
+  events: [Event!]!
   first_name: String!
+  groups: [Group!]!
   id: Int!
   last_name: String!
   location: Location

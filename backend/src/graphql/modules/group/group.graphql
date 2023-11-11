@@ -1,0 +1,33 @@
+extend type Query{
+  groups(offset: Int, limit: Int): [Group!]!
+  groupById(id: Int!): Group
+  groupsByIds(ids: [Int!]!): [Group!]!
+
+  filterGroups(
+    offset: Int,
+    limit: Int,
+    eventTypeIds: [Int!],
+    filterLocation: FilterLocationInput,
+    sort: GroupSortType):[Group!]!
+}
+
+type Group{
+  id: Int!
+  name: String!
+  summary: String!
+  description: String
+  admin_id: Int!
+  image_filepath: String
+  location_id: Int!
+
+  admin: User!
+  location: Location!
+  members: [User!]!
+  events: [Event!]!
+  eventTypes: [EventType!]!
+}
+
+enum GroupSortType {
+  DISTANCE
+  NAME
+}

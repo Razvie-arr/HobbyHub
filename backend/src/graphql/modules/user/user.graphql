@@ -26,6 +26,8 @@ type User { # Public info about user
 
   event_types: [EventType!]!
   location: Location
+  events: [Event!]!
+  groups: [Group!]!
 }
 
 type AuthUser { # Private info about user (e.g. with email address, ...)

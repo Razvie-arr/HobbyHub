@@ -42,13 +42,14 @@ export type AuthUser = {
 export type Event = {
   __typename?: 'Event';
   allow_waitlist: Scalars['Boolean']['output'];
-  author: User;
+  author?: Maybe<User>;
   author_id?: Maybe<Scalars['Int']['output']>;
   capacity: Scalars['Int']['output'];
   created_at: Scalars['String']['output'];
   description?: Maybe<Scalars['String']['output']>;
   end_datetime: Scalars['String']['output'];
   event_types: Array<EventType>;
+  group?: Maybe<Group>;
   group_id?: Maybe<Scalars['Int']['output']>;
   id: Scalars['Int']['output'];
   image_filepath?: Maybe<Scalars['String']['output']>;
@@ -88,6 +89,27 @@ export type FilterLocationInput = {
   latitude: Scalars['Float']['input'];
   longitude: Scalars['Float']['input'];
 };
+
+export type Group = {
+  __typename?: 'Group';
+  admin: User;
+  admin_id: Scalars['Int']['output'];
+  description?: Maybe<Scalars['String']['output']>;
+  eventTypes: Array<EventType>;
+  events: Array<Event>;
+  id: Scalars['Int']['output'];
+  image_filepath?: Maybe<Scalars['String']['output']>;
+  location: Location;
+  location_id: Scalars['Int']['output'];
+  members: Array<User>;
+  name: Scalars['String']['output'];
+  summary: Scalars['String']['output'];
+};
+
+export enum GroupSortType {
+  Distance = 'DISTANCE',
+  Name = 'NAME',
+}
 
 export type Location = {
   __typename?: 'Location';
@@ -222,6 +244,10 @@ export type Query = {
   events: Array<Event>;
   eventsByIds: Array<Event>;
   filterEvents?: Maybe<Array<Event>>;
+  filterGroups: Array<Group>;
+  groupById?: Maybe<Group>;
+  groups: Array<Group>;
+  groupsByIds: Array<Group>;
   interestingNearbyEvents: Array<Event>;
   locationById?: Maybe<Location>;
   locations: Array<Location>;
@@ -273,6 +299,27 @@ export type QueryFilterEventsArgs = {
   offset?: InputMaybe<Scalars['Int']['input']>;
   sort?: InputMaybe<SortType>;
   start_datetime?: InputMaybe<Scalars['String']['input']>;
+};
+
+export type QueryFilterGroupsArgs = {
+  eventTypeIds?: InputMaybe<Array<Scalars['Int']['input']>>;
+  filterLocation?: InputMaybe<FilterLocationInput>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  sort?: InputMaybe<GroupSortType>;
+};
+
+export type QueryGroupByIdArgs = {
+  id: Scalars['Int']['input'];
+};
+
+export type QueryGroupsArgs = {
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+};
+
+export type QueryGroupsByIdsArgs = {
+  ids: Array<Scalars['Int']['input']>;
 };
 
 export type QueryInterestingNearbyEventsArgs = {
@@ -347,7 +394,9 @@ export type User = {
   description?: Maybe<Scalars['String']['output']>;
   email: Scalars['String']['output'];
   event_types: Array<EventType>;
+  events: Array<Event>;
   first_name: Scalars['String']['output'];
+  groups: Array<Group>;
   id: Scalars['Int']['output'];
   last_name: Scalars['String']['output'];
   location?: Maybe<Location>;
@@ -446,6 +495,8 @@ export type ResolversTypes = {
   EventType: ResolverTypeWrapper<EventType>;
   FilterLocationInput: FilterLocationInput;
   Float: ResolverTypeWrapper<Scalars['Float']['output']>;
+  Group: ResolverTypeWrapper<Group>;
+  GroupSortType: GroupSortType;
   Int: ResolverTypeWrapper<Scalars['Int']['output']>;
   Location: ResolverTypeWrapper<Location>;
   LocationInput: LocationInput;
@@ -469,6 +520,7 @@ export type ResolversParentTypes = {
   EventType: EventType;
   FilterLocationInput: FilterLocationInput;
   Float: Scalars['Float']['output'];
+  Group: Group;
   Int: Scalars['Int']['output'];
   Location: Location;
   LocationInput: LocationInput;
@@ -512,13 +564,14 @@ export type EventResolvers<
   ParentType extends ResolversParentTypes['Event'] = ResolversParentTypes['Event'],
 > = {
   allow_waitlist?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
-  author?: Resolver<ResolversTypes['User'], ParentType, ContextType>;
+  author?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType>;
   author_id?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
   capacity?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   created_at?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   description?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   end_datetime?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   event_types?: Resolver<Array<ResolversTypes['EventType']>, ParentType, ContextType>;
+  group?: Resolver<Maybe<ResolversTypes['Group']>, ParentType, ContextType>;
   group_id?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
   id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   image_filepath?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
@@ -538,6 +591,25 @@ export type EventTypeResolvers<
   category?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type GroupResolvers<
+  ContextType = CustomContext,
+  ParentType extends ResolversParentTypes['Group'] = ResolversParentTypes['Group'],
+> = {
+  admin?: Resolver<ResolversTypes['User'], ParentType, ContextType>;
+  admin_id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  description?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  eventTypes?: Resolver<Array<ResolversTypes['EventType']>, ParentType, ContextType>;
+  events?: Resolver<Array<ResolversTypes['Event']>, ParentType, ContextType>;
+  id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  image_filepath?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  location?: Resolver<ResolversTypes['Location'], ParentType, ContextType>;
+  location_id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  members?: Resolver<Array<ResolversTypes['User']>, ParentType, ContextType>;
+  name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  summary?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -679,6 +751,20 @@ export type QueryResolvers<
     ContextType,
     Partial<QueryFilterEventsArgs>
   >;
+  filterGroups?: Resolver<Array<ResolversTypes['Group']>, ParentType, ContextType, Partial<QueryFilterGroupsArgs>>;
+  groupById?: Resolver<
+    Maybe<ResolversTypes['Group']>,
+    ParentType,
+    ContextType,
+    RequireFields<QueryGroupByIdArgs, 'id'>
+  >;
+  groups?: Resolver<Array<ResolversTypes['Group']>, ParentType, ContextType, Partial<QueryGroupsArgs>>;
+  groupsByIds?: Resolver<
+    Array<ResolversTypes['Group']>,
+    ParentType,
+    ContextType,
+    RequireFields<QueryGroupsByIdsArgs, 'ids'>
+  >;
   interestingNearbyEvents?: Resolver<
     Array<ResolversTypes['Event']>,
     ParentType,
@@ -743,7 +829,9 @@ export type UserResolvers<
   description?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   email?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   event_types?: Resolver<Array<ResolversTypes['EventType']>, ParentType, ContextType>;
+  events?: Resolver<Array<ResolversTypes['Event']>, ParentType, ContextType>;
   first_name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  groups?: Resolver<Array<ResolversTypes['Group']>, ParentType, ContextType>;
   id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   last_name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   location?: Resolver<Maybe<ResolversTypes['Location']>, ParentType, ContextType>;
@@ -757,6 +845,7 @@ export type Resolvers<ContextType = CustomContext> = {
   AuthUser?: AuthUserResolvers<ContextType>;
   Event?: EventResolvers<ContextType>;
   EventType?: EventTypeResolvers<ContextType>;
+  Group?: GroupResolvers<ContextType>;
   Location?: LocationResolvers<ContextType>;
   Mutation?: MutationResolvers<ContextType>;
   Query?: QueryResolvers<ContextType>;

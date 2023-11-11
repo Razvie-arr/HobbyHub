@@ -41,13 +41,14 @@ export type AuthUser = {
 export type Event = {
   __typename?: 'Event';
   allow_waitlist: Scalars['Boolean']['output'];
-  author: User;
+  author?: Maybe<User>;
   author_id?: Maybe<Scalars['Int']['output']>;
   capacity: Scalars['Int']['output'];
   created_at: Scalars['String']['output'];
   description?: Maybe<Scalars['String']['output']>;
   end_datetime: Scalars['String']['output'];
   event_types: Array<EventType>;
+  group?: Maybe<Group>;
   group_id?: Maybe<Scalars['Int']['output']>;
   id: Scalars['Int']['output'];
   image_filepath?: Maybe<Scalars['String']['output']>;
@@ -87,6 +88,27 @@ export type FilterLocationInput = {
   latitude: Scalars['Float']['input'];
   longitude: Scalars['Float']['input'];
 };
+
+export type Group = {
+  __typename?: 'Group';
+  admin: User;
+  admin_id: Scalars['Int']['output'];
+  description?: Maybe<Scalars['String']['output']>;
+  eventTypes: Array<EventType>;
+  events: Array<Event>;
+  id: Scalars['Int']['output'];
+  image_filepath?: Maybe<Scalars['String']['output']>;
+  location: Location;
+  location_id: Scalars['Int']['output'];
+  members: Array<User>;
+  name: Scalars['String']['output'];
+  summary: Scalars['String']['output'];
+};
+
+export enum GroupSortType {
+  Distance = 'DISTANCE',
+  Name = 'NAME',
+}
 
 export type Location = {
   __typename?: 'Location';
@@ -221,6 +243,10 @@ export type Query = {
   events: Array<Event>;
   eventsByIds: Array<Event>;
   filterEvents?: Maybe<Array<Event>>;
+  filterGroups: Array<Group>;
+  groupById?: Maybe<Group>;
+  groups: Array<Group>;
+  groupsByIds: Array<Group>;
   interestingNearbyEvents: Array<Event>;
   locationById?: Maybe<Location>;
   locations: Array<Location>;
@@ -272,6 +298,27 @@ export type QueryFilterEventsArgs = {
   offset?: InputMaybe<Scalars['Int']['input']>;
   sort?: InputMaybe<SortType>;
   start_datetime?: InputMaybe<Scalars['String']['input']>;
+};
+
+export type QueryFilterGroupsArgs = {
+  eventTypeIds?: InputMaybe<Array<Scalars['Int']['input']>>;
+  filterLocation?: InputMaybe<FilterLocationInput>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  sort?: InputMaybe<GroupSortType>;
+};
+
+export type QueryGroupByIdArgs = {
+  id: Scalars['Int']['input'];
+};
+
+export type QueryGroupsArgs = {
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+};
+
+export type QueryGroupsByIdsArgs = {
+  ids: Array<Scalars['Int']['input']>;
 };
 
 export type QueryInterestingNearbyEventsArgs = {
@@ -346,7 +393,9 @@ export type User = {
   description?: Maybe<Scalars['String']['output']>;
   email: Scalars['String']['output'];
   event_types: Array<EventType>;
+  events: Array<Event>;
   first_name: Scalars['String']['output'];
+  groups: Array<Group>;
   id: Scalars['Int']['output'];
   last_name: Scalars['String']['output'];
   location?: Maybe<Location>;
@@ -363,6 +412,37 @@ export type UserInput = {
   last_name: Scalars['String']['input'];
   location_id?: InputMaybe<Scalars['Int']['input']>;
   verified: Scalars['Boolean']['input'];
+};
+
+export type OnboardUserMutationVariables = Exact<{
+  user: UserInput;
+  location: LocationInputWithoutCoords;
+}>;
+
+export type OnboardUserMutation = {
+  __typename?: 'Mutation';
+  onboardUser: {
+    __typename?: 'AuthUser';
+    id: number;
+    email: string;
+    first_name: string;
+    last_name: string;
+    verified: boolean;
+    location_id?: number | null;
+    description?: string | null;
+    password: string;
+    location?: {
+      __typename?: 'Location';
+      id: number;
+      country: string;
+      city: string;
+      street_name: string;
+      street_number: string;
+      latitude: number;
+      longitude: number;
+    } | null;
+    event_types: Array<{ __typename?: 'EventType'; id: number; name: string; category: string }>;
+  };
 };
 
 export type SignInMutationVariables = Exact<{
@@ -421,37 +501,6 @@ export type MutationMutationVariables = Exact<{
 
 export type MutationMutation = { __typename?: 'Mutation'; verify: string };
 
-export type OnboardUserMutationVariables = Exact<{
-  user: UserInput;
-  location: LocationInputWithoutCoords;
-}>;
-
-export type OnboardUserMutation = {
-  __typename?: 'Mutation';
-  onboardUser: {
-    __typename?: 'AuthUser';
-    id: number;
-    email: string;
-    first_name: string;
-    last_name: string;
-    verified: boolean;
-    location_id?: number | null;
-    description?: string | null;
-    password: string;
-    location?: {
-      __typename?: 'Location';
-      id: number;
-      country: string;
-      city: string;
-      street_name: string;
-      street_number: string;
-      latitude: number;
-      longitude: number;
-    } | null;
-    event_types: Array<{ __typename?: 'EventType'; id: number; name: string; category: string }>;
-  };
-};
-
 export type EventFragmentFragment = {
   __typename?: 'Event';
   id: number;
@@ -464,7 +513,7 @@ export type EventFragmentFragment = {
   capacity: number;
   allow_waitlist: boolean;
   event_types: Array<{ __typename?: 'EventType'; id: number; name: string }>;
-  author: { __typename?: 'User'; id: number; first_name: string; last_name: string };
+  author?: { __typename?: 'User'; id: number; first_name: string; last_name: string } | null;
   location: {
     __typename?: 'Location';
     id: number;
@@ -708,6 +757,93 @@ export const EventFragmentFragmentDoc = {
     },
   ],
 } as unknown as DocumentNode<EventFragmentFragment, unknown>;
+export const OnboardUserDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'mutation',
+      name: { kind: 'Name', value: 'OnboardUser' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'user' } },
+          type: { kind: 'NonNullType', type: { kind: 'NamedType', name: { kind: 'Name', value: 'UserInput' } } },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'location' } },
+          type: {
+            kind: 'NonNullType',
+            type: { kind: 'NamedType', name: { kind: 'Name', value: 'LocationInputWithoutCoords' } },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'onboardUser' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'user' },
+                value: { kind: 'Variable', name: { kind: 'Name', value: 'user' } },
+              },
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'location' },
+                value: { kind: 'Variable', name: { kind: 'Name', value: 'location' } },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'email' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'first_name' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'last_name' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'verified' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'location_id' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'description' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'password' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'location' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'country' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'city' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'street_name' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'street_number' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'latitude' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'longitude' } },
+                    ],
+                  },
+                },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'event_types' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'name' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'category' } },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<OnboardUserMutation, OnboardUserMutationVariables>;
 export const SignInDocument = {
   kind: 'Document',
   definitions: [
@@ -916,93 +1052,6 @@ export const MutationDocument = {
     },
   ],
 } as unknown as DocumentNode<MutationMutation, MutationMutationVariables>;
-export const OnboardUserDocument = {
-  kind: 'Document',
-  definitions: [
-    {
-      kind: 'OperationDefinition',
-      operation: 'mutation',
-      name: { kind: 'Name', value: 'OnboardUser' },
-      variableDefinitions: [
-        {
-          kind: 'VariableDefinition',
-          variable: { kind: 'Variable', name: { kind: 'Name', value: 'user' } },
-          type: { kind: 'NonNullType', type: { kind: 'NamedType', name: { kind: 'Name', value: 'UserInput' } } },
-        },
-        {
-          kind: 'VariableDefinition',
-          variable: { kind: 'Variable', name: { kind: 'Name', value: 'location' } },
-          type: {
-            kind: 'NonNullType',
-            type: { kind: 'NamedType', name: { kind: 'Name', value: 'LocationInputWithoutCoords' } },
-          },
-        },
-      ],
-      selectionSet: {
-        kind: 'SelectionSet',
-        selections: [
-          {
-            kind: 'Field',
-            name: { kind: 'Name', value: 'onboardUser' },
-            arguments: [
-              {
-                kind: 'Argument',
-                name: { kind: 'Name', value: 'user' },
-                value: { kind: 'Variable', name: { kind: 'Name', value: 'user' } },
-              },
-              {
-                kind: 'Argument',
-                name: { kind: 'Name', value: 'location' },
-                value: { kind: 'Variable', name: { kind: 'Name', value: 'location' } },
-              },
-            ],
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [
-                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
-                { kind: 'Field', name: { kind: 'Name', value: 'email' } },
-                { kind: 'Field', name: { kind: 'Name', value: 'first_name' } },
-                { kind: 'Field', name: { kind: 'Name', value: 'last_name' } },
-                { kind: 'Field', name: { kind: 'Name', value: 'verified' } },
-                { kind: 'Field', name: { kind: 'Name', value: 'location_id' } },
-                { kind: 'Field', name: { kind: 'Name', value: 'description' } },
-                { kind: 'Field', name: { kind: 'Name', value: 'password' } },
-                {
-                  kind: 'Field',
-                  name: { kind: 'Name', value: 'location' },
-                  selectionSet: {
-                    kind: 'SelectionSet',
-                    selections: [
-                      { kind: 'Field', name: { kind: 'Name', value: 'id' } },
-                      { kind: 'Field', name: { kind: 'Name', value: 'country' } },
-                      { kind: 'Field', name: { kind: 'Name', value: 'city' } },
-                      { kind: 'Field', name: { kind: 'Name', value: 'street_name' } },
-                      { kind: 'Field', name: { kind: 'Name', value: 'street_number' } },
-                      { kind: 'Field', name: { kind: 'Name', value: 'latitude' } },
-                      { kind: 'Field', name: { kind: 'Name', value: 'longitude' } },
-                    ],
-                  },
-                },
-                {
-                  kind: 'Field',
-                  name: { kind: 'Name', value: 'event_types' },
-                  selectionSet: {
-                    kind: 'SelectionSet',
-                    selections: [
-                      { kind: 'Field', name: { kind: 'Name', value: 'id' } },
-                      { kind: 'Field', name: { kind: 'Name', value: 'name' } },
-                      { kind: 'Field', name: { kind: 'Name', value: 'category' } },
-                    ],
-                  },
-                },
-              ],
-            },
-          },
-        ],
-      },
-    },
-  ],
-} as unknown as DocumentNode<OnboardUserMutation, OnboardUserMutationVariables>;
 export const CreateEventDocument = {
   kind: 'Document',
   definitions: [
