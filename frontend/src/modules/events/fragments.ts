@@ -15,6 +15,13 @@ export const EventFragment = gql(/* GraphQL */ `
       first_name
       last_name
     }
+    group {
+      id
+      name
+      admin {
+        id
+      }
+    }
     location {
       id
       country

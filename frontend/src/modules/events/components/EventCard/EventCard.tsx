@@ -60,7 +60,8 @@ export const EventCard = ({ event, simplified, maxFlexBasis = '24%' }: EventCard
                 ))}
               </HStack>
               <Text color="purple.600" as="b">
-                Hosted by: {event.author.first_name} {event.author.last_name}
+                Hosted by:{' '}
+                {event.author ? `${event.author.first_name} ${event.author.last_name}` : `${event.group?.name}`}
               </Text>
               <Stack spacing="2">
                 <EventDateTime startDateTime={event.start_datetime} endDateTime={event.end_datetime} />
@@ -68,7 +69,7 @@ export const EventCard = ({ event, simplified, maxFlexBasis = '24%' }: EventCard
                 <EventParticipants capacity={event.capacity} participants={event.participants} />
               </Stack>
             </Stack>
-            {user && user.id === event.author.id ? (
+            {user && (user.id === event.author?.id || user.id === event.group?.admin.id) ? (
               <Button
                 borderRadius="full"
                 size="sm"
@@ -83,7 +84,7 @@ export const EventCard = ({ event, simplified, maxFlexBasis = '24%' }: EventCard
                 Edit event
               </Button>
             ) : null}
-            {user && user.id !== event.author.id ? (
+            {user && (user.id !== event.author?.id || user.id !== event.group?.admin.id) ? (
               <Button
                 borderRadius="full"
                 size="sm"

@@ -87,6 +87,7 @@ const locationAwareEventAttributes = [
   'summary',
   'description',
   'author_id',
+  'group_id',
   'capacity',
   'allow_waitlist',
   'image_filepath',
@@ -397,3 +398,4 @@ export const filterEventResolver = async (
   );
   return events[0];
 };
+
