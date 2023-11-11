@@ -1,18 +1,17 @@
 import { Button, ButtonGroup, Flex, Heading, HStack, Stack } from '@chakra-ui/react';
 import { Link } from 'react-router-dom';
 
-import { WithAuthUser } from 'src/shared/types';
+import { WithAuthUser, WithEvent } from 'src/shared/types';
 
 import { route } from '../../../../route';
 import { ContentContainer } from '../../../../shared/layout';
 import { useAuth } from '../../../auth';
-import { WithEvent } from '../../types';
 import { DeleteEventButton } from '../shared';
 
 const EventDetailsHeaderButtons = ({ user, event }: WithAuthUser & WithEvent) => (
   <ButtonGroup spacing="6">
     <Stack direction={{ base: 'column', sm: 'row' }}>
-      {user.id === event.author.id ? (
+      {user.id === event.author?.id || user.id === event.group?.admin.id ? (
         <>
           <Button as={Link} to={route.editEvent(event.id)} colorScheme="purple" rounded="full">
             Edit

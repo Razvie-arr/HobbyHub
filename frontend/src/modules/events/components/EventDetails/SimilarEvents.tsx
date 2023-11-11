@@ -1,7 +1,7 @@
 import { useQuery } from '@apollo/client';
 
 import { QueryResult } from '../../../../shared/layout';
-import { getEventFragmentData } from '../../fragments';
+import { getEventFragmentData } from '../../../../shared/types';
 import { SIMILAR_EVENTS } from '../../queries';
 import { EventsSection } from '..';
 

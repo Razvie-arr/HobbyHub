@@ -95,7 +95,7 @@ export type Group = {
   admin: User;
   admin_id: Scalars['Int']['output'];
   description?: Maybe<Scalars['String']['output']>;
-  eventTypes: Array<EventType>;
+  event_types: Array<EventType>;
   events: Array<Event>;
   id: Scalars['Int']['output'];
   image_filepath?: Maybe<Scalars['String']['output']>;
@@ -601,7 +601,7 @@ export type GroupResolvers<
   admin?: Resolver<ResolversTypes['User'], ParentType, ContextType>;
   admin_id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   description?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-  eventTypes?: Resolver<Array<ResolversTypes['EventType']>, ParentType, ContextType>;
+  event_types?: Resolver<Array<ResolversTypes['EventType']>, ParentType, ContextType>;
   events?: Resolver<Array<ResolversTypes['Event']>, ParentType, ContextType>;
   id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   image_filepath?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;

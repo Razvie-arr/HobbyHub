@@ -1,17 +1,18 @@
-extend type Query{
+extend type Query {
   groups(offset: Int, limit: Int): [Group!]!
   groupById(id: Int!): Group
   groupsByIds(ids: [Int!]!): [Group!]!
 
   filterGroups(
-    offset: Int,
-    limit: Int,
-    eventTypeIds: [Int!],
-    filterLocation: FilterLocationInput,
-    sort: GroupSortType):[Group!]!
+    offset: Int
+    limit: Int
+    eventTypeIds: [Int!]
+    filterLocation: FilterLocationInput
+    sort: GroupSortType
+  ): [Group!]!
 }
 
-type Group{
+type Group {
   id: Int!
   name: String!
   summary: String!
@@ -24,10 +25,11 @@ type Group{
   location: Location!
   members: [User!]!
   events: [Event!]!
-  eventTypes: [EventType!]!
+  event_types: [EventType!]!
 }
 
 enum GroupSortType {
   DISTANCE
   NAME
 }
+

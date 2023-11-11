@@ -7,9 +7,9 @@ import { createFilterValuesFromParams, MainFilters, MainFiltersValues } from '..
 import { useFilterSearchParams } from '../../../shared/filters/hooks';
 import { useLngLatGeocoding } from '../../../shared/hooks/useLngLatGeocoding';
 import { ContentContainer, QueryResult } from '../../../shared/layout';
+import { getEventFragmentData } from '../../../shared/types';
 import { useAuth } from '../../auth';
 import { EventsMapButton, EventsSection } from '../components';
-import { getEventFragmentData } from '../fragments';
 import { FILTERED_EVENTS } from '../queries';
 
 const callIfFunction = (f: number | (() => number)) => (typeof f === 'number' ? f : f());

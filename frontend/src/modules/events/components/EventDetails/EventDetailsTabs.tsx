@@ -1,7 +1,7 @@
 import { Box, Flex, Tab, TabList, TabPanel, TabPanels, Tabs, Text } from '@chakra-ui/react';
 
+import { WithEvent } from '../../../../shared/types';
 import { useAuth } from '../../../auth';
-import { WithEvent } from '../../types';
 
 import { EventDetailsParticipants } from './EventDetailsParticipants';
 import { SimilarEvents } from './SimilarEvents';

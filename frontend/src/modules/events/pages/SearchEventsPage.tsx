@@ -5,8 +5,8 @@ import { ReadonlyArray } from 'effect';
 import { useSearchParams } from 'react-router-dom';
 
 import { ContentContainer, QueryResult } from '../../../shared/layout';
+import { getEventFragmentData } from '../../../shared/types';
 import { EventsMapButton, EventsSection } from '../components';
-import { getEventFragmentData } from '../fragments';
 import { SEARCH_EVENTS } from '../queries';
 
 export const SearchEventsPage = () => {

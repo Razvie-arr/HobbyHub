@@ -94,7 +94,7 @@ export type Group = {
   admin: User;
   admin_id: Scalars['Int']['output'];
   description?: Maybe<Scalars['String']['output']>;
-  eventTypes: Array<EventType>;
+  event_types: Array<EventType>;
   events: Array<Event>;
   id: Scalars['Int']['output'];
   image_filepath?: Maybe<Scalars['String']['output']>;
@@ -501,33 +501,6 @@ export type MutationMutationVariables = Exact<{
 
 export type MutationMutation = { __typename?: 'Mutation'; verify: string };
 
-export type EventFragmentFragment = {
-  __typename?: 'Event';
-  id: number;
-  name: string;
-  start_datetime: string;
-  end_datetime: string;
-  summary: string;
-  description?: string | null;
-  image_filepath?: string | null;
-  capacity: number;
-  allow_waitlist: boolean;
-  event_types: Array<{ __typename?: 'EventType'; id: number; name: string }>;
-  author?: { __typename?: 'User'; id: number; first_name: string; last_name: string } | null;
-  group?: { __typename?: 'Group'; id: number; name: string; admin: { __typename?: 'User'; id: number } } | null;
-  location: {
-    __typename?: 'Location';
-    id: number;
-    country: string;
-    city: string;
-    street_name: string;
-    street_number: string;
-    longitude: number;
-    latitude: number;
-  };
-  participants: Array<{ __typename?: 'User'; id: number; first_name: string; last_name: string }>;
-} & { ' $fragmentName'?: 'EventFragmentFragment' };
-
 export type CreateEventMutationVariables = Exact<{
   event: EventInput;
   location: LocationInputWithoutCoords;
@@ -683,6 +656,54 @@ export type SearchEventsQuery = {
   >;
 };
 
+export type EventFragmentFragment = {
+  __typename?: 'Event';
+  id: number;
+  name: string;
+  start_datetime: string;
+  end_datetime: string;
+  summary: string;
+  description?: string | null;
+  image_filepath?: string | null;
+  capacity: number;
+  allow_waitlist: boolean;
+  event_types: Array<{ __typename?: 'EventType'; id: number; name: string }>;
+  author?: { __typename?: 'User'; id: number; first_name: string; last_name: string } | null;
+  group?: { __typename?: 'Group'; id: number; name: string; admin: { __typename?: 'User'; id: number } } | null;
+  location: {
+    __typename?: 'Location';
+    id: number;
+    country: string;
+    city: string;
+    street_name: string;
+    street_number: string;
+    longitude: number;
+    latitude: number;
+  };
+  participants: Array<{ __typename?: 'User'; id: number; first_name: string; last_name: string }>;
+} & { ' $fragmentName'?: 'EventFragmentFragment' };
+
+export type GroupFragmentFragment = {
+  __typename?: 'Group';
+  id: number;
+  name: string;
+  summary: string;
+  description?: string | null;
+  image_filepath?: string | null;
+  admin: { __typename?: 'User'; id: number; first_name: string; last_name: string };
+  event_types: Array<{ __typename?: 'EventType'; id: number; name: string }>;
+  location: {
+    __typename?: 'Location';
+    id: number;
+    country: string;
+    city: string;
+    street_name: string;
+    street_number: string;
+    longitude: number;
+    latitude: number;
+  };
+} & { ' $fragmentName'?: 'GroupFragmentFragment' };
+
 export const EventFragmentFragmentDoc = {
   kind: 'Document',
   definitions: [
@@ -777,6 +798,65 @@ export const EventFragmentFragmentDoc = {
     },
   ],
 } as unknown as DocumentNode<EventFragmentFragment, unknown>;
+export const GroupFragmentFragmentDoc = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'GroupFragment' },
+      typeCondition: { kind: 'NamedType', name: { kind: 'Name', value: 'Group' } },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'name' } },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'admin' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'first_name' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'last_name' } },
+              ],
+            },
+          },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'event_types' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'name' } },
+              ],
+            },
+          },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'location' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'country' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'city' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'street_name' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'street_number' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'longitude' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'latitude' } },
+              ],
+            },
+          },
+          { kind: 'Field', name: { kind: 'Name', value: 'summary' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'description' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'image_filepath' } },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<GroupFragmentFragment, unknown>;
 export const OnboardUserDocument = {
   kind: 'Document',
   definitions: [

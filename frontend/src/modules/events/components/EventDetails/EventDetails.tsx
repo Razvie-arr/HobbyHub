@@ -2,7 +2,7 @@ import { Image, Stack, VStack } from '@chakra-ui/react';
 
 import { DEFAULT_EVENT_IMAGE_PATH } from '../../../../shared/constants';
 import { ContentContainer } from '../../../../shared/layout';
-import { WithEvent } from '../../types';
+import { WithEvent } from '../../../../shared/types';
 
 import { EventDetailsHeader } from './EventDetailsHeader';
 import { EventDetailsInfoCard } from './EventDetailsInfoCard';

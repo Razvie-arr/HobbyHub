@@ -1,4 +1,4 @@
-import { FragmentType, getFragmentData, gql } from '../../gql';
+import { FragmentType, getFragmentData, gql } from '../../../gql';
 
 export const EventFragment = gql(/* GraphQL */ `
   fragment EventFragment on Event {

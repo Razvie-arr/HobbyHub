@@ -136,6 +136,7 @@ export const rootResolver: Resolvers = {
     location: groupLocationResolver,
     members: groupMembersResolver,
     events: groupEventsResolver,
-    eventTypes: groupEventTypesResolver,
+    event_types: groupEventTypesResolver,
   },
 };
+

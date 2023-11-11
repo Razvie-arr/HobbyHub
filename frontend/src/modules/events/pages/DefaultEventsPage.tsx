@@ -7,11 +7,10 @@ import { createSearchParams, useNavigate } from 'react-router-dom';
 import { AuthUser, EventType, SortType } from '../../../gql/graphql';
 import { route } from '../../../route';
 import { ContentContainer, QueryResult } from '../../../shared/layout';
+import { EventProps, getEventFragmentData } from '../../../shared/types';
 import { useAuth } from '../../auth';
 import { EventsMapButton, EventsSection } from '../components';
-import { getEventFragmentData } from '../fragments';
 import { EVENTS, LOCATION_AWARE_EVENTS } from '../queries';
-import { EventProps } from '../types';
 
 interface LocationAwareEventsProps {
   geolocation: Pick<GeolocationPosition['coords'], 'longitude' | 'latitude'>;

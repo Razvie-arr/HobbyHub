@@ -20,8 +20,6 @@ const documents = {
   '\n  mutation SignUp($email: String!, $first_name: String!, $last_name: String!, $password: String!) {\n    signUp(email: $email, first_name: $first_name, last_name: $last_name, password: $password) {\n      user {\n        id\n        first_name\n        last_name\n        email\n      }\n      token\n    }\n  }\n':
     types.SignUpDocument,
   '\n  mutation Mutation($token: String!) {\n    verify(token: $token)\n  }\n': types.MutationDocument,
-  '\n  fragment EventFragment on Event {\n    id\n    name\n    start_datetime\n    end_datetime\n    event_types {\n      id\n      name\n    }\n    author {\n      id\n      first_name\n      last_name\n    }\n    group {\n      id\n      name\n      admin {\n        id\n      }\n    }\n    location {\n      id\n      country\n      city\n      street_name\n      street_number\n      longitude\n      latitude\n    }\n    summary\n    description\n    image_filepath\n    capacity\n    allow_waitlist\n    participants {\n      id\n      first_name\n      last_name\n    }\n  }\n':
-    types.EventFragmentFragmentDoc,
   '\n  mutation CreateEvent($event: EventInput!, $location: LocationInputWithoutCoords!) {\n    createEvent(event: $event, location: $location) {\n      id\n    }\n  }\n':
     types.CreateEventDocument,
   '\n  mutation EditEvent($event: EventInput!, $location: LocationInputWithoutCoords!) {\n    editEvent(event: $event, location: $location) {\n      id\n    }\n}\n':
@@ -48,6 +46,10 @@ const documents = {
     types.SimilarEventsDocument,
   '\n  query SearchEvents($text: String!, $offset: Int, $limit: Int) {\n    searchEvents(text: $text, offset: $offset, limit: $limit) {\n      ...EventFragment\n    }\n  }\n':
     types.SearchEventsDocument,
+  '\n  fragment EventFragment on Event {\n    id\n    name\n    start_datetime\n    end_datetime\n    event_types {\n      id\n      name\n    }\n    author {\n      id\n      first_name\n      last_name\n    }\n    group {\n      id\n      name\n      admin {\n        id\n      }\n    }\n    location {\n      id\n      country\n      city\n      street_name\n      street_number\n      longitude\n      latitude\n    }\n    summary\n    description\n    image_filepath\n    capacity\n    allow_waitlist\n    participants {\n      id\n      first_name\n      last_name\n    }\n  }\n':
+    types.EventFragmentFragmentDoc,
+  '\n  fragment GroupFragment on Group {\n    id\n    name\n    admin {\n      id\n      first_name\n      last_name\n    }\n    event_types {\n      id\n      name\n    }\n    location {\n      id\n      country\n      city\n      street_name\n      street_number\n      longitude\n      latitude\n    }\n    summary\n    description\n    image_filepath\n  }\n':
+    types.GroupFragmentFragmentDoc,
 };
 
 /**
@@ -88,12 +90,6 @@ export function gql(
 export function gql(
   source: '\n  mutation Mutation($token: String!) {\n    verify(token: $token)\n  }\n',
 ): (typeof documents)['\n  mutation Mutation($token: String!) {\n    verify(token: $token)\n  }\n'];
-/**
- * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
- */
-export function gql(
-  source: '\n  fragment EventFragment on Event {\n    id\n    name\n    start_datetime\n    end_datetime\n    event_types {\n      id\n      name\n    }\n    author {\n      id\n      first_name\n      last_name\n    }\n    group {\n      id\n      name\n      admin {\n        id\n      }\n    }\n    location {\n      id\n      country\n      city\n      street_name\n      street_number\n      longitude\n      latitude\n    }\n    summary\n    description\n    image_filepath\n    capacity\n    allow_waitlist\n    participants {\n      id\n      first_name\n      last_name\n    }\n  }\n',
-): (typeof documents)['\n  fragment EventFragment on Event {\n    id\n    name\n    start_datetime\n    end_datetime\n    event_types {\n      id\n      name\n    }\n    author {\n      id\n      first_name\n      last_name\n    }\n    group {\n      id\n      name\n      admin {\n        id\n      }\n    }\n    location {\n      id\n      country\n      city\n      street_name\n      street_number\n      longitude\n      latitude\n    }\n    summary\n    description\n    image_filepath\n    capacity\n    allow_waitlist\n    participants {\n      id\n      first_name\n      last_name\n    }\n  }\n'];
 /**
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
@@ -172,6 +168,18 @@ export function gql(
 export function gql(
   source: '\n  query SearchEvents($text: String!, $offset: Int, $limit: Int) {\n    searchEvents(text: $text, offset: $offset, limit: $limit) {\n      ...EventFragment\n    }\n  }\n',
 ): (typeof documents)['\n  query SearchEvents($text: String!, $offset: Int, $limit: Int) {\n    searchEvents(text: $text, offset: $offset, limit: $limit) {\n      ...EventFragment\n    }\n  }\n'];
+/**
+ * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function gql(
+  source: '\n  fragment EventFragment on Event {\n    id\n    name\n    start_datetime\n    end_datetime\n    event_types {\n      id\n      name\n    }\n    author {\n      id\n      first_name\n      last_name\n    }\n    group {\n      id\n      name\n      admin {\n        id\n      }\n    }\n    location {\n      id\n      country\n      city\n      street_name\n      street_number\n      longitude\n      latitude\n    }\n    summary\n    description\n    image_filepath\n    capacity\n    allow_waitlist\n    participants {\n      id\n      first_name\n      last_name\n    }\n  }\n',
+): (typeof documents)['\n  fragment EventFragment on Event {\n    id\n    name\n    start_datetime\n    end_datetime\n    event_types {\n      id\n      name\n    }\n    author {\n      id\n      first_name\n      last_name\n    }\n    group {\n      id\n      name\n      admin {\n        id\n      }\n    }\n    location {\n      id\n      country\n      city\n      street_name\n      street_number\n      longitude\n      latitude\n    }\n    summary\n    description\n    image_filepath\n    capacity\n    allow_waitlist\n    participants {\n      id\n      first_name\n      last_name\n    }\n  }\n'];
+/**
+ * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function gql(
+  source: '\n  fragment GroupFragment on Group {\n    id\n    name\n    admin {\n      id\n      first_name\n      last_name\n    }\n    event_types {\n      id\n      name\n    }\n    location {\n      id\n      country\n      city\n      street_name\n      street_number\n      longitude\n      latitude\n    }\n    summary\n    description\n    image_filepath\n  }\n',
+): (typeof documents)['\n  fragment GroupFragment on Group {\n    id\n    name\n    admin {\n      id\n      first_name\n      last_name\n    }\n    event_types {\n      id\n      name\n    }\n    location {\n      id\n      country\n      city\n      street_name\n      street_number\n      longitude\n      latitude\n    }\n    summary\n    description\n    image_filepath\n  }\n'];
 
 export function gql(source: string) {
   return (documents as any)[source] ?? {};

@@ -5,9 +5,9 @@ import { useNavigate, useParams } from 'react-router-dom';
 
 import { route } from '../../../route';
 import { ContentContainer, QueryResult } from '../../../shared/layout';
+import { getEventFragmentData } from '../../../shared/types';
 import { useAuth } from '../../auth';
 import { DeleteEventButton } from '../components';
-import { getEventFragmentData } from '../fragments';
 import { EDIT_EVENT } from '../mutations';
 import { EVENT } from '../queries';
 
@@ -49,7 +49,7 @@ const EditEventForm = ({ eventId }: EditEventFormProps) => {
 
         const event = getEventFragmentData(eventFragment);
 
-        if (!user || (user && user.id !== event.author.id)) {
+        if (!user || (user && (user.id !== event.author?.id || user.id !== event.group?.admin.id))) {
           return (
             <ContentContainer mt="16">
               <Alert status="error">
@@ -66,7 +66,7 @@ const EditEventForm = ({ eventId }: EditEventFormProps) => {
             additionalButton={<DeleteEventButton event={event} colorScheme="purple" flex={1} />}
             defaultImagePath={event.image_filepath}
             defaultValues={{
-              author: `${event.author.first_name} ${event.author.last_name}`,
+              author: `${event.author ? `${event.author.first_name} ${event.author.last_name}` : event.group?.name}`,
               allowWaitlist: event.allow_waitlist,
               capacity: event.capacity,
               city: event.location.city,

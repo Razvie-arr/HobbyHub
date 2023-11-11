@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Box } from '@chakra-ui/react';
 import { GoogleMap, InfoWindowF, MarkerF, useLoadScript } from '@react-google-maps/api';
 
-import { EventProps, WithEvent, WithNonEmptyEvents } from '../../types';
+import { EventProps, WithEvent, WithNonEmptyEvents } from '../../../../shared/types';
 import { EventCard } from '../EventCard/EventCard';
 
 interface EventsMapProps extends WithNonEmptyEvents {

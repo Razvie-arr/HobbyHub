@@ -1,15 +1,15 @@
 import { Icon, Stack, Text, TypographyProps } from '@chakra-ui/react';
 import { FaLocationDot } from 'react-icons/fa6';
 
-import { EventProps } from '../../types';
+import { Location } from '../../../gql/graphql';
 
-interface EventAddressProps {
+interface AddressInfoProps {
   noIcon?: boolean;
   fontSize?: TypographyProps['fontSize'];
-  location: EventProps['location'];
+  location: Location;
 }
 
-export const EventAddress = ({ noIcon, fontSize = 'sm', location }: EventAddressProps) => (
+export const AddressInfo = ({ noIcon, fontSize = 'sm', location }: AddressInfoProps) => (
   <Stack direction="row">
     {noIcon ? null : <Icon as={FaLocationDot} color="purple.500" />}
     <Text fontWeight="medium" fontSize={fontSize}>
@@ -17,3 +17,4 @@ export const EventAddress = ({ noIcon, fontSize = 'sm', location }: EventAddress
     </Text>
   </Stack>
 );
+

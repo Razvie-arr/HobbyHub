@@ -2,8 +2,8 @@ import { useQuery } from '@apollo/client';
 import { useParams } from 'react-router-dom';
 
 import { QueryResult } from '../../../shared/layout';
+import { getEventFragmentData } from '../../../shared/types';
 import { EventDetails } from '../components';
-import { getEventFragmentData } from '../fragments';
 import { EVENT } from '../queries';
 
 interface EventDetailsProps {

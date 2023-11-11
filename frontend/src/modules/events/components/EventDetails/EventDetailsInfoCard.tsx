@@ -1,11 +1,10 @@
 import { Card, Divider, Heading, Stack, Text, VStack } from '@chakra-ui/react';
 import { MdAccountCircle, MdCalendarToday, MdGroups, MdInfo, MdLocationOn } from 'react-icons/md';
 
-import { EventTypeTag } from 'src/shared/design-system';
+import { AddressInfo, EventDateTime, EventParticipants, EventTypeTag } from 'src/shared/design-system';
 
-import { WithEvent } from '../../types';
+import { WithEvent } from '../../../../shared/types';
 import { EventsMap } from '../EventMap';
-import { EventAddress, EventDateTime, EventParticipants } from '../shared';
 
 import { EventInfoRow } from './EventInfoRow';
 
@@ -28,7 +27,7 @@ export const EventDetailsInfoCard = ({ event }: WithEvent) => (
         <Text>
           Hosted by:{' '}
           <Text as="b">
-            {event.author.first_name} {event.author.last_name}
+            {event.author ? `${event.author.first_name} ${event.author.last_name}` : event.group?.name}
           </Text>
         </Text>
       </EventInfoRow>
@@ -44,7 +43,7 @@ export const EventDetailsInfoCard = ({ event }: WithEvent) => (
         <EventDateTime noIcon fontSize="md" startDateTime={event.start_datetime} endDateTime={event.end_datetime} />
       </EventInfoRow>
       <EventInfoRow icon={MdLocationOn}>
-        <EventAddress noIcon fontSize="md" location={event.location} />
+        <AddressInfo noIcon fontSize="md" location={event.location} />
       </EventInfoRow>
       <EventsMap events={[event]} height="22.7vh" />
     </VStack>
