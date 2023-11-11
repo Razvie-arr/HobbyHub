@@ -9,6 +9,7 @@ import {
   eventAuthorResolver,
   eventByIdResolver,
   eventEventTypesResolver,
+  eventGroupResolver,
   eventLocationResolver,
   eventParticipantsResolver,
   eventsByIdsResolver,
@@ -25,6 +26,17 @@ import {
   eventTypesByIdsResolver,
   eventTypesResolver,
 } from './modules/eventType/eventTypeResolvers';
+import {
+  filterGroupsResolver,
+  groupAdminResolver,
+  groupByIdResolver,
+  groupEventsResolver,
+  groupEventTypesResolver,
+  groupLocationResolver,
+  groupMembersResolver,
+  groupsByIdsResolver,
+  groupsResolver,
+} from './modules/group/groupResolvers';
 import { locationByIdResolver, locationsByIdsResolver, locationsResolver } from './modules/location/locationResolvers';
 import { searchEventsResolver } from './modules/search/searchResolver';
 import {
@@ -40,7 +52,9 @@ import {
   editUserResolver,
   onboardUserResolver,
   userByIdResolver,
+  userEventsResolver,
   userEventTypesResolver,
+  userGroupsResolver,
   userLocationResolver,
   usersByIdsResolver,
   usersResolver,
@@ -72,6 +86,11 @@ export const rootResolver: Resolvers = {
     users: usersResolver,
     userById: userByIdResolver,
     usersByIds: usersByIdsResolver,
+
+    groups: groupsResolver,
+    groupById: groupByIdResolver,
+    groupsByIds: groupsByIdsResolver,
+    filterGroups: filterGroupsResolver,
   },
 
   AuthUser: {
@@ -81,6 +100,7 @@ export const rootResolver: Resolvers = {
 
   Event: {
     author: eventAuthorResolver,
+    group: eventGroupResolver,
     location: eventLocationResolver,
     event_types: eventEventTypesResolver,
     participants: eventParticipantsResolver,
@@ -107,6 +127,15 @@ export const rootResolver: Resolvers = {
   User: {
     event_types: userEventTypesResolver,
     location: userLocationResolver,
+    events: userEventsResolver,
+    groups: userGroupsResolver,
+  },
+
+  Group: {
+    admin: groupAdminResolver,
+    location: groupLocationResolver,
+    members: groupMembersResolver,
+    events: groupEventsResolver,
+    eventTypes: groupEventTypesResolver,
   },
 };
-

@@ -2,7 +2,7 @@
 import { BatchedSQLDataSource } from '@nic-jennings/sql-datasource';
 import { Tables } from 'knex/types/tables';
 
-import { FilterLocationInput, SortType } from '../types';
+import { FilterLocationInput, GroupSortType, SortType } from '../types';
 
 type TableNames = keyof Tables;
 
@@ -135,6 +135,49 @@ export class SQLDataSource extends BatchedSQLDataSource {
       .limit(limit);
   };
 
+  public getFilteredGroups = (
+    offset: number,
+    limit: number,
+    eventTypeIds?: Array<number> | null,
+    filterLocation?: FilterLocationInput | null,
+    sort?: String | null,
+  ) => {
+    let stringQuery = 'SELECT DISTINCT UserGroup.*';
+
+    let distanceQuery;
+    if (filterLocation) {
+      distanceQuery = `st_distance_sphere(POINT(loc.latitude, loc.longitude), 
+      POINT(${filterLocation.latitude}, ${filterLocation.longitude})) / 1000`;
+      stringQuery += `, ${distanceQuery} as distance`;
+      stringQuery += ' FROM UserGroup';
+      stringQuery += ' JOIN Location loc ON UserGroup.location_id = loc.id';
+    } else {
+      stringQuery += ' FROM UserGroup';
+    }
+
+    if (eventTypeIds) {
+      stringQuery += ' JOIN UserGroup_EventType ON UserGroup.id = UserGroup_EventType.event_id';
+      stringQuery += ' JOIN EventType ON UserGroup_EventType.event_type_id = EventType.id';
+      stringQuery += ` WHERE EventType.id in (${eventTypeIds.toString()})`;
+    }
+
+    if (filterLocation) {
+      stringQuery += stringQuery.includes('WHERE') ? ' AND' : ' WHERE';
+      stringQuery += ` ${distanceQuery} <= ${filterLocation.distance}`;
+    }
+
+    if (sort) {
+      if (sort === GroupSortType.Distance && filterLocation) {
+        stringQuery += ' ORDER BY distance';
+      } else if (GroupSortType.Name) {
+        stringQuery += ' ORDER BY name DESC';
+      }
+    }
+
+    stringQuery += ` LIMIT ${limit} OFFSET ${offset} `;
+    return this.db.query.raw(stringQuery);
+  };
+
   events = {
     // @ts-ignore, no actual type error but ts-node is erroneously detecting errors
     ...this.createBaseQueries('Event'),
@@ -160,5 +203,32 @@ export class SQLDataSource extends BatchedSQLDataSource {
         .query('User_EventType')
         .innerJoin('EventType', 'User_EventType.event_type_id', 'EventType.id')
         .where('user_id', userId),
+    getUserEvents: (userId: number) =>
+      this.db
+        .query('Event_User')
+        .innerJoin('Event', 'Event_User.event_id', 'Event.id')
+        .where('Event_User.user_id', userId),
+    getUserGroups: (userId: number) =>
+      this.db
+        .query('User_UserGroup')
+        .innerJoin('Group', 'User_UserGroup.group_id', 'UserGroup.id')
+        .where('user_id', userId),
+  };
+
+  groups = {
+    // @ts-ignore, no actual type error but ts-node is erroneously detecting errors
+    ...this.createBaseQueries('UserGroup'),
+    getGroupEventTypes: (groupId: number) =>
+      this.db
+        .query('UserGroup_EventType')
+        .innerJoin('EventType', 'UserGroup_EventType.event_type_id', 'EventType.id')
+        .where('group_id', groupId),
+    getGroupMembers: (groupId: number) =>
+      this.db.query('User_UserGroup').innerJoin('User', 'User_UserGroup.user_id', 'User.id').where('group_id', groupId),
+    getGroupEvents: (groupId: number) =>
+      this.db
+        .query('Event_UserGroup')
+        .innerJoin('Event', 'Event_UserGroup.event_id', 'Event.id')
+        .where('Event_UserGroup.group_id', groupId),
   };
 }

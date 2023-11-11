@@ -1,5 +1,6 @@
 import { Knex } from 'knex';
 
+import { Group } from '../types';
 import { Event, EventType, Location, User } from '../types/graphqlTypesGenerated';
 
 declare module 'knex/types/tables' {
@@ -8,10 +9,14 @@ declare module 'knex/types/tables' {
     EventType: EventType;
     Location: Location;
     User: User;
+    UserGroup: Group;
 
     Event_EventType: { event_id: number; event_type_id: number };
     Event_User: { event_id: number; user_id: number };
+    Event_UserGroup: { event_id: number; group_id: number };
+    UserGroup_EventType: { group_id: number; event_type_id: number };
     User_EventType: { user_id: number; event_type_id: number };
+    User_UserGroup: { user_id: number; group_id: number };
 
     //https://knexjs.org/guide/#typescript
     event_composite: Knex.CompositeTableType<
@@ -41,4 +46,3 @@ declare module 'knex/types/tables' {
     >;
   }
 }
-

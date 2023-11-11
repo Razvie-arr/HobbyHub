@@ -42,7 +42,8 @@ type Event {
   group_id: Int
   location_id: Int!
 
-  author: User!
+  author: User
+  group: Group
   event_types: [EventType!]!
   location: Location!
   participants: [User!]!
