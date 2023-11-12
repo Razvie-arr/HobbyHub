@@ -170,7 +170,7 @@ export class SQLDataSource extends BatchedSQLDataSource {
       if (sort === GroupSortType.Distance && filterLocation) {
         stringQuery += ' ORDER BY distance';
       } else if (GroupSortType.Name) {
-        stringQuery += ' ORDER BY name DESC';
+        stringQuery += ' ORDER BY name ASC';
       }
     }
 
@@ -232,3 +232,4 @@ export class SQLDataSource extends BatchedSQLDataSource {
         .where('Event_UserGroup.group_id', groupId),
   };
 }
+
