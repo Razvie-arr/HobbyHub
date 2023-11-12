@@ -6,9 +6,14 @@ import { WithAuthUser } from 'src/shared/types';
 
 import { ContentContainer } from '../../../layout';
 
-import { DataDetailsProps } from './types';
+import { DataDetailsProps, WithDeleteButton } from './types';
 
-const DataDetailsHeaderButtons = ({ user, editRoute, ...other }: DataDetailsProps & WithAuthUser) => {
+const DataDetailsHeaderButtons = ({
+  user,
+  editRoute,
+  deleteButton,
+  ...other
+}: DataDetailsProps & WithAuthUser & WithDeleteButton) => {
   const isUserInfoOwner =
     user.id ===
     match(other)
@@ -23,7 +28,7 @@ const DataDetailsHeaderButtons = ({ user, editRoute, ...other }: DataDetailsProp
             <Button as={Link} to={editRoute} colorScheme="purple" rounded="full">
               Edit
             </Button>
-            {/* <DeleteEventButton event={event} colorScheme="purple" rounded="full" variant="outline" /> */}
+            {deleteButton}
           </>
         ) : (
           <>
@@ -43,7 +48,7 @@ const DataDetailsHeaderButtons = ({ user, editRoute, ...other }: DataDetailsProp
   );
 };
 
-export const DataDetailsHeader = ({ user, ...other }: DataDetailsProps) => (
+export const DataDetailsHeader = ({ user, ...other }: DataDetailsProps & WithDeleteButton) => (
   <Flex width="100%" bgColor="white" shadow="sm" position="sticky" top={{ base: '57px', md: '67px' }} zIndex={1} py={4}>
     <ContentContainer>
       <HStack justifyContent="space-between" bgColor="white" flexBasis="100%">
@@ -55,3 +60,4 @@ export const DataDetailsHeader = ({ user, ...other }: DataDetailsProps) => (
     </ContentContainer>
   </Flex>
 );
+

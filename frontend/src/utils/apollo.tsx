@@ -22,7 +22,7 @@ export function EnhancedApolloProvider({ children }: Props) {
 
   const handleSignOut = useCallback(() => {
     signOut();
-    navigate(route.signIn());
+    navigate(route.home());
     window.location.reload();
   }, [signOut, navigate]);
 
@@ -95,3 +95,4 @@ const uploadLink = createUploadLink({
     'Apollo-Require-Preflight': 'ok', // This is for CSRF
   },
 });
+

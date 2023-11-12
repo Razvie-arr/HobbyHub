@@ -15,8 +15,8 @@ import {
 import { useNavigate } from 'react-router-dom';
 
 import { route } from '../../../../route';
+import { WithEvent } from '../../../../shared/types';
 import { DELETE_EVENT } from '../../mutations';
-import { WithEvent } from '../../types';
 
 export const DeleteEventButton = ({ event, ...buttonProps }: WithEvent & ButtonProps) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -73,3 +73,4 @@ export const DeleteEventButton = ({ event, ...buttonProps }: WithEvent & ButtonP
     </>
   );
 };
+

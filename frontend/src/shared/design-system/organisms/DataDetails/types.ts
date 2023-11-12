@@ -23,3 +23,8 @@ export type DataDetailsProps = EventDataDetails | GroupDataDetails;
 export interface WithAdditionalTabs {
   additionalTabs?: Array<{ title: ReactNode; content: ReactNode }>;
 }
+
+export interface WithDeleteButton {
+  deleteButton?: ReactNode;
+}
+
