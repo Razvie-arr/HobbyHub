@@ -9,7 +9,6 @@ import {
   eventAuthorResolver,
   eventByIdResolver,
   eventEventTypesResolver,
-  eventGroupResolver,
   eventLocationResolver,
   eventParticipantsResolver,
   eventsByIdsResolver,
@@ -104,7 +103,6 @@ export const rootResolver: Resolvers = {
 
   Event: {
     author: eventAuthorResolver,
-    group: eventGroupResolver,
     location: eventLocationResolver,
     event_types: eventEventTypesResolver,
     participants: eventParticipantsResolver,
@@ -141,6 +139,20 @@ export const rootResolver: Resolvers = {
     members: groupMembersResolver,
     events: groupEventsResolver,
     event_types: groupEventTypesResolver,
+  },
+
+  Author: {
+    __resolveType: (obj) => {
+      // @ts-expect-error
+      if (obj.email) {
+        return 'User';
+      }
+      // @ts-expect-error
+      if (obj.admin_id) {
+        return 'Group';
+      }
+      return null; // GraphQLError is thrown
+    },
   },
 };
 

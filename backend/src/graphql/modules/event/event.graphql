@@ -26,6 +26,8 @@ extend type Mutation {
   uploadEventImage(event_image: Upload): String
 }
 
+union Author = User | Group
+
 type Event {
   id: Int!
   name: String!
@@ -42,8 +44,8 @@ type Event {
   group_id: Int
   location_id: Int!
 
-  author: User
-  group: Group
+  author: Author!
+
   event_types: [EventType!]!
   location: Location!
   participants: [User!]!
@@ -77,3 +79,4 @@ enum SortType {
   DISTANCE
   DATE
 }
+

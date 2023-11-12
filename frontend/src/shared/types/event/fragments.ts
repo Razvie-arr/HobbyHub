@@ -11,15 +11,21 @@ export const EventFragment = gql(/* GraphQL */ `
       name
     }
     author {
-      id
-      first_name
-      last_name
-    }
-    group {
-      id
-      name
-      admin {
+      ... on User {
+        __typename
         id
+        first_name
+        last_name
+      }
+      ... on Group {
+        __typename
+        id
+        name
+        admin {
+          id
+          first_name
+          last_name
+        }
       }
     }
     location {
@@ -47,3 +53,4 @@ export const EventFragment = gql(/* GraphQL */ `
 export type EventFragmentType = FragmentType<typeof EventFragment>;
 
 export const getEventFragmentData = (event: EventFragmentType) => getFragmentData(EventFragment, event);
+

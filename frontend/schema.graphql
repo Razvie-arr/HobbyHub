@@ -16,16 +16,17 @@ type AuthUser {
   verified: Boolean!
 }
 
+union Author = Group | User
+
 type Event {
   allow_waitlist: Boolean!
-  author: User
+  author: Author!
   author_id: Int
   capacity: Int!
   created_at: String!
   description: String
   end_datetime: String!
   event_types: [EventType!]!
-  group: Group
   group_id: Int
   id: Int!
   image_filepath: String

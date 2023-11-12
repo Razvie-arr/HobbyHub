@@ -8,6 +8,7 @@ export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: 
 export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
 export type MakeEmpty<T extends { [key: string]: unknown }, K extends keyof T> = { [_ in K]?: never };
 export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
+export type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>;
 export type RequireFields<T, K extends keyof T> = Omit<T, K> & { [P in K]-?: NonNullable<T[P]> };
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
@@ -39,17 +40,18 @@ export type AuthUser = {
   verified: Scalars['Boolean']['output'];
 };
 
+export type Author = Group | User;
+
 export type Event = {
   __typename?: 'Event';
   allow_waitlist: Scalars['Boolean']['output'];
-  author?: Maybe<User>;
+  author: Author;
   author_id?: Maybe<Scalars['Int']['output']>;
   capacity: Scalars['Int']['output'];
   created_at: Scalars['String']['output'];
   description?: Maybe<Scalars['String']['output']>;
   end_datetime: Scalars['String']['output'];
   event_types: Array<EventType>;
-  group?: Maybe<Group>;
   group_id?: Maybe<Scalars['Int']['output']>;
   id: Scalars['Int']['output'];
   image_filepath?: Maybe<Scalars['String']['output']>;
@@ -502,12 +504,18 @@ export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs
   info: GraphQLResolveInfo,
 ) => TResult | Promise<TResult>;
 
+/** Mapping of union types */
+export type ResolversUnionTypes<RefType extends Record<string, unknown>> = {
+  Author: Group | User;
+};
+
 /** Mapping between all available schema types and the resolvers types */
 export type ResolversTypes = {
   AuthInfo: ResolverTypeWrapper<AuthInfo>;
   AuthUser: ResolverTypeWrapper<AuthUser>;
+  Author: ResolverTypeWrapper<ResolversUnionTypes<ResolversTypes>['Author']>;
   Boolean: ResolverTypeWrapper<Scalars['Boolean']['output']>;
-  Event: ResolverTypeWrapper<Event>;
+  Event: ResolverTypeWrapper<Omit<Event, 'author'> & { author: ResolversTypes['Author'] }>;
   EventInput: EventInput;
   EventType: ResolverTypeWrapper<EventType>;
   FilterLocationInput: FilterLocationInput;
@@ -531,8 +539,9 @@ export type ResolversTypes = {
 export type ResolversParentTypes = {
   AuthInfo: AuthInfo;
   AuthUser: AuthUser;
+  Author: ResolversUnionTypes<ResolversParentTypes>['Author'];
   Boolean: Scalars['Boolean']['output'];
-  Event: Event;
+  Event: Omit<Event, 'author'> & { author: ResolversParentTypes['Author'] };
   EventInput: EventInput;
   EventType: EventType;
   FilterLocationInput: FilterLocationInput;
@@ -576,19 +585,25 @@ export type AuthUserResolvers<
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
+export type AuthorResolvers<
+  ContextType = CustomContext,
+  ParentType extends ResolversParentTypes['Author'] = ResolversParentTypes['Author'],
+> = {
+  __resolveType: TypeResolveFn<'Group' | 'User', ParentType, ContextType>;
+};
+
 export type EventResolvers<
   ContextType = CustomContext,
   ParentType extends ResolversParentTypes['Event'] = ResolversParentTypes['Event'],
 > = {
   allow_waitlist?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
-  author?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType>;
+  author?: Resolver<ResolversTypes['Author'], ParentType, ContextType>;
   author_id?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
   capacity?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   created_at?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   description?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   end_datetime?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   event_types?: Resolver<Array<ResolversTypes['EventType']>, ParentType, ContextType>;
-  group?: Resolver<Maybe<ResolversTypes['Group']>, ParentType, ContextType>;
   group_id?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
   id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   image_filepath?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
@@ -872,6 +887,7 @@ export type UserResolvers<
 export type Resolvers<ContextType = CustomContext> = {
   AuthInfo?: AuthInfoResolvers<ContextType>;
   AuthUser?: AuthUserResolvers<ContextType>;
+  Author?: AuthorResolvers<ContextType>;
   Event?: EventResolvers<ContextType>;
   EventType?: EventTypeResolvers<ContextType>;
   Group?: GroupResolvers<ContextType>;

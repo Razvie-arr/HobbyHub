@@ -17,7 +17,12 @@ const DataDetailsHeaderButtons = ({
   const isUserInfoOwner =
     user.id ===
     match(other)
-      .with({ type: 'event' }, ({ data }) => (data.author ? data.author.id : data.group?.admin.id))
+      .with({ type: 'event' }, ({ data }) =>
+        match(data.author)
+          .with({ __typename: 'User' }, ({ id }) => id)
+          .with({ __typename: 'Group' }, ({ admin }) => admin.id)
+          .exhaustive(),
+      )
       .with({ type: 'group' }, ({ data }) => data.admin.id)
       .exhaustive();
   return (

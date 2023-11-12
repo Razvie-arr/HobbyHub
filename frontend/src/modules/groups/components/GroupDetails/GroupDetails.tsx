@@ -5,7 +5,10 @@ import { useAuth } from '../../../auth';
 
 export const GroupDetails = ({ group }: WithGroup) => {
   const { user } = useAuth();
+  console.log(group);
   const groupEvents = group.events.map(getEventFragmentData);
+  if (groupEvents[0] && groupEvents[0].author.__typename === 'User') {
+  }
   return (
     <DataDetails
       user={user}

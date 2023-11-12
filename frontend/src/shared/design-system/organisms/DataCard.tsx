@@ -1,5 +1,5 @@
 import { Card, CardBody, Heading, HStack, Image, Link, Stack, Text } from '@chakra-ui/react';
-import { To } from 'react-router-dom';
+import { To, useNavigate } from 'react-router-dom';
 import { match } from 'ts-pattern';
 
 import {
@@ -12,6 +12,7 @@ import {
 } from 'src/shared/design-system';
 import { EventProps, GroupProps, WithNullableAuthUser } from 'src/shared/types';
 
+import { route } from '../../../route';
 import { DEFAULT_EVENT_IMAGE_PATH } from '../../constants';
 import { ReactRouterLink } from '../../navigation';
 
@@ -34,10 +35,16 @@ interface GroupDataProps extends CommonProps {
 type DataCardProps = EventDataProps | GroupDataProps;
 
 export const DataCard = ({ simplified, maxFlexBasis = '24%', detailRoute, user, ...other }: DataCardProps) => {
-  const author = match(other)
-    .with({ type: 'event' }, ({ data }) => data.author)
+  const owner = match(other)
+    .with({ type: 'event' }, ({ data }) =>
+      match(data.author)
+        .with({ __typename: 'User' }, (author) => author)
+        .with({ __typename: 'Group' }, ({ admin }) => admin)
+        .exhaustive(),
+    )
     .with({ type: 'group' }, ({ data }) => data.admin)
     .exhaustive();
+  const navigate = useNavigate();
   return (
     <Card
       flexBasis={{ '2xl': maxFlexBasis, lg: '32%', md: '48%' }}
@@ -90,9 +97,10 @@ export const DataCard = ({ simplified, maxFlexBasis = '24%', detailRoute, user, 
                   .with(
                     { type: 'event' },
                     ({ data }) =>
-                      `Hosted by: ${
-                        data.author ? `${data.author.first_name} ${data.author.last_name}` : data.group?.name
-                      }`,
+                      `Hosted by: ${match(data.author)
+                        .with({ __typename: 'User' }, ({ first_name, last_name }) => `${first_name} ${last_name}`)
+                        .with({ __typename: 'Group' }, ({ name }) => name)
+                        .exhaustive()}`,
                   )
                   .with({ type: 'group' }, ({ data }) => `Admin: ${data.admin.first_name} ${data.admin.last_name}`)
                   .exhaustive()}
@@ -107,22 +115,25 @@ export const DataCard = ({ simplified, maxFlexBasis = '24%', detailRoute, user, 
                 ) : null}
               </Stack>
             </Stack>
-            {user && user.id === author?.id ? (
+            {user && user.id === owner.id ? (
               <Button
                 borderRadius="full"
                 size="sm"
                 colorScheme="purple"
-                // as={ReactRouterLink}
                 variant="outline"
-                // to={route.editEvent(event.id)}
                 onClick={(e) => {
                   e.preventDefault();
+                  const to = match(other)
+                    .with({ type: 'event' }, ({ data }) => route.editEvent(data.id))
+                    .with({ type: 'group' }, ({ data }) => route.editGroup(data.id))
+                    .exhaustive();
+                  navigate(to);
                 }}
               >
                 Edit event
               </Button>
             ) : null}
-            {user && user.id !== author?.id ? (
+            {user && user.id !== owner.id ? (
               <Button
                 borderRadius="full"
                 size="sm"
@@ -149,3 +160,4 @@ export const DataCard = ({ simplified, maxFlexBasis = '24%', detailRoute, user, 
     </Card>
   );
 };
+

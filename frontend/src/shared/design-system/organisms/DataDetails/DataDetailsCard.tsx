@@ -31,7 +31,10 @@ export const DataDetailsCard = (props: DataDetailsProps) => (
               <>
                 Hosted by:{' '}
                 <Text as="b">
-                  {data.author ? `${data.author.first_name} ${data.author.last_name}` : data.group?.name}
+                  {match(data.author)
+                    .with({ __typename: 'User' }, ({ first_name, last_name }) => `${first_name} ${last_name}`)
+                    .with({ __typename: 'Group' }, ({ name }) => name)
+                    .exhaustive()}
                 </Text>
               </>
             ))
@@ -90,3 +93,4 @@ export const DataDetailsCard = (props: DataDetailsProps) => (
     </VStack>
   </Card>
 );
+
