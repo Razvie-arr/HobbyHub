@@ -7,7 +7,7 @@ interface MemberItemProps {
 }
 
 export const MemberItem = ({ name, primaryButtonText }: MemberItemProps) => (
-  <HStack justifyContent="space-between" bgColor="white" p={3} flexBasis="45%" borderRadius={10} mb={4}>
+  <HStack justifyContent="space-between" bgColor="white" p={3} flexBasis="45%" borderRadius={10} mb={4} shadow="sm">
     <HStack>
       <IconButton
         isRound={true}
@@ -27,3 +27,4 @@ export const MemberItem = ({ name, primaryButtonText }: MemberItemProps) => (
     </Box>
   </HStack>
 );
+

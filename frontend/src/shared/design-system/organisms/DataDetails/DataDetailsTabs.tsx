@@ -12,12 +12,19 @@ export const DataDetailsTabs = ({
 }: (EventDataDetails | GroupDataDetails) & WithAdditionalTabs) => (
   <Tabs w="100%" colorScheme="purple">
     <TabList>
-      <Tab>
-        <Text as="b">Description</Text>
-      </Tab>
+      {other.data.description ? (
+        <Tab>
+          <Text as="b">Description</Text>
+        </Tab>
+      ) : null}
       {user ? (
         <Tab>
-          <Text as="b">Participants</Text>
+          <Text as="b">
+            {match(other)
+              .with({ type: 'event' }, () => 'Participants')
+              .with({ type: 'group' }, () => 'Members')
+              .exhaustive()}
+          </Text>
         </Tab>
       ) : null}
       {additionalTabs
@@ -29,11 +36,13 @@ export const DataDetailsTabs = ({
         : null}
     </TabList>
     <TabPanels>
-      <TabPanel px="0">
-        <Box p={4} boxShadow="sm" bgColor="white">
-          <Text whiteSpace="pre-line">{other.data.description}</Text>
-        </Box>
-      </TabPanel>
+      {other.data.description ? (
+        <TabPanel px="0">
+          <Box p={4} boxShadow="sm" bgColor="white">
+            <Text whiteSpace="pre-line">{other.data.description}</Text>
+          </Box>
+        </TabPanel>
+      ) : null}
       {user ? (
         <TabPanel px="0">
           <Flex justifyContent="space-between" flexWrap="wrap">
@@ -63,3 +72,4 @@ export const DataDetailsTabs = ({
     </TabPanels>
   </Tabs>
 );
+
