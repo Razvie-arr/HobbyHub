@@ -9,4 +9,3 @@ interface NameFieldProps {
 export const NameField = (props: NameFieldProps) => (
   <InputField {...props} type="text" isRequired autoComplete="on" autoCorrect="off" autoCapitalize="off" />
 );
-

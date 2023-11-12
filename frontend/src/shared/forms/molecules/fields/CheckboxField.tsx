@@ -25,4 +25,3 @@ export const InlineCheckboxField = ({ id, name, label, formControlProps, ...chec
     </FormControl>
   );
 };
-

@@ -37,4 +37,3 @@ export const Layout = ({ children }: PropsWithChildren) => {
     </Flex>
   );
 };
-

@@ -33,6 +33,19 @@ import {
   eventTypesByIdsResolver,
   eventTypesResolver,
 } from './modules/eventType/eventTypeResolvers';
+import {
+  filterGroupsResolver,
+  groupAdminResolver,
+  groupByIdResolver,
+  groupEventsResolver,
+  groupEventTypesResolver,
+  groupLocationResolver,
+  groupMembersResolver,
+  groupsByIdsResolver,
+  groupsResolver,
+  interestingNearbyGroupsResolver,
+  nearbyGroupsResolver,
+} from './modules/group/groupResolvers';
 import { locationByIdResolver, locationsByIdsResolver, locationsResolver } from './modules/location/locationResolvers';
 import { searchEventsResolver } from './modules/search/searchResolver';
 import {
@@ -48,7 +61,9 @@ import {
   editUserResolver,
   onboardUserResolver,
   userByIdResolver,
+  userEventsResolver,
   userEventTypesResolver,
+  userGroupsResolver,
   userLocationResolver,
   usersByIdsResolver,
   usersResolver,
@@ -83,6 +98,13 @@ export const rootResolver: Resolvers = {
 
     threads: threadsResolver,
     threadById: threadByIdResolver,
+
+    groups: groupsResolver,
+    groupById: groupByIdResolver,
+    groupsByIds: groupsByIdsResolver,
+    filterGroups: filterGroupsResolver,
+    nearbyGroups: nearbyGroupsResolver,
+    interestingNearbyGroups: interestingNearbyGroupsResolver,
   },
 
   AuthUser: {
@@ -120,6 +142,30 @@ export const rootResolver: Resolvers = {
   User: {
     event_types: userEventTypesResolver,
     location: userLocationResolver,
+    events: userEventsResolver,
+    groups: userGroupsResolver,
+  },
+
+  Group: {
+    admin: groupAdminResolver,
+    location: groupLocationResolver,
+    members: groupMembersResolver,
+    events: groupEventsResolver,
+    event_types: groupEventTypesResolver,
+  },
+
+  Author: {
+    __resolveType: (obj) => {
+      // @ts-expect-error
+      if (obj.email) {
+        return 'User';
+      }
+      // @ts-expect-error
+      if (obj.admin_id) {
+        return 'Group';
+      }
+      return null; // GraphQLError is thrown
+    },
   },
 
   Thread: {
@@ -132,3 +178,4 @@ export const rootResolver: Resolvers = {
     sender: messageSenderResolver,
   },
 };
+

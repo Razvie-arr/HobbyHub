@@ -1,2 +1,2 @@
-export { createFilterValuesFromParams } from './createFilterValuesFromParams';
-
+export { createEventFilterValuesFromParams } from './createEventFilterValuesFromParams';
+export { createGroupFilterValuesFromParams } from './createGroupFilterValuesFromParams';

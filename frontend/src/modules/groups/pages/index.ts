@@ -1,1 +1,4 @@
-export { GroupsPage }  from './GroupsPage';
+export { DefaultGroupsPage } from './DefaultGroupsPage';
+export { GroupDetailsPageContainer as GroupDetailsPage } from './GroupDetailsPage';
+export { GroupsPageContainer as GroupsPage } from './GroupsPage';
+

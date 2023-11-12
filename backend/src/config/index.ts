@@ -14,4 +14,3 @@ export const { GOOGLE_API_KEY } = process.env;
 export const PROJECT_ROOT = path.resolve(process.cwd());
 export const FRONTEND_ROOT = path.resolve(PROJECT_ROOT, `../frontend/`);
 export const FRONTEND_PUBLIC_FOLDER = path.resolve(FRONTEND_ROOT, `public`);
-

@@ -5,4 +5,3 @@ export const VERIFY_USER = gql(`
     verify(token: $token)
   }
 `);
-

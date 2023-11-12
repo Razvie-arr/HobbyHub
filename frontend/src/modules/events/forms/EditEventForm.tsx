@@ -2,12 +2,13 @@ import { useMutation, useQuery } from '@apollo/client';
 import { Alert, AlertDescription, AlertIcon, AlertTitle, useToast } from '@chakra-ui/react';
 import { Option, pipe } from 'effect';
 import { useNavigate, useParams } from 'react-router-dom';
+import { match } from 'ts-pattern';
 
 import { route } from '../../../route';
 import { ContentContainer, QueryResult } from '../../../shared/layout';
+import { getEventFragmentData } from '../../../shared/types';
 import { useAuth } from '../../auth';
 import { DeleteEventButton } from '../components';
-import { getEventFragmentData } from '../fragments';
 import { EDIT_EVENT } from '../mutations';
 import { EVENT } from '../queries';
 
@@ -49,7 +50,12 @@ const EditEventForm = ({ eventId }: EditEventFormProps) => {
 
         const event = getEventFragmentData(eventFragment);
 
-        if (!user || (user && user.id !== event.author.id)) {
+        const authorId = match(event.author)
+          .with({ __typename: 'User' }, ({ id }) => id)
+          .with({ __typename: 'Group' }, ({ admin }) => admin.id)
+          .exhaustive();
+
+        if (!user || user.id !== authorId) {
           return (
             <ContentContainer mt="16">
               <Alert status="error">
@@ -61,12 +67,17 @@ const EditEventForm = ({ eventId }: EditEventFormProps) => {
           );
         }
 
+        const authorName = match(event.author)
+          .with({ __typename: 'User' }, ({ first_name, last_name }) => `${first_name} ${last_name}`)
+          .with({ __typename: 'Group' }, ({ name }) => name)
+          .exhaustive();
+
         return (
           <EventForm
             additionalButton={<DeleteEventButton event={event} colorScheme="purple" flex={1} />}
             defaultImagePath={event.image_filepath}
             defaultValues={{
-              author: `${event.author.first_name} ${event.author.last_name}`,
+              author: authorName,
               allowWaitlist: event.allow_waitlist,
               capacity: event.capacity,
               city: event.location.city,

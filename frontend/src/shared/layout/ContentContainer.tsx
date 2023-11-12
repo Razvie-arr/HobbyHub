@@ -6,4 +6,3 @@ export const ContentContainer = ({ children, ...containerProps }: PropsWithChild
     {children}
   </Container>
 );
-

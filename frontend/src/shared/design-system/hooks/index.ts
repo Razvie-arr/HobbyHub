@@ -6,4 +6,3 @@ export type Disclosure = ReturnType<typeof useDisclosure>;
 export interface WithDisclosure {
   disclosure: Disclosure;
 }
-

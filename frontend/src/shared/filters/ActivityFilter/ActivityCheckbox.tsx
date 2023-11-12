@@ -19,4 +19,3 @@ export const ActivityCheckbox = ({ eventType, handleChange, isChecked }: Activit
     </Checkbox>
   </HStack>
 );
-

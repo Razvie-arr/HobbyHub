@@ -1,6 +1,6 @@
 import { Knex } from 'knex';
 
-import { Event, EventType, Location, Thread, User } from '../types';
+import { Event, EventType, Group, Location, Thread, User } from '../types';
 
 declare module 'knex/types/tables' {
   interface Tables {
@@ -10,11 +10,15 @@ declare module 'knex/types/tables' {
     User: User;
     Thread: Thread;
     Message: Message;
+    UserGroup: Group;
 
     Event_EventType: { event_id: number; event_type_id: number };
     Event_User: { event_id: number; user_id: number };
+    Event_UserGroup: { event_id: number; group_id: number };
+    UserGroup_EventType: { group_id: number; event_type_id: number };
     User_EventType: { user_id: number; event_type_id: number };
     User_Thread: { user_id: number; thread_id: number };
+    User_UserGroup: { user_id: number; group_id: number };
 
     //https://knexjs.org/guide/#typescript
     event_composite: Knex.CompositeTableType<
@@ -44,3 +48,4 @@ declare module 'knex/types/tables' {
     >;
   }
 }
+

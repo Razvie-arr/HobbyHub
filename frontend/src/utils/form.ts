@@ -17,4 +17,3 @@ export const getCurrentDateTime = () => {
 
   return `${date.getFullYear()}-${monthPart}-${datePart}T${hoursPart}:${minutesPart}`;
 };
-

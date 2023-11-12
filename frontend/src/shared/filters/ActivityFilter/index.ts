@@ -1,2 +1,1 @@
 export { ActivityFilter } from './ActivityFilter';
-

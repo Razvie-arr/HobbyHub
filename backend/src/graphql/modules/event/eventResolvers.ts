@@ -11,6 +11,7 @@ import {
   CustomContext,
   Event,
   EventType,
+  Group,
   Location,
   MutationCreateEventArgs,
   MutationDeleteEventArgs,
@@ -40,10 +41,19 @@ export const eventsResolver: ContextualResolver<Array<Event>, QueryEventsArgs> =
   { dataSources },
 ) => await dataSources.sql.events.getAll(offset, limit, { value: 'created_at', order: 'desc' });
 
-export const eventAuthorResolver: ContextualResolverWithParent<User, Event> = async (parent, _, { dataSources }) =>
-  parent.author_id
-    ? ((await dataSources.sql.users.getById(parent.author_id)) as unknown as User)
-    : (null as unknown as User);
+export const eventAuthorResolver: ContextualResolverWithParent<User | Group, Event> = async (
+  parent,
+  _,
+  { dataSources },
+) => {
+  if (parent.author_id) {
+    return (await dataSources.sql.users.getById(parent.author_id)) as unknown as User;
+  }
+  if (parent.group_id) {
+    return (await dataSources.sql.groups.getById(parent.group_id)) as unknown as Group;
+  }
+  throw Error('Event has no author.');
+};
 
 export const eventLocationResolver: ContextualResolverWithParent<Location, Event> = async (
   parent,
@@ -81,6 +91,7 @@ const locationAwareEventAttributes = [
   'summary',
   'description',
   'author_id',
+  'group_id',
   'capacity',
   'allow_waitlist',
   'image_filepath',
@@ -391,3 +402,4 @@ export const filterEventResolver = async (
   );
   return events[0];
 };
+

@@ -37,4 +37,3 @@ extend type Mutation {
   editLocation(location: LocationInputWithoutCoords!): Location
   deleteLocation(id: Int!): String!
 }
-

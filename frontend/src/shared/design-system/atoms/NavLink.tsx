@@ -25,4 +25,3 @@ export function NavLink(props: NavLinkProps) {
     />
   );
 }
-

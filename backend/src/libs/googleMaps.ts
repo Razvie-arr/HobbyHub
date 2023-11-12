@@ -4,4 +4,3 @@ export const getGoogleMapsClient = () => {
   const client = new Client({});
   return client;
 };
-

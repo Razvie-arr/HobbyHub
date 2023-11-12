@@ -9,4 +9,3 @@ extend type Query {
   eventTypeById(id: Int!): EventType
   eventTypesByIds(ids: [Int!]!): [EventType!]!
 }
-

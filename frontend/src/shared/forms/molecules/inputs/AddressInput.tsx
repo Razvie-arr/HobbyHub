@@ -16,4 +16,3 @@ export const AddressInput = ({ onPlaceSelected, ...inputProps }: AddressInputPro
   });
   return <Input {...inputProps} ref={ref} />;
 };
-

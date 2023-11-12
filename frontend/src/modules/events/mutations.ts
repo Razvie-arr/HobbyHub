@@ -27,4 +27,3 @@ export const UPLOAD_EVENT_IMAGE = gql(`
     uploadEventImage(event_image: $eventImage)
 }
 `);
-
