@@ -9,4 +9,3 @@ export const SelectField = ({ id, name, label, formControlProps, ...selectProps 
     {(field) => <Select {...selectProps} {...field} />}
   </FormField>
 );
-

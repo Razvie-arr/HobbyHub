@@ -13,4 +13,3 @@ export const GroupCard = ({ group, ...other }: GroupCardProps) => {
   const { user } = useAuth();
   return <DataCard detailRoute={route.groupDetails(group.id)} user={user} type="group" data={group} {...other} />;
 };
-

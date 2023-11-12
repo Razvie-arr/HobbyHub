@@ -7,4 +7,3 @@ type Mutation {
 }
 
 scalar Upload
-

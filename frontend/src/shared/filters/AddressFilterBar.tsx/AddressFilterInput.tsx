@@ -73,4 +73,3 @@ export const AddressFilterInput = ({ onAddressSelected }: AddressFilterInputProp
     </HStack>
   );
 };
-

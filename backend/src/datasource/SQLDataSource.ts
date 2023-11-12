@@ -232,4 +232,3 @@ export class SQLDataSource extends BatchedSQLDataSource {
         .where('Event_UserGroup.group_id', groupId),
   };
 }
-

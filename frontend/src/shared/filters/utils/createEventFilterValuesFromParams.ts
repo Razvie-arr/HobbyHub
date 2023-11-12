@@ -14,4 +14,3 @@ export const createEventFilterValuesFromParams = (
     : ([null, null] as const)) as readonly [Date | null, Date | null],
   sortBy: params.sortBy ?? SortType.Date,
 });
-

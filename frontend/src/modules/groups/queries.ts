@@ -15,4 +15,3 @@ export const FILTERED_GROUPS = gql(`
     }
   }
 `);
-

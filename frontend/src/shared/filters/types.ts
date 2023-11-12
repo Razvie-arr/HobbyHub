@@ -16,4 +16,3 @@ export interface EventFiltersValues extends CommonFiltersValues {
 export interface GroupFiltersValues extends CommonFiltersValues {
   sortBy: GroupSortType;
 }
-

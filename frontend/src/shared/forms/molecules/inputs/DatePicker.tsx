@@ -24,4 +24,3 @@ export const DatePicker = <
 }: DatePickerProps<CustomModifierNames, WithRange>) => (
   <ReactDatePicker {...datePickerProps} customInput={<DateInput {...inputProps} />} dateFormat="MMM d, y" />
 );
-

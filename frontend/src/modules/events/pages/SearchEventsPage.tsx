@@ -77,4 +77,3 @@ export const SearchEventsPage = () => {
     </ContentContainer>
   );
 };
-

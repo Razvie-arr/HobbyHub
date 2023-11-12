@@ -53,4 +53,3 @@ export const DataMapButton = ({ mapInfos, forceRender, iconOnly, ...buttonProps 
     </>
   );
 };
-

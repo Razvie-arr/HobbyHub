@@ -28,4 +28,3 @@ export const PasswordField = ({ confirmPassword }: PasswordFieldProps) => (
     ) : null}
   </>
 );
-

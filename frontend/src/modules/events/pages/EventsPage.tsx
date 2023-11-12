@@ -151,4 +151,3 @@ export const EventsPage = ({ location }: EventsPageProps) => {
     </>
   );
 };
-

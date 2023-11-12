@@ -11,4 +11,3 @@ export const SubmitButton = ({ isLoading, text }: SubmitButtonProps) => (
     {text}
   </Button>
 );
-

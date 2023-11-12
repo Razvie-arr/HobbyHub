@@ -36,4 +36,3 @@ export const EventDetailsPageContainer = () => {
 
   return param.eventId ? <EventDetailsPage eventId={parseInt(param.eventId)} /> : null;
 };
-

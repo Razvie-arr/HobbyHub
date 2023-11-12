@@ -30,4 +30,3 @@ export const useGeolocation = () => {
 
   return { geolocation, isLoading };
 };
-

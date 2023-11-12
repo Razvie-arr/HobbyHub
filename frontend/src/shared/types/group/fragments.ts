@@ -36,4 +36,3 @@ export const GroupFragment = gql(/* GraphQL */ `
 export type GroupFragmentType = FragmentType<typeof GroupFragment>;
 
 export const getGroupFragmentData = (event: GroupFragmentType) => getFragmentData(GroupFragment, event);
-

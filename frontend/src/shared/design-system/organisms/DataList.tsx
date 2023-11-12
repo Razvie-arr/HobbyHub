@@ -81,4 +81,3 @@ export const DataList = ({ user, handleSeeAll, title, maxColumnCount = 4, ...oth
     </Box>
   );
 };
-

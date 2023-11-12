@@ -7,4 +7,3 @@ export type RouterLinkProps = Omit<LinkProps, 'as'>;
 export const RouterLink = forwardRef(function RouterLink(props: RouterLinkProps, ref) {
   return <Link as={ReactRouterLink} ref={ref} {...props} />;
 });
-

@@ -17,4 +17,3 @@ export interface WithGroups {
 export interface WithNonEmptyGroups {
   groups: [GroupProps, ...GroupProps[]];
 }
-

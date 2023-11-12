@@ -47,4 +47,3 @@ export const FilterEventTypes = ({ eventTypes, setFilteredEventTypes }: FilterEv
     </InputGroup>
   );
 };
-

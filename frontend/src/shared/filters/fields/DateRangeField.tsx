@@ -19,4 +19,3 @@ export const DateRangeField = () => (
     inputProps={inputProps}
   />
 );
-

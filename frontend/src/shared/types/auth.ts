@@ -7,4 +7,3 @@ export interface WithAuthUser {
 export interface WithNullableAuthUser {
   user: AuthUser | null;
 }
-

@@ -13,4 +13,3 @@ export const SIGN_UP_MUTATION = gql(/* GraphQL */ `
     }
   }
 `);
-

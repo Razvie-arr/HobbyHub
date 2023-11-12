@@ -32,4 +32,3 @@ export const SimilarEvents = ({ user, eventId, eventTypeIds, city }: SimilarEven
     />
   );
 };
-

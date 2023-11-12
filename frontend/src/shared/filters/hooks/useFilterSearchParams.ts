@@ -90,4 +90,3 @@ export const useFilterSearchParams = <S>() => {
       updatedParams.sortBy === null,
   };
 };
-

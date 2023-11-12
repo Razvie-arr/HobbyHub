@@ -95,4 +95,3 @@ const uploadLink = createUploadLink({
     'Apollo-Require-Preflight': 'ok', // This is for CSRF
   },
 });
-

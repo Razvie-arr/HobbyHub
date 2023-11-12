@@ -12,4 +12,3 @@ export const DataRowItem = ({ icon, children }: DataRowItemProps) => (
     {children}
   </HStack>
 );
-

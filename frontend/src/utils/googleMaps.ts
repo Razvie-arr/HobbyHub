@@ -29,4 +29,3 @@ export const getAddressName = flow(
   }),
   Option.getOrElse(() => ''),
 );
-

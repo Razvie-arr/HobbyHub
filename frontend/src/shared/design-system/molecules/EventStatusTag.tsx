@@ -36,4 +36,3 @@ export const EventStatusTag = ({ hasWaitlist, isFullCapacity, ...tagProps }: Eve
     </Tag>
   );
 };
-

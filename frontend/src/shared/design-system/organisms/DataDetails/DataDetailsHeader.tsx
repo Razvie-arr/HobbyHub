@@ -55,4 +55,3 @@ export const DataDetailsHeader = ({ user, ...other }: DataDetailsProps) => (
     </ContentContainer>
   </Flex>
 );
-

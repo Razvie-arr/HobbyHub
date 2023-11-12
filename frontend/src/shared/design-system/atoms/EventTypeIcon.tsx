@@ -71,4 +71,3 @@ export const EventTypeIcon = ({ eventTypeName }: EventTypeIconProps) => {
       return <Icon as={MdStroller} />;
   }
 };
-

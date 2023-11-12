@@ -16,4 +16,3 @@ export const DistanceSelectField = () => (
     <option value="500">Within 500 km</option>
   </SelectField>
 );
-

@@ -6,4 +6,3 @@ export const theme = extendTheme({
     body: 'Roboto, sans-serif',
   },
 });
-

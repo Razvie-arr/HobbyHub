@@ -1,2 +1,1 @@
 export { GroupDetails } from './GroupDetails';
-

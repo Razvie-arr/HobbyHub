@@ -27,4 +27,3 @@ export const MemberItem = ({ name, primaryButtonText }: MemberItemProps) => (
     </Box>
   </HStack>
 );
-

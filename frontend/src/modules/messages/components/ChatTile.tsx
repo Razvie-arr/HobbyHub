@@ -9,8 +9,17 @@ interface ChatTileProps {
 
 export const ChatTile = ({ thread, onClick, currentUser, isSelected }: ChatTileProps) => {
   const otherUsers = thread.users.filter((user) => user !== currentUser);
-  return(
-    <Box w="20" minH="20" bg={isSelected ? 'gray.300' : 'gray.50'} width="100%" px={5} borderRadius={8} onClick={onClick} _hover={{ cursor: 'pointer' }}>
+  return (
+    <Box
+      w="20"
+      minH="20"
+      bg={isSelected ? 'gray.300' : 'gray.50'}
+      width="100%"
+      px={5}
+      borderRadius={8}
+      onClick={onClick}
+      _hover={{ cursor: 'pointer' }}
+    >
       <Flex height="100%" alignItems="center">
         <Avatar src="gibbresh.png" boxSize="50px" name={thread.users[0]} bg="purple.500" />
         <Box mx={4}>
@@ -31,4 +40,3 @@ export const ChatTile = ({ thread, onClick, currentUser, isSelected }: ChatTileP
     </Box>
   );
 };
-

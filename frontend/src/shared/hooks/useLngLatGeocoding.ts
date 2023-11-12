@@ -28,4 +28,3 @@ export const useLngLatGeocoding = ({ lng, lat }: LngLat) => {
   }, []);
   return { isLoading, location };
 };
-

@@ -11,4 +11,3 @@ export function InputField({ id, name, label, ...inputProps }: InputFieldProps) 
     </FormField>
   );
 }
-

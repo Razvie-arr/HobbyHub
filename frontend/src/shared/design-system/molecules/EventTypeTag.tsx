@@ -15,4 +15,3 @@ export const EventTypeTag = ({ borderRadius, eventType }: EventTypeTagProps) => 
     </Tag>
   </Tooltip>
 );
-

@@ -36,4 +36,3 @@ export const GroupDetailsPageContainer = () => {
 
   return param.groupId ? <GroupDetailsPage groupId={parseInt(param.groupId)} /> : null;
 };
-

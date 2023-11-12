@@ -68,4 +68,3 @@ export const ModalForm = <TFieldValues extends FieldValues = FieldValues>({
     </Modal>
   </>
 );
-

@@ -25,4 +25,3 @@ interface GroupMapData {
 }
 
 export type MapData = EventMapData | GroupMapData;
-

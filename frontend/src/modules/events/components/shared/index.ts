@@ -1,2 +1,1 @@
 export { DeleteEventButton } from './DeleteEventButton';
-

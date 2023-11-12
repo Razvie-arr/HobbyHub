@@ -37,4 +37,3 @@ export const DatePickerField = <
     )}
   </FormField>
 );
-

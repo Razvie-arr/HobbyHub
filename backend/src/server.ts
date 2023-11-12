@@ -58,4 +58,3 @@ const init = async () => {
 };
 
 void init();
-

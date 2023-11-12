@@ -13,4 +13,3 @@ export const EventCard = ({ event, ...other }: EventCardProps) => {
   const { user } = useAuth();
   return <DataCard detailRoute={route.eventDetails(event.id)} user={user} type="event" data={event} {...other} />;
 };
-

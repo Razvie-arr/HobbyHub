@@ -11,4 +11,3 @@ export const route = {
   messages: () => `/messages`,
   groups: () => `/groups`,
 };
-

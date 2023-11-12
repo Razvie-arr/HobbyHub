@@ -5,4 +5,3 @@ import { theme } from './theme';
 export const ThemeProvider = ({ children }: React.PropsWithChildren) => (
   <ChakraProvider theme={theme}>{children}</ChakraProvider>
 );
-

@@ -21,4 +21,3 @@ export const AddressFilterBar = ({ address, onAddressSelected }: AddressFilterBa
     </HStack>
   </ContentContainer>
 );
-

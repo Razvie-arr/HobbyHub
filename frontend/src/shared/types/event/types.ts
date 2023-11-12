@@ -42,4 +42,3 @@ export type EventTypeName =
   | 'Ferata'
   | 'Walking the dog'
   | 'Strollering';
-

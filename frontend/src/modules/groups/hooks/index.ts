@@ -1,2 +1,1 @@
 export { useQueryCallFromSearchParams } from './useQueryCallFromSearchParams';
-

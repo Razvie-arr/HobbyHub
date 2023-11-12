@@ -14,4 +14,3 @@ if (root) {
     </StrictMode>,
   );
 }
-

@@ -139,4 +139,3 @@ export const rootResolver: Resolvers = {
     event_types: groupEventTypesResolver,
   },
 };
-

@@ -128,4 +128,3 @@ export const GroupFilters = ({ defaultValues, handleSubmit }: GroupFiltersProps)
     </FormProvider>
   );
 };
-

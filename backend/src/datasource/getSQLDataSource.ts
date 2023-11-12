@@ -37,4 +37,3 @@ export const getSQLDataSource = (): SQLDataSource => {
     throw err;
   }
 };
-

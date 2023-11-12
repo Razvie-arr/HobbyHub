@@ -62,4 +62,3 @@ input UserInput {
 
   event_type_ids: [Int!]!
 }
-

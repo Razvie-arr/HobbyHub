@@ -9,4 +9,3 @@ export const MultiSelectField = ({ id, name, label, formControlProps, ...selectP
     {(field) => <Select {...selectProps} {...field} />}
   </FormField>
 );
-

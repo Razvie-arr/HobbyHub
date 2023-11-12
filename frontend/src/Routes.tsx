@@ -34,4 +34,3 @@ export const Routes = () => (
     <Route path="*" element={<NotFoundPage />} />
   </RouterRoutes>
 );
-

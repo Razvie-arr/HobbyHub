@@ -118,4 +118,3 @@ export const DataMap = ({ height = '79vh', mapDataArray }: MapProps) => {
     </Box>
   );
 };
-

@@ -11,4 +11,3 @@ export const createGroupFilterValuesFromParams = (
   distance: '20',
   sortBy: params.sortBy ?? GroupSortType.Distance,
 });
-

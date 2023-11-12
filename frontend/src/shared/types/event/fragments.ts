@@ -47,4 +47,3 @@ export const EventFragment = gql(/* GraphQL */ `
 export type EventFragmentType = FragmentType<typeof EventFragment>;
 
 export const getEventFragmentData = (event: EventFragmentType) => getFragmentData(EventFragment, event);
-
