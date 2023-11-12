@@ -49,11 +49,6 @@ const EditEventForm = ({ eventId }: EditEventFormProps) => {
 
         const event = getEventFragmentData(eventFragment);
 
-        console.log({
-          user,
-          event,
-        });
-
         if (!user || !(user && (user.id === event.author?.id || user.id === event.group?.admin.id))) {
           return (
             <ContentContainer mt="16">
