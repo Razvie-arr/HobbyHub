@@ -1,1 +1,2 @@
-export { GroupDetailsPage, GroupsPage } from './pages';
+export { DefaultGroupsPage, GroupDetailsPage, GroupsPage } from './pages';
+

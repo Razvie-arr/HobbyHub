@@ -1,5 +1,13 @@
 import { gql } from '../../gql';
 
+export const GROUPS = gql(`
+  query Groups($offset: Int, $limit: Int) {
+    groups(offset: $offset, limit: $limit) {
+      ...GroupFragment
+    }
+  }
+`);
+
 export const GROUP = gql(`
   query GroupById($groupId: Int!) {
     groupById(id: $groupId) {
@@ -15,3 +23,21 @@ export const FILTERED_GROUPS = gql(`
     }
   }
 `);
+
+export const LOCATION_AWARE_GROUPS = gql(`
+  query GetLocationAwareGroups($userId: Int!, $longitude: Float!, $latitude: Float!, $offset: Int, $limit: Int) {
+    nearbyGroups(longitude: $longitude, latitude: $latitude, offset: $offset, limit: $limit) {
+      ...GroupFragment
+    }
+    interestingNearbyGroups(
+      longitude: $longitude
+      latitude: $latitude
+      userId: $userId
+      offset: $offset
+      limit: $limit
+    ) {
+      ...GroupFragment
+    }
+  }
+`);
+

@@ -1,3 +1,4 @@
+import { HAVERSINE_FORMULA } from '../../../sharedConstants';
 import {
   ContextualNullableResolver,
   ContextualResolver,
@@ -11,6 +12,8 @@ import {
   QueryGroupByIdArgs,
   QueryGroupsArgs,
   QueryGroupsByIdsArgs,
+  QueryInterestingNearbyGroupsArgs,
+  QueryNearbyGroupsArgs,
   User,
 } from '../../../types';
 
@@ -65,6 +68,7 @@ export const groupMembersResolver: ContextualResolverWithParent<Array<User>, Gro
   _,
   { dataSources },
 ) => await dataSources.sql.groups.getGroupMembers(parent.id);
+
 export const filterGroupsResolver = async (
   _: unknown,
   { offset, limit, eventTypeIds, filterLocation, sort }: QueryFilterGroupsArgs,
@@ -81,3 +85,56 @@ export const filterGroupsResolver = async (
   );
   return groups[0];
 };
+
+const DEFAULT_DISTANCE = 20;
+
+const locationAwareGroupAttributes = [
+  'UserGroup.id as id',
+  'name',
+  'summary',
+  'description',
+  'admin_id',
+  'image_filepath',
+  'location_id',
+  'country',
+  'city',
+  'street_name',
+  'street_number',
+  'latitude',
+  'longitude',
+];
+
+export const nearbyGroupsResolver = async (
+  _: unknown,
+  { longitude, latitude, offset, limit }: QueryNearbyGroupsArgs,
+  { dataSources }: CustomContext,
+): Promise<Array<Group>> => {
+  const distance = dataSources.sql.db.query.raw(HAVERSINE_FORMULA, [latitude, longitude, latitude]);
+  const result = dataSources.sql.db.query
+    .select(...locationAwareGroupAttributes)
+    .from('UserGroup')
+    .join('Location', 'UserGroup.location_id', '=', 'Location.id')
+    .having(distance, '<', DEFAULT_DISTANCE)
+    .orderByRaw(distance)
+    .offset(offset ?? 0);
+  return limit ? result.limit(limit) : result.limit(DEFAULT_LIMIT);
+};
+
+export const interestingNearbyGroupsResolver = async (
+  _: unknown,
+  { latitude, longitude, userId, offset, limit }: QueryInterestingNearbyGroupsArgs,
+  { dataSources }: CustomContext,
+): Promise<Array<Group>> => {
+  const distance = dataSources.sql.db.query.raw(HAVERSINE_FORMULA, [latitude, longitude, latitude]);
+  const result = dataSources.sql.db.query
+    .distinct(...locationAwareGroupAttributes)
+    .from('UserGroup')
+    .join('UserGroup_EventType', 'UserGroup.id', 'UserGroup_EventType.group_id')
+    .join('User_EventType', 'UserGroup_EventType.event_type_id', 'User_EventType.event_type_id')
+    .join('Location', 'UserGroup.location_id', '=', 'Location.id')
+    .where('User_EventType.user_id', '=', userId)
+    .having(distance, '<', DEFAULT_DISTANCE)
+    .offset(offset ?? 0);
+  return limit ? result.limit(limit) : result.limit(DEFAULT_LIMIT);
+};
+

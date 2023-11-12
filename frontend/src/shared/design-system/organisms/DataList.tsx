@@ -42,7 +42,7 @@ export const DataList = ({ user, handleSeeAll, title, maxColumnCount = 4, ...oth
           {title ? <Heading as="h2">{title}</Heading> : null}{' '}
           {handleSeeAll ? (
             <Button size="md" variant="link" colorScheme="purple" onClick={handleSeeAll}>
-              See all events
+              See all {`${other.type}s`}
             </Button>
           ) : null}
         </Stack>
@@ -81,3 +81,4 @@ export const DataList = ({ user, handleSeeAll, title, maxColumnCount = 4, ...oth
     </Box>
   );
 };
+

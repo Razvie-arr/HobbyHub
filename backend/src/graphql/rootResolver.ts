@@ -36,6 +36,8 @@ import {
   groupMembersResolver,
   groupsByIdsResolver,
   groupsResolver,
+  interestingNearbyGroupsResolver,
+  nearbyGroupsResolver,
 } from './modules/group/groupResolvers';
 import { locationByIdResolver, locationsByIdsResolver, locationsResolver } from './modules/location/locationResolvers';
 import { searchEventsResolver } from './modules/search/searchResolver';
@@ -91,6 +93,8 @@ export const rootResolver: Resolvers = {
     groupById: groupByIdResolver,
     groupsByIds: groupsByIdsResolver,
     filterGroups: filterGroupsResolver,
+    nearbyGroups: nearbyGroupsResolver,
+    interestingNearbyGroups: interestingNearbyGroupsResolver,
   },
 
   AuthUser: {
@@ -139,3 +143,4 @@ export const rootResolver: Resolvers = {
     event_types: groupEventTypesResolver,
   },
 };
+

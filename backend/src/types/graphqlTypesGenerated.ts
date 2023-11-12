@@ -249,9 +249,11 @@ export type Query = {
   groups: Array<Group>;
   groupsByIds: Array<Group>;
   interestingNearbyEvents: Array<Event>;
+  interestingNearbyGroups: Array<Group>;
   locationById?: Maybe<Location>;
   locations: Array<Location>;
   locationsByIds: Array<Location>;
+  nearbyGroups: Array<Group>;
   newlyCreatedNearbyEvents: Array<Event>;
   searchEvents: Array<Event>;
   similarEvents: Array<Event>;
@@ -330,6 +332,14 @@ export type QueryInterestingNearbyEventsArgs = {
   userId: Scalars['Int']['input'];
 };
 
+export type QueryInterestingNearbyGroupsArgs = {
+  latitude: Scalars['Float']['input'];
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  longitude: Scalars['Float']['input'];
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  userId: Scalars['Int']['input'];
+};
+
 export type QueryLocationByIdArgs = {
   id: Scalars['Int']['input'];
 };
@@ -341,6 +351,13 @@ export type QueryLocationsArgs = {
 
 export type QueryLocationsByIdsArgs = {
   ids: Array<Scalars['Int']['input']>;
+};
+
+export type QueryNearbyGroupsArgs = {
+  latitude: Scalars['Float']['input'];
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  longitude: Scalars['Float']['input'];
+  offset?: InputMaybe<Scalars['Int']['input']>;
 };
 
 export type QueryNewlyCreatedNearbyEventsArgs = {
@@ -771,6 +788,12 @@ export type QueryResolvers<
     ContextType,
     RequireFields<QueryInterestingNearbyEventsArgs, 'latitude' | 'longitude' | 'userId'>
   >;
+  interestingNearbyGroups?: Resolver<
+    Array<ResolversTypes['Group']>,
+    ParentType,
+    ContextType,
+    RequireFields<QueryInterestingNearbyGroupsArgs, 'latitude' | 'longitude' | 'userId'>
+  >;
   locationById?: Resolver<
     Maybe<ResolversTypes['Location']>,
     ParentType,
@@ -783,6 +806,12 @@ export type QueryResolvers<
     ParentType,
     ContextType,
     RequireFields<QueryLocationsByIdsArgs, 'ids'>
+  >;
+  nearbyGroups?: Resolver<
+    Array<ResolversTypes['Group']>,
+    ParentType,
+    ContextType,
+    RequireFields<QueryNearbyGroupsArgs, 'latitude' | 'longitude'>
   >;
   newlyCreatedNearbyEvents?: Resolver<
     Array<ResolversTypes['Event']>,

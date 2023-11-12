@@ -160,9 +160,11 @@ type Query {
   groups(limit: Int, offset: Int): [Group!]!
   groupsByIds(ids: [Int!]!): [Group!]!
   interestingNearbyEvents(latitude: Float!, limit: Int, longitude: Float!, offset: Int, userId: Int!): [Event!]!
+  interestingNearbyGroups(latitude: Float!, limit: Int, longitude: Float!, offset: Int, userId: Int!): [Group!]!
   locationById(id: Int!): Location
   locations(limit: Int, offset: Int): [Location!]!
   locationsByIds(ids: [Int!]!): [Location!]!
+  nearbyGroups(latitude: Float!, limit: Int, longitude: Float!, offset: Int): [Group!]!
   newlyCreatedNearbyEvents(latitude: Float!, limit: Int, longitude: Float!, offset: Int): [Event!]!
   searchEvents(limit: Int, offset: Int, text: String!): [Event!]!
   similarEvents(city: String!, eventId: Int!, eventTypeIds: [Int!]!, limit: Int, offset: Int): [Event!]!
@@ -206,4 +208,3 @@ input UserInput {
   location_id: Int
   verified: Boolean!
 }
-

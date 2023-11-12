@@ -1,23 +1,17 @@
 import { Route, Routes as RouterRoutes } from 'react-router-dom';
 
 import { OnboardingForm, VerifyUserPage } from 'src/modules/auth';
-import {
-  CreateEventForm,
-  DefaultEventsPage,
-  EditEventForm,
-  EventDetailsPage,
-  EventsPage,
-  SearchEventsPage,
-} from 'src/modules/events';
+import { CreateEventForm, EditEventForm, EventDetailsPage, EventsPage, SearchEventsPage } from 'src/modules/events';
 import { NotFoundPage } from 'src/shared/navigation';
 
 import { GroupDetailsPage, GroupsPage } from './modules/groups';
+import { HomePage } from './modules/home';
 import { MessagesPage } from './modules/messages';
 import { route } from './route';
 
 export const Routes = () => (
   <RouterRoutes>
-    <Route path={route.home()} element={<DefaultEventsPage />} />
+    <Route path={route.home()} element={<HomePage />} />
 
     <Route path={route.events()} element={<EventsPage />} />
     <Route path={route.searchEvents()} element={<SearchEventsPage />} />
@@ -34,3 +28,4 @@ export const Routes = () => (
     <Route path="*" element={<NotFoundPage />} />
   </RouterRoutes>
 );
+

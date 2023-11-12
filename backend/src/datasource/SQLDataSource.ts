@@ -156,7 +156,7 @@ export class SQLDataSource extends BatchedSQLDataSource {
     }
 
     if (eventTypeIds) {
-      stringQuery += ' JOIN UserGroup_EventType ON UserGroup.id = UserGroup_EventType.event_id';
+      stringQuery += ' JOIN UserGroup_EventType ON UserGroup.id = UserGroup_EventType.group_id';
       stringQuery += ' JOIN EventType ON UserGroup_EventType.event_type_id = EventType.id';
       stringQuery += ` WHERE EventType.id in (${eventTypeIds.toString()})`;
     }
@@ -232,3 +232,4 @@ export class SQLDataSource extends BatchedSQLDataSource {
         .where('Event_UserGroup.group_id', groupId),
   };
 }
+

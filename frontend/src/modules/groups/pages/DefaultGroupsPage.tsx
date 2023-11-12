@@ -4,14 +4,14 @@ import { Button, Center, Stack } from '@chakra-ui/react';
 import { Option, pipe, ReadonlyArray } from 'effect';
 import { createSearchParams, useNavigate } from 'react-router-dom';
 
-import { AuthUser, EventType, SortType } from '../../../gql/graphql';
+import { AuthUser, EventType } from '../../../gql/graphql';
 import { route } from '../../../route';
 import { DataList } from '../../../shared/design-system';
 import { DataMapButton } from '../../../shared/design-system/organisms/DataMap';
 import { QueryResult } from '../../../shared/layout';
-import { EventProps, getEventFragmentData } from '../../../shared/types';
+import { getGroupFragmentData } from '../../../shared/types';
 import { useAuth } from '../../auth';
-import { EVENTS, LOCATION_AWARE_EVENTS } from '../queries';
+import { GROUPS, LOCATION_AWARE_GROUPS } from '../queries';
 
 interface LocationAwareEventsProps {
   geolocation: Pick<GeolocationPosition['coords'], 'longitude' | 'latitude'>;
@@ -25,12 +25,12 @@ const eventTypesToSearchParams = (eventTypes: Array<EventType>, eventTypeCategor
     (ids) => ids.toString(),
   );
 
-const LocationAwareEvents = ({ geolocation, user }: LocationAwareEventsProps) => {
+const LocationAwareGroups = ({ geolocation, user }: LocationAwareEventsProps) => {
   const navigate = useNavigate();
 
   const { latitude, longitude } = geolocation;
 
-  const result = useQuery(LOCATION_AWARE_EVENTS, {
+  const result = useQuery(LOCATION_AWARE_GROUPS, {
     variables: { offset: 0, limit: 4, longitude, latitude, userId: user.id },
   });
 
@@ -38,20 +38,19 @@ const LocationAwareEvents = ({ geolocation, user }: LocationAwareEventsProps) =>
     <QueryResult
       queryResult={result}
       render={(data) => {
-        const todaysNearbyEvents = data.todaysNearbyEvents.map(getEventFragmentData);
-        const interestingNearbyEvents = data.interestingNearbyEvents.map(getEventFragmentData);
-        const newlyCreatedNearbyEvents = data.newlyCreatedNearbyEvents.map(getEventFragmentData);
+        const nearbyGroups = data.nearbyGroups.map(getGroupFragmentData);
+        const interestingNearbyGroups = data.interestingNearbyGroups.map(getGroupFragmentData);
 
-        const allEvents: Array<EventProps> = ReadonlyArray.dedupeWith(
-          [...todaysNearbyEvents, ...interestingNearbyEvents, ...newlyCreatedNearbyEvents],
+        const allGroups = ReadonlyArray.dedupeWith(
+          [...nearbyGroups, ...interestingNearbyGroups],
           (self, that) => self.id === that.id,
         );
 
         return (
           <>
-            {ReadonlyArray.isNonEmptyArray(allEvents) ? (
+            {ReadonlyArray.isNonEmptyArray(allGroups) ? (
               <DataMapButton
-                mapInfos={{ user, type: 'event', dataArray: allEvents }}
+                mapInfos={{ user, type: 'group', dataArray: allGroups }}
                 position="fixed"
                 bottom="8"
                 right="8"
@@ -60,15 +59,15 @@ const LocationAwareEvents = ({ geolocation, user }: LocationAwareEventsProps) =>
             <Stack spacing="8" mt="8">
               <DataList
                 user={user}
-                type="event"
-                dataArray={todaysNearbyEvents}
-                title="Today around you"
+                type="group"
+                dataArray={nearbyGroups}
+                title="Groups near you"
                 handleSeeAll={() => {
                   const startDate = new Date();
                   const endDate = new Date();
                   endDate.setDate(endDate.getDate() + 1);
                   navigate({
-                    pathname: route.events(),
+                    pathname: route.groups(),
                     search: createSearchParams({
                       lat: latitude.toString(),
                       lng: longitude.toString(),
@@ -80,12 +79,12 @@ const LocationAwareEvents = ({ geolocation, user }: LocationAwareEventsProps) =>
               />
               <DataList
                 user={user}
-                type="event"
-                dataArray={interestingNearbyEvents}
-                title="Nearby events you might be interested in"
+                type="group"
+                dataArray={interestingNearbyGroups}
+                title="Nearby groups you might be interested in"
                 handleSeeAll={() => {
                   navigate({
-                    pathname: route.events(),
+                    pathname: route.groups(),
                     search: createSearchParams({
                       lat: latitude.toString(),
                       lng: longitude.toString(),
@@ -93,23 +92,6 @@ const LocationAwareEvents = ({ geolocation, user }: LocationAwareEventsProps) =>
                       sports: eventTypesToSearchParams(user.event_types, 'Sports'),
                       games: eventTypesToSearchParams(user.event_types, 'Games'),
                       other: eventTypesToSearchParams(user.event_types, 'Other'),
-                    }).toString(),
-                  });
-                }}
-              />
-              <DataList
-                user={user}
-                type="event"
-                dataArray={newlyCreatedNearbyEvents}
-                title="Newly added around you"
-                handleSeeAll={() => {
-                  navigate({
-                    pathname: route.events(),
-                    search: createSearchParams({
-                      lat: latitude.toString(),
-                      lng: longitude.toString(),
-                      distance: '20',
-                      sortBy: SortType.Date,
                     }).toString(),
                   });
                 }}
@@ -122,8 +104,8 @@ const LocationAwareEvents = ({ geolocation, user }: LocationAwareEventsProps) =>
   );
 };
 
-const LocationUnawareEvents = () => {
-  const queryResult = useQuery(EVENTS, {
+const LocationUnawareGroups = () => {
+  const queryResult = useQuery(GROUPS, {
     variables: { offset: 0, limit: 8 },
   });
 
@@ -133,21 +115,21 @@ const LocationUnawareEvents = () => {
     <QueryResult
       queryResult={queryResult}
       render={(data) => {
-        const events = data.events.map(getEventFragmentData);
+        const groups = data.groups.map(getGroupFragmentData);
         return (
           <>
-            {ReadonlyArray.isNonEmptyArray(events) ? (
+            {ReadonlyArray.isNonEmptyArray(groups) ? (
               <DataMapButton
-                mapInfos={{ user: null, type: 'event', dataArray: events }}
+                mapInfos={{ user: null, type: 'group', dataArray: groups }}
                 position="fixed"
                 bottom="8"
                 right="8"
               />
             ) : null}
             <Stack spacing="8" mt="8">
-              <DataList user={null} type="event" dataArray={events} title="Events" />
+              <DataList user={null} type="group" dataArray={groups} title="Groups" />
             </Stack>
-            {ReadonlyArray.isNonEmptyArray(events) ? (
+            {ReadonlyArray.isNonEmptyArray(groups) ? (
               <Center mb="16">
                 <Button
                   colorScheme="purple"
@@ -155,10 +137,10 @@ const LocationUnawareEvents = () => {
                   onClick={async () => {
                     const result = await queryResult.fetchMore({
                       variables: {
-                        offset: events.length,
+                        offset: groups.length,
                       },
                     });
-                    if ((result.data.events.length ?? 0) === 0) {
+                    if ((result.data.groups.length ?? 0) === 0) {
                       setNoMoreResults(true);
                     }
                   }}
@@ -174,16 +156,16 @@ const LocationUnawareEvents = () => {
   );
 };
 
-export const DefaultEventsPage = () => {
+export const DefaultGroupsPage = () => {
   const { user } = useAuth();
 
   return user && user.event_types.length > 0 && user.location ? (
-    <LocationAwareEvents
+    <LocationAwareGroups
       geolocation={{ latitude: user.location.latitude, longitude: user.location.longitude }}
       user={user}
     />
   ) : (
-    <LocationUnawareEvents />
+    <LocationUnawareGroups />
   );
 };
 
