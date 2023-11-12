@@ -49,7 +49,12 @@ const EditEventForm = ({ eventId }: EditEventFormProps) => {
 
         const event = getEventFragmentData(eventFragment);
 
-        if (!user || (user && (user.id !== event.author?.id || user.id !== event.group?.admin.id))) {
+        console.log({
+          user,
+          event,
+        });
+
+        if (!user || !(user && (user.id === event.author?.id || user.id === event.group?.admin.id))) {
           return (
             <ContentContainer mt="16">
               <Alert status="error">
@@ -129,3 +134,4 @@ const EditEventForm = ({ eventId }: EditEventFormProps) => {
     />
   );
 };
+
