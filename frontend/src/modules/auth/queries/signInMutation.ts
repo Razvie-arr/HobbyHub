@@ -30,4 +30,3 @@ export const SIGN_IN_MUTATION = gql(/* GraphQL */ `
     }
   }
 `);
-

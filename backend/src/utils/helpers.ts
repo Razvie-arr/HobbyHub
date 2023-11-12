@@ -72,4 +72,3 @@ export const getPublicStorageFilePath = ({
     relativeFileUrl: `/${path.join(relativeDirectory, uniqueFilename).split(path.sep).join('/')}`,
   };
 };
-

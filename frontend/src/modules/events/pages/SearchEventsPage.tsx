@@ -4,12 +4,16 @@ import { Button, Center, Stack } from '@chakra-ui/react';
 import { ReadonlyArray } from 'effect';
 import { useSearchParams } from 'react-router-dom';
 
+import { DataList } from '../../../shared/design-system';
+import { DataMapButton } from '../../../shared/design-system/organisms/DataMap';
 import { ContentContainer, QueryResult } from '../../../shared/layout';
-import { EventsMapButton, EventsSection } from '../components';
-import { getEventFragmentData } from '../fragments';
+import { getEventFragmentData } from '../../../shared/types';
+import { useAuth } from '../../auth';
 import { SEARCH_EVENTS } from '../queries';
 
 export const SearchEventsPage = () => {
+  const { user } = useAuth();
+
   const [params] = useSearchParams();
   const searchValue = params.get('searchValue') as string;
 
@@ -36,10 +40,15 @@ export const SearchEventsPage = () => {
           return (
             <>
               {ReadonlyArray.isNonEmptyArray(events) ? (
-                <EventsMapButton events={events} position="fixed" bottom="8" right="8" />
+                <DataMapButton
+                  mapInfos={{ user, type: 'event', dataArray: events }}
+                  position="fixed"
+                  bottom="8"
+                  right="8"
+                />
               ) : null}
               <Stack spacing="8" mt="8">
-                <EventsSection events={events} title="Search results" />
+                <DataList user={user} type="event" dataArray={events} title="Search results" />
               </Stack>
               {ReadonlyArray.isNonEmptyArray(events) ? (
                 <Center mb="16">
@@ -68,4 +77,3 @@ export const SearchEventsPage = () => {
     </ContentContainer>
   );
 };
-

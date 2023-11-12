@@ -97,4 +97,3 @@ function setStorageState(newState: AuthState) {
 
   window.localStorage.setItem(LOCAL_STORAGE_AUTH_KEY, JSON.stringify(newState));
 }
-

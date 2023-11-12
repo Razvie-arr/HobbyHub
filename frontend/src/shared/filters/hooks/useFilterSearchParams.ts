@@ -1,8 +1,6 @@
 import { flow, Number, Option, ReadonlyArray, String } from 'effect';
 import { useSearchParams } from 'react-router-dom';
 
-import { SortType } from '../../../gql/graphql';
-
 const processArraySearchParam = flow(
   (value: string | null) => value,
   Option.fromNullable,
@@ -16,7 +14,7 @@ const processArraySearchParam = flow(
   Option.getOrElse((): number[] => []),
 );
 
-export const useFilterSearchParams = () => {
+export const useFilterSearchParams = <S>() => {
   const [params, setParams] = useSearchParams();
 
   const lng = params.get('lng');
@@ -31,7 +29,7 @@ export const useFilterSearchParams = () => {
     startDate: params.get('startDate') ?? null,
     endDate: params.get('endDate') ?? null,
     distance: params.get('distance'),
-    sortBy: params.get('sortBy') as SortType,
+    sortBy: params.get('sortBy') as S,
   };
 
   return {
@@ -92,4 +90,3 @@ export const useFilterSearchParams = () => {
       updatedParams.sortBy === null,
   };
 };
-

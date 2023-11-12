@@ -1,2 +1,0 @@
-export { useQueryCallFromSearchParams } from './useQueryCallFromSearchParams';
-

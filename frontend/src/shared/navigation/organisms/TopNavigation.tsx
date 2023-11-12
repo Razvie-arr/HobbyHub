@@ -97,22 +97,23 @@ export function TopNavigation() {
                   />
                 </Tooltip>
                 <IconButton
-                  color="purple.600"
-                  _hover={{ bg: 'purple.50' }}
-                  _active={{ bg: 'purple.50' }}
-                  alignSelf="center"
-                  aria-label="Open notifications"
-                  variant="ghost"
-                  fontSize="xl"
-                  icon={<FaRegComment />}
-                />
-
-                <IconButton
+                  as={NavLink}
+                  to={route.messages()}
                   color="purple.600"
                   _hover={{ bg: 'purple.50' }}
                   _active={{ bg: 'purple.50' }}
                   alignSelf="center"
                   aria-label="Open chats"
+                  variant="ghost"
+                  fontSize="xl"
+                  icon={<FaRegComment />}
+                />
+                <IconButton
+                  color="purple.600"
+                  _hover={{ bg: 'purple.50' }}
+                  _active={{ bg: 'purple.50' }}
+                  alignSelf="center"
+                  aria-label="Open notifications"
                   variant="ghost"
                   fontSize="xl"
                   icon={<FaRegBell />}

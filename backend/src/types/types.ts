@@ -23,4 +23,3 @@ export type ContextualNullableResolver<R, A = unknown> = (
   args: A,
   context: CustomContext,
 ) => Promise<R | null>;
-

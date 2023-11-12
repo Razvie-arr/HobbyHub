@@ -87,4 +87,3 @@ export const ActivityFilter = ({ eventTypes, fieldName, label }: ActivityFilterP
     />
   );
 };
-

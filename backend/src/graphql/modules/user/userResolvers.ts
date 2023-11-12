@@ -7,7 +7,9 @@ import {
   ContextualResolver,
   ContextualResolverWithParent,
   CustomContext,
+  Event,
   EventType,
+  Group,
   Location,
   MutationEditUserArgs,
   MutationOnboardUserArgs,
@@ -46,6 +48,18 @@ export const userLocationResolver: ContextualResolverWithParent<Location, User> 
   parent.location_id
     ? ((await dataSources.sql.locations.getById(parent.location_id)) as unknown as Location)
     : (null as unknown as Location);
+
+export const userEventsResolver: ContextualResolverWithParent<Array<Event>, User> = async (
+  parent,
+  _,
+  { dataSources },
+) => await dataSources.sql.users.getUserEvents(parent.id);
+
+export const userGroupsResolver: ContextualResolverWithParent<Array<Group>, User> = async (
+  parent,
+  _,
+  { dataSources },
+) => await dataSources.sql.users.getUserGroups(parent.id);
 
 export const editUserResolver = async (
   _: unknown,
@@ -200,4 +214,3 @@ export const onboardUserResolver = async (
   // @ts-ignore
   return dbUserResponse;
 };
-

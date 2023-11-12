@@ -83,4 +83,3 @@ export const SEARCH_EVENTS = gql(`
     }
   }
 `);
-

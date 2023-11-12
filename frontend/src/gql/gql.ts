@@ -13,15 +13,13 @@ import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/
  * Therefore it is highly recommended to use the babel or swc plugin for production.
  */
 const documents = {
+  '\n  mutation OnboardUser($user: UserInput!, $location: LocationInputWithoutCoords!) {\n    onboardUser(user: $user, location: $location) {\n      id\n      email\n      first_name\n      last_name\n      verified\n      location_id\n      description\n      password\n      location {\n        id\n        country\n        city\n        street_name\n        street_number\n        latitude\n        longitude\n      }\n      event_types {\n        id\n        name\n        category\n      }\n    }\n  }\n':
+    types.OnboardUserDocument,
   '\n  mutation SignIn($email: String!, $password: String!) {\n    signIn(email: $email, password: $password) {\n      user {\n        id\n        email\n        first_name\n        last_name\n        verified\n        location_id\n        description\n        location {\n          id\n          country\n          city\n          street_name\n          street_number\n          latitude\n          longitude\n        }\n        event_types {\n          id\n          name\n          category\n        }\n      }\n      token\n    }\n  }\n':
     types.SignInDocument,
   '\n  mutation SignUp($email: String!, $first_name: String!, $last_name: String!, $password: String!) {\n    signUp(email: $email, first_name: $first_name, last_name: $last_name, password: $password) {\n      user {\n        id\n        first_name\n        last_name\n        email\n      }\n      token\n    }\n  }\n':
     types.SignUpDocument,
   '\n  mutation Mutation($token: String!) {\n    verify(token: $token)\n  }\n': types.MutationDocument,
-  '\n  mutation OnboardUser($user: UserInput!, $location: LocationInputWithoutCoords!) {\n    onboardUser(user: $user, location: $location) {\n      id\n      email\n      first_name\n      last_name\n      verified\n      location_id\n      description\n      password\n      location {\n        id\n        country\n        city\n        street_name\n        street_number\n        latitude\n        longitude\n      }\n      event_types {\n        id\n        name\n        category\n      }\n    }\n  }\n':
-    types.OnboardUserDocument,
-  '\n  fragment EventFragment on Event {\n    id\n    name\n    start_datetime\n    end_datetime\n    event_types {\n      id\n      name\n    }\n    author {\n      id\n      first_name\n      last_name\n    }\n    location {\n      id\n      country\n      city\n      street_name\n      street_number\n      longitude\n      latitude\n    }\n    summary\n    description\n    image_filepath\n    capacity\n    allow_waitlist\n    participants {\n      id\n      first_name\n      last_name\n    }\n  }\n':
-    types.EventFragmentFragmentDoc,
   '\n  mutation CreateEvent($event: EventInput!, $location: LocationInputWithoutCoords!) {\n    createEvent(event: $event, location: $location) {\n      id\n    }\n  }\n':
     types.CreateEventDocument,
   '\n  mutation EditEvent($event: EventInput!, $location: LocationInputWithoutCoords!) {\n    editEvent(event: $event, location: $location) {\n      id\n    }\n}\n':
@@ -48,6 +46,18 @@ const documents = {
     types.SimilarEventsDocument,
   '\n  query SearchEvents($text: String!, $offset: Int, $limit: Int) {\n    searchEvents(text: $text, offset: $offset, limit: $limit) {\n      ...EventFragment\n    }\n  }\n':
     types.SearchEventsDocument,
+  '\n  query Groups($offset: Int, $limit: Int) {\n    groups(offset: $offset, limit: $limit) {\n      ...GroupFragment\n    }\n  }\n':
+    types.GroupsDocument,
+  '\n  query GroupById($groupId: Int!) {\n    groupById(id: $groupId) {\n      ...GroupFragment\n    }\n  }\n':
+    types.GroupByIdDocument,
+  '\n  query FilterGroups($offset: Int, $limit: Int, $eventTypeIds: [Int!], $filterLocation: FilterLocationInput, $sort: GroupSortType) {\n    filterGroups(offset: $offset, limit: $limit, eventTypeIds: $eventTypeIds, filterLocation: $filterLocation, sort: $sort) {\n      ...GroupFragment\n    }\n  }\n':
+    types.FilterGroupsDocument,
+  '\n  query GetLocationAwareGroups($userId: Int!, $longitude: Float!, $latitude: Float!, $offset: Int, $limit: Int) {\n    nearbyGroups(longitude: $longitude, latitude: $latitude, offset: $offset, limit: $limit) {\n      ...GroupFragment\n    }\n    interestingNearbyGroups(\n      longitude: $longitude\n      latitude: $latitude\n      userId: $userId\n      offset: $offset\n      limit: $limit\n    ) {\n      ...GroupFragment\n    }\n  }\n':
+    types.GetLocationAwareGroupsDocument,
+  '\n  fragment EventFragment on Event {\n    id\n    name\n    start_datetime\n    end_datetime\n    event_types {\n      id\n      name\n    }\n    author {\n      ... on User {\n        __typename\n        id\n        first_name\n        last_name\n      }\n      ... on Group {\n        __typename\n        id\n        name\n        admin {\n          id\n          first_name\n          last_name\n        }\n      }\n    }\n    location {\n      id\n      country\n      city\n      street_name\n      street_number\n      longitude\n      latitude\n    }\n    summary\n    description\n    image_filepath\n    capacity\n    allow_waitlist\n    participants {\n      id\n      first_name\n      last_name\n    }\n  }\n':
+    types.EventFragmentFragmentDoc,
+  '\n  fragment GroupFragment on Group {\n    id\n    name\n    admin {\n      id\n      first_name\n      last_name\n    }\n    event_types {\n      id\n      name\n    }\n    location {\n      id\n      country\n      city\n      street_name\n      street_number\n      longitude\n      latitude\n    }\n    events {\n      ...EventFragment\n    }\n    members {\n      id\n      first_name\n      last_name\n    }\n    summary\n    description\n    image_filepath\n  }\n':
+    types.GroupFragmentFragmentDoc,
 };
 
 /**
@@ -68,6 +78,12 @@ export function gql(source: string): unknown;
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function gql(
+  source: '\n  mutation OnboardUser($user: UserInput!, $location: LocationInputWithoutCoords!) {\n    onboardUser(user: $user, location: $location) {\n      id\n      email\n      first_name\n      last_name\n      verified\n      location_id\n      description\n      password\n      location {\n        id\n        country\n        city\n        street_name\n        street_number\n        latitude\n        longitude\n      }\n      event_types {\n        id\n        name\n        category\n      }\n    }\n  }\n',
+): (typeof documents)['\n  mutation OnboardUser($user: UserInput!, $location: LocationInputWithoutCoords!) {\n    onboardUser(user: $user, location: $location) {\n      id\n      email\n      first_name\n      last_name\n      verified\n      location_id\n      description\n      password\n      location {\n        id\n        country\n        city\n        street_name\n        street_number\n        latitude\n        longitude\n      }\n      event_types {\n        id\n        name\n        category\n      }\n    }\n  }\n'];
+/**
+ * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function gql(
   source: '\n  mutation SignIn($email: String!, $password: String!) {\n    signIn(email: $email, password: $password) {\n      user {\n        id\n        email\n        first_name\n        last_name\n        verified\n        location_id\n        description\n        location {\n          id\n          country\n          city\n          street_name\n          street_number\n          latitude\n          longitude\n        }\n        event_types {\n          id\n          name\n          category\n        }\n      }\n      token\n    }\n  }\n',
 ): (typeof documents)['\n  mutation SignIn($email: String!, $password: String!) {\n    signIn(email: $email, password: $password) {\n      user {\n        id\n        email\n        first_name\n        last_name\n        verified\n        location_id\n        description\n        location {\n          id\n          country\n          city\n          street_name\n          street_number\n          latitude\n          longitude\n        }\n        event_types {\n          id\n          name\n          category\n        }\n      }\n      token\n    }\n  }\n'];
 /**
@@ -82,18 +98,6 @@ export function gql(
 export function gql(
   source: '\n  mutation Mutation($token: String!) {\n    verify(token: $token)\n  }\n',
 ): (typeof documents)['\n  mutation Mutation($token: String!) {\n    verify(token: $token)\n  }\n'];
-/**
- * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
- */
-export function gql(
-  source: '\n  mutation OnboardUser($user: UserInput!, $location: LocationInputWithoutCoords!) {\n    onboardUser(user: $user, location: $location) {\n      id\n      email\n      first_name\n      last_name\n      verified\n      location_id\n      description\n      password\n      location {\n        id\n        country\n        city\n        street_name\n        street_number\n        latitude\n        longitude\n      }\n      event_types {\n        id\n        name\n        category\n      }\n    }\n  }\n',
-): (typeof documents)['\n  mutation OnboardUser($user: UserInput!, $location: LocationInputWithoutCoords!) {\n    onboardUser(user: $user, location: $location) {\n      id\n      email\n      first_name\n      last_name\n      verified\n      location_id\n      description\n      password\n      location {\n        id\n        country\n        city\n        street_name\n        street_number\n        latitude\n        longitude\n      }\n      event_types {\n        id\n        name\n        category\n      }\n    }\n  }\n'];
-/**
- * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
- */
-export function gql(
-  source: '\n  fragment EventFragment on Event {\n    id\n    name\n    start_datetime\n    end_datetime\n    event_types {\n      id\n      name\n    }\n    author {\n      id\n      first_name\n      last_name\n    }\n    location {\n      id\n      country\n      city\n      street_name\n      street_number\n      longitude\n      latitude\n    }\n    summary\n    description\n    image_filepath\n    capacity\n    allow_waitlist\n    participants {\n      id\n      first_name\n      last_name\n    }\n  }\n',
-): (typeof documents)['\n  fragment EventFragment on Event {\n    id\n    name\n    start_datetime\n    end_datetime\n    event_types {\n      id\n      name\n    }\n    author {\n      id\n      first_name\n      last_name\n    }\n    location {\n      id\n      country\n      city\n      street_name\n      street_number\n      longitude\n      latitude\n    }\n    summary\n    description\n    image_filepath\n    capacity\n    allow_waitlist\n    participants {\n      id\n      first_name\n      last_name\n    }\n  }\n'];
 /**
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
@@ -172,6 +176,42 @@ export function gql(
 export function gql(
   source: '\n  query SearchEvents($text: String!, $offset: Int, $limit: Int) {\n    searchEvents(text: $text, offset: $offset, limit: $limit) {\n      ...EventFragment\n    }\n  }\n',
 ): (typeof documents)['\n  query SearchEvents($text: String!, $offset: Int, $limit: Int) {\n    searchEvents(text: $text, offset: $offset, limit: $limit) {\n      ...EventFragment\n    }\n  }\n'];
+/**
+ * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function gql(
+  source: '\n  query Groups($offset: Int, $limit: Int) {\n    groups(offset: $offset, limit: $limit) {\n      ...GroupFragment\n    }\n  }\n',
+): (typeof documents)['\n  query Groups($offset: Int, $limit: Int) {\n    groups(offset: $offset, limit: $limit) {\n      ...GroupFragment\n    }\n  }\n'];
+/**
+ * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function gql(
+  source: '\n  query GroupById($groupId: Int!) {\n    groupById(id: $groupId) {\n      ...GroupFragment\n    }\n  }\n',
+): (typeof documents)['\n  query GroupById($groupId: Int!) {\n    groupById(id: $groupId) {\n      ...GroupFragment\n    }\n  }\n'];
+/**
+ * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function gql(
+  source: '\n  query FilterGroups($offset: Int, $limit: Int, $eventTypeIds: [Int!], $filterLocation: FilterLocationInput, $sort: GroupSortType) {\n    filterGroups(offset: $offset, limit: $limit, eventTypeIds: $eventTypeIds, filterLocation: $filterLocation, sort: $sort) {\n      ...GroupFragment\n    }\n  }\n',
+): (typeof documents)['\n  query FilterGroups($offset: Int, $limit: Int, $eventTypeIds: [Int!], $filterLocation: FilterLocationInput, $sort: GroupSortType) {\n    filterGroups(offset: $offset, limit: $limit, eventTypeIds: $eventTypeIds, filterLocation: $filterLocation, sort: $sort) {\n      ...GroupFragment\n    }\n  }\n'];
+/**
+ * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function gql(
+  source: '\n  query GetLocationAwareGroups($userId: Int!, $longitude: Float!, $latitude: Float!, $offset: Int, $limit: Int) {\n    nearbyGroups(longitude: $longitude, latitude: $latitude, offset: $offset, limit: $limit) {\n      ...GroupFragment\n    }\n    interestingNearbyGroups(\n      longitude: $longitude\n      latitude: $latitude\n      userId: $userId\n      offset: $offset\n      limit: $limit\n    ) {\n      ...GroupFragment\n    }\n  }\n',
+): (typeof documents)['\n  query GetLocationAwareGroups($userId: Int!, $longitude: Float!, $latitude: Float!, $offset: Int, $limit: Int) {\n    nearbyGroups(longitude: $longitude, latitude: $latitude, offset: $offset, limit: $limit) {\n      ...GroupFragment\n    }\n    interestingNearbyGroups(\n      longitude: $longitude\n      latitude: $latitude\n      userId: $userId\n      offset: $offset\n      limit: $limit\n    ) {\n      ...GroupFragment\n    }\n  }\n'];
+/**
+ * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function gql(
+  source: '\n  fragment EventFragment on Event {\n    id\n    name\n    start_datetime\n    end_datetime\n    event_types {\n      id\n      name\n    }\n    author {\n      ... on User {\n        __typename\n        id\n        first_name\n        last_name\n      }\n      ... on Group {\n        __typename\n        id\n        name\n        admin {\n          id\n          first_name\n          last_name\n        }\n      }\n    }\n    location {\n      id\n      country\n      city\n      street_name\n      street_number\n      longitude\n      latitude\n    }\n    summary\n    description\n    image_filepath\n    capacity\n    allow_waitlist\n    participants {\n      id\n      first_name\n      last_name\n    }\n  }\n',
+): (typeof documents)['\n  fragment EventFragment on Event {\n    id\n    name\n    start_datetime\n    end_datetime\n    event_types {\n      id\n      name\n    }\n    author {\n      ... on User {\n        __typename\n        id\n        first_name\n        last_name\n      }\n      ... on Group {\n        __typename\n        id\n        name\n        admin {\n          id\n          first_name\n          last_name\n        }\n      }\n    }\n    location {\n      id\n      country\n      city\n      street_name\n      street_number\n      longitude\n      latitude\n    }\n    summary\n    description\n    image_filepath\n    capacity\n    allow_waitlist\n    participants {\n      id\n      first_name\n      last_name\n    }\n  }\n'];
+/**
+ * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function gql(
+  source: '\n  fragment GroupFragment on Group {\n    id\n    name\n    admin {\n      id\n      first_name\n      last_name\n    }\n    event_types {\n      id\n      name\n    }\n    location {\n      id\n      country\n      city\n      street_name\n      street_number\n      longitude\n      latitude\n    }\n    events {\n      ...EventFragment\n    }\n    members {\n      id\n      first_name\n      last_name\n    }\n    summary\n    description\n    image_filepath\n  }\n',
+): (typeof documents)['\n  fragment GroupFragment on Group {\n    id\n    name\n    admin {\n      id\n      first_name\n      last_name\n    }\n    event_types {\n      id\n      name\n    }\n    location {\n      id\n      country\n      city\n      street_name\n      street_number\n      longitude\n      latitude\n    }\n    events {\n      ...EventFragment\n    }\n    members {\n      id\n      first_name\n      last_name\n    }\n    summary\n    description\n    image_filepath\n  }\n'];
 
 export function gql(source: string) {
   return (documents as any)[source] ?? {};

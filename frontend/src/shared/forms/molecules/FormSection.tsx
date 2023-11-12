@@ -14,4 +14,3 @@ export const FormSection = ({ title, children }: FormStackProps) => (
     {children}
   </Stack>
 );
-

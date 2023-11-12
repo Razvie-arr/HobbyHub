@@ -28,4 +28,3 @@ export const EmailVerificationModal = ({ disclosure }: WithDisclosure) => (
     </ModalContent>
   </Modal>
 );
-
