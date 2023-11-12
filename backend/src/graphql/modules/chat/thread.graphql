@@ -9,6 +9,7 @@ type Thread {
   thread_read: Boolean!
 
   users: [User!]!
-  messages: [Message]!
+  messages: [Message!]!
   lastMessage: Message!
 }
+

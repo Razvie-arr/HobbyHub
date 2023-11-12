@@ -6,7 +6,7 @@ import { match } from 'ts-pattern';
 import { Box, DataCard, NoData } from 'src/shared/design-system';
 
 import { route } from '../../../route';
-import { EventProps, GroupProps, WithNullableAuthUser } from '../../types';
+import { EventData, GroupData, WithNullableAuthUser } from '../../types';
 
 interface CommonProps extends WithNullableAuthUser {
   title?: ReactNode;
@@ -16,12 +16,12 @@ interface CommonProps extends WithNullableAuthUser {
 
 interface EventsDataList extends CommonProps {
   type: 'event';
-  dataArray: Array<EventProps>;
+  dataArray: Array<EventData>;
 }
 
 interface GroupsDataList extends CommonProps {
   type: 'group';
-  dataArray: Array<GroupProps>;
+  dataArray: Array<GroupData>;
 }
 
 type DataListProps = EventsDataList | GroupsDataList;

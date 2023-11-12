@@ -10,7 +10,7 @@ import {
   EventStatusTag,
   EventTypeTag,
 } from 'src/shared/design-system';
-import { EventProps, GroupProps, WithNullableAuthUser } from 'src/shared/types';
+import { EventData, GroupData, WithNullableAuthUser } from 'src/shared/types';
 
 import { route } from '../../../route';
 import { DEFAULT_EVENT_IMAGE_PATH } from '../../constants';
@@ -24,12 +24,12 @@ interface CommonProps extends WithNullableAuthUser {
 
 interface EventDataProps extends CommonProps {
   type: 'event';
-  data: EventProps;
+  data: EventData;
 }
 
 interface GroupDataProps extends CommonProps {
   type: 'group';
-  data: GroupProps;
+  data: GroupData;
 }
 
 type DataCardProps = EventDataProps | GroupDataProps;

@@ -1,13 +1,13 @@
 import { Icon, Stack, Text, TypographyProps } from '@chakra-ui/react';
 import { FaPeopleGroup } from 'react-icons/fa6';
 
-import { EventProps } from '../../types';
+import { EventData } from '../../types';
 
 interface EventParticipantsProps {
   noIcon?: boolean;
   fontSize?: TypographyProps['fontSize'];
-  capacity: EventProps['capacity'];
-  participants: EventProps['participants'];
+  capacity: EventData['capacity'];
+  participants: EventData['participants'];
 }
 
 export const EventParticipants = ({ noIcon, fontSize = 'sm', capacity, participants }: EventParticipantsProps) => (
@@ -18,3 +18,4 @@ export const EventParticipants = ({ noIcon, fontSize = 'sm', capacity, participa
     </Text>
   </Stack>
 );
+

@@ -9,7 +9,7 @@ import { route } from '../../../route';
 import { DataList } from '../../../shared/design-system';
 import { DataMapButton } from '../../../shared/design-system/organisms/DataMap';
 import { QueryResult } from '../../../shared/layout';
-import { EventProps, getEventFragmentData } from '../../../shared/types';
+import { EventData, getEventFragmentData } from '../../../shared/types';
 import { useAuth } from '../../auth';
 import { EVENTS, LOCATION_AWARE_EVENTS } from '../queries';
 
@@ -42,7 +42,7 @@ const LocationAwareEvents = ({ geolocation, user }: LocationAwareEventsProps) =>
         const interestingNearbyEvents = data.interestingNearbyEvents.map(getEventFragmentData);
         const newlyCreatedNearbyEvents = data.newlyCreatedNearbyEvents.map(getEventFragmentData);
 
-        const allEvents: Array<EventProps> = ReadonlyArray.dedupeWith(
+        const allEvents: Array<EventData> = ReadonlyArray.dedupeWith(
           [...todaysNearbyEvents, ...interestingNearbyEvents, ...newlyCreatedNearbyEvents],
           (self, that) => self.id === that.id,
         );

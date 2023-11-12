@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { Fragment, useEffect, useRef } from 'react';
 import {
   CardBody,
   CardFooter,
@@ -14,22 +14,20 @@ import {
 import { FaArrowLeft } from 'react-icons/fa6';
 import { MdSend } from 'react-icons/md';
 
+import { getMessageFragmentData, WithAuthUser, WithThread } from '../../../shared/types';
 import { Message } from '../components';
 
-export const ChatContent = ({
-  thread,
-  currentUser,
-  onBackClick,
-}: {
-  thread: Thread;
-  currentUser: string;
+interface ChatContentProps extends WithThread, WithAuthUser {
+  title: string;
   onBackClick: () => void;
-}) => {
-  const isMyMessage = (senderId: string) => senderId === currentUser;
-  const sortedMessages = [...thread.messages].sort(
-    (a, b) => new Date(a.sent_at).getTime() - new Date(b.sent_at).getTime(),
-  );
-  const otherUsers = thread.users.filter((user) => user !== currentUser);
+}
+
+export const ChatContent = ({ thread, user, title, onBackClick }: ChatContentProps) => {
+  const { locale } = Intl.DateTimeFormat().resolvedOptions();
+
+  const sortedMessages = thread.messages
+    .map(getMessageFragmentData)
+    .sort((a, b) => new Date(a.sent_at).getTime() - new Date(b.sent_at).getTime());
   const chatContainerRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
@@ -54,19 +52,29 @@ export const ChatContent = ({
           onClick={onBackClick}
         />
         <Text fontSize="xl" as="b" textAlign="center">
-          {otherUsers.join(', ')}
+          {title}
         </Text>
       </CardHeader>
       <CardBody bg="gray.50" overflowY="auto" ref={chatContainerRef}>
-        <VStack gap={5}>
-          {sortedMessages.map((message) => (
-            <Message
-              key={message.id}
-              isMyMessage={isMyMessage(message.sender_id)}
-              senderName={message.sender_id}
-              messageText={message.text}
-            />
-          ))}
+        <VStack gap={8}>
+          {sortedMessages.map((message) => {
+            const sentAt = new Date(message.sent_at);
+            return (
+              <Fragment key={message.id}>
+                {sentAt.toLocaleString(locale, {
+                  day: 'numeric',
+                  month: 'short',
+                  hour: '2-digit',
+                  minute: '2-digit',
+                })}
+                <Message
+                  isMyMessage={message.sender_id === user.id}
+                  senderName={`${message.sender.first_name} ${message.sender.last_name}`}
+                  messageText={message.text}
+                />
+              </Fragment>
+            );
+          })}
         </VStack>
       </CardBody>
       <CardFooter>
@@ -87,3 +95,4 @@ export const ChatContent = ({
     </>
   );
 };
+

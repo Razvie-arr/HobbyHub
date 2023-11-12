@@ -4,16 +4,17 @@ import { GroupFragment } from './fragments';
 
 export type GroupFragmentResultType = DocumentType<typeof GroupFragment>;
 
-export type GroupProps = DocumentType<typeof GroupFragment>;
+export type GroupData = DocumentType<typeof GroupFragment>;
 
 export interface WithGroup {
-  group: GroupProps;
+  group: GroupData;
 }
 
 export interface WithGroups {
-  groups: Array<GroupProps>;
+  groups: Array<GroupData>;
 }
 
 export interface WithNonEmptyGroups {
-  groups: [GroupProps, ...GroupProps[]];
+  groups: [GroupData, ...GroupData[]];
 }
+

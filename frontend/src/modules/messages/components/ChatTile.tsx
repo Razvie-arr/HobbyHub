@@ -1,14 +1,17 @@
 import { Avatar, Box, Circle, Flex, Spacer, Text } from '@chakra-ui/react';
 
-interface ChatTileProps {
-  thread: Thread;
+import { getMessageFragmentData, WithThread } from '../../../shared/types';
+
+interface ChatTileProps extends WithThread {
+  title: string;
   onClick: () => void;
-  currentUser: string;
   isSelected: boolean;
 }
 
-export const ChatTile = ({ thread, onClick, currentUser, isSelected }: ChatTileProps) => {
-  const otherUsers = thread.users.filter((user) => user !== currentUser);
+export const ChatTile = ({ title, thread, onClick, isSelected }: ChatTileProps) => {
+  const lastMessage = getMessageFragmentData(thread.lastMessage);
+  const { locale } = Intl.DateTimeFormat().resolvedOptions();
+  const lastMessageSentAt = new Date(lastMessage.sent_at);
   return (
     <Box
       w="20"
@@ -21,22 +24,28 @@ export const ChatTile = ({ thread, onClick, currentUser, isSelected }: ChatTileP
       _hover={{ cursor: 'pointer' }}
     >
       <Flex height="100%" alignItems="center">
-        <Avatar src="gibbresh.png" boxSize="50px" name={thread.users[0]} bg="purple.500" />
+        <Avatar boxSize="50px" name={title} bg="purple.500" />
         <Box mx={4}>
-          <Text as="b">{otherUsers.join(', ')}</Text>
+          <Text as="b">{title}</Text>
           <Flex alignItems="center">
             <Text noOfLines={1} width="100%">
-              {thread.lastMessage?.text}
+              {lastMessage.text}
             </Text>
             <Spacer />
           </Flex>
         </Box>
         <Spacer />
         <Text mx={3} fontSize="sm">
-          {thread.last_message_at}
+          {lastMessageSentAt.toLocaleString(locale, {
+            day: 'numeric',
+            month: 'short',
+            hour: '2-digit',
+            minute: '2-digit',
+          })}
         </Text>
         <Circle visibility={thread.thread_read ? 'hidden' : 'visible'} size="10px" bg="purple.500"></Circle>
       </Flex>
     </Box>
   );
 };
+

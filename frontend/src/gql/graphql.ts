@@ -140,6 +140,16 @@ export type LocationInputWithoutCoords = {
   street_number: Scalars['String']['input'];
 };
 
+export type Message = {
+  __typename?: 'Message';
+  id: Scalars['Int']['output'];
+  sender: User;
+  sender_id: Scalars['Int']['output'];
+  sent_at: Scalars['String']['output'];
+  text: Scalars['String']['output'];
+  thread_id: Scalars['Int']['output'];
+};
+
 export type Mutation = {
   __typename?: 'Mutation';
   _empty?: Maybe<Scalars['String']['output']>;
@@ -154,6 +164,7 @@ export type Mutation = {
   onboardUser: AuthUser;
   requestResetPassword: Scalars['Boolean']['output'];
   resetPassword: Scalars['Boolean']['output'];
+  sendMessage: Scalars['String']['output'];
   signIn: AuthInfo;
   signUp: AuthInfo;
   uploadEventImage?: Maybe<Scalars['String']['output']>;
@@ -214,6 +225,12 @@ export type MutationResetPasswordArgs = {
   token: Scalars['String']['input'];
 };
 
+export type MutationSendMessageArgs = {
+  recipientId: Scalars['Int']['input'];
+  senderId: Scalars['Int']['input'];
+  text: Scalars['String']['input'];
+};
+
 export type MutationSignInArgs = {
   email: Scalars['String']['input'];
   password: Scalars['String']['input'];
@@ -257,6 +274,8 @@ export type Query = {
   newlyCreatedNearbyEvents: Array<Event>;
   searchEvents: Array<Event>;
   similarEvents: Array<Event>;
+  threadById?: Maybe<Thread>;
+  threads: Array<Thread>;
   todaysNearbyEvents: Array<Event>;
   userById?: Maybe<User>;
   users: Array<User>;
@@ -381,6 +400,16 @@ export type QuerySimilarEventsArgs = {
   offset?: InputMaybe<Scalars['Int']['input']>;
 };
 
+export type QueryThreadByIdArgs = {
+  id: Scalars['Int']['input'];
+};
+
+export type QueryThreadsArgs = {
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  userId: Scalars['Int']['input'];
+};
+
 export type QueryTodaysNearbyEventsArgs = {
   latitude: Scalars['Float']['input'];
   limit?: InputMaybe<Scalars['Int']['input']>;
@@ -405,6 +434,16 @@ export enum SortType {
   Date = 'DATE',
   Distance = 'DISTANCE',
 }
+
+export type Thread = {
+  __typename?: 'Thread';
+  id: Scalars['Int']['output'];
+  lastMessage: Message;
+  last_message_at?: Maybe<Scalars['String']['output']>;
+  messages: Array<Message>;
+  thread_read: Scalars['Boolean']['output'];
+  users: Array<User>;
+};
 
 export type User = {
   __typename?: 'User';
@@ -728,6 +767,15 @@ export type GetLocationAwareGroupsQuery = {
   >;
 };
 
+export type ThreadsQueryVariables = Exact<{
+  userId: Scalars['Int']['input'];
+}>;
+
+export type ThreadsQuery = {
+  __typename?: 'Query';
+  threads: Array<{ __typename?: 'Thread' } & { ' $fragmentRefs'?: { ThreadFragmentFragment: ThreadFragmentFragment } }>;
+};
+
 export type EventFragmentFragment = {
   __typename?: 'Event';
   id: number;
@@ -783,6 +831,28 @@ export type GroupFragmentFragment = {
   events: Array<{ __typename?: 'Event' } & { ' $fragmentRefs'?: { EventFragmentFragment: EventFragmentFragment } }>;
   members: Array<{ __typename?: 'User'; id: number; first_name: string; last_name: string }>;
 } & { ' $fragmentName'?: 'GroupFragmentFragment' };
+
+export type MessageFragmentFragment = {
+  __typename?: 'Message';
+  id: number;
+  thread_id: number;
+  sender_id: number;
+  text: string;
+  sent_at: string;
+  sender: { __typename?: 'User'; id: number; first_name: string; last_name: string };
+} & { ' $fragmentName'?: 'MessageFragmentFragment' };
+
+export type ThreadFragmentFragment = {
+  __typename?: 'Thread';
+  id: number;
+  last_message_at?: string | null;
+  thread_read: boolean;
+  users: Array<{ __typename?: 'User'; id: number; first_name: string; last_name: string }>;
+  lastMessage: { __typename?: 'Message' } & { ' $fragmentRefs'?: { MessageFragmentFragment: MessageFragmentFragment } };
+  messages: Array<
+    { __typename?: 'Message' } & { ' $fragmentRefs'?: { MessageFragmentFragment: MessageFragmentFragment } }
+  >;
+} & { ' $fragmentName'?: 'ThreadFragmentFragment' };
 
 export const EventFragmentFragmentDoc = {
   kind: 'Document',
@@ -1076,6 +1146,111 @@ export const GroupFragmentFragmentDoc = {
     },
   ],
 } as unknown as DocumentNode<GroupFragmentFragment, unknown>;
+export const MessageFragmentFragmentDoc = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'MessageFragment' },
+      typeCondition: { kind: 'NamedType', name: { kind: 'Name', value: 'Message' } },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'thread_id' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'sender_id' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'text' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'sent_at' } },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'sender' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'first_name' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'last_name' } },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<MessageFragmentFragment, unknown>;
+export const ThreadFragmentFragmentDoc = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'ThreadFragment' },
+      typeCondition: { kind: 'NamedType', name: { kind: 'Name', value: 'Thread' } },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'last_message_at' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'thread_read' } },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'users' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'first_name' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'last_name' } },
+              ],
+            },
+          },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'lastMessage' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [{ kind: 'FragmentSpread', name: { kind: 'Name', value: 'MessageFragment' } }],
+            },
+          },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'messages' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [{ kind: 'FragmentSpread', name: { kind: 'Name', value: 'MessageFragment' } }],
+            },
+          },
+        ],
+      },
+    },
+    {
+      kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'MessageFragment' },
+      typeCondition: { kind: 'NamedType', name: { kind: 'Name', value: 'Message' } },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'thread_id' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'sender_id' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'text' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'sent_at' } },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'sender' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'first_name' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'last_name' } },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<ThreadFragmentFragment, unknown>;
 export const OnboardUserDocument = {
   kind: 'Document',
   definitions: [
@@ -4118,3 +4293,108 @@ export const GetLocationAwareGroupsDocument = {
     },
   ],
 } as unknown as DocumentNode<GetLocationAwareGroupsQuery, GetLocationAwareGroupsQueryVariables>;
+export const ThreadsDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'query',
+      name: { kind: 'Name', value: 'Threads' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'userId' } },
+          type: { kind: 'NonNullType', type: { kind: 'NamedType', name: { kind: 'Name', value: 'Int' } } },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'threads' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'userId' },
+                value: { kind: 'Variable', name: { kind: 'Name', value: 'userId' } },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [{ kind: 'FragmentSpread', name: { kind: 'Name', value: 'ThreadFragment' } }],
+            },
+          },
+        ],
+      },
+    },
+    {
+      kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'MessageFragment' },
+      typeCondition: { kind: 'NamedType', name: { kind: 'Name', value: 'Message' } },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'thread_id' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'sender_id' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'text' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'sent_at' } },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'sender' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'first_name' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'last_name' } },
+              ],
+            },
+          },
+        ],
+      },
+    },
+    {
+      kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'ThreadFragment' },
+      typeCondition: { kind: 'NamedType', name: { kind: 'Name', value: 'Thread' } },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'last_message_at' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'thread_read' } },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'users' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'first_name' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'last_name' } },
+              ],
+            },
+          },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'lastMessage' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [{ kind: 'FragmentSpread', name: { kind: 'Name', value: 'MessageFragment' } }],
+            },
+          },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'messages' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [{ kind: 'FragmentSpread', name: { kind: 'Name', value: 'MessageFragment' } }],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<ThreadsQuery, ThreadsQueryVariables>;
