@@ -1,7 +1,9 @@
 import { SortType } from '../../../gql/graphql';
 import { useFilterSearchParams } from '../hooks';
 
-export const createFilterValuesFromParams = (params: ReturnType<typeof useFilterSearchParams>['params']) => ({
+export const createEventFilterValuesFromParams = (
+  params: ReturnType<typeof useFilterSearchParams<SortType>>['params'],
+) => ({
   sports: params.sports,
   games: params.games,
   other: params.other,

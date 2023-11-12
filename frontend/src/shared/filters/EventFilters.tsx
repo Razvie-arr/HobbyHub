@@ -6,25 +6,26 @@ import { useLocation } from 'react-router-dom';
 
 import { SortType } from '../../gql/graphql';
 import { eventTypes } from '../constants';
-import { DatePickerField, SelectField } from '../forms';
+import { SelectField } from '../forms';
 import { ContentContainer } from '../layout';
 
 import { ActivityFilter } from './ActivityFilter';
 import { AddressFilterBar } from './AddressFilterBar.tsx';
+import { DateRangeField, DistanceSelectField } from './fields';
 import { useFilterSearchParams } from './hooks';
-import { MainFiltersValues } from './types';
+import { EventFiltersValues } from './types';
 
 const inputProps = {
-  bg: 'gray.200',
+  bg: 'white',
   borderRadius: 'full',
 };
 
 interface MainFiltersProps {
-  defaultValues: MainFiltersValues;
-  handleSubmit: (values: MainFiltersValues) => void;
+  defaultValues: EventFiltersValues;
+  handleSubmit: (values: EventFiltersValues) => void;
 }
 
-export const MainFilters = ({ defaultValues, handleSubmit }: MainFiltersProps) => {
+export const EventFilters = ({ defaultValues, handleSubmit }: MainFiltersProps) => {
   const { setParams } = useFilterSearchParams();
 
   const methods = useForm({
@@ -77,27 +78,8 @@ export const MainFilters = ({ defaultValues, handleSubmit }: MainFiltersProps) =
                     <ActivityFilter label="Games" fieldName="games" eventTypes={eventTypes.games} />
                     <ActivityFilter label="Other" fieldName="other" eventTypes={eventTypes.other} />
                   </HStack>
-                  <SelectField name="distance" formControlProps={{ flexBasis: '11%' }} {...inputProps}>
-                    <option value="5">Within 5 km</option>
-                    <option value="10">Within 10 km</option>
-                    <option value="20">Within 20 km</option>
-                    <option value="50">Within 50 km</option>
-                    <option value="100">Within 100 km</option>
-                    <option value="200">Within 200 km</option>
-                    <option value="500">Within 500 km</option>
-                  </SelectField>
-                  <DatePickerField
-                    name="dates"
-                    formControlProps={{ flexBasis: { base: 'none', lg: '17%' } }}
-                    datePickerProps={{
-                      selectsRange: true,
-                      isClearable: true,
-                      placeholderText: 'Select dates',
-                      monthsShown: 2,
-                      todayButton: 'Today',
-                    }}
-                    inputProps={inputProps}
-                  />
+                  <DistanceSelectField />
+                  <DateRangeField />
                   <SelectField
                     name="sortBy"
                     formControlProps={{ flexBasis: { base: 'none', lg: '13%' } }}
@@ -140,7 +122,7 @@ export const MainFilters = ({ defaultValues, handleSubmit }: MainFiltersProps) =
               </ContentContainer>
             </Box>
             <Box bg="gray.50" w="100%" py="4">
-              <AddressFilterBar defaultValues={defaultValues} onAddressSelected={handleFormSubmit} />
+              <AddressFilterBar address={defaultValues.address} onAddressSelected={handleFormSubmit} />
             </Box>
           </VStack>
         </form>

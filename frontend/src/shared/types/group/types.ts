@@ -7,14 +7,14 @@ export type GroupFragmentResultType = DocumentType<typeof GroupFragment>;
 export type GroupProps = DocumentType<typeof GroupFragment>;
 
 export interface WithGroup {
-  Group: GroupProps;
+  group: GroupProps;
 }
 
 export interface WithGroups {
-  Groups: Array<GroupProps>;
+  groups: Array<GroupProps>;
 }
 
 export interface WithNonEmptyGroups {
-  Groups: [GroupProps, ...GroupProps[]];
+  groups: [GroupProps, ...GroupProps[]];
 }
 

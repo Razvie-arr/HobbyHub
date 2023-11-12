@@ -1,0 +1,2 @@
+export { GroupDetails } from './GroupDetails';
+

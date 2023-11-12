@@ -46,6 +46,10 @@ const documents = {
     types.SimilarEventsDocument,
   '\n  query SearchEvents($text: String!, $offset: Int, $limit: Int) {\n    searchEvents(text: $text, offset: $offset, limit: $limit) {\n      ...EventFragment\n    }\n  }\n':
     types.SearchEventsDocument,
+  '\n  query GroupById($groupId: Int!) {\n    groupById(id: $groupId) {\n      ...GroupFragment\n    }\n  }\n':
+    types.GroupByIdDocument,
+  '\n  query FilterGroups($offset: Int, $limit: Int, $eventTypeIds: [Int!], $filterLocation: FilterLocationInput, $sort: GroupSortType) {\n    filterGroups(offset: $offset, limit: $limit, eventTypeIds: $eventTypeIds, filterLocation: $filterLocation, sort: $sort) {\n      ...GroupFragment\n    }\n  }\n':
+    types.FilterGroupsDocument,
   '\n  fragment EventFragment on Event {\n    id\n    name\n    start_datetime\n    end_datetime\n    event_types {\n      id\n      name\n    }\n    author {\n      id\n      first_name\n      last_name\n    }\n    group {\n      id\n      name\n      admin {\n        id\n      }\n    }\n    location {\n      id\n      country\n      city\n      street_name\n      street_number\n      longitude\n      latitude\n    }\n    summary\n    description\n    image_filepath\n    capacity\n    allow_waitlist\n    participants {\n      id\n      first_name\n      last_name\n    }\n  }\n':
     types.EventFragmentFragmentDoc,
   '\n  fragment GroupFragment on Group {\n    id\n    name\n    admin {\n      id\n      first_name\n      last_name\n    }\n    event_types {\n      id\n      name\n    }\n    location {\n      id\n      country\n      city\n      street_name\n      street_number\n      longitude\n      latitude\n    }\n    members {\n      id\n      first_name\n      last_name\n    }\n    summary\n    description\n    image_filepath\n  }\n':
@@ -168,6 +172,18 @@ export function gql(
 export function gql(
   source: '\n  query SearchEvents($text: String!, $offset: Int, $limit: Int) {\n    searchEvents(text: $text, offset: $offset, limit: $limit) {\n      ...EventFragment\n    }\n  }\n',
 ): (typeof documents)['\n  query SearchEvents($text: String!, $offset: Int, $limit: Int) {\n    searchEvents(text: $text, offset: $offset, limit: $limit) {\n      ...EventFragment\n    }\n  }\n'];
+/**
+ * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function gql(
+  source: '\n  query GroupById($groupId: Int!) {\n    groupById(id: $groupId) {\n      ...GroupFragment\n    }\n  }\n',
+): (typeof documents)['\n  query GroupById($groupId: Int!) {\n    groupById(id: $groupId) {\n      ...GroupFragment\n    }\n  }\n'];
+/**
+ * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function gql(
+  source: '\n  query FilterGroups($offset: Int, $limit: Int, $eventTypeIds: [Int!], $filterLocation: FilterLocationInput, $sort: GroupSortType) {\n    filterGroups(offset: $offset, limit: $limit, eventTypeIds: $eventTypeIds, filterLocation: $filterLocation, sort: $sort) {\n      ...GroupFragment\n    }\n  }\n',
+): (typeof documents)['\n  query FilterGroups($offset: Int, $limit: Int, $eventTypeIds: [Int!], $filterLocation: FilterLocationInput, $sort: GroupSortType) {\n    filterGroups(offset: $offset, limit: $limit, eventTypeIds: $eventTypeIds, filterLocation: $filterLocation, sort: $sort) {\n      ...GroupFragment\n    }\n  }\n'];
 /**
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */

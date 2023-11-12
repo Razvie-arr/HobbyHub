@@ -3,20 +3,20 @@ import { useLazyQuery } from '@apollo/client';
 import { Button, Center, Flex, Spinner, Stack } from '@chakra-ui/react';
 import { Option, pipe, ReadonlyArray } from 'effect';
 
-import { SortType } from '../../../gql/graphql';
+import { GroupSortType } from '../../../gql/graphql';
 import { DataList } from '../../../shared/design-system';
 import { DataMapButton } from '../../../shared/design-system/organisms/DataMap';
-import { createEventFilterValuesFromParams, EventFilters, EventFiltersValues } from '../../../shared/filters';
+import { createGroupFilterValuesFromParams, GroupFilters, GroupFiltersValues } from '../../../shared/filters';
 import { useFilterSearchParams } from '../../../shared/filters/hooks';
 import { useLngLatGeocoding } from '../../../shared/hooks/useLngLatGeocoding';
 import { ContentContainer, QueryResult } from '../../../shared/layout';
-import { getEventFragmentData } from '../../../shared/types';
+import { getGroupFragmentData } from '../../../shared/types';
 import { useAuth } from '../../auth';
-import { FILTERED_EVENTS } from '../queries';
+import { FILTERED_GROUPS } from '../queries';
 
 const callIfFunction = (f: number | (() => number)) => (typeof f === 'number' ? f : f());
 
-export const EventsPageContainer = () => {
+export const GroupsPageContainer = () => {
   const { params } = useFilterSearchParams();
   const { user } = useAuth();
 
@@ -30,7 +30,7 @@ export const EventsPageContainer = () => {
       <Spinner size="xl" />
     </Flex>
   ) : (
-    <EventsPage location={location} />
+    <GroupPage location={location} />
   );
 };
 
@@ -40,18 +40,17 @@ interface EventsPageProps {
 
 const DEFAULT_LIMIT = 8;
 
-export const EventsPage = ({ location }: EventsPageProps) => {
+export const GroupPage = ({ location }: EventsPageProps) => {
   const { user } = useAuth();
-  const [getFilteredEvents, queryResult] = useLazyQuery(FILTERED_EVENTS);
-  const { params } = useFilterSearchParams<SortType>();
+  const [getFilteredGroups, queryResult] = useLazyQuery(FILTERED_GROUPS);
+  const { params } = useFilterSearchParams<GroupSortType>();
 
-  const defaultFilterValues = { ...createEventFilterValuesFromParams(params), address: location };
+  const defaultFilterValues = { ...createGroupFilterValuesFromParams(params), address: location };
 
   const [filterValues, setFilterValues] = useState(defaultFilterValues);
   const [noMoreResults, setNoMoreResults] = useState(false);
 
-  const fetchFilteredEvents = async (values: EventFiltersValues, ownLimit: number) => {
-    const [startDate, endDate] = values.dates;
+  const fetchFilteredEvents = async (values: GroupFiltersValues, ownLimit: number) => {
     const filterLocation = pipe(
       values.address?.geometry?.location,
       Option.fromNullable,
@@ -64,11 +63,9 @@ export const EventsPage = ({ location }: EventsPageProps) => {
     );
     const eventTypeIds = [...values.sports, ...values.games, ...values.other];
 
-    const result = await getFilteredEvents({
+    const result = await getFilteredGroups({
       variables: {
         filterLocation: filterLocation,
-        startDatetime: startDate?.toISOString(),
-        endDatetime: endDate?.toISOString(),
         eventTypeIds: ReadonlyArray.isNonEmptyArray(eventTypeIds) ? eventTypeIds : undefined,
         limit: ownLimit,
         offset: 0,
@@ -93,7 +90,7 @@ export const EventsPage = ({ location }: EventsPageProps) => {
 
   return (
     <>
-      <EventFilters
+      <GroupFilters
         defaultValues={defaultFilterValues}
         handleSubmit={async (values) => {
           await fetchFilteredEvents(values, DEFAULT_LIMIT);
@@ -105,25 +102,25 @@ export const EventsPage = ({ location }: EventsPageProps) => {
         <QueryResult
           queryResult={queryResult}
           render={(data) => {
-            const eventFragments = data.filterEvents;
-            if (!eventFragments) {
+            const groupFragments = data.filterGroups;
+            if (!groupFragments) {
               return null;
             }
-            const events = eventFragments.map(getEventFragmentData);
+            const groups = groupFragments.map(getGroupFragmentData);
             return (
               <>
-                {ReadonlyArray.isNonEmptyArray(events) ? (
+                {ReadonlyArray.isNonEmptyArray(groups) ? (
                   <DataMapButton
-                    mapInfos={{ user, type: 'event', dataArray: events }}
+                    mapInfos={{ user, type: 'group', dataArray: groups }}
                     position="fixed"
                     bottom="8"
                     right="8"
                   />
                 ) : null}
                 <Stack spacing="8">
-                  <DataList type="event" dataArray={events} user={user} />
+                  <DataList type="group" dataArray={groups} user={user} />
                 </Stack>
-                {ReadonlyArray.isNonEmptyArray(events) ? (
+                {ReadonlyArray.isNonEmptyArray(groups) ? (
                   <Center mb="16">
                     <Button
                       colorScheme="purple"
@@ -131,10 +128,10 @@ export const EventsPage = ({ location }: EventsPageProps) => {
                       onClick={async () => {
                         const result = await queryResult.fetchMore({
                           variables: {
-                            offset: events.length,
+                            offset: groups.length,
                           },
                         });
-                        if ((result.data.filterEvents?.length ?? 0) === 0) {
+                        if ((result.data.filterGroups?.length ?? 0) === 0) {
                           setNoMoreResults(true);
                         }
                       }}
