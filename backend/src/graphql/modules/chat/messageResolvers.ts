@@ -14,7 +14,7 @@ export const sendMessageResolver = async (
     .transaction(async (trx) => {
       const currentDateTime = new Date().toISOString().slice(0, 19).replace('T', ' ');
 
-      let threadIdDb;
+      let threadId;
       let newThreadCreated = false;
 
       const foundThreadBetweenUsersId = (
@@ -25,21 +25,27 @@ export const sendMessageResolver = async (
           .havingRaw('COUNT(DISTINCT user_id) = 2')
       )[0];
       if (foundThreadBetweenUsersId) {
-        threadIdDb = foundThreadBetweenUsersId.thread_id;
+        threadId = foundThreadBetweenUsersId.thread_id;
       } else {
-        threadIdDb = (await trx('Thread').insert({ last_message_at: currentDateTime, thread_read: false }, 'id'))[0];
+        threadId = (await trx('Thread').insert({ last_message_at: currentDateTime }, 'id'))[0];
         newThreadCreated = true;
       }
 
       if (newThreadCreated) {
-        await trx('User_Thread').insert({ user_id: senderId, thread_id: threadIdDb as number });
-        await trx('User_Thread').insert({ user_id: recipientId, thread_id: threadIdDb as number });
+        await trx('User_Thread').insert({ user_id: senderId, thread_id: threadId as number });
+        await trx('User_Thread').insert({ user_id: recipientId, thread_id: threadId as number });
       }
+
+      await trx('User_Thread').where('user_id', senderId).andWhere('thread_id', threadId).update('thread_read', true);
+      await trx('User_Thread')
+        .where('user_id', recipientId)
+        .andWhere('thread_id', threadId)
+        .update('thread_read', false);
 
       const messageId = (
         await trx('Message').insert(
           {
-            thread_id: threadIdDb,
+            thread_id: threadId,
             sender_id: senderId,
             text: text,
             sent_at: currentDateTime,

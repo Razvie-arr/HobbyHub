@@ -17,7 +17,7 @@ declare module 'knex/types/tables' {
     Event_UserGroup: { event_id: number; group_id: number };
     UserGroup_EventType: { group_id: number; event_type_id: number };
     User_EventType: { user_id: number; event_type_id: number };
-    User_Thread: { user_id: number; thread_id: number };
+    User_Thread: { user_id: number; thread_id: number; thread_read: boolean };
     User_UserGroup: { user_id: number; group_id: number };
 
     //https://knexjs.org/guide/#typescript
@@ -48,4 +48,3 @@ declare module 'knex/types/tables' {
     >;
   }
 }
-

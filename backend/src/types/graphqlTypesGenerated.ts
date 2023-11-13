@@ -164,6 +164,7 @@ export type Mutation = {
   editLocation?: Maybe<Location>;
   editUser: User;
   onboardUser: AuthUser;
+  readThread: Scalars['String']['output'];
   requestResetPassword: Scalars['Boolean']['output'];
   resetPassword: Scalars['Boolean']['output'];
   sendMessage: Scalars['String']['output'];
@@ -216,6 +217,12 @@ export type MutationEditUserArgs = {
 export type MutationOnboardUserArgs = {
   location: LocationInputWithoutCoords;
   user: UserInput;
+};
+
+export type MutationReadThreadArgs = {
+  read: Scalars['Boolean']['input'];
+  threadId: Scalars['Int']['input'];
+  userId: Scalars['Int']['input'];
 };
 
 export type MutationRequestResetPasswordArgs = {
@@ -442,8 +449,7 @@ export type Thread = {
   id: Scalars['Int']['output'];
   lastMessage: Message;
   last_message_at?: Maybe<Scalars['String']['output']>;
-  messages: Array<Maybe<Message>>;
-  thread_read: Scalars['Boolean']['output'];
+  messages: Array<Message>;
   users: Array<User>;
 };
 
@@ -769,6 +775,12 @@ export type MutationResolvers<
     ContextType,
     RequireFields<MutationOnboardUserArgs, 'location' | 'user'>
   >;
+  readThread?: Resolver<
+    ResolversTypes['String'],
+    ParentType,
+    ContextType,
+    RequireFields<MutationReadThreadArgs, 'read' | 'threadId' | 'userId'>
+  >;
   requestResetPassword?: Resolver<
     ResolversTypes['Boolean'],
     ParentType,
@@ -943,8 +955,7 @@ export type ThreadResolvers<
   id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   lastMessage?: Resolver<ResolversTypes['Message'], ParentType, ContextType>;
   last_message_at?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-  messages?: Resolver<Array<Maybe<ResolversTypes['Message']>>, ParentType, ContextType>;
-  thread_read?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  messages?: Resolver<Array<ResolversTypes['Message']>, ParentType, ContextType>;
   users?: Resolver<Array<ResolversTypes['User']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };

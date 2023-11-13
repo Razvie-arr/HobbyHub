@@ -1,8 +1,11 @@
+import { GraphQLError } from 'graphql/error';
+
 import {
   ContextualNullableResolver,
   ContextualResolver,
   ContextualResolverWithParent,
   Message,
+  MutationReadThreadArgs,
   QueryThreadByIdArgs,
   QueryThreadsArgs,
   Thread,
@@ -37,3 +40,15 @@ export const threadLastMessageResolver: ContextualResolverWithParent<Message, Th
   _,
   { dataSources },
 ) => await dataSources.sql.threads.getLastMessage(parent.id);
+
+export const readThreadResolver: ContextualResolver<string, MutationReadThreadArgs> = async (
+  _,
+  { userId, threadId, read },
+  { dataSources },
+) => {
+  const dbResponse = await dataSources.sql.threads.setReadThread(userId, threadId, read);
+  if (!dbResponse) {
+    throw new GraphQLError('Error when changing thread read status');
+  }
+  return 'Thread read status changed!';
+};
