@@ -249,7 +249,7 @@ export class SQLDataSource extends BatchedSQLDataSource {
       this.db.query('Message').where('thread_id', threadId).orderBy('sent_at', 'desc').first('*'),
     getUsers: (threadId: number) =>
       this.db.query('User_Thread').innerJoin('User', 'User_Thread.user_id', 'User.id').where('thread_id', threadId),
-    setReadThread: (userId: number, threadId: number, read: boolean) =>
+    setRead: (userId: number, threadId: number, read: boolean) =>
       this.db.write('User_Thread').where('user_id', userId).andWhere('thread_id', threadId).update('thread_read', read),
   };
 }

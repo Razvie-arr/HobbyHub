@@ -1,12 +1,10 @@
 import { GraphQLError } from 'graphql/error';
 
 import {
-  ContextualNullableResolver,
   ContextualResolver,
   ContextualResolverWithParent,
   Message,
   MutationReadThreadArgs,
-  QueryThreadByIdArgs,
   QueryThreadsArgs,
   Thread,
   User,
@@ -17,11 +15,6 @@ export const threadsResolver: ContextualResolver<Array<Thread>, QueryThreadsArgs
   { userId, offset, limit },
   { dataSources },
 ) => dataSources.sql.threads.getAllByUserId(userId, offset, limit);
-export const threadByIdResolver: ContextualNullableResolver<Thread, QueryThreadByIdArgs> = async (
-  _,
-  { id },
-  { dataSources },
-) => await dataSources.sql.threads.getById(id);
 
 export const threadUsersResolver: ContextualResolverWithParent<Array<User>, Thread> = async (
   parent,
@@ -46,7 +39,7 @@ export const editReadThreadResolver: ContextualResolver<string, MutationReadThre
   { userId, threadId, read },
   { dataSources },
 ) => {
-  const dbResponse = await dataSources.sql.threads.setReadThread(userId, threadId, read);
+  const dbResponse = await dataSources.sql.threads.setRead(userId, threadId, read);
   if (!dbResponse) {
     throw new GraphQLError('Error when changing thread read status');
   }

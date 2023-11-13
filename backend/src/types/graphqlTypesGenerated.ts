@@ -283,7 +283,6 @@ export type Query = {
   newlyCreatedNearbyEvents: Array<Event>;
   searchEvents: Array<Event>;
   similarEvents: Array<Event>;
-  threadById?: Maybe<Thread>;
   threads: Array<Thread>;
   todaysNearbyEvents: Array<Event>;
   userById?: Maybe<User>;
@@ -409,10 +408,6 @@ export type QuerySimilarEventsArgs = {
   offset?: InputMaybe<Scalars['Int']['input']>;
 };
 
-export type QueryThreadByIdArgs = {
-  id: Scalars['Int']['input'];
-};
-
 export type QueryThreadsArgs = {
   limit?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
@@ -450,6 +445,7 @@ export type Thread = {
   lastMessage: Message;
   last_message_at?: Maybe<Scalars['String']['output']>;
   messages: Array<Message>;
+  thread_read: Scalars['Boolean']['output'];
   users: Array<User>;
 };
 
@@ -920,12 +916,6 @@ export type QueryResolvers<
     ContextType,
     RequireFields<QuerySimilarEventsArgs, 'city' | 'eventId' | 'eventTypeIds'>
   >;
-  threadById?: Resolver<
-    Maybe<ResolversTypes['Thread']>,
-    ParentType,
-    ContextType,
-    RequireFields<QueryThreadByIdArgs, 'id'>
-  >;
   threads?: Resolver<
     Array<ResolversTypes['Thread']>,
     ParentType,
@@ -956,6 +946,7 @@ export type ThreadResolvers<
   lastMessage?: Resolver<ResolversTypes['Message'], ParentType, ContextType>;
   last_message_at?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   messages?: Resolver<Array<ResolversTypes['Message']>, ParentType, ContextType>;
+  thread_read?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
   users?: Resolver<Array<ResolversTypes['User']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };

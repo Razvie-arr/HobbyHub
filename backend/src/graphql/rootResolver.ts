@@ -5,7 +5,6 @@ import { Resolvers } from '../types';
 import { messageSenderResolver, sendMessageResolver } from './modules/chat/messageResolvers';
 import {
   editReadThreadResolver,
-  threadByIdResolver,
   threadLastMessageResolver,
   threadMessagesResolver,
   threadsResolver,
@@ -98,7 +97,6 @@ export const rootResolver: Resolvers = {
     usersByIds: usersByIdsResolver,
 
     threads: threadsResolver,
-    threadById: threadByIdResolver,
 
     groups: groupsResolver,
     groupById: groupByIdResolver,
