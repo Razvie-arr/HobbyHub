@@ -4,7 +4,7 @@ import { Resolvers } from '../types';
 
 import { messageSenderResolver, sendMessageResolver } from './modules/chat/messageResolvers';
 import {
-  readThreadResolver,
+  editReadThreadResolver,
   threadByIdResolver,
   threadLastMessageResolver,
   threadMessagesResolver,
@@ -137,7 +137,7 @@ export const rootResolver: Resolvers = {
 
     sendMessage: sendMessageResolver,
 
-    readThread: readThreadResolver,
+    readThread: editReadThreadResolver,
   },
 
   Upload: GraphQLUpload,
