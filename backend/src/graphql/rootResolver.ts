@@ -2,7 +2,11 @@ import GraphQLUpload from 'graphql-upload/GraphQLUpload.js';
 
 import { Resolvers } from '../types';
 
-import { messageSenderResolver, sendMessageResolver } from './modules/chat/messageResolvers';
+import {
+  messagesByThreadIdResolver,
+  messageSenderResolver,
+  sendMessageResolver,
+} from './modules/chat/messageResolvers';
 import {
   editReadThreadResolver,
   threadLastMessageResolver,
@@ -97,6 +101,7 @@ export const rootResolver: Resolvers = {
     usersByIds: usersByIdsResolver,
 
     threads: threadsResolver,
+    messagesByThreadId: messagesByThreadIdResolver,
 
     groups: groupsResolver,
     groupById: groupByIdResolver,
@@ -135,7 +140,7 @@ export const rootResolver: Resolvers = {
 
     sendMessage: sendMessageResolver,
 
-    readThread: editReadThreadResolver,
+    editReadThread: editReadThreadResolver,
   },
 
   Upload: GraphQLUpload,

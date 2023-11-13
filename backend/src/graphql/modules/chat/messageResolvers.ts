@@ -1,9 +1,23 @@
 import { GraphQLError } from 'graphql/error';
 
-import { ContextualResolverWithParent, CustomContext, Message, MutationSendMessageArgs, User } from '../../../types';
+import {
+  ContextualResolver,
+  ContextualResolverWithParent,
+  CustomContext,
+  Message,
+  MutationSendMessageArgs,
+  QueryMessagesByThreadIdArgs,
+  User,
+} from '../../../types';
 
 export const messageSenderResolver: ContextualResolverWithParent<User, Message> = async (parent, _, { dataSources }) =>
   (await dataSources.sql.users.getById(parent.sender_id)) as unknown as User;
+
+export const messagesByThreadIdResolver: ContextualResolver<Array<Message>, QueryMessagesByThreadIdArgs> = async (
+  _,
+  { threadId, offset, limit },
+  { dataSources },
+) => await dataSources.sql.messages.getAllByThreadId(threadId, offset, limit);
 
 export const sendMessageResolver = async (
   _: unknown,

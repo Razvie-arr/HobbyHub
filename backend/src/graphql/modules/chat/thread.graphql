@@ -3,7 +3,7 @@ extend type Query {
 }
 
 extend type Mutation {
-  readThread(userId: Int!, threadId: Int!, read: Boolean!): String!
+  editReadThread(userId: Int!, threadId: Int!, read: Boolean!): String!
 }
 
 type Thread {

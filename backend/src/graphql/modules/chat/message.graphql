@@ -1,3 +1,7 @@
+extend type Query {
+  messagesByThreadId(threadId: Int!, offset: Int, limit: Int): [Message!]!
+}
+
 extend type Mutation {
   sendMessage(senderId: Int!, recipientId: Int!, text: String!): String!
 }

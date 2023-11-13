@@ -4,7 +4,7 @@ import {
   ContextualResolver,
   ContextualResolverWithParent,
   Message,
-  MutationReadThreadArgs,
+  MutationEditReadThreadArgs,
   QueryThreadsArgs,
   Thread,
   User,
@@ -34,7 +34,7 @@ export const threadLastMessageResolver: ContextualResolverWithParent<Message, Th
   { dataSources },
 ) => await dataSources.sql.threads.getLastMessage(parent.id);
 
-export const editReadThreadResolver: ContextualResolver<string, MutationReadThreadArgs> = async (
+export const editReadThreadResolver: ContextualResolver<string, MutationEditReadThreadArgs> = async (
   _,
   { userId, threadId, read },
   { dataSources },

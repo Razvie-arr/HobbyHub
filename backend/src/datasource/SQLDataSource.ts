@@ -252,4 +252,14 @@ export class SQLDataSource extends BatchedSQLDataSource {
     setRead: (userId: number, threadId: number, read: boolean) =>
       this.db.write('User_Thread').where('user_id', userId).andWhere('thread_id', threadId).update('thread_read', read),
   };
+
+  messages = {
+    getAllByThreadId: (threadId: number, offset?: number | null, limit?: number | null) => {
+      const query = this.db
+        .query('Message')
+        .where('thread_id', threadId)
+        .offset(offset ?? 0);
+      return limit ? query.limit(limit) : query;
+    },
+  };
 }

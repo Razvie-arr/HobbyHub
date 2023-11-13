@@ -162,9 +162,9 @@ export type Mutation = {
   deleteUser: Scalars['String']['output'];
   editEvent: Event;
   editLocation?: Maybe<Location>;
+  editReadThread: Scalars['String']['output'];
   editUser: User;
   onboardUser: AuthUser;
-  readThread: Scalars['String']['output'];
   requestResetPassword: Scalars['Boolean']['output'];
   resetPassword: Scalars['Boolean']['output'];
   sendMessage: Scalars['String']['output'];
@@ -209,6 +209,12 @@ export type MutationEditLocationArgs = {
   location: LocationInputWithoutCoords;
 };
 
+export type MutationEditReadThreadArgs = {
+  read: Scalars['Boolean']['input'];
+  threadId: Scalars['Int']['input'];
+  userId: Scalars['Int']['input'];
+};
+
 export type MutationEditUserArgs = {
   location: LocationInputWithoutCoords;
   user: UserInput;
@@ -217,12 +223,6 @@ export type MutationEditUserArgs = {
 export type MutationOnboardUserArgs = {
   location: LocationInputWithoutCoords;
   user: UserInput;
-};
-
-export type MutationReadThreadArgs = {
-  read: Scalars['Boolean']['input'];
-  threadId: Scalars['Int']['input'];
-  userId: Scalars['Int']['input'];
 };
 
 export type MutationRequestResetPasswordArgs = {
@@ -279,6 +279,7 @@ export type Query = {
   locationById?: Maybe<Location>;
   locations: Array<Location>;
   locationsByIds: Array<Location>;
+  messagesByThreadId: Array<Message>;
   nearbyGroups: Array<Group>;
   newlyCreatedNearbyEvents: Array<Event>;
   searchEvents: Array<Event>;
@@ -378,6 +379,12 @@ export type QueryLocationsArgs = {
 
 export type QueryLocationsByIdsArgs = {
   ids: Array<Scalars['Int']['input']>;
+};
+
+export type QueryMessagesByThreadIdArgs = {
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  threadId: Scalars['Int']['input'];
 };
 
 export type QueryNearbyGroupsArgs = {
@@ -759,6 +766,12 @@ export type MutationResolvers<
     ContextType,
     RequireFields<MutationEditLocationArgs, 'location'>
   >;
+  editReadThread?: Resolver<
+    ResolversTypes['String'],
+    ParentType,
+    ContextType,
+    RequireFields<MutationEditReadThreadArgs, 'read' | 'threadId' | 'userId'>
+  >;
   editUser?: Resolver<
     ResolversTypes['User'],
     ParentType,
@@ -770,12 +783,6 @@ export type MutationResolvers<
     ParentType,
     ContextType,
     RequireFields<MutationOnboardUserArgs, 'location' | 'user'>
-  >;
-  readThread?: Resolver<
-    ResolversTypes['String'],
-    ParentType,
-    ContextType,
-    RequireFields<MutationReadThreadArgs, 'read' | 'threadId' | 'userId'>
   >;
   requestResetPassword?: Resolver<
     ResolversTypes['Boolean'],
@@ -891,6 +898,12 @@ export type QueryResolvers<
     ParentType,
     ContextType,
     RequireFields<QueryLocationsByIdsArgs, 'ids'>
+  >;
+  messagesByThreadId?: Resolver<
+    Array<ResolversTypes['Message']>,
+    ParentType,
+    ContextType,
+    RequireFields<QueryMessagesByThreadIdArgs, 'threadId'>
   >;
   nearbyGroups?: Resolver<
     Array<ResolversTypes['Group']>,
