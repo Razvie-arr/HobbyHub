@@ -7,14 +7,14 @@ export type MessageFragmentResultType = DocumentType<typeof MessageFragment>;
 export type MessageData = DocumentType<typeof MessageFragment>;
 
 export interface WithMessage {
-  thread: MessageData;
+  message: MessageData;
 }
 
 export interface WithMessages {
-  threads: Array<MessageData>;
+  messages: Array<MessageData>;
 }
 
 export interface WithNonEmptyMessages {
-  threads: [MessageData, ...MessageData[]];
+  messages: [MessageData, ...MessageData[]];
 }
 

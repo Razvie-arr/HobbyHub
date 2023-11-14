@@ -8,3 +8,11 @@ export const THREADS = gql(`
   }
 `);
 
+export const MESSAGES_BY_THREAD = gql(`
+  query MessagesByThreadId($threadId: Int!) {
+    messagesByThreadId(threadId: $threadId) {
+      ...MessageFragment
+    }
+  }
+`);
+

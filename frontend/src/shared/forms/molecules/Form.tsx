@@ -1,4 +1,5 @@
 import { type ReactNode } from 'react';
+import { Box } from '@chakra-ui/react';
 import { type FieldValues, FormProvider, type SubmitHandler, useForm, type UseFormProps } from 'react-hook-form';
 
 export type FormProps<TFieldValues extends FieldValues = FieldValues> = UseFormProps<TFieldValues> & {
@@ -17,9 +18,12 @@ export const Form = <TFieldValues extends FieldValues = FieldValues>({
 
   return (
     <FormProvider {...methods}>
-      <form onSubmit={methods.handleSubmit(onSubmit)} noValidate={noValidate}>
-        {children}
-      </form>
+      <Box w="100%">
+        <form onSubmit={methods.handleSubmit(onSubmit)} noValidate={noValidate}>
+          {children}
+        </form>
+      </Box>
     </FormProvider>
   );
 };
+

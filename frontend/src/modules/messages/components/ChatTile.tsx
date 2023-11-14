@@ -1,15 +1,16 @@
-import { Avatar, Box, Circle, Flex, Spacer, Text } from '@chakra-ui/react';
+import { Avatar, Box, Circle, Flex, HStack, Spacer, Text } from '@chakra-ui/react';
 
-import { getMessageFragmentData, WithThread } from '../../../shared/types';
+import { MessageData } from '../../../shared/types';
 
-interface ChatTileProps extends WithThread {
+interface ChatTileProps {
   title: string;
   onClick: () => void;
   isSelected: boolean;
+  lastMessage: MessageData;
+  read?: boolean;
 }
 
-export const ChatTile = ({ title, thread, onClick, isSelected }: ChatTileProps) => {
-  const lastMessage = getMessageFragmentData(thread.lastMessage);
+export const ChatTile = ({ title, lastMessage, read, onClick, isSelected }: ChatTileProps) => {
   const { locale } = Intl.DateTimeFormat().resolvedOptions();
   const lastMessageSentAt = new Date(lastMessage.sent_at);
   return (
@@ -18,24 +19,23 @@ export const ChatTile = ({ title, thread, onClick, isSelected }: ChatTileProps) 
       minH="20"
       bg={isSelected ? 'gray.300' : 'gray.50'}
       width="100%"
-      px={5}
+      px={3}
       borderRadius={8}
       onClick={onClick}
       _hover={{ cursor: 'pointer' }}
     >
-      <Flex height="100%" alignItems="center">
+      <HStack height="100%" alignItems="center" spacing={3}>
         <Avatar boxSize="50px" name={title} bg="purple.500" />
-        <Box mx={4}>
+        <Box>
           <Text as="b">{title}</Text>
           <Flex alignItems="center">
             <Text noOfLines={1} width="100%">
               {lastMessage.text}
             </Text>
-            <Spacer />
           </Flex>
         </Box>
         <Spacer />
-        <Text mx={3} fontSize="sm">
+        <Text mx={3} fontSize="sm" m="0">
           {lastMessageSentAt.toLocaleString(locale, {
             day: 'numeric',
             month: 'short',
@@ -43,8 +43,8 @@ export const ChatTile = ({ title, thread, onClick, isSelected }: ChatTileProps) 
             minute: '2-digit',
           })}
         </Text>
-        <Circle visibility={thread.thread_read ? 'hidden' : 'visible'} size="10px" bg="purple.500"></Circle>
-      </Flex>
+        <Circle visibility={read ? 'hidden' : 'visible'} size="10px" bg="purple.500"></Circle>
+      </HStack>
     </Box>
   );
 };

@@ -8,7 +8,7 @@ interface MessageProps {
 
 export const Message = ({ isMyMessage, senderName, messageText }: MessageProps) => (
   <HStack alignSelf={isMyMessage ? 'flex-end' : 'flex-start'} spacing={4}>
-    {!isMyMessage && <Avatar src="gibbresh.png" boxSize="50px" name={senderName} bg="purple.500" />}
+    {!isMyMessage && <Avatar boxSize="50px" name={senderName} bg="purple.500" />}
     <Box
       shadow="sm"
       bg={isMyMessage ? 'purple.500' : 'white'}
@@ -20,3 +20,4 @@ export const Message = ({ isMyMessage, senderName, messageText }: MessageProps) 
     </Box>
   </HStack>
 );
+

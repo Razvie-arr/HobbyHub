@@ -1,33 +1,21 @@
 import { Fragment, useEffect, useRef } from 'react';
-import {
-  CardBody,
-  CardFooter,
-  CardHeader,
-  Icon,
-  IconButton,
-  Input,
-  InputGroup,
-  InputRightElement,
-  Text,
-  VStack,
-} from '@chakra-ui/react';
+import { CardBody, CardHeader, IconButton, Text, VStack } from '@chakra-ui/react';
+import { NonEmptyArray } from 'effect/dist/declarations/src/ReadonlyArray';
 import { FaArrowLeft } from 'react-icons/fa6';
-import { MdSend } from 'react-icons/md';
 
-import { getMessageFragmentData, WithAuthUser, WithThread } from '../../../shared/types';
+import { User } from '../../../gql/graphql';
+import { WithAuthUser, WithMessages } from '../../../shared/types';
 import { Message } from '../components';
 
-interface ChatContentProps extends WithThread, WithAuthUser {
-  title: string;
+interface ChatContentProps extends WithMessages, WithAuthUser {
   onBackClick: () => void;
+  otherUsers: NonEmptyArray<User>;
 }
 
-export const ChatContent = ({ thread, user, title, onBackClick }: ChatContentProps) => {
+export const ChatContent = ({ messages, user, otherUsers, onBackClick }: ChatContentProps) => {
   const { locale } = Intl.DateTimeFormat().resolvedOptions();
 
-  const sortedMessages = thread.messages
-    .map(getMessageFragmentData)
-    .sort((a, b) => new Date(a.sent_at).getTime() - new Date(b.sent_at).getTime());
+  const sortedMessages = messages.sort((a, b) => new Date(a.sent_at).getTime() - new Date(b.sent_at).getTime());
   const chatContainerRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
@@ -52,7 +40,7 @@ export const ChatContent = ({ thread, user, title, onBackClick }: ChatContentPro
           onClick={onBackClick}
         />
         <Text fontSize="xl" as="b" textAlign="center">
-          {title}
+          {otherUsers.map(({ first_name, last_name }) => `${first_name} ${last_name}`).join(', ')}
         </Text>
       </CardHeader>
       <CardBody bg="gray.50" overflowY="auto" ref={chatContainerRef}>
@@ -77,21 +65,6 @@ export const ChatContent = ({ thread, user, title, onBackClick }: ChatContentPro
           })}
         </VStack>
       </CardBody>
-      <CardFooter>
-        <InputGroup>
-          <Input placeholder="Write a reply..." borderRadius="full" />
-          <InputRightElement width="3rem">
-            <IconButton
-              borderRadius="full"
-              colorScheme="purple"
-              aria-label="Send message"
-              h="1.75rem"
-              size="sm"
-              icon={<Icon as={MdSend} />}
-            />
-          </InputRightElement>
-        </InputGroup>
-      </CardFooter>
     </>
   );
 };

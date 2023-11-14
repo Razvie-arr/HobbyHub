@@ -1,1 +1,2 @@
-export { MessagesPage } from './MessagesPage';
+export { MessagesPageContainer as MessagesPage } from './MessagesPage';
+

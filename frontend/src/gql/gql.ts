@@ -54,8 +54,14 @@ const documents = {
     types.FilterGroupsDocument,
   '\n  query GetLocationAwareGroups($userId: Int!, $longitude: Float!, $latitude: Float!, $offset: Int, $limit: Int) {\n    nearbyGroups(longitude: $longitude, latitude: $latitude, offset: $offset, limit: $limit) {\n      ...GroupFragment\n    }\n    interestingNearbyGroups(\n      longitude: $longitude\n      latitude: $latitude\n      userId: $userId\n      offset: $offset\n      limit: $limit\n    ) {\n      ...GroupFragment\n    }\n  }\n':
     types.GetLocationAwareGroupsDocument,
+  '\n  mutation EditReadThread($userId: Int!, $threadId: Int!, $read: Boolean!) {\n    editReadThread(userId: $userId, threadId: $threadId, read: $read)\n  }\n':
+    types.EditReadThreadDocument,
+  '\n  mutation SendMessage($senderId: Int!, $recipientId: Int!, $text: String!) {\n    sendMessage(senderId: $senderId, recipientId: $recipientId, text: $text)\n  }\n':
+    types.SendMessageDocument,
   '\n  query Threads($userId: Int!) {\n    threads(userId: $userId) {\n      ...ThreadFragment\n    }\n  }\n':
     types.ThreadsDocument,
+  '\n  query MessagesByThreadId($threadId: Int!) {\n    messagesByThreadId(threadId: $threadId) {\n      ...MessageFragment\n    }\n  }\n':
+    types.MessagesByThreadIdDocument,
   '\n  fragment EventFragment on Event {\n    id\n    name\n    start_datetime\n    end_datetime\n    event_types {\n      id\n      name\n    }\n    author {\n      ... on User {\n        __typename\n        id\n        first_name\n        last_name\n      }\n      ... on Group {\n        __typename\n        id\n        name\n        admin {\n          id\n          first_name\n          last_name\n        }\n      }\n    }\n    location {\n      id\n      country\n      city\n      street_name\n      street_number\n      longitude\n      latitude\n    }\n    summary\n    description\n    image_filepath\n    capacity\n    allow_waitlist\n    participants {\n      id\n      first_name\n      last_name\n    }\n  }\n':
     types.EventFragmentFragmentDoc,
   '\n  fragment GroupFragment on Group {\n    id\n    name\n    admin {\n      id\n      first_name\n      last_name\n    }\n    event_types {\n      id\n      name\n    }\n    location {\n      id\n      country\n      city\n      street_name\n      street_number\n      longitude\n      latitude\n    }\n    events {\n      ...EventFragment\n    }\n    members {\n      id\n      first_name\n      last_name\n    }\n    summary\n    description\n    image_filepath\n  }\n':
@@ -210,8 +216,26 @@ export function gql(
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function gql(
+  source: '\n  mutation EditReadThread($userId: Int!, $threadId: Int!, $read: Boolean!) {\n    editReadThread(userId: $userId, threadId: $threadId, read: $read)\n  }\n',
+): (typeof documents)['\n  mutation EditReadThread($userId: Int!, $threadId: Int!, $read: Boolean!) {\n    editReadThread(userId: $userId, threadId: $threadId, read: $read)\n  }\n'];
+/**
+ * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function gql(
+  source: '\n  mutation SendMessage($senderId: Int!, $recipientId: Int!, $text: String!) {\n    sendMessage(senderId: $senderId, recipientId: $recipientId, text: $text)\n  }\n',
+): (typeof documents)['\n  mutation SendMessage($senderId: Int!, $recipientId: Int!, $text: String!) {\n    sendMessage(senderId: $senderId, recipientId: $recipientId, text: $text)\n  }\n'];
+/**
+ * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function gql(
   source: '\n  query Threads($userId: Int!) {\n    threads(userId: $userId) {\n      ...ThreadFragment\n    }\n  }\n',
 ): (typeof documents)['\n  query Threads($userId: Int!) {\n    threads(userId: $userId) {\n      ...ThreadFragment\n    }\n  }\n'];
+/**
+ * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function gql(
+  source: '\n  query MessagesByThreadId($threadId: Int!) {\n    messagesByThreadId(threadId: $threadId) {\n      ...MessageFragment\n    }\n  }\n',
+): (typeof documents)['\n  query MessagesByThreadId($threadId: Int!) {\n    messagesByThreadId(threadId: $threadId) {\n      ...MessageFragment\n    }\n  }\n'];
 /**
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
