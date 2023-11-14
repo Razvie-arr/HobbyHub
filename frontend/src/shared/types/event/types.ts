@@ -4,18 +4,18 @@ import { EventFragment } from './fragments';
 
 export type EventFragmentResultType = DocumentType<typeof EventFragment>;
 
-export type EventProps = DocumentType<typeof EventFragment>;
+export type EventData = DocumentType<typeof EventFragment>;
 
 export interface WithEvent {
-  event: EventProps;
+  event: EventData;
 }
 
 export interface WithEvents {
-  events: Array<EventProps>;
+  events: Array<EventData>;
 }
 
 export interface WithNonEmptyEvents {
-  events: [EventProps, ...EventProps[]];
+  events: [EventData, ...EventData[]];
 }
 
 export type EventTypeName =
@@ -42,3 +42,4 @@ export type EventTypeName =
   | 'Ferata'
   | 'Walking the dog'
   | 'Strollering';
+

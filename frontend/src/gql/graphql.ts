@@ -140,6 +140,16 @@ export type LocationInputWithoutCoords = {
   street_number: Scalars['String']['input'];
 };
 
+export type Message = {
+  __typename?: 'Message';
+  id: Scalars['Int']['output'];
+  sender: User;
+  sender_id: Scalars['Int']['output'];
+  sent_at: Scalars['String']['output'];
+  text: Scalars['String']['output'];
+  thread_id: Scalars['Int']['output'];
+};
+
 export type Mutation = {
   __typename?: 'Mutation';
   _empty?: Maybe<Scalars['String']['output']>;
@@ -150,10 +160,12 @@ export type Mutation = {
   deleteUser: Scalars['String']['output'];
   editEvent: Event;
   editLocation?: Maybe<Location>;
+  editReadThread: Scalars['String']['output'];
   editUser: User;
   onboardUser: AuthUser;
   requestResetPassword: Scalars['Boolean']['output'];
   resetPassword: Scalars['Boolean']['output'];
+  sendMessage: Scalars['String']['output'];
   signIn: AuthInfo;
   signUp: AuthInfo;
   uploadEventImage?: Maybe<Scalars['String']['output']>;
@@ -195,6 +207,12 @@ export type MutationEditLocationArgs = {
   location: LocationInputWithoutCoords;
 };
 
+export type MutationEditReadThreadArgs = {
+  read: Scalars['Boolean']['input'];
+  threadId: Scalars['Int']['input'];
+  userId: Scalars['Int']['input'];
+};
+
 export type MutationEditUserArgs = {
   location: LocationInputWithoutCoords;
   user: UserInput;
@@ -212,6 +230,12 @@ export type MutationRequestResetPasswordArgs = {
 export type MutationResetPasswordArgs = {
   password: Scalars['String']['input'];
   token: Scalars['String']['input'];
+};
+
+export type MutationSendMessageArgs = {
+  recipientId: Scalars['Int']['input'];
+  senderId: Scalars['Int']['input'];
+  text: Scalars['String']['input'];
 };
 
 export type MutationSignInArgs = {
@@ -253,10 +277,12 @@ export type Query = {
   locationById?: Maybe<Location>;
   locations: Array<Location>;
   locationsByIds: Array<Location>;
+  messagesByThreadId: Array<Message>;
   nearbyGroups: Array<Group>;
   newlyCreatedNearbyEvents: Array<Event>;
   searchEvents: Array<Event>;
   similarEvents: Array<Event>;
+  threads: Array<Thread>;
   todaysNearbyEvents: Array<Event>;
   userById?: Maybe<User>;
   users: Array<User>;
@@ -353,6 +379,12 @@ export type QueryLocationsByIdsArgs = {
   ids: Array<Scalars['Int']['input']>;
 };
 
+export type QueryMessagesByThreadIdArgs = {
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  threadId: Scalars['Int']['input'];
+};
+
 export type QueryNearbyGroupsArgs = {
   latitude: Scalars['Float']['input'];
   limit?: InputMaybe<Scalars['Int']['input']>;
@@ -381,6 +413,12 @@ export type QuerySimilarEventsArgs = {
   offset?: InputMaybe<Scalars['Int']['input']>;
 };
 
+export type QueryThreadsArgs = {
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  userId: Scalars['Int']['input'];
+};
+
 export type QueryTodaysNearbyEventsArgs = {
   latitude: Scalars['Float']['input'];
   limit?: InputMaybe<Scalars['Int']['input']>;
@@ -405,6 +443,16 @@ export enum SortType {
   Date = 'DATE',
   Distance = 'DISTANCE',
 }
+
+export type Thread = {
+  __typename?: 'Thread';
+  id: Scalars['Int']['output'];
+  lastMessage: Message;
+  last_message_at?: Maybe<Scalars['String']['output']>;
+  messages: Array<Message>;
+  thread_read: Scalars['Boolean']['output'];
+  users: Array<User>;
+};
 
 export type User = {
   __typename?: 'User';
@@ -728,6 +776,42 @@ export type GetLocationAwareGroupsQuery = {
   >;
 };
 
+export type EditReadThreadMutationVariables = Exact<{
+  userId: Scalars['Int']['input'];
+  threadId: Scalars['Int']['input'];
+  read: Scalars['Boolean']['input'];
+}>;
+
+export type EditReadThreadMutation = { __typename?: 'Mutation'; editReadThread: string };
+
+export type SendMessageMutationVariables = Exact<{
+  senderId: Scalars['Int']['input'];
+  recipientId: Scalars['Int']['input'];
+  text: Scalars['String']['input'];
+}>;
+
+export type SendMessageMutation = { __typename?: 'Mutation'; sendMessage: string };
+
+export type ThreadsQueryVariables = Exact<{
+  userId: Scalars['Int']['input'];
+}>;
+
+export type ThreadsQuery = {
+  __typename?: 'Query';
+  threads: Array<{ __typename?: 'Thread' } & { ' $fragmentRefs'?: { ThreadFragmentFragment: ThreadFragmentFragment } }>;
+};
+
+export type MessagesByThreadIdQueryVariables = Exact<{
+  threadId: Scalars['Int']['input'];
+}>;
+
+export type MessagesByThreadIdQuery = {
+  __typename?: 'Query';
+  messagesByThreadId: Array<
+    { __typename?: 'Message' } & { ' $fragmentRefs'?: { MessageFragmentFragment: MessageFragmentFragment } }
+  >;
+};
+
 export type EventFragmentFragment = {
   __typename?: 'Event';
   id: number;
@@ -783,6 +867,28 @@ export type GroupFragmentFragment = {
   events: Array<{ __typename?: 'Event' } & { ' $fragmentRefs'?: { EventFragmentFragment: EventFragmentFragment } }>;
   members: Array<{ __typename?: 'User'; id: number; first_name: string; last_name: string }>;
 } & { ' $fragmentName'?: 'GroupFragmentFragment' };
+
+export type MessageFragmentFragment = {
+  __typename?: 'Message';
+  id: number;
+  thread_id: number;
+  sender_id: number;
+  text: string;
+  sent_at: string;
+  sender: { __typename?: 'User'; id: number; first_name: string; last_name: string };
+} & { ' $fragmentName'?: 'MessageFragmentFragment' };
+
+export type ThreadFragmentFragment = {
+  __typename?: 'Thread';
+  id: number;
+  last_message_at?: string | null;
+  thread_read: boolean;
+  users: Array<{ __typename?: 'User'; id: number; first_name: string; last_name: string }>;
+  lastMessage: { __typename?: 'Message' } & { ' $fragmentRefs'?: { MessageFragmentFragment: MessageFragmentFragment } };
+  messages: Array<
+    { __typename?: 'Message' } & { ' $fragmentRefs'?: { MessageFragmentFragment: MessageFragmentFragment } }
+  >;
+} & { ' $fragmentName'?: 'ThreadFragmentFragment' };
 
 export const EventFragmentFragmentDoc = {
   kind: 'Document',
@@ -1076,6 +1182,111 @@ export const GroupFragmentFragmentDoc = {
     },
   ],
 } as unknown as DocumentNode<GroupFragmentFragment, unknown>;
+export const MessageFragmentFragmentDoc = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'MessageFragment' },
+      typeCondition: { kind: 'NamedType', name: { kind: 'Name', value: 'Message' } },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'thread_id' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'sender_id' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'text' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'sent_at' } },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'sender' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'first_name' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'last_name' } },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<MessageFragmentFragment, unknown>;
+export const ThreadFragmentFragmentDoc = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'ThreadFragment' },
+      typeCondition: { kind: 'NamedType', name: { kind: 'Name', value: 'Thread' } },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'last_message_at' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'thread_read' } },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'users' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'first_name' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'last_name' } },
+              ],
+            },
+          },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'lastMessage' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [{ kind: 'FragmentSpread', name: { kind: 'Name', value: 'MessageFragment' } }],
+            },
+          },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'messages' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [{ kind: 'FragmentSpread', name: { kind: 'Name', value: 'MessageFragment' } }],
+            },
+          },
+        ],
+      },
+    },
+    {
+      kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'MessageFragment' },
+      typeCondition: { kind: 'NamedType', name: { kind: 'Name', value: 'Message' } },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'thread_id' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'sender_id' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'text' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'sent_at' } },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'sender' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'first_name' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'last_name' } },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<ThreadFragmentFragment, unknown>;
 export const OnboardUserDocument = {
   kind: 'Document',
   definitions: [
@@ -4118,3 +4329,278 @@ export const GetLocationAwareGroupsDocument = {
     },
   ],
 } as unknown as DocumentNode<GetLocationAwareGroupsQuery, GetLocationAwareGroupsQueryVariables>;
+export const EditReadThreadDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'mutation',
+      name: { kind: 'Name', value: 'EditReadThread' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'userId' } },
+          type: { kind: 'NonNullType', type: { kind: 'NamedType', name: { kind: 'Name', value: 'Int' } } },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'threadId' } },
+          type: { kind: 'NonNullType', type: { kind: 'NamedType', name: { kind: 'Name', value: 'Int' } } },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'read' } },
+          type: { kind: 'NonNullType', type: { kind: 'NamedType', name: { kind: 'Name', value: 'Boolean' } } },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'editReadThread' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'userId' },
+                value: { kind: 'Variable', name: { kind: 'Name', value: 'userId' } },
+              },
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'threadId' },
+                value: { kind: 'Variable', name: { kind: 'Name', value: 'threadId' } },
+              },
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'read' },
+                value: { kind: 'Variable', name: { kind: 'Name', value: 'read' } },
+              },
+            ],
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<EditReadThreadMutation, EditReadThreadMutationVariables>;
+export const SendMessageDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'mutation',
+      name: { kind: 'Name', value: 'SendMessage' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'senderId' } },
+          type: { kind: 'NonNullType', type: { kind: 'NamedType', name: { kind: 'Name', value: 'Int' } } },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'recipientId' } },
+          type: { kind: 'NonNullType', type: { kind: 'NamedType', name: { kind: 'Name', value: 'Int' } } },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'text' } },
+          type: { kind: 'NonNullType', type: { kind: 'NamedType', name: { kind: 'Name', value: 'String' } } },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'sendMessage' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'senderId' },
+                value: { kind: 'Variable', name: { kind: 'Name', value: 'senderId' } },
+              },
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'recipientId' },
+                value: { kind: 'Variable', name: { kind: 'Name', value: 'recipientId' } },
+              },
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'text' },
+                value: { kind: 'Variable', name: { kind: 'Name', value: 'text' } },
+              },
+            ],
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<SendMessageMutation, SendMessageMutationVariables>;
+export const ThreadsDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'query',
+      name: { kind: 'Name', value: 'Threads' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'userId' } },
+          type: { kind: 'NonNullType', type: { kind: 'NamedType', name: { kind: 'Name', value: 'Int' } } },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'threads' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'userId' },
+                value: { kind: 'Variable', name: { kind: 'Name', value: 'userId' } },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [{ kind: 'FragmentSpread', name: { kind: 'Name', value: 'ThreadFragment' } }],
+            },
+          },
+        ],
+      },
+    },
+    {
+      kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'MessageFragment' },
+      typeCondition: { kind: 'NamedType', name: { kind: 'Name', value: 'Message' } },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'thread_id' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'sender_id' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'text' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'sent_at' } },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'sender' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'first_name' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'last_name' } },
+              ],
+            },
+          },
+        ],
+      },
+    },
+    {
+      kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'ThreadFragment' },
+      typeCondition: { kind: 'NamedType', name: { kind: 'Name', value: 'Thread' } },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'last_message_at' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'thread_read' } },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'users' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'first_name' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'last_name' } },
+              ],
+            },
+          },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'lastMessage' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [{ kind: 'FragmentSpread', name: { kind: 'Name', value: 'MessageFragment' } }],
+            },
+          },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'messages' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [{ kind: 'FragmentSpread', name: { kind: 'Name', value: 'MessageFragment' } }],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<ThreadsQuery, ThreadsQueryVariables>;
+export const MessagesByThreadIdDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'query',
+      name: { kind: 'Name', value: 'MessagesByThreadId' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'threadId' } },
+          type: { kind: 'NonNullType', type: { kind: 'NamedType', name: { kind: 'Name', value: 'Int' } } },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'messagesByThreadId' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'threadId' },
+                value: { kind: 'Variable', name: { kind: 'Name', value: 'threadId' } },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [{ kind: 'FragmentSpread', name: { kind: 'Name', value: 'MessageFragment' } }],
+            },
+          },
+        ],
+      },
+    },
+    {
+      kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'MessageFragment' },
+      typeCondition: { kind: 'NamedType', name: { kind: 'Name', value: 'Message' } },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'thread_id' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'sender_id' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'text' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'sent_at' } },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'sender' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'first_name' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'last_name' } },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<MessagesByThreadIdQuery, MessagesByThreadIdQueryVariables>;

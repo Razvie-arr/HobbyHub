@@ -3,6 +3,18 @@ import GraphQLUpload from 'graphql-upload/GraphQLUpload.js';
 import { Resolvers } from '../types';
 
 import {
+  messagesByThreadIdResolver,
+  messageSenderResolver,
+  sendMessageResolver,
+} from './modules/chat/messageResolvers';
+import {
+  editReadThreadResolver,
+  threadLastMessageResolver,
+  threadMessagesResolver,
+  threadsResolver,
+  threadUsersResolver,
+} from './modules/chat/threadResolvers';
+import {
   createEventResolver,
   deleteEventResolver,
   editEventResolver,
@@ -88,6 +100,9 @@ export const rootResolver: Resolvers = {
     userById: userByIdResolver,
     usersByIds: usersByIdsResolver,
 
+    threads: threadsResolver,
+    messagesByThreadId: messagesByThreadIdResolver,
+
     groups: groupsResolver,
     groupById: groupByIdResolver,
     groupsByIds: groupsByIdsResolver,
@@ -122,6 +137,10 @@ export const rootResolver: Resolvers = {
 
     editUser: editUserResolver,
     onboardUser: onboardUserResolver,
+
+    sendMessage: sendMessageResolver,
+
+    editReadThread: editReadThreadResolver,
   },
 
   Upload: GraphQLUpload,
@@ -154,5 +173,14 @@ export const rootResolver: Resolvers = {
       return null; // GraphQLError is thrown
     },
   },
-};
 
+  Thread: {
+    users: threadUsersResolver,
+    messages: threadMessagesResolver,
+    lastMessage: threadLastMessageResolver,
+  },
+
+  Message: {
+    sender: messageSenderResolver,
+  },
+};

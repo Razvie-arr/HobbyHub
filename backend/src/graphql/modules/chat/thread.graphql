@@ -1,0 +1,17 @@
+extend type Query {
+  threads(userId: Int!, offset: Int, limit: Int): [Thread!]!
+}
+
+extend type Mutation {
+  editReadThread(userId: Int!, threadId: Int!, read: Boolean!): String!
+}
+
+type Thread {
+  id: Int!
+  last_message_at: String
+
+  thread_read: Boolean!
+  users: [User!]!
+  messages: [Message!]!
+  lastMessage: Message!
+}

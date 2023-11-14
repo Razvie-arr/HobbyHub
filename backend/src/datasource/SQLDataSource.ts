@@ -231,5 +231,35 @@ export class SQLDataSource extends BatchedSQLDataSource {
         .innerJoin('Event', 'Event_UserGroup.event_id', 'Event.id')
         .where('Event_UserGroup.group_id', groupId),
   };
-}
 
+  threads = {
+    // @ts-ignore, no actual type error but ts-node is erroneously detecting errors
+    ...this.createBaseQueries('Thread'),
+    getAllByUserId: (userId: number, offset?: number | null, limit?: number | null) => {
+      const query = this.db
+        .query('User_Thread')
+        .innerJoin('Thread', 'User_Thread.thread_id', 'Thread.id')
+        .where('user_id', userId)
+        .orderBy('last_message_at', 'desc')
+        .offset(offset ?? 0);
+      return limit ? query.limit(limit) : query;
+    },
+    getMessages: (threadId: number) => this.db.query('Message').where('thread_id', threadId).orderBy('sent_at', 'desc'),
+    getLastMessage: (threadId: number) =>
+      this.db.query('Message').where('thread_id', threadId).orderBy('sent_at', 'desc').first('*'),
+    getUsers: (threadId: number) =>
+      this.db.query('User_Thread').innerJoin('User', 'User_Thread.user_id', 'User.id').where('thread_id', threadId),
+    setRead: (userId: number, threadId: number, read: boolean) =>
+      this.db.write('User_Thread').where('user_id', userId).andWhere('thread_id', threadId).update('thread_read', read),
+  };
+
+  messages = {
+    getAllByThreadId: (threadId: number, offset?: number | null, limit?: number | null) => {
+      const query = this.db
+        .query('Message')
+        .where('thread_id', threadId)
+        .offset(offset ?? 0);
+      return limit ? query.limit(limit) : query;
+    },
+  };
+}

@@ -1,35 +1,21 @@
-import { useEffect, useRef } from 'react';
-import {
-  CardBody,
-  CardFooter,
-  CardHeader,
-  Icon,
-  IconButton,
-  Input,
-  InputGroup,
-  InputRightElement,
-  Text,
-  VStack,
-} from '@chakra-ui/react';
+import { Fragment, useEffect, useRef } from 'react';
+import { CardBody, CardHeader, IconButton, Text, VStack } from '@chakra-ui/react';
+import { NonEmptyArray } from 'effect/dist/declarations/src/ReadonlyArray';
 import { FaArrowLeft } from 'react-icons/fa6';
-import { MdSend } from 'react-icons/md';
 
+import { User } from '../../../gql/graphql';
+import { WithAuthUser, WithMessages } from '../../../shared/types';
 import { Message } from '../components';
 
-export const ChatContent = ({
-  thread,
-  currentUser,
-  onBackClick,
-}: {
-  thread: Thread;
-  currentUser: string;
+interface ChatContentProps extends WithMessages, WithAuthUser {
   onBackClick: () => void;
-}) => {
-  const isMyMessage = (senderId: string) => senderId === currentUser;
-  const sortedMessages = [...thread.messages].sort(
-    (a, b) => new Date(a.sent_at).getTime() - new Date(b.sent_at).getTime(),
-  );
-  const otherUsers = thread.users.filter((user) => user !== currentUser);
+  otherUsers: NonEmptyArray<User>;
+}
+
+export const ChatContent = ({ messages, user, otherUsers, onBackClick }: ChatContentProps) => {
+  const { locale } = Intl.DateTimeFormat().resolvedOptions();
+
+  const sortedMessages = messages.sort((a, b) => new Date(a.sent_at).getTime() - new Date(b.sent_at).getTime());
   const chatContainerRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
@@ -54,36 +40,32 @@ export const ChatContent = ({
           onClick={onBackClick}
         />
         <Text fontSize="xl" as="b" textAlign="center">
-          {otherUsers.join(', ')}
+          {otherUsers.map(({ first_name, last_name }) => `${first_name} ${last_name}`).join(', ')}
         </Text>
       </CardHeader>
       <CardBody bg="gray.50" overflowY="auto" ref={chatContainerRef}>
-        <VStack gap={5}>
-          {sortedMessages.map((message) => (
-            <Message
-              key={message.id}
-              isMyMessage={isMyMessage(message.sender_id)}
-              senderName={message.sender_id}
-              messageText={message.text}
-            />
-          ))}
+        <VStack gap={8}>
+          {sortedMessages.map((message) => {
+            const sentAt = new Date(message.sent_at);
+            return (
+              <Fragment key={message.id}>
+                {sentAt.toLocaleString(locale, {
+                  day: 'numeric',
+                  month: 'short',
+                  hour: '2-digit',
+                  minute: '2-digit',
+                })}
+                <Message
+                  isMyMessage={message.sender_id === user.id}
+                  senderName={`${message.sender.first_name} ${message.sender.last_name}`}
+                  messageText={message.text}
+                />
+              </Fragment>
+            );
+          })}
         </VStack>
       </CardBody>
-      <CardFooter>
-        <InputGroup>
-          <Input placeholder="Write a reply..." borderRadius="full" />
-          <InputRightElement width="3rem">
-            <IconButton
-              borderRadius="full"
-              colorScheme="purple"
-              aria-label="Send message"
-              h="1.75rem"
-              size="sm"
-              icon={<Icon as={MdSend} />}
-            />
-          </InputRightElement>
-        </InputGroup>
-      </CardFooter>
     </>
   );
 };
+

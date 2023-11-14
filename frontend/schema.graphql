@@ -114,6 +114,15 @@ input LocationInputWithoutCoords {
   street_number: String!
 }
 
+type Message {
+  id: Int!
+  sender: User!
+  sender_id: Int!
+  sent_at: String!
+  text: String!
+  thread_id: Int!
+}
+
 type Mutation {
   _empty(nothing: String): String
   createEvent(event: EventInput!, location: LocationInputWithoutCoords!): Event!
@@ -123,10 +132,12 @@ type Mutation {
   deleteUser(id: Int!): String!
   editEvent(event: EventInput!, location: LocationInputWithoutCoords!): Event!
   editLocation(location: LocationInputWithoutCoords!): Location
+  editReadThread(read: Boolean!, threadId: Int!, userId: Int!): String!
   editUser(location: LocationInputWithoutCoords!, user: UserInput!): User!
   onboardUser(location: LocationInputWithoutCoords!, user: UserInput!): AuthUser!
   requestResetPassword(email: String!): Boolean!
   resetPassword(password: String!, token: String!): Boolean!
+  sendMessage(recipientId: Int!, senderId: Int!, text: String!): String!
   signIn(email: String!, password: String!): AuthInfo!
   signUp(email: String!, first_name: String!, last_name: String!, password: String!): AuthInfo!
   uploadEventImage(event_image: Upload): String
@@ -165,10 +176,12 @@ type Query {
   locationById(id: Int!): Location
   locations(limit: Int, offset: Int): [Location!]!
   locationsByIds(ids: [Int!]!): [Location!]!
+  messagesByThreadId(limit: Int, offset: Int, threadId: Int!): [Message!]!
   nearbyGroups(latitude: Float!, limit: Int, longitude: Float!, offset: Int): [Group!]!
   newlyCreatedNearbyEvents(latitude: Float!, limit: Int, longitude: Float!, offset: Int): [Event!]!
   searchEvents(limit: Int, offset: Int, text: String!): [Event!]!
   similarEvents(city: String!, eventId: Int!, eventTypeIds: [Int!]!, limit: Int, offset: Int): [Event!]!
+  threads(limit: Int, offset: Int, userId: Int!): [Thread!]!
   todaysNearbyEvents(latitude: Float!, limit: Int, longitude: Float!, offset: Int): [Event!]!
   userById(id: Int!): User
   users(limit: Int, offset: Int): [User!]!
@@ -178,6 +191,15 @@ type Query {
 enum SortType {
   DATE
   DISTANCE
+}
+
+type Thread {
+  id: Int!
+  lastMessage: Message!
+  last_message_at: String
+  messages: [Message!]!
+  thread_read: Boolean!
+  users: [User!]!
 }
 
 """

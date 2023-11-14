@@ -22,7 +22,7 @@ export const QueryResult = <T, V extends OperationVariables>({ queryResult, rend
   }
   if (queryResult.loading && !queryResult.data) {
     return (
-      <Flex justify="center" alignItems="center" width="100%" p="8">
+      <Flex justify="center" alignItems="center" width="100%" p="8" flex="1 1 auto">
         <Spinner size="xl" />
       </Flex>
     );
@@ -33,3 +33,4 @@ export const QueryResult = <T, V extends OperationVariables>({ queryResult, rend
   }
   return <p>Nothing to show...</p>;
 };
+

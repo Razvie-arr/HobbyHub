@@ -1,7 +1,7 @@
 import { ReactNode } from 'react';
 import { To } from 'react-router-dom';
 
-import { EventProps, GroupProps, WithAuthUser } from '../../../types';
+import { EventData, GroupData, WithAuthUser } from '../../../types';
 
 interface CommonProps {
   user: WithAuthUser['user'] | null;
@@ -10,12 +10,12 @@ interface CommonProps {
 
 export interface EventDataDetails extends CommonProps {
   type: 'event';
-  data: EventProps;
+  data: EventData;
 }
 
 export interface GroupDataDetails extends CommonProps {
   type: 'group';
-  data: GroupProps;
+  data: GroupData;
 }
 
 export type DataDetailsProps = EventDataDetails | GroupDataDetails;

@@ -130,3 +130,4 @@ export const EventFilters = ({ defaultValues, handleSubmit }: MainFiltersProps) 
     </FormProvider>
   );
 };
+

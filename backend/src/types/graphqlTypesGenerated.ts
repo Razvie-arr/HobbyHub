@@ -142,6 +142,16 @@ export type LocationInputWithoutCoords = {
   street_number: Scalars['String']['input'];
 };
 
+export type Message = {
+  __typename?: 'Message';
+  id: Scalars['Int']['output'];
+  sender: User;
+  sender_id: Scalars['Int']['output'];
+  sent_at: Scalars['String']['output'];
+  text: Scalars['String']['output'];
+  thread_id: Scalars['Int']['output'];
+};
+
 export type Mutation = {
   __typename?: 'Mutation';
   _empty?: Maybe<Scalars['String']['output']>;
@@ -152,10 +162,12 @@ export type Mutation = {
   deleteUser: Scalars['String']['output'];
   editEvent: Event;
   editLocation?: Maybe<Location>;
+  editReadThread: Scalars['String']['output'];
   editUser: User;
   onboardUser: AuthUser;
   requestResetPassword: Scalars['Boolean']['output'];
   resetPassword: Scalars['Boolean']['output'];
+  sendMessage: Scalars['String']['output'];
   signIn: AuthInfo;
   signUp: AuthInfo;
   uploadEventImage?: Maybe<Scalars['String']['output']>;
@@ -197,6 +209,12 @@ export type MutationEditLocationArgs = {
   location: LocationInputWithoutCoords;
 };
 
+export type MutationEditReadThreadArgs = {
+  read: Scalars['Boolean']['input'];
+  threadId: Scalars['Int']['input'];
+  userId: Scalars['Int']['input'];
+};
+
 export type MutationEditUserArgs = {
   location: LocationInputWithoutCoords;
   user: UserInput;
@@ -214,6 +232,12 @@ export type MutationRequestResetPasswordArgs = {
 export type MutationResetPasswordArgs = {
   password: Scalars['String']['input'];
   token: Scalars['String']['input'];
+};
+
+export type MutationSendMessageArgs = {
+  recipientId: Scalars['Int']['input'];
+  senderId: Scalars['Int']['input'];
+  text: Scalars['String']['input'];
 };
 
 export type MutationSignInArgs = {
@@ -255,10 +279,12 @@ export type Query = {
   locationById?: Maybe<Location>;
   locations: Array<Location>;
   locationsByIds: Array<Location>;
+  messagesByThreadId: Array<Message>;
   nearbyGroups: Array<Group>;
   newlyCreatedNearbyEvents: Array<Event>;
   searchEvents: Array<Event>;
   similarEvents: Array<Event>;
+  threads: Array<Thread>;
   todaysNearbyEvents: Array<Event>;
   userById?: Maybe<User>;
   users: Array<User>;
@@ -355,6 +381,12 @@ export type QueryLocationsByIdsArgs = {
   ids: Array<Scalars['Int']['input']>;
 };
 
+export type QueryMessagesByThreadIdArgs = {
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  threadId: Scalars['Int']['input'];
+};
+
 export type QueryNearbyGroupsArgs = {
   latitude: Scalars['Float']['input'];
   limit?: InputMaybe<Scalars['Int']['input']>;
@@ -383,6 +415,12 @@ export type QuerySimilarEventsArgs = {
   offset?: InputMaybe<Scalars['Int']['input']>;
 };
 
+export type QueryThreadsArgs = {
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  userId: Scalars['Int']['input'];
+};
+
 export type QueryTodaysNearbyEventsArgs = {
   latitude: Scalars['Float']['input'];
   limit?: InputMaybe<Scalars['Int']['input']>;
@@ -407,6 +445,16 @@ export enum SortType {
   Date = 'DATE',
   Distance = 'DISTANCE',
 }
+
+export type Thread = {
+  __typename?: 'Thread';
+  id: Scalars['Int']['output'];
+  lastMessage: Message;
+  last_message_at?: Maybe<Scalars['String']['output']>;
+  messages: Array<Message>;
+  thread_read: Scalars['Boolean']['output'];
+  users: Array<User>;
+};
 
 export type User = {
   __typename?: 'User';
@@ -526,10 +574,12 @@ export type ResolversTypes = {
   Location: ResolverTypeWrapper<Location>;
   LocationInput: LocationInput;
   LocationInputWithoutCoords: LocationInputWithoutCoords;
+  Message: ResolverTypeWrapper<Message>;
   Mutation: ResolverTypeWrapper<{}>;
   Query: ResolverTypeWrapper<{}>;
   SortType: SortType;
   String: ResolverTypeWrapper<Scalars['String']['output']>;
+  Thread: ResolverTypeWrapper<Thread>;
   Upload: ResolverTypeWrapper<Scalars['Upload']['output']>;
   User: ResolverTypeWrapper<User>;
   UserInput: UserInput;
@@ -551,9 +601,11 @@ export type ResolversParentTypes = {
   Location: Location;
   LocationInput: LocationInput;
   LocationInputWithoutCoords: LocationInputWithoutCoords;
+  Message: Message;
   Mutation: {};
   Query: {};
   String: Scalars['String']['output'];
+  Thread: Thread;
   Upload: Scalars['Upload']['output'];
   User: User;
   UserInput: UserInput;
@@ -659,6 +711,19 @@ export type LocationResolvers<
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
+export type MessageResolvers<
+  ContextType = CustomContext,
+  ParentType extends ResolversParentTypes['Message'] = ResolversParentTypes['Message'],
+> = {
+  id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  sender?: Resolver<ResolversTypes['User'], ParentType, ContextType>;
+  sender_id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  sent_at?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  text?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  thread_id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
 export type MutationResolvers<
   ContextType = CustomContext,
   ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation'],
@@ -701,6 +766,12 @@ export type MutationResolvers<
     ContextType,
     RequireFields<MutationEditLocationArgs, 'location'>
   >;
+  editReadThread?: Resolver<
+    ResolversTypes['String'],
+    ParentType,
+    ContextType,
+    RequireFields<MutationEditReadThreadArgs, 'read' | 'threadId' | 'userId'>
+  >;
   editUser?: Resolver<
     ResolversTypes['User'],
     ParentType,
@@ -724,6 +795,12 @@ export type MutationResolvers<
     ParentType,
     ContextType,
     RequireFields<MutationResetPasswordArgs, 'password' | 'token'>
+  >;
+  sendMessage?: Resolver<
+    ResolversTypes['String'],
+    ParentType,
+    ContextType,
+    RequireFields<MutationSendMessageArgs, 'recipientId' | 'senderId' | 'text'>
   >;
   signIn?: Resolver<
     ResolversTypes['AuthInfo'],
@@ -822,6 +899,12 @@ export type QueryResolvers<
     ContextType,
     RequireFields<QueryLocationsByIdsArgs, 'ids'>
   >;
+  messagesByThreadId?: Resolver<
+    Array<ResolversTypes['Message']>,
+    ParentType,
+    ContextType,
+    RequireFields<QueryMessagesByThreadIdArgs, 'threadId'>
+  >;
   nearbyGroups?: Resolver<
     Array<ResolversTypes['Group']>,
     ParentType,
@@ -846,6 +929,12 @@ export type QueryResolvers<
     ContextType,
     RequireFields<QuerySimilarEventsArgs, 'city' | 'eventId' | 'eventTypeIds'>
   >;
+  threads?: Resolver<
+    Array<ResolversTypes['Thread']>,
+    ParentType,
+    ContextType,
+    RequireFields<QueryThreadsArgs, 'userId'>
+  >;
   todaysNearbyEvents?: Resolver<
     Array<ResolversTypes['Event']>,
     ParentType,
@@ -860,6 +949,19 @@ export type QueryResolvers<
     ContextType,
     RequireFields<QueryUsersByIdsArgs, 'ids'>
   >;
+};
+
+export type ThreadResolvers<
+  ContextType = CustomContext,
+  ParentType extends ResolversParentTypes['Thread'] = ResolversParentTypes['Thread'],
+> = {
+  id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  lastMessage?: Resolver<ResolversTypes['Message'], ParentType, ContextType>;
+  last_message_at?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  messages?: Resolver<Array<ResolversTypes['Message']>, ParentType, ContextType>;
+  thread_read?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  users?: Resolver<Array<ResolversTypes['User']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
 export interface UploadScalarConfig extends GraphQLScalarTypeConfig<ResolversTypes['Upload'], any> {
@@ -892,8 +994,10 @@ export type Resolvers<ContextType = CustomContext> = {
   EventType?: EventTypeResolvers<ContextType>;
   Group?: GroupResolvers<ContextType>;
   Location?: LocationResolvers<ContextType>;
+  Message?: MessageResolvers<ContextType>;
   Mutation?: MutationResolvers<ContextType>;
   Query?: QueryResolvers<ContextType>;
+  Thread?: ThreadResolvers<ContextType>;
   Upload?: GraphQLScalarType;
   User?: UserResolvers<ContextType>;
 };
