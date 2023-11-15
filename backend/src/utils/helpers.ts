@@ -2,7 +2,7 @@ import path from 'path';
 import uniqueSlug from 'unique-slug';
 
 import { FRONTEND_PUBLIC_FOLDER } from '../config';
-import { EventInput, LocationInput, UserInput } from '../types';
+import { EventInput, GroupInput, LocationInput, UserInput } from '../types';
 
 export function createEventInput(event: EventInput) {
   return {
@@ -42,6 +42,18 @@ export function createUserInput(user: UserInput) {
     verified: getValue(user.verified),
     location_id: getValue(user.location_id),
     description: getValue(user.description),
+  };
+}
+
+export function createGroupInput(group: GroupInput) {
+  return {
+    id: getValue(group.id),
+    name: getValue(group.name),
+    summary: getValue(group.summary),
+    description: getValue(group.description),
+    admin_id: getValue(group.admin_id),
+    image_filepath: getValue(group.image_filepath),
+    location_id: getValue(group.location_id),
   };
 }
 

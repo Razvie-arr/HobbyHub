@@ -38,6 +38,9 @@ import {
   eventTypesResolver,
 } from './modules/eventType/eventTypeResolvers';
 import {
+  createGroupResolver,
+  deleteGroupResolver,
+  editGroupResolver,
   filterGroupsResolver,
   groupAdminResolver,
   groupByIdResolver,
@@ -49,6 +52,7 @@ import {
   groupsResolver,
   interestingNearbyGroupsResolver,
   nearbyGroupsResolver,
+  uploadGroupImageResolver,
 } from './modules/group/groupResolvers';
 import { locationByIdResolver, locationsByIdsResolver, locationsResolver } from './modules/location/locationResolvers';
 import { searchEventsResolver } from './modules/search/searchResolver';
@@ -138,8 +142,12 @@ export const rootResolver: Resolvers = {
     editUser: editUserResolver,
     onboardUser: onboardUserResolver,
 
-    sendMessage: sendMessageResolver,
+    createGroup: createGroupResolver,
+    editGroup: editGroupResolver,
+    deleteGroup: deleteGroupResolver,
+    uploadGroupImage: uploadGroupImageResolver,
 
+    sendMessage: sendMessageResolver,
     editReadThread: editReadThreadResolver,
   },
 
@@ -184,3 +192,4 @@ export const rootResolver: Resolvers = {
     sender: messageSenderResolver,
   },
 };
+

@@ -2,7 +2,6 @@ import * as fs from 'fs';
 import * as fsPromises from 'fs/promises';
 import { GraphQLError } from 'graphql/error';
 
-import { GOOGLE_API_KEY } from '../../../config';
 import { HAVERSINE_FORMULA } from '../../../sharedConstants';
 import {
   ContextualNullableResolver,
@@ -27,7 +26,8 @@ import {
   QueryTodaysNearbyEventsArgs,
   User,
 } from '../../../types';
-import { createEventInput, createLocationInput, getPublicStorageFilePath } from '../../../utils/helpers';
+import { createEventInput, getPublicStorageFilePath } from '../../../utils/helpers';
+import { createLocation, updateLocation } from '../location/locationResolvers';
 
 const DEFAULT_DISTANCE = 20;
 const DEFAULT_LIMIT = 4;
@@ -221,31 +221,7 @@ export const createEventResolver = async (
     throw new GraphQLError("Event can't have both author_id and group_id!");
   }
 
-  const geocodeResult = await googleMapsClient.geocode({
-    params: {
-      address: `${location.street_name} ${location.street_number} ${location.city} ${location.country}`,
-      // @ts-expect-error
-      key: GOOGLE_API_KEY,
-    },
-  });
-
-  const firstAddress = geocodeResult.data.results[0];
-
-  if (!firstAddress) {
-    throw new GraphQLError(`Error while looking up location coordinates!`);
-  }
-
-  const { lat, lng } = firstAddress.geometry.location;
-
-  const dbLocationResponse = await dataSources.sql.db
-    .write('Location')
-    .insert(createLocationInput({ ...location, latitude: lat, longitude: lng }));
-
-  if (!dbLocationResponse[0]) {
-    throw new GraphQLError(`Error while creating Location!`);
-  }
-
-  event.location_id = dbLocationResponse[0];
+  event.location_id = await createLocation(location, dataSources, googleMapsClient);
 
   const dbResponse = await dataSources.sql.db.write('Event').insert(createEventInput(event));
   if (!dbResponse[0]) {
@@ -293,31 +269,8 @@ export const editEventResolver = async (
     throw new GraphQLError('EventTypeId needs to be filled in order to update!');
   }
 
-  const geocodeResult = await googleMapsClient.geocode({
-    params: {
-      address: `${location.street_name} ${location.street_number} ${location.city} ${location.country}`,
-      // @ts-expect-error
-      key: GOOGLE_API_KEY,
-    },
-  });
-
-  const firstAddress = geocodeResult.data.results[0];
-
-  if (!firstAddress) {
-    throw new GraphQLError(`Error while looking up location coordinates!`);
-  }
-
-  const { lat, lng } = firstAddress.geometry.location;
-
-  const locationId = location.id ? location.id : event.location_id;
-  const dbLocationResponse = await dataSources.sql.db
-    .write('Location')
-    .where('id', locationId)
-    .update(createLocationInput({ ...location, latitude: lat, longitude: lng }));
-
-  if (!dbLocationResponse) {
-    throw new GraphQLError(`Error while updating location!`);
-  }
+  location.id = location.id ? location.id : event.location_id;
+  await updateLocation(location, dataSources, googleMapsClient);
 
   const event_id = event.id;
   const dbDeleteEventEventTypeResponse = await dataSources.sql.db
@@ -353,7 +306,7 @@ export const editEventResolver = async (
   const dbResult = await dataSources.sql.events.getById(event.id);
 
   if (!dbResult) {
-    throw new GraphQLError(`Error while querying just created event - it should exist but doesn't!`);
+    throw new GraphQLError(`Error while querying group!`);
   }
 
   return dbResult;
@@ -402,4 +355,3 @@ export const filterEventResolver = async (
   );
   return events[0];
 };
-
