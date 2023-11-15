@@ -15,7 +15,7 @@ import { MdCheck, MdClose, MdEdit } from 'react-icons/md';
 import { AddressInput } from '../../forms';
 
 interface AddressFilterInputProps {
-  onAddressSelected: () => Promise<void>;
+  onAddressSelected: (address: google.maps.places.PlaceResult) => Promise<void>;
 }
 
 export const AddressFilterInput = ({ onAddressSelected }: AddressFilterInputProps) => {
@@ -39,7 +39,7 @@ export const AddressFilterInput = ({ onAddressSelected }: AddressFilterInputProp
                 inputProps.onChange({ currentTarget: { value: place.formatted_address } });
               }
               field.onChange(place);
-              await onAddressSelected();
+              await onAddressSelected(place);
             }}
           />
         )}
@@ -73,3 +73,4 @@ export const AddressFilterInput = ({ onAddressSelected }: AddressFilterInputProp
     </HStack>
   );
 };
+

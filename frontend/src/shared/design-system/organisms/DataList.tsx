@@ -1,9 +1,9 @@
 import { ReactNode } from 'react';
-import { Button, Divider, Flex, Heading, Stack } from '@chakra-ui/react';
+import { Button, Center, Divider, Flex, Heading, Stack } from '@chakra-ui/react';
 import { ReadonlyArray } from 'effect';
 import { match } from 'ts-pattern';
 
-import { Box, DataCard, NoData } from 'src/shared/design-system';
+import { Box, DataCard, DataMapButton, NoData } from 'src/shared/design-system';
 
 import { route } from '../../../route';
 import { EventData, GroupData, WithNullableAuthUser } from '../../types';
@@ -12,6 +12,8 @@ interface CommonProps extends WithNullableAuthUser {
   title?: ReactNode;
   handleSeeAll?: () => void;
   maxColumnCount?: 4 | 3;
+  noMoreResults?: boolean;
+  handleShowMore?: () => void;
 }
 
 interface EventsDataList extends CommonProps {
@@ -26,7 +28,15 @@ interface GroupsDataList extends CommonProps {
 
 type DataListProps = EventsDataList | GroupsDataList;
 
-export const DataList = ({ user, handleSeeAll, title, maxColumnCount = 4, ...other }: DataListProps) => {
+export const DataList = ({
+  user,
+  handleSeeAll,
+  title,
+  maxColumnCount = 4,
+  noMoreResults,
+  handleShowMore,
+  ...other
+}: DataListProps) => {
   const commonCardProps = {
     user,
     maxFlexBasis: maxColumnCount === 4 ? '24%' : ' 32%',
@@ -48,32 +58,46 @@ export const DataList = ({ user, handleSeeAll, title, maxColumnCount = 4, ...oth
         </Stack>
         {title ? <Divider borderColor="purple.200" /> : null}
         {ReadonlyArray.isNonEmptyArray<unknown>(other.dataArray) ? (
-          <Flex flexWrap="wrap" columnGap="4">
-            {match(other)
-              .with({ type: 'event' }, (props) =>
-                props.dataArray.map((data) => (
-                  <DataCard
-                    key={data.id}
-                    {...commonCardProps}
-                    type={props.type}
-                    data={data}
-                    detailRoute={route.eventDetails(data.id)}
-                  />
-                )),
-              )
-              .with({ type: 'group' }, (props) =>
-                props.dataArray.map((data) => (
-                  <DataCard
-                    key={data.id}
-                    {...commonCardProps}
-                    type={props.type}
-                    data={data}
-                    detailRoute={route.groupDetails(data.id)}
-                  />
-                )),
-              )
-              .exhaustive()}
-          </Flex>
+          <>
+            <DataMapButton
+              // @ts-expect-error, type error on non empty array check
+              mapInfos={{ user, ...other }}
+              position="fixed"
+              bottom="8"
+              right="8"
+            />
+            <Flex flexWrap="wrap" columnGap="4">
+              {match(other)
+                .with({ type: 'event' }, (props) =>
+                  props.dataArray.map((data) => (
+                    <DataCard
+                      key={data.id}
+                      {...commonCardProps}
+                      type={props.type}
+                      data={data}
+                      detailRoute={route.eventDetails(data.id)}
+                    />
+                  )),
+                )
+                .with({ type: 'group' }, (props) =>
+                  props.dataArray.map((data) => (
+                    <DataCard
+                      key={data.id}
+                      {...commonCardProps}
+                      type={props.type}
+                      data={data}
+                      detailRoute={route.groupDetails(data.id)}
+                    />
+                  )),
+                )
+                .exhaustive()}
+            </Flex>
+            <Center mb="16">
+              <Button colorScheme="purple" isDisabled={noMoreResults} onClick={handleShowMore}>
+                {noMoreResults ? 'No more results: Try different filter values' : 'Show more'}
+              </Button>
+            </Center>
+          </>
         ) : (
           <NoData />
         )}

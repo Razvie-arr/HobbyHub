@@ -14,13 +14,14 @@ const processArraySearchParam = flow(
   Option.getOrElse((): number[] => []),
 );
 
-export const useFilterSearchParams = <S>() => {
+export const useFilterSearchParams = <F, S>() => {
   const [params, setParams] = useSearchParams();
 
   const lng = params.get('lng');
   const lat = params.get('lat');
 
   const updatedParams = {
+    filterPreset: params.get('filterPreset') ?? ('none' as F),
     sports: processArraySearchParam(params.get('sports')),
     games: processArraySearchParam(params.get('games')),
     other: processArraySearchParam(params.get('other')),
@@ -34,8 +35,11 @@ export const useFilterSearchParams = <S>() => {
 
   return {
     params: updatedParams,
-    setParams: (values: {}) => {
+    setParams: (values: {}, { deleteKeys }: { deleteKeys?: string[] } = {}) => {
       setParams((prevParams) => {
+        if (deleteKeys) {
+          deleteKeys.forEach((key) => prevParams.delete(key));
+        }
         Object.entries(values)
           .filter(([_, value]) => value !== '')
           .filter(([_, value]) => value !== null)
@@ -90,3 +94,4 @@ export const useFilterSearchParams = <S>() => {
       updatedParams.sortBy === null,
   };
 };
+

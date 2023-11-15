@@ -16,6 +16,10 @@ export const useGeolocation = () => {
 
   useEffect(() => {
     if (permission === 'granted' || permission === 'denied') {
+      if (permission === 'denied') {
+        // @ts-expect-error, missing unneeded fields
+        setGeolocation({ coords: { latitude: 50.073658, longitude: 14.41854 } });
+      }
       setIsLoading(false);
     }
   }, [permission]);
@@ -30,3 +34,4 @@ export const useGeolocation = () => {
 
   return { geolocation, isLoading };
 };
+

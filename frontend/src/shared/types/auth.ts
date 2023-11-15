@@ -7,3 +7,8 @@ export interface WithAuthUser {
 export interface WithNullableAuthUser {
   user: AuthUser | null;
 }
+
+export interface WithOnboardedUser {
+  user: AuthUser & { location: NonNullable<AuthUser['location']> };
+}
+

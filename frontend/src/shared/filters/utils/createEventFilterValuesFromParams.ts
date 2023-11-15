@@ -1,9 +1,11 @@
 import { SortType } from '../../../gql/graphql';
 import { useFilterSearchParams } from '../hooks';
+import { EventFilterPreset } from '../types';
 
 export const createEventFilterValuesFromParams = (
-  params: ReturnType<typeof useFilterSearchParams<SortType>>['params'],
+  params: ReturnType<typeof useFilterSearchParams<EventFilterPreset, SortType>>['params'],
 ) => ({
+  filterPreset: params.filterPreset as EventFilterPreset,
   sports: params.sports,
   games: params.games,
   other: params.other,
@@ -14,3 +16,4 @@ export const createEventFilterValuesFromParams = (
     : ([null, null] as const)) as readonly [Date | null, Date | null],
   sortBy: params.sortBy ?? SortType.Date,
 });
+

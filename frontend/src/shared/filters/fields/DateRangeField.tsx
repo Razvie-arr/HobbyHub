@@ -8,7 +8,7 @@ const inputProps = {
 export const DateRangeField = () => (
   <DatePickerField
     name="dates"
-    formControlProps={{ flexBasis: { base: 'none', lg: '17%' } }}
+    formControlProps={{ flexBasis: { base: 'none', lg: '18%' } }}
     datePickerProps={{
       selectsRange: true,
       isClearable: true,
@@ -19,3 +19,4 @@ export const DateRangeField = () => (
     inputProps={inputProps}
   />
 );
+

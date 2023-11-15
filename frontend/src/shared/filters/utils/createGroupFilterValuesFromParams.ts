@@ -1,9 +1,11 @@
 import { GroupSortType } from '../../../gql/graphql';
 import { useFilterSearchParams } from '../hooks';
+import { GroupFilterPreset } from '../types';
 
 export const createGroupFilterValuesFromParams = (
-  params: ReturnType<typeof useFilterSearchParams<GroupSortType>>['params'],
+  params: ReturnType<typeof useFilterSearchParams<GroupFilterPreset, GroupSortType>>['params'],
 ) => ({
+  filterPreset: params.filterPreset as GroupFilterPreset,
   sports: params.sports,
   games: params.games,
   other: params.other,
@@ -11,3 +13,4 @@ export const createGroupFilterValuesFromParams = (
   distance: '20',
   sortBy: params.sortBy ?? GroupSortType.Distance,
 });
+
