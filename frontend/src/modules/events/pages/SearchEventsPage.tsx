@@ -1,11 +1,9 @@
 import { useEffect, useState } from 'react';
 import { useQuery } from '@apollo/client';
-import { Button, Center, Stack } from '@chakra-ui/react';
-import { ReadonlyArray } from 'effect';
+import { Stack } from '@chakra-ui/react';
 import { useSearchParams } from 'react-router-dom';
 
 import { DataList } from '../../../shared/design-system';
-import { DataMapButton } from '../../../shared/design-system/organisms/DataMap';
 import { ContentContainer, QueryResult } from '../../../shared/layout';
 import { getEventFragmentData } from '../../../shared/types';
 import { useAuth } from '../../auth';
@@ -38,42 +36,29 @@ export const SearchEventsPage = () => {
         render={(data) => {
           const events = data.searchEvents.map(getEventFragmentData);
           return (
-            <>
-              {ReadonlyArray.isNonEmptyArray(events) ? (
-                <DataMapButton
-                  mapInfos={{ user, type: 'event', dataArray: events }}
-                  position="fixed"
-                  bottom="8"
-                  right="8"
-                />
-              ) : null}
-              <Stack spacing="8" mt="8">
-                <DataList user={user} type="event" dataArray={events} title="Search results" />
-              </Stack>
-              {ReadonlyArray.isNonEmptyArray(events) ? (
-                <Center mb="16">
-                  <Button
-                    colorScheme="purple"
-                    isDisabled={noMoreResults}
-                    onClick={async () => {
-                      const result = await searchResult.fetchMore({
-                        variables: {
-                          offset: events.length,
-                        },
-                      });
-                      if ((result.data.searchEvents.length ?? 0) === 0) {
-                        setNoMoreResults(true);
-                      }
-                    }}
-                  >
-                    {noMoreResults ? 'No more results: Try different search values' : 'Show more'}
-                  </Button>
-                </Center>
-              ) : null}
-            </>
+            <Stack spacing="8" mt="8">
+              <DataList
+                user={user}
+                type="event"
+                dataArray={events}
+                title="Search results"
+                noMoreResults={noMoreResults}
+                handleShowMore={async () => {
+                  const result = await searchResult.fetchMore({
+                    variables: {
+                      offset: events.length,
+                    },
+                  });
+                  if ((result.data.searchEvents.length ?? 0) === 0) {
+                    setNoMoreResults(true);
+                  }
+                }}
+              />
+            </Stack>
           );
         }}
       />
     </ContentContainer>
   );
 };
+
