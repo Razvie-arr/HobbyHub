@@ -46,5 +46,13 @@ declare module 'knex/types/tables' {
         Partial<Pick<User, 'location_id' | 'description'>>,
       Partial<Omit<User, 'id'>>
     >;
+
+    group_composite: Knex.CompositeTableType<
+      Group,
+      Partial<Omit<Group, id>> &
+        Pick<Group, 'name' | 'summary' | 'admin_id' | 'location'> &
+        Partial<Pick<Group, 'description' | 'image_filepath'>>,
+      Partial<Omit<Group, 'id' | 'admin_id'>>
+    >;
   }
 }

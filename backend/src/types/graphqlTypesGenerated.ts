@@ -1,6 +1,7 @@
 import { GraphQLResolveInfo, GraphQLScalarType, GraphQLScalarTypeConfig } from 'graphql';
 import { CustomContext } from './types';
 import type { FileUpload } from 'graphql-upload/Upload';
+
 export type Maybe<T> = T | null;
 export type InputMaybe<T> = Maybe<T>;
 export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
@@ -108,6 +109,17 @@ export type Group = {
   summary: Scalars['String']['output'];
 };
 
+export type GroupInput = {
+  admin_id: Scalars['Int']['input'];
+  description?: InputMaybe<Scalars['String']['input']>;
+  event_type_ids: Array<Scalars['Int']['input']>;
+  id?: InputMaybe<Scalars['Int']['input']>;
+  image_filepath?: InputMaybe<Scalars['String']['input']>;
+  location_id?: InputMaybe<Scalars['Int']['input']>;
+  name: Scalars['String']['input'];
+  summary: Scalars['String']['input'];
+};
+
 export enum GroupSortType {
   Distance = 'DISTANCE',
   Name = 'NAME',
@@ -156,11 +168,14 @@ export type Mutation = {
   __typename?: 'Mutation';
   _empty?: Maybe<Scalars['String']['output']>;
   createEvent: Event;
+  createGroup: Group;
   createLocation?: Maybe<Location>;
   deleteEvent: Scalars['String']['output'];
+  deleteGroup: Scalars['String']['output'];
   deleteLocation: Scalars['String']['output'];
   deleteUser: Scalars['String']['output'];
   editEvent: Event;
+  editGroup: Group;
   editLocation?: Maybe<Location>;
   editReadThread: Scalars['String']['output'];
   editUser: User;
@@ -171,6 +186,7 @@ export type Mutation = {
   signIn: AuthInfo;
   signUp: AuthInfo;
   uploadEventImage?: Maybe<Scalars['String']['output']>;
+  uploadGroupImage?: Maybe<Scalars['String']['output']>;
   verify: Scalars['String']['output'];
 };
 
@@ -183,12 +199,22 @@ export type MutationCreateEventArgs = {
   location: LocationInputWithoutCoords;
 };
 
+export type MutationCreateGroupArgs = {
+  group: GroupInput;
+  location: LocationInputWithoutCoords;
+};
+
 export type MutationCreateLocationArgs = {
   location: LocationInputWithoutCoords;
 };
 
 export type MutationDeleteEventArgs = {
   event_id: Scalars['Int']['input'];
+  location_id: Scalars['Int']['input'];
+};
+
+export type MutationDeleteGroupArgs = {
+  group_id: Scalars['Int']['input'];
   location_id: Scalars['Int']['input'];
 };
 
@@ -202,6 +228,11 @@ export type MutationDeleteUserArgs = {
 
 export type MutationEditEventArgs = {
   event: EventInput;
+  location: LocationInputWithoutCoords;
+};
+
+export type MutationEditGroupArgs = {
+  group: GroupInput;
   location: LocationInputWithoutCoords;
 };
 
@@ -254,6 +285,10 @@ export type MutationSignUpArgs = {
 
 export type MutationUploadEventImageArgs = {
   event_image?: InputMaybe<Scalars['Upload']['input']>;
+};
+
+export type MutationUploadGroupImageArgs = {
+  group_image?: InputMaybe<Scalars['Upload']['input']>;
 };
 
 export type MutationVerifyArgs = {
@@ -569,6 +604,7 @@ export type ResolversTypes = {
   FilterLocationInput: FilterLocationInput;
   Float: ResolverTypeWrapper<Scalars['Float']['output']>;
   Group: ResolverTypeWrapper<Group>;
+  GroupInput: GroupInput;
   GroupSortType: GroupSortType;
   Int: ResolverTypeWrapper<Scalars['Int']['output']>;
   Location: ResolverTypeWrapper<Location>;
@@ -597,6 +633,7 @@ export type ResolversParentTypes = {
   FilterLocationInput: FilterLocationInput;
   Float: Scalars['Float']['output'];
   Group: Group;
+  GroupInput: GroupInput;
   Int: Scalars['Int']['output'];
   Location: Location;
   LocationInput: LocationInput;
@@ -735,6 +772,12 @@ export type MutationResolvers<
     ContextType,
     RequireFields<MutationCreateEventArgs, 'event' | 'location'>
   >;
+  createGroup?: Resolver<
+    ResolversTypes['Group'],
+    ParentType,
+    ContextType,
+    RequireFields<MutationCreateGroupArgs, 'group' | 'location'>
+  >;
   createLocation?: Resolver<
     Maybe<ResolversTypes['Location']>,
     ParentType,
@@ -746,6 +789,12 @@ export type MutationResolvers<
     ParentType,
     ContextType,
     RequireFields<MutationDeleteEventArgs, 'event_id' | 'location_id'>
+  >;
+  deleteGroup?: Resolver<
+    ResolversTypes['String'],
+    ParentType,
+    ContextType,
+    RequireFields<MutationDeleteGroupArgs, 'group_id' | 'location_id'>
   >;
   deleteLocation?: Resolver<
     ResolversTypes['String'],
@@ -759,6 +808,12 @@ export type MutationResolvers<
     ParentType,
     ContextType,
     RequireFields<MutationEditEventArgs, 'event' | 'location'>
+  >;
+  editGroup?: Resolver<
+    ResolversTypes['Group'],
+    ParentType,
+    ContextType,
+    RequireFields<MutationEditGroupArgs, 'group' | 'location'>
   >;
   editLocation?: Resolver<
     Maybe<ResolversTypes['Location']>,
@@ -819,6 +874,12 @@ export type MutationResolvers<
     ParentType,
     ContextType,
     Partial<MutationUploadEventImageArgs>
+  >;
+  uploadGroupImage?: Resolver<
+    Maybe<ResolversTypes['String']>,
+    ParentType,
+    ContextType,
+    Partial<MutationUploadGroupImageArgs>
   >;
   verify?: Resolver<ResolversTypes['String'], ParentType, ContextType, RequireFields<MutationVerifyArgs, 'token'>>;
 };
