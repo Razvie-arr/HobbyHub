@@ -30,8 +30,8 @@ export const SendMessageForm = ({ user, otherUsers, refetchMessages }: SendMessa
   const [sendMessage, sendMessageRequestState] = useMutation(SEND_MESSAGE);
 
   const handleSubmit = methods.handleSubmit(async (values) => {
-    const promises = otherUsers.map(async ({ id }) =>
-      sendMessage({ variables: { recipientId: id, senderId: user.id, text: values.message } }),
+    const promises = otherUsers.map(async (recipient) =>
+      sendMessage({ variables: { recipient, sender: user, text: values.message } }),
     );
     await Promise.all(promises);
     await refetchMessages();
@@ -68,3 +68,4 @@ export const SendMessageForm = ({ user, otherUsers, refetchMessages }: SendMessa
     </FormProvider>
   );
 };
+

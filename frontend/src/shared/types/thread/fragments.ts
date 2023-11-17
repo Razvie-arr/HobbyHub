@@ -9,6 +9,7 @@ export const ThreadFragment = gql(/* GraphQL */ `
       id
       first_name
       last_name
+      email
     }
     lastMessage {
       ...MessageFragment
@@ -22,3 +23,4 @@ export const ThreadFragment = gql(/* GraphQL */ `
 export type ThreadFragmentType = FragmentType<typeof ThreadFragment>;
 
 export const getThreadFragmentData = (event: ThreadFragmentType) => getFragmentData(ThreadFragment, event);
+

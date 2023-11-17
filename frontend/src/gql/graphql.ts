@@ -1,6 +1,5 @@
 /* eslint-disable */
 import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';
-
 export type Maybe<T> = T | null;
 export type InputMaybe<T> = Maybe<T>;
 export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
@@ -264,8 +263,8 @@ export type MutationResetPasswordArgs = {
 };
 
 export type MutationSendMessageArgs = {
-  recipientId: Scalars['Int']['input'];
-  senderId: Scalars['Int']['input'];
+  recipient: RecipientInput;
+  sender: SenderInput;
   text: Scalars['String']['input'];
 };
 
@@ -472,6 +471,17 @@ export type QueryUsersArgs = {
 
 export type QueryUsersByIdsArgs = {
   ids: Array<Scalars['Int']['input']>;
+};
+
+export type RecipientInput = {
+  email: Scalars['String']['input'];
+  first_name: Scalars['String']['input'];
+  id: Scalars['Int']['input'];
+};
+
+export type SenderInput = {
+  first_name: Scalars['String']['input'];
+  id: Scalars['Int']['input'];
 };
 
 export enum SortType {
@@ -820,8 +830,8 @@ export type EditReadThreadMutationVariables = Exact<{
 export type EditReadThreadMutation = { __typename?: 'Mutation'; editReadThread: string };
 
 export type SendMessageMutationVariables = Exact<{
-  senderId: Scalars['Int']['input'];
-  recipientId: Scalars['Int']['input'];
+  sender: SenderInput;
+  recipient: RecipientInput;
   text: Scalars['String']['input'];
 }>;
 
@@ -918,7 +928,7 @@ export type ThreadFragmentFragment = {
   id: number;
   last_message_at?: string | null;
   thread_read: boolean;
-  users: Array<{ __typename?: 'User'; id: number; first_name: string; last_name: string }>;
+  users: Array<{ __typename?: 'User'; id: number; first_name: string; last_name: string; email: string }>;
   lastMessage: { __typename?: 'Message' } & { ' $fragmentRefs'?: { MessageFragmentFragment: MessageFragmentFragment } };
   messages: Array<
     { __typename?: 'Message' } & { ' $fragmentRefs'?: { MessageFragmentFragment: MessageFragmentFragment } }
@@ -1271,6 +1281,7 @@ export const ThreadFragmentFragmentDoc = {
                 { kind: 'Field', name: { kind: 'Name', value: 'id' } },
                 { kind: 'Field', name: { kind: 'Name', value: 'first_name' } },
                 { kind: 'Field', name: { kind: 'Name', value: 'last_name' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'email' } },
               ],
             },
           },
@@ -4427,13 +4438,13 @@ export const SendMessageDocument = {
       variableDefinitions: [
         {
           kind: 'VariableDefinition',
-          variable: { kind: 'Variable', name: { kind: 'Name', value: 'senderId' } },
-          type: { kind: 'NonNullType', type: { kind: 'NamedType', name: { kind: 'Name', value: 'Int' } } },
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'sender' } },
+          type: { kind: 'NonNullType', type: { kind: 'NamedType', name: { kind: 'Name', value: 'SenderInput' } } },
         },
         {
           kind: 'VariableDefinition',
-          variable: { kind: 'Variable', name: { kind: 'Name', value: 'recipientId' } },
-          type: { kind: 'NonNullType', type: { kind: 'NamedType', name: { kind: 'Name', value: 'Int' } } },
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'recipient' } },
+          type: { kind: 'NonNullType', type: { kind: 'NamedType', name: { kind: 'Name', value: 'RecipientInput' } } },
         },
         {
           kind: 'VariableDefinition',
@@ -4450,13 +4461,13 @@ export const SendMessageDocument = {
             arguments: [
               {
                 kind: 'Argument',
-                name: { kind: 'Name', value: 'senderId' },
-                value: { kind: 'Variable', name: { kind: 'Name', value: 'senderId' } },
+                name: { kind: 'Name', value: 'sender' },
+                value: { kind: 'Variable', name: { kind: 'Name', value: 'sender' } },
               },
               {
                 kind: 'Argument',
-                name: { kind: 'Name', value: 'recipientId' },
-                value: { kind: 'Variable', name: { kind: 'Name', value: 'recipientId' } },
+                name: { kind: 'Name', value: 'recipient' },
+                value: { kind: 'Variable', name: { kind: 'Name', value: 'recipient' } },
               },
               {
                 kind: 'Argument',
@@ -4551,6 +4562,7 @@ export const ThreadsDocument = {
                 { kind: 'Field', name: { kind: 'Name', value: 'id' } },
                 { kind: 'Field', name: { kind: 'Name', value: 'first_name' } },
                 { kind: 'Field', name: { kind: 'Name', value: 'last_name' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'email' } },
               ],
             },
           },

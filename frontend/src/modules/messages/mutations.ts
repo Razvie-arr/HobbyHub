@@ -7,7 +7,8 @@ export const EDIT_THREAD_READ = gql(`
 `);
 
 export const SEND_MESSAGE = gql(`
-  mutation SendMessage($senderId: Int!, $recipientId: Int!, $text: String!) {
-    sendMessage(senderId: $senderId, recipientId: $recipientId, text: $text)
+  mutation SendMessage($sender: SenderInput!, $recipient: RecipientInput!, $text: String!) {
+    sendMessage(sender: $sender, recipient: $recipient, text: $text)
   }
 `);
+

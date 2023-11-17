@@ -56,7 +56,7 @@ const documents = {
     types.GetLocationAwareGroupsDocument,
   '\n  mutation EditReadThread($userId: Int!, $threadId: Int!, $read: Boolean!) {\n    editReadThread(userId: $userId, threadId: $threadId, read: $read)\n  }\n':
     types.EditReadThreadDocument,
-  '\n  mutation SendMessage($senderId: Int!, $recipientId: Int!, $text: String!) {\n    sendMessage(senderId: $senderId, recipientId: $recipientId, text: $text)\n  }\n':
+  '\n  mutation SendMessage($sender: SenderInput!, $recipient: RecipientInput!, $text: String!) {\n    sendMessage(sender: $sender, recipient: $recipient, text: $text)\n  }\n':
     types.SendMessageDocument,
   '\n  query Threads($userId: Int!) {\n    threads(userId: $userId) {\n      ...ThreadFragment\n    }\n  }\n':
     types.ThreadsDocument,
@@ -68,7 +68,7 @@ const documents = {
     types.GroupFragmentFragmentDoc,
   '\n  fragment MessageFragment on Message {\n    id\n    thread_id\n    sender_id\n    text\n    sent_at\n    sender {\n      id\n      first_name\n      last_name\n    }\n  }\n':
     types.MessageFragmentFragmentDoc,
-  '\n  fragment ThreadFragment on Thread {\n    id\n    last_message_at\n    thread_read\n    users {\n      id\n      first_name\n      last_name\n    }\n    lastMessage {\n      ...MessageFragment\n    }\n    messages {\n      ...MessageFragment\n    }\n  }\n':
+  '\n  fragment ThreadFragment on Thread {\n    id\n    last_message_at\n    thread_read\n    users {\n      id\n      first_name\n      last_name\n      email\n    }\n    lastMessage {\n      ...MessageFragment\n    }\n    messages {\n      ...MessageFragment\n    }\n  }\n':
     types.ThreadFragmentFragmentDoc,
 };
 
@@ -222,8 +222,8 @@ export function gql(
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function gql(
-  source: '\n  mutation SendMessage($senderId: Int!, $recipientId: Int!, $text: String!) {\n    sendMessage(senderId: $senderId, recipientId: $recipientId, text: $text)\n  }\n',
-): (typeof documents)['\n  mutation SendMessage($senderId: Int!, $recipientId: Int!, $text: String!) {\n    sendMessage(senderId: $senderId, recipientId: $recipientId, text: $text)\n  }\n'];
+  source: '\n  mutation SendMessage($sender: SenderInput!, $recipient: RecipientInput!, $text: String!) {\n    sendMessage(sender: $sender, recipient: $recipient, text: $text)\n  }\n',
+): (typeof documents)['\n  mutation SendMessage($sender: SenderInput!, $recipient: RecipientInput!, $text: String!) {\n    sendMessage(sender: $sender, recipient: $recipient, text: $text)\n  }\n'];
 /**
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
@@ -258,8 +258,8 @@ export function gql(
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function gql(
-  source: '\n  fragment ThreadFragment on Thread {\n    id\n    last_message_at\n    thread_read\n    users {\n      id\n      first_name\n      last_name\n    }\n    lastMessage {\n      ...MessageFragment\n    }\n    messages {\n      ...MessageFragment\n    }\n  }\n',
-): (typeof documents)['\n  fragment ThreadFragment on Thread {\n    id\n    last_message_at\n    thread_read\n    users {\n      id\n      first_name\n      last_name\n    }\n    lastMessage {\n      ...MessageFragment\n    }\n    messages {\n      ...MessageFragment\n    }\n  }\n'];
+  source: '\n  fragment ThreadFragment on Thread {\n    id\n    last_message_at\n    thread_read\n    users {\n      id\n      first_name\n      last_name\n      email\n    }\n    lastMessage {\n      ...MessageFragment\n    }\n    messages {\n      ...MessageFragment\n    }\n  }\n',
+): (typeof documents)['\n  fragment ThreadFragment on Thread {\n    id\n    last_message_at\n    thread_read\n    users {\n      id\n      first_name\n      last_name\n      email\n    }\n    lastMessage {\n      ...MessageFragment\n    }\n    messages {\n      ...MessageFragment\n    }\n  }\n'];
 
 export function gql(source: string) {
   return (documents as any)[source] ?? {};
