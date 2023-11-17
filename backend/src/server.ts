@@ -11,9 +11,9 @@ import { rootResolver } from './graphql/rootResolver';
 import { rootTypeDefs } from './graphql/rootTypeDefs';
 import { getConnection } from './libs/dbConnection';
 import { getGoogleMapsClient } from './libs/googleMaps';
-import { CustomContext } from './types/types';
 import { PORT } from './config';
 import { getSQLDataSource } from './datasource';
+import { CustomContext } from './types';
 
 const init = async () => {
   const app = express();
@@ -30,6 +30,7 @@ const init = async () => {
 
   const customContext = async ({ req }: StandaloneServerContextFunctionArgument): Promise<CustomContext> => {
     const auth = req.headers.Authorization || '';
+    const requestSenderUrl = req.headers['origin'] || '';
 
     return {
       dbConnection: await getConnection(),
@@ -38,12 +39,13 @@ const init = async () => {
       },
       googleMapsClient: getGoogleMapsClient(),
       auth,
+      requestSenderUrl: requestSenderUrl,
     };
   };
 
   app.use(
     '/', //path to graphql server
-    cors<cors.CorsRequest>(), // accepts all origins ('*'), not support cookies
+    cors(), // accepts all origins ('*'), not support cookies
     express.json(), // req.body parser
     graphqlUploadExpress(), // graphql upload middleware
     expressMiddleware(server, {

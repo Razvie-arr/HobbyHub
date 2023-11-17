@@ -1,6 +1,5 @@
 import { GraphQLError } from 'graphql/error';
 
-import { GOOGLE_API_KEY } from '../../../config';
 import {
   AuthUser,
   ContextualNullableResolver,
@@ -18,7 +17,8 @@ import {
   QueryUsersByIdsArgs,
   User,
 } from '../../../types';
-import { createLocationInput, createUserInput } from '../../../utils/helpers';
+import { createUserInput } from '../../../utils/helpers';
+import { createLocation, updateLocation } from '../location/locationResolvers';
 
 export const usersResolver: ContextualResolver<Array<User>, QueryUsersArgs> = async (
   _,
@@ -76,31 +76,8 @@ export const editUserResolver = async (
     throw new GraphQLError('EventTypeId needs to be filled in order to update!');
   }
 
-  const geocodeResult = await googleMapsClient.geocode({
-    params: {
-      address: `${location.street_name} ${location.street_number} ${location.city} ${location.country}`,
-      // @ts-expect-error
-      key: GOOGLE_API_KEY,
-    },
-  });
-
-  const firstAddress = geocodeResult.data.results[0];
-
-  if (!firstAddress) {
-    throw new GraphQLError(`Error while looking up location coordinates!`);
-  }
-
-  const { lat, lng } = firstAddress.geometry.location;
-
-  const locationId = location.id ? location.id : user.location_id;
-  const dbLocationResponse = await dataSources.sql.db
-    .write('Location')
-    .where('id', locationId)
-    .update(createLocationInput({ ...location, latitude: lat, longitude: lng }));
-
-  if (!dbLocationResponse) {
-    throw new GraphQLError(`Error while updating Location!`);
-  }
+  location.id = location.id ? location.id : user.location_id;
+  await updateLocation(location, dataSources, googleMapsClient);
 
   const user_id = user.id;
   //Swap old Event Types for new ones
@@ -151,30 +128,7 @@ export const onboardUserResolver = async (
     throw new GraphQLError('EventTypeId needs to be filled in order to onboard!');
   }
 
-  const geocodeResult = await googleMapsClient.geocode({
-    params: {
-      address: `${location.street_name} ${location.street_number} ${location.city} ${location.country}`,
-      // @ts-expect-error
-      key: GOOGLE_API_KEY,
-    },
-  });
-
-  const firstAddress = geocodeResult.data.results[0];
-
-  if (!firstAddress) {
-    throw new GraphQLError(`Error while looking up location coordinates!`);
-  }
-
-  const { lat, lng } = firstAddress.geometry.location;
-  const dbLocationResponse = await dataSources.sql.db
-    .write('Location')
-    .insert(createLocationInput({ ...location, latitude: lat, longitude: lng }));
-
-  if (!dbLocationResponse[0]) {
-    throw new GraphQLError(`Error while inserting Location!`);
-  }
-
-  user.location_id = dbLocationResponse[0];
+  user.location_id = await createLocation(location, dataSources, googleMapsClient);
 
   const dbUpdateUserResponse = await dataSources.sql.db
     .write('User')

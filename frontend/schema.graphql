@@ -81,6 +81,17 @@ type Group {
   summary: String!
 }
 
+input GroupInput {
+  admin_id: Int!
+  description: String
+  event_type_ids: [Int!]!
+  id: Int
+  image_filepath: String
+  location_id: Int
+  name: String!
+  summary: String!
+}
+
 enum GroupSortType {
   DISTANCE
   NAME
@@ -126,11 +137,14 @@ type Message {
 type Mutation {
   _empty(nothing: String): String
   createEvent(event: EventInput!, location: LocationInputWithoutCoords!): Event!
+  createGroup(group: GroupInput!, location: LocationInputWithoutCoords!): Group!
   createLocation(location: LocationInputWithoutCoords!): Location
   deleteEvent(event_id: Int!, location_id: Int!): String!
+  deleteGroup(group_id: Int!, location_id: Int!): String!
   deleteLocation(id: Int!): String!
   deleteUser(id: Int!): String!
   editEvent(event: EventInput!, location: LocationInputWithoutCoords!): Event!
+  editGroup(group: GroupInput!, location: LocationInputWithoutCoords!): Group!
   editLocation(location: LocationInputWithoutCoords!): Location
   editReadThread(read: Boolean!, threadId: Int!, userId: Int!): String!
   editUser(location: LocationInputWithoutCoords!, user: UserInput!): User!
@@ -141,6 +155,7 @@ type Mutation {
   signIn(email: String!, password: String!): AuthInfo!
   signUp(email: String!, first_name: String!, last_name: String!, password: String!): AuthInfo!
   uploadEventImage(event_image: Upload): String
+  uploadGroupImage(group_image: Upload): String
   verify(token: String!): String!
 }
 
@@ -230,4 +245,15 @@ input UserInput {
   last_name: String!
   location_id: Int
   verified: Boolean!
+}
+
+input SenderInput {
+  id: Int!,
+  first_name: String!
+}
+
+input RecipientInput {
+  id: Int!,
+  first_name: String!
+  email: String!
 }

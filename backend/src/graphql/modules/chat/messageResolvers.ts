@@ -1,5 +1,7 @@
 import { GraphQLError } from 'graphql/error';
 
+import { getSQLDataSource } from '../../../datasource';
+import { sendEmail } from '../../../libs/nodeMailer';
 import {
   ContextualResolver,
   ContextualResolverWithParent,
@@ -9,6 +11,8 @@ import {
   QueryMessagesByThreadIdArgs,
   User,
 } from '../../../types';
+
+const MESSAGE_NOTIFICATION_SUBJECT = 'New message in HobbyHub';
 
 export const messageSenderResolver: ContextualResolverWithParent<User, Message> = async (parent, _, { dataSources }) =>
   (await dataSources.sql.users.getById(parent.sender_id)) as unknown as User;
@@ -21,11 +25,18 @@ export const messagesByThreadIdResolver: ContextualResolver<Array<Message>, Quer
 
 export const sendMessageResolver = async (
   _: unknown,
-  { senderId, recipientId, text }: MutationSendMessageArgs,
-  { dataSources }: CustomContext,
-): Promise<string> =>
-  await dataSources.sql.db.write
-    .transaction(async (trx) => {
+  { sender, recipient, text }: MutationSendMessageArgs,
+  { requestSenderUrl }: CustomContext,
+): Promise<string> => {
+  const response: string = await sendMessage(sender.id, recipient.id, text);
+
+  await sendEmailNotification(sender.first_name, recipient.first_name, recipient.email, requestSenderUrl);
+  return response;
+};
+
+const sendMessage = async (senderId: number, recipientId: number, text: string): Promise<string> =>
+  await getSQLDataSource()
+    .db.write.transaction(async (trx) => {
       const currentDateTime = new Date().toISOString().slice(0, 19).replace('T', ' ');
 
       let threadId;
@@ -73,3 +84,22 @@ export const sendMessageResolver = async (
     .catch((error) => {
       throw new GraphQLError(error);
     });
+
+const sendEmailNotification = async (
+  senderName: string,
+  recipientName: string,
+  recipientEmail: string,
+  frontendUrl: string,
+) => {
+  const emailTextMessage = `Hi ${recipientName}! You just got a new message from ${senderName}\n View messages using this link ${frontendUrl}/messages`;
+  const emailHtmlMessage = `Hi ${recipientName}! You just got a new message from ${senderName} <br> View messages using this <a href="${frontendUrl}/messages">link </a>`;
+
+  try {
+    await sendEmail(recipientEmail, MESSAGE_NOTIFICATION_SUBJECT, {
+      text: emailTextMessage,
+      html: emailHtmlMessage,
+    });
+  } catch (error) {
+    throw error;
+  }
+};

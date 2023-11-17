@@ -1,5 +1,6 @@
 /* eslint-disable */
 import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';
+
 export type Maybe<T> = T | null;
 export type InputMaybe<T> = Maybe<T>;
 export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
@@ -106,6 +107,17 @@ export type Group = {
   summary: Scalars['String']['output'];
 };
 
+export type GroupInput = {
+  admin_id: Scalars['Int']['input'];
+  description?: InputMaybe<Scalars['String']['input']>;
+  event_type_ids: Array<Scalars['Int']['input']>;
+  id?: InputMaybe<Scalars['Int']['input']>;
+  image_filepath?: InputMaybe<Scalars['String']['input']>;
+  location_id?: InputMaybe<Scalars['Int']['input']>;
+  name: Scalars['String']['input'];
+  summary: Scalars['String']['input'];
+};
+
 export enum GroupSortType {
   Distance = 'DISTANCE',
   Name = 'NAME',
@@ -154,11 +166,14 @@ export type Mutation = {
   __typename?: 'Mutation';
   _empty?: Maybe<Scalars['String']['output']>;
   createEvent: Event;
+  createGroup: Group;
   createLocation?: Maybe<Location>;
   deleteEvent: Scalars['String']['output'];
+  deleteGroup: Scalars['String']['output'];
   deleteLocation: Scalars['String']['output'];
   deleteUser: Scalars['String']['output'];
   editEvent: Event;
+  editGroup: Group;
   editLocation?: Maybe<Location>;
   editReadThread: Scalars['String']['output'];
   editUser: User;
@@ -169,6 +184,7 @@ export type Mutation = {
   signIn: AuthInfo;
   signUp: AuthInfo;
   uploadEventImage?: Maybe<Scalars['String']['output']>;
+  uploadGroupImage?: Maybe<Scalars['String']['output']>;
   verify: Scalars['String']['output'];
 };
 
@@ -181,12 +197,22 @@ export type MutationCreateEventArgs = {
   location: LocationInputWithoutCoords;
 };
 
+export type MutationCreateGroupArgs = {
+  group: GroupInput;
+  location: LocationInputWithoutCoords;
+};
+
 export type MutationCreateLocationArgs = {
   location: LocationInputWithoutCoords;
 };
 
 export type MutationDeleteEventArgs = {
   event_id: Scalars['Int']['input'];
+  location_id: Scalars['Int']['input'];
+};
+
+export type MutationDeleteGroupArgs = {
+  group_id: Scalars['Int']['input'];
   location_id: Scalars['Int']['input'];
 };
 
@@ -200,6 +226,11 @@ export type MutationDeleteUserArgs = {
 
 export type MutationEditEventArgs = {
   event: EventInput;
+  location: LocationInputWithoutCoords;
+};
+
+export type MutationEditGroupArgs = {
+  group: GroupInput;
   location: LocationInputWithoutCoords;
 };
 
@@ -252,6 +283,10 @@ export type MutationSignUpArgs = {
 
 export type MutationUploadEventImageArgs = {
   event_image?: InputMaybe<Scalars['Upload']['input']>;
+};
+
+export type MutationUploadGroupImageArgs = {
+  group_image?: InputMaybe<Scalars['Upload']['input']>;
 };
 
 export type MutationVerifyArgs = {

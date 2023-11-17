@@ -1,3 +1,7 @@
+import fs from 'fs';
+import fsPromises from 'fs/promises';
+import { GraphQLError } from 'graphql/error';
+
 import { HAVERSINE_FORMULA } from '../../../sharedConstants';
 import {
   ContextualNullableResolver,
@@ -8,6 +12,10 @@ import {
   EventType,
   Group,
   Location,
+  MutationCreateGroupArgs,
+  MutationDeleteGroupArgs,
+  MutationEditGroupArgs,
+  MutationUploadGroupImageArgs,
   QueryFilterGroupsArgs,
   QueryGroupByIdArgs,
   QueryGroupsArgs,
@@ -16,8 +24,11 @@ import {
   QueryNearbyGroupsArgs,
   User,
 } from '../../../types';
+import { createGroupInput, getPublicStorageFilePath } from '../../../utils/helpers';
+import { createLocation, updateLocation } from '../location/locationResolvers';
 
 const DEFAULT_LIMIT = 4;
+const FRONTEND_PROFILE_IMAGE_RELATIVE_PATH = 'uploads/group_image';
 
 export const groupsResolver: ContextualResolver<Array<Group>, QueryGroupsArgs> = async (
   _,
@@ -137,3 +148,149 @@ export const interestingNearbyGroupsResolver = async (
     .offset(offset ?? 0);
   return limit ? result.limit(limit) : result.limit(DEFAULT_LIMIT);
 };
+
+export const uploadGroupImageResolver = async (_: unknown, { group_image }: MutationUploadGroupImageArgs) => {
+  let groupImageUrl = null;
+  const groupImageFile = await group_image;
+
+  if (groupImageFile) {
+    const { fileDirectoryPath, filePath, relativeFileUrl } = getPublicStorageFilePath({
+      filename: groupImageFile.filename,
+      relativeDirectory: FRONTEND_PROFILE_IMAGE_RELATIVE_PATH,
+    });
+
+    await fsPromises.mkdir(fileDirectoryPath, { recursive: true });
+
+    const stream = groupImageFile.createReadStream();
+    stream.pipe(fs.createWriteStream(filePath));
+
+    groupImageUrl = relativeFileUrl;
+  }
+
+  return groupImageUrl;
+};
+
+export const createGroupResolver = async (
+  _: unknown,
+  { location, group }: MutationCreateGroupArgs,
+  { dataSources, googleMapsClient }: CustomContext,
+) => {
+  group.location_id = await createLocation(location, dataSources, googleMapsClient);
+
+  const dbResponse = await dataSources.sql.db.write('UserGroup').insert(createGroupInput(group));
+  if (!dbResponse[0]) {
+    throw new GraphQLError(`Error while creating group!`);
+  }
+
+  const dbResult = await dataSources.sql.groups.getById(dbResponse[0]);
+
+  if (!dbResult) {
+    throw new GraphQLError(`Error while querying just created group - it should exist but doesn't!`);
+  }
+
+  const group_id = dbResponse[0];
+  // Use map to create an array of insert promises
+  const insertPromises = group.event_type_ids.map((eventTypeId) =>
+    dataSources.sql.db.write('UserGroup_EventType').insert({ group_id: group_id, event_type_id: eventTypeId }),
+  );
+
+  // Await all insertions
+  const dbGroupEventTypeResponses = await Promise.all(insertPromises);
+
+  // Check if any of the insertions failed
+  if (dbGroupEventTypeResponses.some((response) => !response)) {
+    throw new GraphQLError(`Error while inserting into UserGroup_EventType table!`);
+  }
+
+  return dbResult;
+};
+
+export const editGroupResolver = async (
+  _: unknown,
+  { location, group }: MutationEditGroupArgs,
+  { dataSources, googleMapsClient }: CustomContext,
+) => {
+  if (!group.id) {
+    throw new GraphQLError('Group ID needs to be filled in order to update!');
+  }
+  if (!location.id && !group.location_id) {
+    throw new GraphQLError('Location ID needs to be filled in order to update!');
+  }
+  if (group.event_type_ids.some((eventTypeId) => !eventTypeId)) {
+    throw new GraphQLError('EventTypeId needs to be filled in order to update!');
+  }
+
+  location.id = location.id ? location.id : group.location_id;
+  await updateLocation(location, dataSources, googleMapsClient);
+
+  const group_id = group.id;
+  const dbDeleteGroupEventTypeResponse = await dataSources.sql.db
+    .write('UserGroup_EventType')
+    .where('group_id', group_id)
+    .delete();
+
+  if (!dbDeleteGroupEventTypeResponse) {
+    throw new GraphQLError(`Error while updating UserGroup_EventType table part 1!`);
+  }
+  // Use map to create an array of insert promises
+  const insertPromises = group.event_type_ids.map((eventTypeId) =>
+    dataSources.sql.db
+      .write('UserGroup_EventType')
+      .where('group_id', group_id)
+      .insert({ group_id: group_id, event_type_id: eventTypeId }),
+  );
+
+  // Await all insertions
+  const dbGroupEventTypeResponses = await Promise.all(insertPromises);
+
+  // Check if any of the insertions failed
+  if (dbGroupEventTypeResponses.some((response) => !response)) {
+    throw new GraphQLError(`Error while updating UserGroup_EventType table part 2!`);
+  }
+
+  const dbResponse = await dataSources.sql.db
+    .write('UserGroup')
+    .where('id', '=', group.id)
+    .update(createGroupInput(group));
+
+  if (!dbResponse) {
+    throw new GraphQLError(`Error while updating group!`);
+  }
+
+  const dbResult = await dataSources.sql.groups.getById(group.id);
+
+  if (!dbResult) {
+    throw new GraphQLError(`Error while querying group!`);
+  }
+
+  return dbResult;
+};
+
+export const deleteGroupResolver = async (
+  _: unknown,
+  { group_id, location_id }: MutationDeleteGroupArgs,
+  { dataSources }: CustomContext,
+) => {
+  const dbGroupEventTypeResult = await dataSources.sql.db
+    .write('UserGroup_EventType')
+    .where('group_id', group_id)
+    .delete();
+
+  if (!dbGroupEventTypeResult) {
+    throw new GraphQLError(`Error while deleting group from UserGroup_EventType table!`);
+  }
+
+  const dbGroupResult = await dataSources.sql.db.write('UserGroup').where('id', group_id).delete();
+
+  if (!dbGroupResult) {
+    throw new GraphQLError(`Error while deleting group!`);
+  }
+
+  const dbLocationResult = await dataSources.sql.db.write('Location').where('id', location_id).delete();
+
+  if (!dbLocationResult) {
+    throw new GraphQLError(`Error while deleting location!`);
+  }
+  return 'Group and location deleted!';
+};
+

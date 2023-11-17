@@ -15,6 +15,13 @@ extend type Query {
   interestingNearbyGroups(longitude: Float!, latitude: Float!, userId: Int!, offset: Int, limit: Int): [Group!]!
 }
 
+extend type Mutation {
+  createGroup(group: GroupInput!, location: LocationInputWithoutCoords!): Group!
+  editGroup(group: GroupInput!, location: LocationInputWithoutCoords!): Group!
+  deleteGroup(group_id: Int!, location_id: Int!): String!
+  uploadGroupImage(group_image: Upload): String
+}
+
 type Group {
   id: Int!
   name: String!
@@ -35,3 +42,16 @@ enum GroupSortType {
   DISTANCE
   NAME
 }
+
+input GroupInput {
+  id: Int
+  name: String!
+  summary: String!
+  description: String
+  admin_id: Int!
+  image_filepath: String
+  location_id: Int
+
+  event_type_ids: [Int!]!
+}
+
