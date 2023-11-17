@@ -266,8 +266,8 @@ export type MutationResetPasswordArgs = {
 };
 
 export type MutationSendMessageArgs = {
-  recipientId: Scalars['Int']['input'];
-  senderId: Scalars['Int']['input'];
+  recipient: RecipientInput;
+  sender: SenderInput;
   text: Scalars['String']['input'];
 };
 
@@ -476,6 +476,17 @@ export type QueryUsersByIdsArgs = {
   ids: Array<Scalars['Int']['input']>;
 };
 
+export type RecipientInput = {
+  email: Scalars['String']['input'];
+  first_name: Scalars['String']['input'];
+  id: Scalars['Int']['input'];
+};
+
+export type SenderInput = {
+  first_name: Scalars['String']['input'];
+  id: Scalars['Int']['input'];
+};
+
 export enum SortType {
   Date = 'DATE',
   Distance = 'DISTANCE',
@@ -613,6 +624,8 @@ export type ResolversTypes = {
   Message: ResolverTypeWrapper<Message>;
   Mutation: ResolverTypeWrapper<{}>;
   Query: ResolverTypeWrapper<{}>;
+  RecipientInput: RecipientInput;
+  SenderInput: SenderInput;
   SortType: SortType;
   String: ResolverTypeWrapper<Scalars['String']['output']>;
   Thread: ResolverTypeWrapper<Thread>;
@@ -641,6 +654,8 @@ export type ResolversParentTypes = {
   Message: Message;
   Mutation: {};
   Query: {};
+  RecipientInput: RecipientInput;
+  SenderInput: SenderInput;
   String: Scalars['String']['output'];
   Thread: Thread;
   Upload: Scalars['Upload']['output'];
@@ -855,7 +870,7 @@ export type MutationResolvers<
     ResolversTypes['String'],
     ParentType,
     ContextType,
-    RequireFields<MutationSendMessageArgs, 'recipientId' | 'senderId' | 'text'>
+    RequireFields<MutationSendMessageArgs, 'recipient' | 'sender' | 'text'>
   >;
   signIn?: Resolver<
     ResolversTypes['AuthInfo'],

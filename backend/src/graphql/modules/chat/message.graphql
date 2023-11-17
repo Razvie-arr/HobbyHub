@@ -3,7 +3,7 @@ extend type Query {
 }
 
 extend type Mutation {
-  sendMessage(senderId: Int!, recipientId: Int!, text: String!): String!
+  sendMessage(sender: SenderInput!, recipient: RecipientInput!, text: String!): String!
 }
 
 type Message {
@@ -14,4 +14,15 @@ type Message {
   sent_at: String!
 
   sender: User!
+}
+
+input SenderInput {
+  id: Int!,
+  first_name: String!
+}
+
+input RecipientInput {
+  id: Int!,
+  first_name: String!
+  email: String!
 }
