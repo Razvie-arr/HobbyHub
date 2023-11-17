@@ -12,6 +12,7 @@ export const DefaultEventsPage = () => {
       const startDate = new Date();
       const endDate = new Date();
       endDate.setDate(endDate.getDate() + 1);
+
       navigate({
         pathname: route.events(),
         search: createSearchParams({
@@ -32,3 +33,4 @@ export const DefaultEventsPage = () => {
 
   return null;
 };
+

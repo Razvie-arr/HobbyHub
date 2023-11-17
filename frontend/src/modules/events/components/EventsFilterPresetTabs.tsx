@@ -20,7 +20,7 @@ interface TabButtonProps {
 }
 
 const TabButton = ({ handleClick, active, label }: TabButtonProps) => (
-  <Button borderRadius="full" colorScheme="purple" variant={active ? 'solid' : 'ghost'} onClick={handleClick}>
+  <Button borderRadius="full" colorScheme="purple" variant={active ? 'solid' : 'outline'} onClick={handleClick}>
     {label}
   </Button>
 );
@@ -109,3 +109,4 @@ export const EventsFilterPresetTabs = ({
     </HStack>
   );
 };
+

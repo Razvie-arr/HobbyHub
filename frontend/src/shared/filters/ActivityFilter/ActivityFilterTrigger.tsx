@@ -29,3 +29,4 @@ export const ActivityFilterTrigger = ({ selectedEventTypes, label }: ActivityFil
     </PopoverTrigger>
   );
 };
+

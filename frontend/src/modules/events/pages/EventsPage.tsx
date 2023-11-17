@@ -94,6 +94,7 @@ export const EventsPage = ({ location }: EventsPageProps) => {
               address,
             });
           }}
+          spacing={0}
         />
       )}
       renderFilterPresets={(renderProps) => (user ? <EventsFilterPresetTabs user={user} {...renderProps} /> : null)}
@@ -114,12 +115,6 @@ export const EventsPage = ({ location }: EventsPageProps) => {
                   dataArray={events}
                   user={user}
                   noMoreResults={noMoreResults}
-                  title={match(params.filterPreset)
-                    .with('today', () => 'Today around you')
-                    .with('recommended', () => 'Nearby events you might be interested in')
-                    .with('newlyAdded', () => 'Newly added around you')
-                    .with('none', () => 'Filtered by you')
-                    .exhaustive()}
                   handleShowMore={async () => {
                     const result = await queryResult.fetchMore({
                       variables: {
@@ -139,3 +134,4 @@ export const EventsPage = ({ location }: EventsPageProps) => {
     </EventFilters>
   );
 };
+

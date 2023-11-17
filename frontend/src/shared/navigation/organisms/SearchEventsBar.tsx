@@ -17,7 +17,7 @@ export const SearchEventsBar = () => {
   };
 
   return (
-    <InputGroup size="md" flexBasis="52%">
+    <InputGroup size="md">
       <Input
         type="search"
         placeholder="Search event"
@@ -45,3 +45,4 @@ export const SearchEventsBar = () => {
     </InputGroup>
   );
 };
+

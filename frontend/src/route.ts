@@ -1,17 +1,18 @@
 export const route = {
-  home: () => `/`,
+  home: () => `/` as const,
 
-  events: () => `/events`,
-  eventDetails: (eventId?: number) => `/event/${eventId ?? ':eventId'}`,
-  searchEvents: () => `/searchEvents`,
-  createEvent: () => `/createEvent`,
-  editEvent: (eventId?: number) => `/editEvent/${eventId ?? ':eventId'}`,
+  events: () => `/events` as const,
+  eventDetails: (eventId?: number) => `/event/${eventId ?? ':eventId'}` as const,
+  searchEvents: () => `/searchEvents` as const,
+  createEvent: () => `/createEvent` as const,
+  editEvent: (eventId?: number) => `/editEvent/${eventId ?? ':eventId'}` as const,
 
-  groups: () => `/groups`,
-  groupDetails: (groupId?: number) => `/group/${groupId ?? ':groupId'}`,
-  editGroup: (groupId?: number) => `/editGroup/${groupId ?? ':groupId'}`,
+  groups: () => `/groups` as const,
+  groupDetails: (groupId?: number) => `/group/${groupId ?? ':groupId'}` as const,
+  editGroup: (groupId?: number) => `/editGroup/${groupId ?? ':groupId'}` as const,
 
-  onboarding: () => `/onboarding`,
-  verifyUser: () => `/auth/verifyUser`,
-  messages: () => `/messages`,
+  onboarding: () => `/onboarding` as const,
+  verifyUser: () => `/auth/verifyUser` as const,
+  messages: () => `/messages` as const,
 };
+

@@ -8,7 +8,7 @@ interface AddressFilterBarProps {
 }
 
 export const AddressFilterBar = ({ address, onAddressSelected, ...stackProps }: AddressFilterBarProps & StackProps) => (
-  <HStack alignItems="end" {...stackProps}>
+  <HStack alignItems="end" {...stackProps} flexGrow={1}>
     <Text as="b" fontSize="lg" flexBasis="6%" lineHeight={1.9}>
       Events in{' '}
     </Text>
@@ -17,3 +17,4 @@ export const AddressFilterBar = ({ address, onAddressSelected, ...stackProps }: 
     </Editable>
   </HStack>
 );
+

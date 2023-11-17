@@ -15,7 +15,9 @@ export const DateRangeField = () => (
       placeholderText: 'Select dates',
       monthsShown: 2,
       todayButton: 'Today',
+      dateFormat: 'mmm d',
     }}
     inputProps={inputProps}
   />
 );
+

@@ -76,18 +76,15 @@ export const EventFilters = ({
     <FormProvider {...methods}>
       <form onSubmit={handleFormSubmit} noValidate>
         <VStack
-          bg="gray.100"
+          bg="white"
           position="sticky"
           top={{ base: '57px', md: '59px' }}
           zIndex={2}
           shadow="sm"
-          py="2"
+          py="4"
           spacing="2"
         >
-          <Box bg="gray.100" w="100%">
-            <ContentContainer>{renderAddressBar(renderProps)}</ContentContainer>
-          </Box>
-          <Box bg="gray.100" w="100%">
+          <Box w="100%">
             <Button
               alignSelf="right"
               colorScheme="purple"
@@ -101,14 +98,14 @@ export const EventFilters = ({
               Filter
             </Button>
             <ContentContainer display={{ base: mobileNav.isOpen ? 'flex' : 'none', lg: 'flex' }}>
-              <Stack direction={{ base: 'column', lg: 'row' }} width="100%">
+              <Stack direction={{ base: 'column', lg: 'row' }} width="100%" justifyContent="center">
                 <HStack>
                   <ActivityFilter label="Sports" fieldName="sports" eventTypes={eventTypes.sports} />
                   <ActivityFilter label="Games" fieldName="games" eventTypes={eventTypes.games} />
                   <ActivityFilter label="Other" fieldName="other" eventTypes={eventTypes.other} />
                 </HStack>
-                <DistanceSelectField />
                 <DateRangeField />
+                <DistanceSelectField />
                 <SelectField
                   name="sortBy"
                   formControlProps={{ flexBasis: { base: 'none', lg: '13%' } }}
@@ -152,10 +149,16 @@ export const EventFilters = ({
           </Box>
         </VStack>
         <Box bg="gray.100" w="100%" my="4">
-          <ContentContainer>{renderFilterPresets(renderProps)}</ContentContainer>
+          <ContentContainer>
+            <Stack direction="column" spacing={4}>
+              {renderFilterPresets(renderProps)}
+              {renderAddressBar(renderProps)}
+            </Stack>
+          </ContentContainer>
         </Box>
         {children}
       </form>
     </FormProvider>
   );
 };
+
