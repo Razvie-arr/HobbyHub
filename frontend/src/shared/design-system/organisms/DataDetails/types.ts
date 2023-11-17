@@ -27,4 +27,3 @@ export interface WithAdditionalTabs {
 export interface WithDeleteButton {
   deleteButton?: ReactNode;
 }
-

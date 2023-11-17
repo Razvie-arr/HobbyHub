@@ -37,4 +37,3 @@ export const useGeocodingWithGeolocation = () => {
 
   return { isLoading, location };
 };
-

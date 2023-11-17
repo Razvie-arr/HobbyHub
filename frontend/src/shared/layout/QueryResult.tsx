@@ -33,4 +33,3 @@ export const QueryResult = <T, V extends OperationVariables>({ queryResult, rend
   }
   return <p>Nothing to show...</p>;
 };
-

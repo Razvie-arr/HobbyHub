@@ -30,7 +30,7 @@ export const Layout = ({ children }: PropsWithChildren) => {
         </Alert>
       ) : null}
       <TopNavigation />
-      <Flex bg="gray.50" flexGrow={1} direction="column">
+      <Flex bg="gray.100" flexGrow={1} direction="column">
         {children}
       </Flex>
       <Footer />

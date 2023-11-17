@@ -79,4 +79,3 @@ enum SortType {
   DISTANCE
   DATE
 }
-

@@ -68,4 +68,3 @@ export const SendMessageForm = ({ user, otherUsers, refetchMessages }: SendMessa
     </FormProvider>
   );
 };
-

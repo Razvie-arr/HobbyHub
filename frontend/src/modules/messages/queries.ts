@@ -15,4 +15,3 @@ export const MESSAGES_BY_THREAD = gql(`
     }
   }
 `);
-

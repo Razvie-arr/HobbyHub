@@ -11,4 +11,3 @@ export interface WithNullableAuthUser {
 export interface WithOnboardedUser {
   user: AuthUser & { location: NonNullable<AuthUser['location']> };
 }
-

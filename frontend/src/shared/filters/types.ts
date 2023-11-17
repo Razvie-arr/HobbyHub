@@ -22,4 +22,3 @@ export interface GroupFiltersValues extends CommonFiltersValues {
   filterPreset: GroupFilterPreset;
   sortBy: GroupSortType;
 }
-

@@ -122,4 +122,3 @@ export const GroupsPage = ({ location }: EventsPageProps) => {
     </GroupFilters>
   );
 };
-

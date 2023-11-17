@@ -21,7 +21,7 @@ export const useFilterSearchParams = <F, S>() => {
   const lat = params.get('lat');
 
   const updatedParams = {
-    filterPreset: params.get('filterPreset') ?? ('none' as F),
+    filterPreset: (params.get('filterPreset') ?? 'none') as F,
     sports: processArraySearchParam(params.get('sports')),
     games: processArraySearchParam(params.get('games')),
     other: processArraySearchParam(params.get('other')),
@@ -94,4 +94,3 @@ export const useFilterSearchParams = <F, S>() => {
       updatedParams.sortBy === null,
   };
 };
-

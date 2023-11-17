@@ -68,4 +68,3 @@ export const ChatContent = ({ messages, user, otherUsers, onBackClick }: ChatCon
     </>
   );
 };
-

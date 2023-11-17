@@ -140,4 +140,3 @@ const EditEventForm = ({ eventId }: EditEventFormProps) => {
     />
   );
 };
-

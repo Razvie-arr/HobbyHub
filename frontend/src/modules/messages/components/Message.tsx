@@ -20,4 +20,3 @@ export const Message = ({ isMyMessage, senderName, messageText }: MessageProps) 
     </Box>
   </HStack>
 );
-

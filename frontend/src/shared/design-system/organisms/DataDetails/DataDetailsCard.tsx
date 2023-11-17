@@ -93,4 +93,3 @@ export const DataDetailsCard = (props: DataDetailsProps) => (
     </VStack>
   </Card>
 );
-

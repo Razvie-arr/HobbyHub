@@ -8,20 +8,24 @@ interface ActivityFilterTriggerProps {
   selectedEventTypes: Array<EventType>;
 }
 
-export const ActivityFilterTrigger = ({ selectedEventTypes, label }: ActivityFilterTriggerProps) => (
-  <PopoverTrigger>
-    <Button
-      rightIcon={<Icon as={MdOutlineExpandMore} />}
-      colorScheme="purple"
-      variant="outline"
-      size={{ base: 'sm', md: 'md' }}
-    >
-      {label}
-      {selectedEventTypes.length !== 0 ? (
-        <Badge ml="2" bg="purple.500" color="white" px="1" size="lg">
-          {selectedEventTypes.length}
-        </Badge>
-      ) : null}
-    </Button>
-  </PopoverTrigger>
-);
+export const ActivityFilterTrigger = ({ selectedEventTypes, label }: ActivityFilterTriggerProps) => {
+  const hasSelectedEventTypes = selectedEventTypes.length > 0;
+  return (
+    <PopoverTrigger>
+      <Button
+        rightIcon={<Icon as={MdOutlineExpandMore} />}
+        colorScheme="purple"
+        variant={hasSelectedEventTypes ? 'solid' : 'outline'}
+        size={{ base: 'sm', md: 'md' }}
+        borderRadius="full"
+      >
+        {label}
+        {hasSelectedEventTypes ? (
+          <Badge ml="2" bg="purple.100" px="1" size="lg">
+            {selectedEventTypes.length}
+          </Badge>
+        ) : null}
+      </Button>
+    </PopoverTrigger>
+  );
+};

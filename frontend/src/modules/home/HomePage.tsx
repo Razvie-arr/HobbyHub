@@ -23,4 +23,3 @@ export const HomePage = () => (
     </Tabs>
   </ContentContainer>
 );
-

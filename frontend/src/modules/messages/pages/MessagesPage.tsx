@@ -143,4 +143,3 @@ const MessagesPage = ({ user, threads }: WithAuthUser & WithNonEmptyThreads) => 
     </ContentContainer>
   );
 };
-

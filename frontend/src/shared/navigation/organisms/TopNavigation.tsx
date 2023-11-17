@@ -51,7 +51,7 @@ export function TopNavigation() {
   return (
     <Box bg="white" position="sticky" top={0} width="100%" zIndex={3} borderBottomWidth="1px" borderColor="purple.100">
       <ContentContainer>
-        <HStack py={{ base: 2 }} align="center" justifyContent="space-between">
+        <HStack py={{ base: 1 }} align="center" justifyContent="space-between">
           <HStack>
             <Image boxSize={{ base: '40px', md: '50px' }} src={LOGO_PATH} alt="logo" borderRadius="base" />
             <IconButton
@@ -68,12 +68,6 @@ export function TopNavigation() {
             />
 
             <HStack display={{ base: 'none', md: 'flex' }} spacing="4">
-              <NavLink to={route.home()}>
-                <Text as="b" mr={5} fontSize={{ base: 'md', md: 'lg' }} fontFamily="heading" color="blackAlpha.900">
-                  HobbyHub
-                </Text>
-              </NavLink>
-
               {menuLinks.map(({ to, title }) => (
                 <RouterNavLink to={to} key={to} fontWeight="medium">
                   {title}
@@ -170,4 +164,3 @@ export function TopNavigation() {
     </Box>
   );
 }
-

@@ -137,4 +137,3 @@ export const interestingNearbyGroupsResolver = async (
     .offset(offset ?? 0);
   return limit ? result.limit(limit) : result.limit(DEFAULT_LIMIT);
 };
-

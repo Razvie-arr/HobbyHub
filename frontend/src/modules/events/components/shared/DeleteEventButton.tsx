@@ -73,4 +73,3 @@ export const DeleteEventButton = ({ event, ...buttonProps }: WithEvent & ButtonP
     </>
   );
 };
-

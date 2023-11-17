@@ -17,4 +17,3 @@ export interface WithThreads {
 export interface WithNonEmptyThreads {
   threads: [ThreadData, ...ThreadData[]];
 }
-

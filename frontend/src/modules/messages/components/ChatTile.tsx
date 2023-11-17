@@ -48,4 +48,3 @@ export const ChatTile = ({ title, lastMessage, read, onClick, isSelected }: Chat
     </Box>
   );
 };
-

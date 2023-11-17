@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { useLazyQuery } from '@apollo/client';
 import { Stack } from '@chakra-ui/react';
 import { flow, Option, pipe, ReadonlyArray } from 'effect';
+import { match } from 'ts-pattern';
 
 import { SortType } from '../../../gql/graphql';
 import { DataList } from '../../../shared/design-system';
@@ -113,6 +114,12 @@ export const EventsPage = ({ location }: EventsPageProps) => {
                   dataArray={events}
                   user={user}
                   noMoreResults={noMoreResults}
+                  title={match(params.filterPreset)
+                    .with('today', () => 'Today around you')
+                    .with('recommended', () => 'Nearby events you might be interested in')
+                    .with('newlyAdded', () => 'Newly added around you')
+                    .with('none', () => 'Filtered by you')
+                    .exhaustive()}
                   handleShowMore={async () => {
                     const result = await queryResult.fetchMore({
                       variables: {
@@ -132,4 +139,3 @@ export const EventsPage = ({ location }: EventsPageProps) => {
     </EventFilters>
   );
 };
-

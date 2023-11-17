@@ -1,5 +1,5 @@
 import { PropsWithChildren, ReactNode, useEffect } from 'react';
-import { Box, Button, HStack, Stack, useDisclosure } from '@chakra-ui/react';
+import { Box, Button, HStack, Stack, useDisclosure, VStack } from '@chakra-ui/react';
 import { FormProvider, useForm, UseFormReset } from 'react-hook-form';
 import { FaFilter, FaXmark } from 'react-icons/fa6';
 import { useLocation } from 'react-router-dom';
@@ -75,8 +75,19 @@ export const EventFilters = ({
   return (
     <FormProvider {...methods}>
       <form onSubmit={handleFormSubmit} noValidate>
-        <Box position="sticky" top={{ base: '57px', md: '67px' }} zIndex={2} shadow="sm">
-          <Box bg="purple.100" w="100%" py="4">
+        <VStack
+          bg="gray.100"
+          position="sticky"
+          top={{ base: '57px', md: '59px' }}
+          zIndex={2}
+          shadow="sm"
+          py="2"
+          spacing="2"
+        >
+          <Box bg="gray.100" w="100%">
+            <ContentContainer>{renderAddressBar(renderProps)}</ContentContainer>
+          </Box>
+          <Box bg="gray.100" w="100%">
             <Button
               alignSelf="right"
               colorScheme="purple"
@@ -139,11 +150,8 @@ export const EventFilters = ({
               </Stack>
             </ContentContainer>
           </Box>
-          <Box bg="gray.50" w="100%" py="4">
-            <ContentContainer>{renderAddressBar(renderProps)}</ContentContainer>
-          </Box>
-        </Box>
-        <Box bg="gray.50" w="100%" py="4">
+        </VStack>
+        <Box bg="gray.100" w="100%" my="4">
           <ContentContainer>{renderFilterPresets(renderProps)}</ContentContainer>
         </Box>
         {children}
@@ -151,4 +159,3 @@ export const EventFilters = ({
     </FormProvider>
   );
 };
-

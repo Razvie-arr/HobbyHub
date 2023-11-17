@@ -17,4 +17,3 @@ export interface WithMessages {
 export interface WithNonEmptyMessages {
   messages: [MessageData, ...MessageData[]];
 }
-

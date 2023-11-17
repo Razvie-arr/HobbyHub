@@ -24,11 +24,13 @@ export const AddressFilterInput = ({ onAddressSelected }: AddressFilterInputProp
   const inputProps = getInputProps();
   return (
     <HStack>
-      <EditablePreview fontSize="xl" color="purple.500" />
+      <EditablePreview fontSize="lg" color="purple.500" />
       <Controller
         name="address"
         render={({ field }) => (
           <AddressInput
+            size="sm"
+            borderRadius="full"
             as={EditableInput}
             onFocus={(event) => {
               event.target.select();
@@ -50,12 +52,14 @@ export const AddressFilterInput = ({ onAddressSelected }: AddressFilterInputProp
             aria-label="Submit location"
             colorScheme="purple"
             icon={<Icon as={MdCheck} />}
+            size="sm"
             {...getSubmitButtonProps()}
           />
           <IconButton
             aria-label="Cancel location"
             colorScheme="purple"
             icon={<Icon as={MdClose} />}
+            size="sm"
             {...getCancelButtonProps()}
           />
         </ButtonGroup>
@@ -73,4 +77,3 @@ export const AddressFilterInput = ({ onAddressSelected }: AddressFilterInputProp
     </HStack>
   );
 };
-

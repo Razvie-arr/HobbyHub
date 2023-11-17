@@ -160,4 +160,3 @@ export const DataCard = ({ simplified, maxFlexBasis = '24%', detailRoute, user, 
     </Card>
   );
 };
-

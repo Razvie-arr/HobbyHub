@@ -15,4 +15,3 @@ export const route = {
   verifyUser: () => `/auth/verifyUser`,
   messages: () => `/messages`,
 };
-

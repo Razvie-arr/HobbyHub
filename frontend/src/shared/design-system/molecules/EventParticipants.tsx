@@ -18,4 +18,3 @@ export const EventParticipants = ({ noIcon, fontSize = 'sm', capacity, participa
     </Text>
   </Stack>
 );
-

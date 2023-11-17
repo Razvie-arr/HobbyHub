@@ -22,4 +22,3 @@ export const ThreadFragment = gql(/* GraphQL */ `
 export type ThreadFragmentType = FragmentType<typeof ThreadFragment>;
 
 export const getThreadFragmentData = (event: ThreadFragmentType) => getFragmentData(ThreadFragment, event);
-

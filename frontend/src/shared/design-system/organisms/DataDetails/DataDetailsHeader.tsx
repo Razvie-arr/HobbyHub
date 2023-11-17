@@ -65,4 +65,3 @@ export const DataDetailsHeader = ({ user, ...other }: DataDetailsProps & WithDel
     </ContentContainer>
   </Flex>
 );
-

@@ -40,4 +40,3 @@ export const LOCATION_AWARE_GROUPS = gql(`
     }
   }
 `);
-

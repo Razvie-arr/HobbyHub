@@ -35,8 +35,10 @@ export const EventsFilterPresetTabs = ({
 
   const handleTodaysEvents = async () => {
     const startDate = new Date();
+    startDate.setHours(0, 0, 0, 0);
     const endDate = new Date();
     endDate.setDate(endDate.getDate() + 1);
+    endDate.setHours(0, 0, 0, 0);
     const values = {
       filterPreset: 'today' as const,
       address: getFilterValues().address,
@@ -107,4 +109,3 @@ export const EventsFilterPresetTabs = ({
     </HStack>
   );
 };
-

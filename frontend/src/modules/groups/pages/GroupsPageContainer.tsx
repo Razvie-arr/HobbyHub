@@ -38,4 +38,3 @@ export const PublicGroupsPageContainer = () => {
   const { isLoading, location } = useGeocodingWithGeolocation();
   return isLoading ? <PageSpinner /> : <GroupsPage location={location} />;
 };
-

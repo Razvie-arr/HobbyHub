@@ -38,4 +38,3 @@ export const PublicEventsPageContainer = () => {
   const { isLoading, location } = useGeocodingWithGeolocation();
   return isLoading ? <PageSpinner /> : <EventsPage location={location} />;
 };
-
