@@ -231,3 +231,14 @@ input UserInput {
   location_id: Int
   verified: Boolean!
 }
+
+input SenderInput {
+  id: Int!,
+  first_name: String!
+}
+
+input RecipientInput {
+  id: Int!,
+  first_name: String!
+  email: String!
+}

@@ -2,7 +2,7 @@ import * as argon2 from 'argon2';
 import { GraphQLError } from 'graphql/error';
 
 import { createToken, createTokenWithExpirationTime, verifyTokenWithExpirationTime } from '../../../libs/jwt';
-import { sendVerificationEmail } from '../../../libs/nodeMailer';
+import { sendEmail } from '../../../libs/nodeMailer';
 import {
   type AuthInfo,
   AuthUser,
@@ -115,7 +115,7 @@ export const signUpResolver = async (
   const verificationHTMLMessage = `Please click <a href="https://frontend-team01-vse.handson.pro/auth/verifyUser?token=${token}">here</a> to verify your account!`;
 
   try {
-    await sendVerificationEmail(email, SUBJECT_VERIFY, {
+    await sendEmail(email, SUBJECT_VERIFY, {
       text: verificationTextMessage,
       html: verificationHTMLMessage,
     });
@@ -168,7 +168,7 @@ export const requestResetPasswordResolver = async (
   const resetPasswordHTMLMessage = `Please reset your password using this <a href="<url for resetting password>?token=${resetToken}" >link</a>`;
 
   try {
-    await sendVerificationEmail(email, SUBJECT_RESET_PASSWORD, {
+    await sendEmail(email, SUBJECT_RESET_PASSWORD, {
       text: resetPasswordTextMessage,
       html: resetPasswordHTMLMessage,
     });
