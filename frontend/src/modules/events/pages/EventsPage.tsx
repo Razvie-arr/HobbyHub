@@ -86,6 +86,7 @@ export const EventsPage = ({ location }: EventsPageProps) => {
       }}
       renderAddressBar={(renderProps) => (
         <AddressFilterBar
+          preAddressText="Events in"
           address={location}
           onAddressSelected={async (address) => {
             const currentFilterValues = renderProps.getFilterValues();

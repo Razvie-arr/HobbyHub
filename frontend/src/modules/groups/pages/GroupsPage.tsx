@@ -76,6 +76,7 @@ export const GroupsPage = ({ location }: EventsPageProps) => {
       }}
       renderAddressBar={(renderProps) => (
         <AddressFilterBar
+          preAddressText="Groups in"
           address={location}
           onAddressSelected={async (address) => {
             const currentFilterValues = renderProps.getFilterValues();

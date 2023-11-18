@@ -82,9 +82,9 @@ export const GroupFilters = ({
           top={{ base: '49px', md: '59px' }}
           zIndex={2}
           shadow="sm"
-          py="4"
+          py={{ base: '2', xl: '4' }}
           direction="column"
-          spacing={{ base: '0', md: '4' }}
+          spacing={{ base: '0', xl: '4' }}
         >
           <ContentContainer>{renderAddressBar(renderProps)}</ContentContainer>
           <Box bg="white" w="100%">
