@@ -41,11 +41,7 @@ export const DataDetailsTabs = ({
         <TabPanel px="0">
           <Flex justifyContent="space-between" flexWrap="wrap">
             {ReadonlyArray.map(other.data.participants, (member) => (
-              <MemberItem
-                key={member.id}
-                name={`${member.first_name} ${member.last_name}`}
-                primaryButtonText="MESSAGE"
-              />
+              <MemberItem key={member.id} user={user} member={member} />
             ))}
           </Flex>
         </TabPanel>
