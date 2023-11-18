@@ -1,4 +1,4 @@
-import { Editable, HStack, StackProps, Text } from '@chakra-ui/react';
+import { Editable, Stack, StackProps, Text } from '@chakra-ui/react';
 
 import { AddressFilterInput } from './AddressFilterInput';
 
@@ -8,13 +8,13 @@ interface AddressFilterBarProps {
 }
 
 export const AddressFilterBar = ({ address, onAddressSelected, ...stackProps }: AddressFilterBarProps & StackProps) => (
-  <HStack alignItems="end" {...stackProps} flexGrow={1}>
-    <Text as="b" fontSize="lg" flexBasis="6%" lineHeight={1.9}>
+  <Stack {...stackProps} flexGrow={1} direction={{ base: 'column', md: 'row' }}>
+    <Text as="b" fontSize="lg" lineHeight={1.9} flexBasis={{ md: '82px' }} display={{ base: 'none', lg: 'initial' }}>
       Events in{' '}
     </Text>
-    <Editable defaultValue={address ? address.formatted_address : ''} flex="1" isPreviewFocusable={false}>
+    <Editable defaultValue={address ? address.formatted_address : ''} isPreviewFocusable={false} flex="1 1 auto">
       <AddressFilterInput onAddressSelected={onAddressSelected} />
     </Editable>
-  </HStack>
+  </Stack>
 );
 

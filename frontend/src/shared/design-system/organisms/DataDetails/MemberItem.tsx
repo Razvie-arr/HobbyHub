@@ -16,7 +16,15 @@ interface MemberItemProps extends WithAuthUser {
 export const MemberItem = ({ user, member }: MemberItemProps) => {
   const sendMessageModalDisclosure = useDisclosure();
   return (
-    <HStack justifyContent="space-between" bgColor="white" p={3} flexBasis="45%" borderRadius={10} mb={4} shadow="sm">
+    <HStack
+      justifyContent="space-between"
+      bgColor="white"
+      p={3}
+      flexBasis={{ base: '100%', md: '45%' }}
+      borderRadius={10}
+      mb={4}
+      shadow="sm"
+    >
       <HStack>
         <IconButton
           isRound={true}

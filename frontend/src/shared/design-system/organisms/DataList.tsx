@@ -66,7 +66,7 @@ export const DataList = ({
               bottom="8"
               right="8"
             />
-            <Flex flexWrap="wrap" columnGap="4">
+            <Flex flexWrap="wrap" columnGap="4" justifyContent={{ base: 'center', md: 'start' }}>
               {match(other)
                 .with({ type: 'event' }, (props) =>
                   props.dataArray.map((data) => (

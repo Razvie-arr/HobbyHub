@@ -17,6 +17,7 @@ import { GroupFiltersValues } from './types';
 const inputProps = {
   bg: 'white',
   borderRadius: 'full',
+  size: { base: 'sm', md: 'md' },
 };
 
 export interface RenderProps {
@@ -78,12 +79,12 @@ export const GroupFilters = ({
         <Stack
           bg="white"
           position="sticky"
-          top={{ base: '57px', md: '59px' }}
+          top={{ base: '49px', md: '59px' }}
           zIndex={2}
           shadow="sm"
           py="4"
-          spacing="4"
           direction="column"
+          spacing={{ base: '0', md: '4' }}
         >
           <ContentContainer>{renderAddressBar(renderProps)}</ContentContainer>
           <Box bg="white" w="100%">
@@ -93,14 +94,15 @@ export const GroupFilters = ({
               mx={4}
               my={2}
               variant="outline"
-              display={{ base: 'flex', lg: 'none' }}
+              display={{ base: 'flex', xl: 'none' }}
               rightIcon={mobileNav.isOpen ? <FaXmark /> : <FaFilter />}
               onClick={mobileNav.onToggle}
+              size={{ base: 'sm', md: 'md' }}
             >
               Filter
             </Button>
-            <ContentContainer display={{ base: mobileNav.isOpen ? 'flex' : 'none', lg: 'flex' }}>
-              <Stack direction={{ base: 'column', lg: 'row' }} width="100%">
+            <ContentContainer display={{ base: mobileNav.isOpen ? 'flex' : 'none', xl: 'flex' }}>
+              <Stack direction={{ base: 'column', xl: 'row' }} width="100%">
                 <HStack>
                   <ActivityFilter label="Sports" fieldName="sports" eventTypes={eventTypes.sports} />
                   <ActivityFilter label="Games" fieldName="games" eventTypes={eventTypes.games} />
@@ -121,6 +123,7 @@ export const GroupFilters = ({
                   width="100%"
                   flexBasis={{ base: 'none', lg: '9%' }}
                   type="submit"
+                  size={{ base: 'sm', md: 'md' }}
                 >
                   Apply filters
                 </Button>
@@ -140,6 +143,7 @@ export const GroupFilters = ({
                         other: [],
                       });
                     }}
+                    size={{ base: 'sm', md: 'md' }}
                   >
                     Reset filters
                   </Button>

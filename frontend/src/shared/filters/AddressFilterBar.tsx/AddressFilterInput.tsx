@@ -23,8 +23,8 @@ export const AddressFilterInput = ({ onAddressSelected }: AddressFilterInputProp
   const { getInputProps } = useEditableContext();
   const inputProps = getInputProps();
   return (
-    <HStack>
-      <EditablePreview fontSize="lg" color="purple.500" />
+    <HStack flex="1 1 auto">
+      <EditablePreview fontSize="lg" color="purple.500" noOfLines={1} />
       <Controller
         name="address"
         render={({ field }) => (

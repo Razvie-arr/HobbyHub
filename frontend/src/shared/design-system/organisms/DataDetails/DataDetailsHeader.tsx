@@ -33,7 +33,7 @@ const DataDetailsHeaderButtons = ({
   return (
     <>
       <ButtonGroup spacing="6">
-        <Stack direction={{ base: 'column', sm: 'row' }}>
+        <Stack direction="row">
           {isUserInfoOwner ? (
             <>
               <Button as={Link} to={editRoute} colorScheme="purple" rounded="full">
@@ -48,6 +48,7 @@ const DataDetailsHeaderButtons = ({
                   colorScheme="purple"
                   rounded="full"
                   isDisabled={other.data.start_datetime.slice(0, 23) < getCurrentDateTime()}
+                  size={{ base: 'sm', md: 'md' }}
                 >
                   Join event
                 </Button>
@@ -62,9 +63,9 @@ const DataDetailsHeaderButtons = ({
 };
 
 export const DataDetailsHeader = ({ user, ...other }: DataDetailsProps & WithDeleteButton) => (
-  <Flex width="100%" bgColor="white" shadow="sm" position="sticky" top={{ base: '57px', md: '59px' }} zIndex={1} py={4}>
+  <Flex width="100%" bgColor="white" shadow="sm" position="sticky" top={{ base: '49px', md: '59px' }} zIndex={1} py={4}>
     <ContentContainer>
-      <HStack justifyContent="space-between" bgColor="white" flexBasis="100%">
+      <Stack justifyContent="space-between" bgColor="white" flexBasis="100%" direction={{ base: 'column', md: 'row' }}>
         <HStack>
           {other.type === 'event' ? (
             <EventStatusTag
@@ -78,7 +79,7 @@ export const DataDetailsHeader = ({ user, ...other }: DataDetailsProps & WithDel
           </Heading>
         </HStack>
         {user ? <DataDetailsHeaderButtons user={user} {...other} /> : null}
-      </HStack>
+      </Stack>
     </ContentContainer>
   </Flex>
 );

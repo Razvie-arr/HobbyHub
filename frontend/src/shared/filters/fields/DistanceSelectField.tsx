@@ -3,6 +3,7 @@ import { SelectField } from '../../forms';
 const inputProps = {
   bg: 'white',
   borderRadius: 'full',
+  size: { base: 'sm', md: 'md' },
 };
 
 export const DistanceSelectField = () => (
@@ -16,3 +17,4 @@ export const DistanceSelectField = () => (
     <option value="500">Within 500 km</option>
   </SelectField>
 );
+

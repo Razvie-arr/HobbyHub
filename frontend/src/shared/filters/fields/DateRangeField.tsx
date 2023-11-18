@@ -3,6 +3,7 @@ import { DatePickerField } from '../../forms';
 const inputProps = {
   bg: 'white',
   borderRadius: 'full',
+  size: { base: 'sm', md: 'md' },
 };
 
 export const DateRangeField = () => (

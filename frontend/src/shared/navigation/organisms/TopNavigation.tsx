@@ -1,5 +1,16 @@
 import { useEffect, useMemo } from 'react';
-import { Avatar, Button, Divider, HStack, Menu, MenuButton, MenuItem, MenuList, Text } from '@chakra-ui/react';
+import {
+  Avatar,
+  Button,
+  Divider,
+  HStack,
+  Menu,
+  MenuButton,
+  MenuItem,
+  MenuList,
+  Text,
+  useBreakpoint,
+} from '@chakra-ui/react';
 import { FaBars, FaChevronDown, FaMagnifyingGlass, FaRegComment, FaXmark } from 'react-icons/fa6';
 import { NavLink, useLocation, useNavigate } from 'react-router-dom';
 
@@ -33,12 +44,16 @@ export function TopNavigation() {
     [location, closeHamburgerMenu],
   );
 
+  const breakpoint = useBreakpoint();
+
   return (
     <Box bg="white" position="sticky" top={0} width="100%" zIndex={3} borderBottomWidth="1px" borderColor="purple.100">
       <ContentContainer>
         <HStack py={{ base: 1 }} align="center" justifyContent="space-between">
           <HStack>
-            <Image boxSize={{ base: '40px', md: '50px' }} src={LOGO_PATH} alt="logo" borderRadius="base" />
+            {breakpoint === 'base' ? null : (
+              <Image boxSize={{ base: '40px', md: '50px' }} src={LOGO_PATH} alt="logo" borderRadius="base" />
+            )}
             <IconButton
               color="purple.600"
               _hover={{ bg: 'purple.50' }}
@@ -70,6 +85,7 @@ export function TopNavigation() {
                     _hover={{ bg: 'purple.600' }}
                     _expanded={{ bg: 'purple.600' }}
                     rightIcon={<FaChevronDown />}
+                    size={{ base: 'sm', md: 'md' }}
                   >
                     Create
                   </MenuButton>
@@ -93,6 +109,7 @@ export function TopNavigation() {
                   variant="ghost"
                   fontSize="xl"
                   icon={<FaMagnifyingGlass />}
+                  size={{ base: 'sm', md: 'md' }}
                 />
                 <IconButton
                   as={NavLink}
@@ -105,6 +122,7 @@ export function TopNavigation() {
                   variant="ghost"
                   fontSize="xl"
                   icon={<FaRegComment />}
+                  size={{ base: 'sm', md: 'md' }}
                 />
                 <Menu>
                   <MenuButton ml="2">
