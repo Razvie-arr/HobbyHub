@@ -123,6 +123,44 @@ export class SQLDataSource extends BatchedSQLDataSource {
       .offset(offset)
       .limit(limit);
 
+  public getGroupsWithSameTypeExceptCity = (
+    groupId: number,
+    eventTypeIds: Array<number>,
+    city: string,
+    offset: number,
+    limit: number,
+  ) =>
+    this.db.query
+      .distinct('UserGroup.*')
+      .from('UserGroup')
+      .join('UserGroup_EventType', 'UserGroup.id', 'UserGroup_EventType.group_id')
+      .join('EventType', 'UserGroup_EventType.event_type_id', 'EventType.id')
+      .join('Location', 'UserGroup.location_id', 'Location.id')
+      .whereNot('Location.city', city)
+      .whereNot('UserGroup.id', groupId)
+      .whereIn('EventType.id', eventTypeIds)
+      .offset(offset)
+      .limit(limit);
+
+  public getGroupsWithSameTypeInCity = (
+    groupId: number,
+    eventTypeIds: Array<number>,
+    city: string,
+    offset: number,
+    limit: number,
+  ) =>
+    this.db.query
+      .distinct('UserGroup.*')
+      .from('UserGroup')
+      .join('UserGroup_EventType', 'UserGroup.id', 'UserGroup_EventType.group_id')
+      .join('EventType', 'UserGroup_EventType.event_type_id', 'EventType.id')
+      .join('Location', 'UserGroup.location_id', 'Location.id')
+      .where('Location.city', city)
+      .whereNot('UserGroup.id', groupId)
+      .whereIn('EventType.id', eventTypeIds)
+      .offset(offset)
+      .limit(limit);
+
   public executeSearchByEventNameAuthorName = (text: string, offset: number, limit: number) => {
     const textLowerCase = text.toLowerCase();
     return this.db.query

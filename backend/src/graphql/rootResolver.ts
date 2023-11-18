@@ -52,6 +52,7 @@ import {
   groupsResolver,
   interestingNearbyGroupsResolver,
   nearbyGroupsResolver,
+  similarGroupsResolver,
   uploadGroupImageResolver,
 } from './modules/group/groupResolvers';
 import { locationByIdResolver, locationsByIdsResolver, locationsResolver } from './modules/location/locationResolvers';
@@ -113,6 +114,7 @@ export const rootResolver: Resolvers = {
     filterGroups: filterGroupsResolver,
     nearbyGroups: nearbyGroupsResolver,
     interestingNearbyGroups: interestingNearbyGroupsResolver,
+    similarGroups: similarGroupsResolver,
 
     searchGroups: searchGroupsResolver,
   },

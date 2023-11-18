@@ -319,6 +319,7 @@ export type Query = {
   searchEvents: Array<Event>;
   searchGroups: Array<Group>;
   similarEvents: Array<Event>;
+  similarGroups: Array<Group>;
   threads: Array<Thread>;
   todaysNearbyEvents: Array<Event>;
   userById?: Maybe<User>;
@@ -452,6 +453,14 @@ export type QuerySimilarEventsArgs = {
   city: Scalars['String']['input'];
   eventId: Scalars['Int']['input'];
   eventTypeIds: Array<Scalars['Int']['input']>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+};
+
+export type QuerySimilarGroupsArgs = {
+  city: Scalars['String']['input'];
+  eventTypeIds: Array<Scalars['Int']['input']>;
+  groupId: Scalars['Int']['input'];
   limit?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
 };
@@ -1017,6 +1026,12 @@ export type QueryResolvers<
     ParentType,
     ContextType,
     RequireFields<QuerySimilarEventsArgs, 'city' | 'eventId' | 'eventTypeIds'>
+  >;
+  similarGroups?: Resolver<
+    Array<ResolversTypes['Group']>,
+    ParentType,
+    ContextType,
+    RequireFields<QuerySimilarGroupsArgs, 'city' | 'eventTypeIds' | 'groupId'>
   >;
   threads?: Resolver<
     Array<ResolversTypes['Thread']>,

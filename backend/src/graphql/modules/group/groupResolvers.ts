@@ -22,6 +22,7 @@ import {
   QueryGroupsByIdsArgs,
   QueryInterestingNearbyGroupsArgs,
   QueryNearbyGroupsArgs,
+  QuerySimilarGroupsArgs,
   User,
 } from '../../../types';
 import { createGroupInput, getPublicStorageFilePath } from '../../../utils/helpers';
@@ -29,6 +30,7 @@ import { createLocation, updateLocation } from '../location/locationResolvers';
 
 const DEFAULT_LIMIT = 4;
 const FRONTEND_PROFILE_IMAGE_RELATIVE_PATH = 'uploads/group_image';
+const MINIMUM_COUNT_SIMILAR_GROUPS = 3;
 
 export const groupsResolver: ContextualResolver<Array<Group>, QueryGroupsArgs> = async (
   _,
@@ -147,6 +149,38 @@ export const interestingNearbyGroupsResolver = async (
     .having(distance, '<', DEFAULT_DISTANCE)
     .offset(offset ?? 0);
   return limit ? result.limit(limit) : result.limit(DEFAULT_LIMIT);
+};
+
+export const similarGroupsResolver = async (
+  _: unknown,
+  { groupId, city, eventTypeIds, offset, limit }: QuerySimilarGroupsArgs,
+  { dataSources }: CustomContext,
+): Promise<Array<Group>> => {
+  offset = offset ?? 0;
+  limit = limit ?? DEFAULT_LIMIT;
+
+  const similarGroupsWithinSameCity: Array<Group> = await dataSources.sql.getGroupsWithSameTypeInCity(
+    groupId,
+    eventTypeIds,
+    city,
+    offset,
+    limit,
+  );
+
+  const similarGroupsCount = similarGroupsWithinSameCity.length;
+
+  if (similarGroupsCount < MINIMUM_COUNT_SIMILAR_GROUPS) {
+    const similarGroupsOutsideCity: Array<Group> = await dataSources.sql.getGroupsWithSameTypeExceptCity(
+      groupId,
+      eventTypeIds,
+      city,
+      0,
+      limit - similarGroupsCount,
+    );
+    return [...similarGroupsWithinSameCity, ...similarGroupsOutsideCity];
+  }
+
+  return similarGroupsWithinSameCity;
 };
 
 export const uploadGroupImageResolver = async (_: unknown, { group_image }: MutationUploadGroupImageArgs) => {
@@ -293,4 +327,3 @@ export const deleteGroupResolver = async (
   }
   return 'Group and location deleted!';
 };
-
