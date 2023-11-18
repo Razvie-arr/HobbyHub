@@ -1,4 +1,5 @@
-import { SortType } from '../../../gql/graphql';
+import { SortType } from 'src/gql/graphql';
+
 import { useFilterSearchParams } from '../hooks';
 import { EventFilterPreset } from '../types';
 
@@ -14,5 +15,5 @@ export const createEventFilterValuesFromParams = (
   dates: (params.startDate && params.endDate
     ? ([new Date(params.startDate), new Date(params.endDate)] as const)
     : ([null, null] as const)) as readonly [Date | null, Date | null],
-  sortBy: params.sortBy ?? SortType.DateCreated,
+  sortBy: params.sortBy ?? SortType.DateStart,
 });
