@@ -4,9 +4,10 @@ import { NonEmptyArray } from 'effect/dist/declarations/src/ReadonlyArray';
 import { FormProvider, useForm } from 'react-hook-form';
 import { MdSend } from 'react-icons/md';
 
-import { User } from '../../../gql/graphql';
+import { User } from 'src/gql/graphql';
+import { WithAuthUser } from 'src/shared/types';
+
 import { InputField, zod, zodResolver } from '../../../shared/forms';
-import { WithAuthUser } from '../../../shared/types';
 import { SEND_MESSAGE } from '../mutations';
 
 interface SendMessageFormProps extends WithAuthUser {
@@ -31,7 +32,13 @@ export const SendMessageForm = ({ user, otherUsers, refetchMessages }: SendMessa
 
   const handleSubmit = methods.handleSubmit(async (values) => {
     const promises = otherUsers.map(async (recipient) =>
-      sendMessage({ variables: { recipient, sender: user, text: values.message } }),
+      sendMessage({
+        variables: {
+          recipient: { email: recipient.email, id: recipient.id, first_name: recipient.first_name },
+          sender: { id: user.id, first_name: user.first_name },
+          text: values.message,
+        },
+      }),
     );
     await Promise.all(promises);
     await refetchMessages();
@@ -68,4 +75,3 @@ export const SendMessageForm = ({ user, otherUsers, refetchMessages }: SendMessa
     </FormProvider>
   );
 };
-
