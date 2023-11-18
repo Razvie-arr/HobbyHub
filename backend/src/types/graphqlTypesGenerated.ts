@@ -317,6 +317,7 @@ export type Query = {
   nearbyGroups: Array<Group>;
   newlyCreatedNearbyEvents: Array<Event>;
   searchEvents: Array<Event>;
+  searchGroups: Array<Group>;
   similarEvents: Array<Event>;
   threads: Array<Thread>;
   todaysNearbyEvents: Array<Event>;
@@ -436,6 +437,12 @@ export type QueryNewlyCreatedNearbyEventsArgs = {
 };
 
 export type QuerySearchEventsArgs = {
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  text: Scalars['String']['input'];
+};
+
+export type QuerySearchGroupsArgs = {
   limit?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
   text: Scalars['String']['input'];
@@ -998,6 +1005,12 @@ export type QueryResolvers<
     ParentType,
     ContextType,
     RequireFields<QuerySearchEventsArgs, 'text'>
+  >;
+  searchGroups?: Resolver<
+    Array<ResolversTypes['Group']>,
+    ParentType,
+    ContextType,
+    RequireFields<QuerySearchGroupsArgs, 'text'>
   >;
   similarEvents?: Resolver<
     Array<ResolversTypes['Event']>,

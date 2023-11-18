@@ -1,4 +1,4 @@
-import { CustomContext, Event, QuerySearchEventsArgs } from '../../../types';
+import { CustomContext, Event, Group, QuerySearchEventsArgs, QuerySearchGroupsArgs } from '../../../types';
 
 export const searchEventsResolver = async (
   _: unknown,
@@ -8,4 +8,14 @@ export const searchEventsResolver = async (
   offset = offset ?? 0;
   limit = limit ?? 100;
   return dataSources.sql.executeSearchByEventNameAuthorName(text, offset, limit);
+};
+
+export const searchGroupsResolver = async (
+  _: unknown,
+  { text, offset, limit }: QuerySearchGroupsArgs,
+  { dataSources }: CustomContext,
+): Promise<Array<Group>> => {
+  offset = offset ?? 0;
+  limit = limit ?? 100;
+  return dataSources.sql.executeSearchByGroupNameAdminName(text, offset, limit);
 };

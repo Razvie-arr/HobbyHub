@@ -137,6 +137,19 @@ export class SQLDataSource extends BatchedSQLDataSource {
       .limit(limit);
   };
 
+  public executeSearchByGroupNameAdminName = (text: string, offset: number, limit: number) => {
+    const textLowerCase = text.toLowerCase();
+    return this.db.query
+      .select('UserGroup.*')
+      .from('UserGroup')
+      .join('User', 'UserGroup.admin_id', 'User.id')
+      .whereRaw('LOWER(UserGroup.name) like ?', `%${textLowerCase}%`)
+      .or.whereRaw('LOWER(User.first_name) like ?', `%${textLowerCase}%`)
+      .or.whereRaw('LOWER(User.last_name) like ?', `%${textLowerCase}%`)
+      .offset(offset)
+      .limit(limit);
+  };
+
   public getFilteredGroups = (
     offset: number,
     limit: number,

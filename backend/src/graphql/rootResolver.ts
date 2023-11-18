@@ -55,7 +55,7 @@ import {
   uploadGroupImageResolver,
 } from './modules/group/groupResolvers';
 import { locationByIdResolver, locationsByIdsResolver, locationsResolver } from './modules/location/locationResolvers';
-import { searchEventsResolver } from './modules/search/searchResolver';
+import { searchEventsResolver, searchGroupsResolver } from './modules/search/searchResolver';
 import {
   authUserEventTypesResolver,
   authUserLocationResolver,
@@ -113,6 +113,8 @@ export const rootResolver: Resolvers = {
     filterGroups: filterGroupsResolver,
     nearbyGroups: nearbyGroupsResolver,
     interestingNearbyGroups: interestingNearbyGroupsResolver,
+
+    searchGroups: searchGroupsResolver,
   },
 
   AuthUser: {
@@ -192,4 +194,3 @@ export const rootResolver: Resolvers = {
     sender: messageSenderResolver,
   },
 };
-

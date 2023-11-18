@@ -1,3 +1,4 @@
 extend type Query {
   searchEvents(text: String!, offset: Int, limit: Int): [Event!]!
+  searchGroups(text: String!, offset: Int, limit: Int): [Group!]!
 }
