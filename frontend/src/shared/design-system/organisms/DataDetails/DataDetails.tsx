@@ -1,6 +1,6 @@
 import { Image, Stack, VStack } from '@chakra-ui/react';
 
-import { DEFAULT_EVENT_IMAGE_PATH } from '../../../constants';
+import { DEFAULT_IMAGE_PATH } from '../../../constants';
 import { ContentContainer } from '../../../layout';
 
 import { DataDetailsCard } from './DataDetailsCard';
@@ -23,7 +23,7 @@ export const DataDetails = ({
             aspectRatio="16/9"
             objectFit="cover"
             alt="Event Image"
-            src={props.data.image_filepath ?? DEFAULT_EVENT_IMAGE_PATH}
+            src={props.data.image_filepath ?? DEFAULT_IMAGE_PATH}
           />
           <DataDetailsTabs {...props} additionalTabs={additionalTabs} />
         </VStack>

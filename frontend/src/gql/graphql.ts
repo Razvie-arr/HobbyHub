@@ -767,6 +767,33 @@ export type SearchEventsQuery = {
   >;
 };
 
+export type CreateGroupMutationVariables = Exact<{
+  group: GroupInput;
+  location: LocationInputWithoutCoords;
+}>;
+
+export type CreateGroupMutation = { __typename?: 'Mutation'; createGroup: { __typename?: 'Group'; id: number } };
+
+export type EditGroupMutationVariables = Exact<{
+  group: GroupInput;
+  location: LocationInputWithoutCoords;
+}>;
+
+export type EditGroupMutation = { __typename?: 'Mutation'; editGroup: { __typename?: 'Group'; id: number } };
+
+export type DeleteGroupMutationVariables = Exact<{
+  groupId: Scalars['Int']['input'];
+  locationId: Scalars['Int']['input'];
+}>;
+
+export type DeleteGroupMutation = { __typename?: 'Mutation'; deleteGroup: string };
+
+export type UploadGroupImageMutationVariables = Exact<{
+  groupImage?: InputMaybe<Scalars['Upload']['input']>;
+}>;
+
+export type UploadGroupImageMutation = { __typename?: 'Mutation'; uploadGroupImage?: string | null };
+
 export type GroupsQueryVariables = Exact<{
   offset?: InputMaybe<Scalars['Int']['input']>;
   limit?: InputMaybe<Scalars['Int']['input']>;
@@ -3392,6 +3419,182 @@ export const SearchEventsDocument = {
     },
   ],
 } as unknown as DocumentNode<SearchEventsQuery, SearchEventsQueryVariables>;
+export const CreateGroupDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'mutation',
+      name: { kind: 'Name', value: 'CreateGroup' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'group' } },
+          type: { kind: 'NonNullType', type: { kind: 'NamedType', name: { kind: 'Name', value: 'GroupInput' } } },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'location' } },
+          type: {
+            kind: 'NonNullType',
+            type: { kind: 'NamedType', name: { kind: 'Name', value: 'LocationInputWithoutCoords' } },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'createGroup' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'group' },
+                value: { kind: 'Variable', name: { kind: 'Name', value: 'group' } },
+              },
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'location' },
+                value: { kind: 'Variable', name: { kind: 'Name', value: 'location' } },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [{ kind: 'Field', name: { kind: 'Name', value: 'id' } }],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<CreateGroupMutation, CreateGroupMutationVariables>;
+export const EditGroupDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'mutation',
+      name: { kind: 'Name', value: 'EditGroup' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'group' } },
+          type: { kind: 'NonNullType', type: { kind: 'NamedType', name: { kind: 'Name', value: 'GroupInput' } } },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'location' } },
+          type: {
+            kind: 'NonNullType',
+            type: { kind: 'NamedType', name: { kind: 'Name', value: 'LocationInputWithoutCoords' } },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'editGroup' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'group' },
+                value: { kind: 'Variable', name: { kind: 'Name', value: 'group' } },
+              },
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'location' },
+                value: { kind: 'Variable', name: { kind: 'Name', value: 'location' } },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [{ kind: 'Field', name: { kind: 'Name', value: 'id' } }],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<EditGroupMutation, EditGroupMutationVariables>;
+export const DeleteGroupDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'mutation',
+      name: { kind: 'Name', value: 'DeleteGroup' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'groupId' } },
+          type: { kind: 'NonNullType', type: { kind: 'NamedType', name: { kind: 'Name', value: 'Int' } } },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'locationId' } },
+          type: { kind: 'NonNullType', type: { kind: 'NamedType', name: { kind: 'Name', value: 'Int' } } },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'deleteGroup' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'group_id' },
+                value: { kind: 'Variable', name: { kind: 'Name', value: 'groupId' } },
+              },
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'location_id' },
+                value: { kind: 'Variable', name: { kind: 'Name', value: 'locationId' } },
+              },
+            ],
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<DeleteGroupMutation, DeleteGroupMutationVariables>;
+export const UploadGroupImageDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'mutation',
+      name: { kind: 'Name', value: 'UploadGroupImage' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'groupImage' } },
+          type: { kind: 'NamedType', name: { kind: 'Name', value: 'Upload' } },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'uploadGroupImage' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'group_image' },
+                value: { kind: 'Variable', name: { kind: 'Name', value: 'groupImage' } },
+              },
+            ],
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<UploadGroupImageMutation, UploadGroupImageMutationVariables>;
 export const GroupsDocument = {
   kind: 'Document',
   definitions: [

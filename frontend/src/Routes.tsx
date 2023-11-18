@@ -4,7 +4,8 @@ import { OnboardingForm, useAuth, VerifyUserPage } from 'src/modules/auth';
 import { CreateEventForm, EditEventForm, EventDetailsPage, EventsPage, SearchEventsPage } from 'src/modules/events';
 import { NotFoundPage } from 'src/shared/navigation';
 
-import { GroupDetailsPage, GroupsPage } from './modules/groups';
+import { EditGroupForm, GroupDetailsPage, GroupsPage } from './modules/groups';
+import { CreateGroupForm } from './modules/groups/forms/CreateGroupForm';
 import { HomePage } from './modules/home';
 import { MessagesPage } from './modules/messages';
 import { route } from './route';
@@ -23,6 +24,8 @@ export const Routes = () => {
 
       <Route path={route.groups()} element={<GroupsPage />} />
       <Route path={route.groupDetails()} element={<GroupDetailsPage />} />
+      <Route path={route.createGroup()} element={<CreateGroupForm />} />
+      <Route path={route.editGroup()} element={<EditGroupForm />} />
 
       <Route path={route.onboarding()} element={<OnboardingForm />} />
       <Route path={route.verifyUser()} element={<VerifyUserPage />} />

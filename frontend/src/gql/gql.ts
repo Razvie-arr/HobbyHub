@@ -46,6 +46,14 @@ const documents = {
     types.SimilarEventsDocument,
   '\n  query SearchEvents($text: String!, $offset: Int, $limit: Int) {\n    searchEvents(text: $text, offset: $offset, limit: $limit) {\n      ...EventFragment\n    }\n  }\n':
     types.SearchEventsDocument,
+  '\n  mutation CreateGroup($group: GroupInput!, $location: LocationInputWithoutCoords!) {\n    createGroup(group: $group, location: $location) {\n      id\n    }\n  }\n':
+    types.CreateGroupDocument,
+  '\n  mutation EditGroup($group: GroupInput!, $location: LocationInputWithoutCoords!) {\n    editGroup(group: $group, location: $location) {\n      id\n    }\n}\n':
+    types.EditGroupDocument,
+  '\n  mutation DeleteGroup($groupId: Int!, $locationId: Int!) {\n    deleteGroup(group_id: $groupId, location_id: $locationId) \n  }\n':
+    types.DeleteGroupDocument,
+  '\n  mutation UploadGroupImage($groupImage: Upload) {\n    uploadGroupImage(group_image: $groupImage)\n}\n':
+    types.UploadGroupImageDocument,
   '\n  query Groups($offset: Int, $limit: Int) {\n    groups(offset: $offset, limit: $limit) {\n      ...GroupFragment\n    }\n  }\n':
     types.GroupsDocument,
   '\n  query GroupById($groupId: Int!) {\n    groupById(id: $groupId) {\n      ...GroupFragment\n    }\n  }\n':
@@ -188,6 +196,30 @@ export function gql(
 export function gql(
   source: '\n  query SearchEvents($text: String!, $offset: Int, $limit: Int) {\n    searchEvents(text: $text, offset: $offset, limit: $limit) {\n      ...EventFragment\n    }\n  }\n',
 ): (typeof documents)['\n  query SearchEvents($text: String!, $offset: Int, $limit: Int) {\n    searchEvents(text: $text, offset: $offset, limit: $limit) {\n      ...EventFragment\n    }\n  }\n'];
+/**
+ * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function gql(
+  source: '\n  mutation CreateGroup($group: GroupInput!, $location: LocationInputWithoutCoords!) {\n    createGroup(group: $group, location: $location) {\n      id\n    }\n  }\n',
+): (typeof documents)['\n  mutation CreateGroup($group: GroupInput!, $location: LocationInputWithoutCoords!) {\n    createGroup(group: $group, location: $location) {\n      id\n    }\n  }\n'];
+/**
+ * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function gql(
+  source: '\n  mutation EditGroup($group: GroupInput!, $location: LocationInputWithoutCoords!) {\n    editGroup(group: $group, location: $location) {\n      id\n    }\n}\n',
+): (typeof documents)['\n  mutation EditGroup($group: GroupInput!, $location: LocationInputWithoutCoords!) {\n    editGroup(group: $group, location: $location) {\n      id\n    }\n}\n'];
+/**
+ * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function gql(
+  source: '\n  mutation DeleteGroup($groupId: Int!, $locationId: Int!) {\n    deleteGroup(group_id: $groupId, location_id: $locationId) \n  }\n',
+): (typeof documents)['\n  mutation DeleteGroup($groupId: Int!, $locationId: Int!) {\n    deleteGroup(group_id: $groupId, location_id: $locationId) \n  }\n'];
+/**
+ * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function gql(
+  source: '\n  mutation UploadGroupImage($groupImage: Upload) {\n    uploadGroupImage(group_image: $groupImage)\n}\n',
+): (typeof documents)['\n  mutation UploadGroupImage($groupImage: Upload) {\n    uploadGroupImage(group_image: $groupImage)\n}\n'];
 /**
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */

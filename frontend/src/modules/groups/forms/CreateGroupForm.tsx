@@ -1,13 +1,12 @@
 import { useMutation } from '@apollo/client';
-import { useToast } from '@chakra-ui/react';
+import { Alert, useToast } from '@chakra-ui/react';
 import { useNavigate } from 'react-router-dom';
 
 import { route } from '../../../route';
-import { getCurrentDateTime } from '../../../utils/form';
 import { useAuth } from '../../auth';
-import { CREATE_EVENT } from '../mutations';
+import { CREATE_GROUP } from '../mutations';
 
-import { EventForm } from './EventForm';
+import { GroupForm } from './GroupForm';
 
 interface SelectOption {
   value: number;
@@ -15,13 +14,10 @@ interface SelectOption {
 }
 
 const defaultValues = {
-  eventImage: null,
+  groupImage: null,
   name: '',
   eventTypes: [] as unknown as [SelectOption, ...SelectOption[]],
   summary: '',
-  capacity: 1,
-  allowWaitlist: false,
-  endDatetime: '',
   streetName: '',
   streetNumber: '',
   city: '',
@@ -29,36 +25,35 @@ const defaultValues = {
   description: '',
 };
 
-export const CreateEventForm = () => {
+export const CreateGroupForm = () => {
   const { user } = useAuth();
-  const [createEventRequest, createEventRequestState] = useMutation(CREATE_EVENT);
+  const [createGroupRequest, createGroupRequestState] = useMutation(CREATE_GROUP);
   const navigate = useNavigate();
   const toast = useToast();
+
+  if (!user) {
+    return <Alert status="error">An error occurred. Please log in to create a group.</Alert>;
+  }
+
   return (
-    <EventForm
+    <GroupForm
       defaultValues={{
         ...defaultValues,
-        author: `${user?.first_name} ${user?.last_name}`,
-        startDatetime: getCurrentDateTime(),
       }}
-      formTitle="Create event"
-      formDescription="Create your own event today!"
+      formTitle="Create group"
+      formDescription="Create your own group today!"
       handleCancel={() => {
         navigate(route.home());
       }}
       handleSubmit={async (values) => {
-        const result = await createEventRequest({
+        const result = await createGroupRequest({
           variables: {
-            event: {
-              allow_waitlist: values.allowWaitlist,
-              capacity: values.capacity,
+            group: {
               description: values.description,
-              end_datetime: values.endDatetime,
-              image_filepath: values.eventImagePath,
+              image_filepath: values.groupImagePath,
               name: values.name,
-              start_datetime: values.startDatetime,
               summary: values.summary,
-              author_id: user?.id,
+              admin_id: user?.id,
               event_type_ids: values.eventTypes.map(({ value }) => value),
             },
             location: {
@@ -73,15 +68,15 @@ export const CreateEventForm = () => {
           variant: 'left-accent',
           status: 'success',
           position: 'top-right',
-          title: 'Event created!',
-          description: 'Your event was created successfully.',
+          title: 'Group created!',
+          description: 'Your group was created successfully.',
         });
-        const id = result.data?.createEvent.id;
+        const id = result.data?.createGroup.id;
         if (id) {
-          navigate(route.eventDetails(id));
+          navigate(route.groupDetails(id));
         }
       }}
-      isLoading={createEventRequestState.loading}
+      isLoading={createGroupRequestState.loading}
       submitButtonLabel="Create"
     />
   );
