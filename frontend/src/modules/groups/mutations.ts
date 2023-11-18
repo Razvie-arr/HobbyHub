@@ -27,3 +27,4 @@ export const UPLOAD_GROUP_IMAGE = gql(`
     uploadGroupImage(group_image: $groupImage)
 }
 `);
+

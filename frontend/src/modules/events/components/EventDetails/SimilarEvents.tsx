@@ -22,13 +22,11 @@ export const SimilarEvents = ({ user, eventId, eventTypeIds, city }: SimilarEven
   return (
     <QueryResult
       queryResult={similarEventsQueryResult}
-      render={({ similarEvents }) => {
-        if (!similarEvents) {
-          return null;
-        }
-        const events = similarEvents.map(getEventFragmentData);
-        return <DataList user={user} type="event" dataArray={events} maxColumnCount={3} />;
-      }}
+      queryName="similarEvents"
+      render={(similarEvents) => (
+        <DataList user={user} type="event" dataArray={similarEvents.map(getEventFragmentData)} maxColumnCount={3} />
+      )}
     />
   );
 };
+

@@ -44,13 +44,8 @@ const EditGroupForm = ({ groupId }: EditGroupFormProps) => {
   return (
     <QueryResult
       queryResult={result}
-      render={(data) => {
-        const groupFragment = data.groupById;
-
-        if (!groupFragment) {
-          return null;
-        }
-
+      queryName="groupById"
+      render={(groupFragment) => {
         const group = getGroupFragmentData(groupFragment);
 
         return (
@@ -112,3 +107,4 @@ const EditGroupForm = ({ groupId }: EditGroupFormProps) => {
     />
   );
 };
+

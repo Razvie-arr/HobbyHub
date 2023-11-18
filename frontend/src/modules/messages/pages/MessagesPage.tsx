@@ -23,8 +23,9 @@ export const MessagesPageContainer = ({ user }: WithAuthUser) => {
   return (
     <QueryResult
       queryResult={threadQueryResult}
-      render={(data) => {
-        const threads = data.threads.map(getThreadFragmentData);
+      queryName="threads"
+      render={(threadFragments) => {
+        const threads = threadFragments.map(getThreadFragmentData);
         return ReadonlyArray.isNonEmptyArray(threads) ? <MessagesPage user={user} threads={threads} /> : null;
       }}
     />
@@ -109,15 +110,15 @@ const MessagesPage = ({ user, threads }: WithAuthUser & WithNonEmptyThreads) => 
           {selectedThread ? (
             <QueryResult
               queryResult={messagesQueryResult}
-              render={(messagesData) => {
-                const messages = messagesData.messagesByThreadId.map(getMessageFragmentData);
+              queryName="messagesByThreadId"
+              render={(messageFragments) => {
                 const otherUsers = selectedThread.users.filter(({ id }) => id !== user.id) as NonEmptyArray<User>;
                 return (
                   <>
                     <ChatContent
                       user={user}
                       otherUsers={otherUsers}
-                      messages={messages}
+                      messages={messageFragments.map(getMessageFragmentData)}
                       onBackClick={handleBackButtonClick}
                     />
                     <CardFooter>
@@ -143,3 +144,4 @@ const MessagesPage = ({ user, threads }: WithAuthUser & WithNonEmptyThreads) => 
     </ContentContainer>
   );
 };
+

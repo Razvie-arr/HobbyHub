@@ -1,12 +1,20 @@
 import { OperationVariables, QueryResult as ApolloQueryResult } from '@apollo/client';
 import { Alert, AlertDescription, AlertIcon, AlertTitle, Box, Card, Flex, Spinner } from '@chakra-ui/react';
 
-interface QueryResultProps<T, V extends OperationVariables> {
-  queryResult: ApolloQueryResult<T, V>;
-  render: (data: T, otherResults: Omit<ApolloQueryResult<T, V>, 'data'>) => React.ReactNode;
+interface QueryResultProps<Q, V extends OperationVariables> {
+  queryResult: ApolloQueryResult<Q, V>;
+  queryName: Exclude<keyof Q, '__typename'>;
+  render: (
+    data: NonNullable<Q[Exclude<keyof Q, '__typename'>]>,
+    otherResults: Omit<ApolloQueryResult<Q, V>, 'data'>,
+  ) => React.ReactNode;
 }
 
-export const QueryResult = <T, V extends OperationVariables>({ queryResult, render }: QueryResultProps<T, V>) => {
+export const QueryResult = <Q, V extends OperationVariables>({
+  queryResult,
+  queryName,
+  render,
+}: QueryResultProps<Q, V>) => {
   if (queryResult.error) {
     return (
       <Card>
@@ -27,9 +35,10 @@ export const QueryResult = <T, V extends OperationVariables>({ queryResult, rend
       </Flex>
     );
   }
-  if (queryResult.data) {
+  if (queryResult.data && queryResult.data[queryName]) {
     const { data, ...rest } = queryResult;
-    return render(data, rest);
+    return render(queryResult.data[queryName] as NonNullable<Q[Exclude<keyof Q, '__typename'>]>, rest);
   }
   return <p>Nothing to show...</p>;
 };
+

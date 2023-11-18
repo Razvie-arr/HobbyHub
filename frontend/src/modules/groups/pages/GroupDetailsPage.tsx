@@ -18,15 +18,8 @@ const GroupDetailsPage = ({ groupId }: EventDetailsProps) => {
   return (
     <QueryResult
       queryResult={eventQueryResult}
-      render={(data) => {
-        const groupFragment = data?.groupById;
-        if (!groupFragment) {
-          return null;
-        }
-        const group = getGroupFragmentData(groupFragment);
-
-        return <GroupDetails group={group} />;
-      }}
+      queryName="groupById"
+      render={(groupFragment) => <GroupDetails group={getGroupFragmentData(groupFragment)} />}
     />
   );
 };
@@ -36,3 +29,4 @@ export const GroupDetailsPageContainer = () => {
 
   return param.groupId ? <GroupDetailsPage groupId={parseInt(param.groupId)} /> : null;
 };
+

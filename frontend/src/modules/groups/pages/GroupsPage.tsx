@@ -90,11 +90,8 @@ export const GroupsPage = ({ location }: EventsPageProps) => {
       <ContentContainer>
         <QueryResult
           queryResult={queryResult}
-          render={(data) => {
-            const groupFragments = data.filterGroups;
-            if (!groupFragments) {
-              return null;
-            }
+          queryName="filterGroups"
+          render={(groupFragments) => {
             const groups = groupFragments.map(getGroupFragmentData);
             return (
               <Stack spacing="8">
@@ -122,3 +119,4 @@ export const GroupsPage = ({ location }: EventsPageProps) => {
     </GroupFilters>
   );
 };
+

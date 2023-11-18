@@ -3,6 +3,8 @@ import { DataDetails, DataList } from '../../../../shared/design-system';
 import { getEventFragmentData, WithGroup } from '../../../../shared/types';
 import { useAuth } from '../../../auth';
 
+import { SimilarGroups } from './SimilarGroups';
+
 export const GroupDetails = ({ group }: WithGroup) => {
   const { user } = useAuth();
   const groupEvents = group.events.map(getEventFragmentData);
@@ -16,7 +18,19 @@ export const GroupDetails = ({ group }: WithGroup) => {
       editRoute={route.editGroup(group.id)}
       additionalTabs={[
         { title: 'Events', content: <DataList user={user} type="event" dataArray={groupEvents} maxColumnCount={3} /> },
+        {
+          title: 'Similar groups',
+          content: (
+            <SimilarGroups
+              city={group.location.city}
+              groupId={group.id}
+              eventTypeIds={group.event_types.map(({ id }) => id)}
+              user={user}
+            />
+          ),
+        },
       ]}
     />
   );
 };
+

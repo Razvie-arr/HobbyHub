@@ -101,11 +101,8 @@ export const EventsPage = ({ location }: EventsPageProps) => {
       <ContentContainer>
         <QueryResult
           queryResult={queryResult}
-          render={(data) => {
-            const eventFragments = data.filterEvents;
-            if (!eventFragments) {
-              return null;
-            }
+          queryName="filterEvents"
+          render={(eventFragments) => {
             const events = eventFragments.map(getEventFragmentData);
             return (
               <Stack spacing="8">

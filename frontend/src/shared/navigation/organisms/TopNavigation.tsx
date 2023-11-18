@@ -1,18 +1,6 @@
 import { useEffect, useMemo } from 'react';
-import {
-  Avatar,
-  Divider,
-  HStack,
-  Icon,
-  Menu,
-  MenuButton,
-  MenuItem,
-  MenuList,
-  Text,
-  Tooltip,
-  useBreakpoint,
-} from '@chakra-ui/react';
-import { FaBars, FaPlus, FaRegBell, FaRegComment, FaXmark } from 'react-icons/fa6';
+import { Avatar, Divider, HStack, Icon, Menu, MenuButton, MenuItem, MenuList, Text, Tooltip } from '@chakra-ui/react';
+import { FaBars, FaMagnifyingGlass, FaPlus, FaRegComment, FaXmark } from 'react-icons/fa6';
 import { NavLink, useLocation, useNavigate } from 'react-router-dom';
 
 import { AuthModalButtons, useAuth } from 'src/modules/auth';
@@ -23,13 +11,10 @@ import { LOGO_PATH } from '../../constants';
 import { ContentContainer } from '../../layout';
 import { RouterNavLink } from '../atoms';
 
-import { SearchEventsBar } from './SearchEventsBar';
-
 export function TopNavigation() {
   const { user, signOut } = useAuth();
   const navigate = useNavigate();
   const mobileNav = useDisclosure();
-  const breakpoint = useBreakpoint();
   const location = useLocation();
 
   const menuLinks = useMemo(
@@ -78,7 +63,6 @@ export function TopNavigation() {
           {user ? (
             <>
               <HStack>
-                {breakpoint === 'base' ? null : <SearchEventsBar />}
                 <Tooltip label="Create event">
                   <IconButton
                     aria-label="Create event"
@@ -92,6 +76,18 @@ export function TopNavigation() {
                 </Tooltip>
                 <IconButton
                   as={NavLink}
+                  to={route.search()}
+                  color="purple.600"
+                  _hover={{ bg: 'purple.50' }}
+                  _active={{ bg: 'purple.50' }}
+                  alignSelf="center"
+                  aria-label="Search"
+                  variant="ghost"
+                  fontSize="xl"
+                  icon={<FaMagnifyingGlass />}
+                />
+                <IconButton
+                  as={NavLink}
                   to={route.messages()}
                   color="purple.600"
                   _hover={{ bg: 'purple.50' }}
@@ -102,23 +98,13 @@ export function TopNavigation() {
                   fontSize="xl"
                   icon={<FaRegComment />}
                 />
-                <IconButton
-                  color="purple.600"
-                  _hover={{ bg: 'purple.50' }}
-                  _active={{ bg: 'purple.50' }}
-                  alignSelf="center"
-                  aria-label="Open notifications"
-                  variant="ghost"
-                  fontSize="xl"
-                  icon={<FaRegBell />}
-                />
                 <Menu>
                   <MenuButton ml="2">
                     <Flex align="center" gap="2">
+                      <Avatar size="sm" name={user?.first_name} src="" bg="purple.300" />
                       <Text display={{ base: 'none', md: 'flex' }} as="b">
                         {user?.first_name}
                       </Text>
-                      <Avatar size="sm" name={user?.first_name} src="" bg="purple.300" />
                     </Flex>
                   </MenuButton>
                   <MenuList>

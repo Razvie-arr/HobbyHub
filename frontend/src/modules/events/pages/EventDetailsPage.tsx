@@ -18,15 +18,8 @@ const EventDetailsPage = ({ eventId }: EventDetailsProps) => {
   return (
     <QueryResult
       queryResult={eventQueryResult}
-      render={(data) => {
-        const eventFragment = data?.eventById;
-        if (!eventFragment) {
-          return null;
-        }
-        const event = getEventFragmentData(eventFragment);
-
-        return <EventDetails event={event} />;
-      }}
+      queryName="eventById"
+      render={(eventFragment) => <EventDetails event={getEventFragmentData(eventFragment)} />}
     />
   );
 };
@@ -36,3 +29,4 @@ export const EventDetailsPageContainer = () => {
 
   return param.eventId ? <EventDetailsPage eventId={parseInt(param.eventId)} /> : null;
 };
+

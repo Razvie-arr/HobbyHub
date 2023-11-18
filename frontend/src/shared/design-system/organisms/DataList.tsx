@@ -92,11 +92,13 @@ export const DataList = ({
                 )
                 .exhaustive()}
             </Flex>
-            <Center mb="16">
-              <Button colorScheme="purple" isDisabled={noMoreResults} onClick={handleShowMore}>
-                {noMoreResults ? 'No more results: Try different filter values' : 'Show more'}
-              </Button>
-            </Center>
+            {handleShowMore ? (
+              <Center mb="16">
+                <Button colorScheme="purple" isDisabled={noMoreResults} onClick={handleShowMore}>
+                  {noMoreResults ? 'No more results: Try different filter values' : 'Show more'}
+                </Button>
+              </Center>
+            ) : null}
           </>
         ) : (
           <NoData />
@@ -105,3 +107,4 @@ export const DataList = ({
     </Box>
   );
 };
+

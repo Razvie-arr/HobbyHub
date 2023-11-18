@@ -40,3 +40,12 @@ export const LOCATION_AWARE_GROUPS = gql(`
     }
   }
 `);
+
+export const SIMILAR_GROUPS = gql(`
+  query SimilarGroups($groupId: Int!, $city: String!, $eventTypeIds: [Int!]!) {
+    similarGroups(groupId: $groupId, city: $city, eventTypeIds: $eventTypeIds) {
+      ...GroupFragment
+    }
+  }
+`);
+

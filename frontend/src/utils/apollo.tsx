@@ -49,11 +49,20 @@ export function EnhancedApolloProvider({ children }: Props) {
           Query: {
             fields: {
               events: offsetLimitPagination(),
+              groups: offsetLimitPagination(),
               filterEvents: {
                 ...offsetLimitPagination(),
                 keyArgs: ['filterLocation', 'start_datetime', 'end_datetime', 'sort', 'eventTypeIds'],
               },
+              filterGroups: {
+                ...offsetLimitPagination(),
+                keyArgs: ['filterLocation', 'sort', 'eventTypeIds'],
+              },
               searchEvents: {
+                ...offsetLimitPagination(),
+                keyArgs: ['text'],
+              },
+              searchGroups: {
                 ...offsetLimitPagination(),
                 keyArgs: ['text'],
               },
@@ -95,3 +104,4 @@ const uploadLink = createUploadLink({
     'Apollo-Require-Preflight': 'ok', // This is for CSRF
   },
 });
+

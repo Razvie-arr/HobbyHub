@@ -197,6 +197,7 @@ type Query {
   searchEvents(limit: Int, offset: Int, text: String!): [Event!]!
   searchGroups(limit: Int, offset: Int, text: String!): [Group!]!
   similarEvents(city: String!, eventId: Int!, eventTypeIds: [Int!]!, limit: Int, offset: Int): [Event!]!
+  similarGroups(city: String!, eventTypeIds: [Int!]!, groupId: Int!, limit: Int, offset: Int): [Group!]!
   threads(limit: Int, offset: Int, userId: Int!): [Thread!]!
   todaysNearbyEvents(latitude: Float!, limit: Int, longitude: Float!, offset: Int): [Event!]!
   userById(id: Int!): User

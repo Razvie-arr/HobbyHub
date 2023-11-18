@@ -41,13 +41,8 @@ const EditEventForm = ({ eventId }: EditEventFormProps) => {
   return (
     <QueryResult
       queryResult={result}
-      render={(data) => {
-        const eventFragment = data.eventById;
-
-        if (!eventFragment) {
-          return null;
-        }
-
+      queryName="eventById"
+      render={(eventFragment) => {
         const event = getEventFragmentData(eventFragment);
 
         const authorId = match(event.author)
