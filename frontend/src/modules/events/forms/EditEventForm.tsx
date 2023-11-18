@@ -82,9 +82,10 @@ const EditEventForm = ({ eventId }: EditEventFormProps) => {
               capacity: event.capacity,
               city: event.location.city,
               country: event.location.country,
-              endDatetime: event.end_datetime.slice(0, 16),
+              date: event.start_datetime.slice(0, 10),
+              endTime: event.end_datetime.slice(11, 23),
               name: event.name,
-              startDatetime: event.start_datetime.slice(0, 16),
+              startTime: event.start_datetime.slice(11, 23),
               streetName: event.location.street_name,
               streetNumber: event.location.street_number,
               summary: event.summary,
@@ -105,9 +106,9 @@ const EditEventForm = ({ eventId }: EditEventFormProps) => {
                     id: eventId,
                     allow_waitlist: values.allowWaitlist,
                     capacity: values.capacity,
-                    end_datetime: values.endDatetime,
+                    end_datetime: `${values.date}T${values.endTime}`,
                     name: values.name,
-                    start_datetime: values.startDatetime,
+                    start_datetime: `${values.date}T${values.startTime}`,
                     summary: values.summary,
                     author_id: user?.id,
                     event_type_ids: values.eventTypes.map(({ value }) => value),
@@ -140,3 +141,4 @@ const EditEventForm = ({ eventId }: EditEventFormProps) => {
     />
   );
 };
+

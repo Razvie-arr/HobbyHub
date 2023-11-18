@@ -34,12 +34,17 @@ export const CreateEventForm = () => {
   const [createEventRequest, createEventRequestState] = useMutation(CREATE_EVENT);
   const navigate = useNavigate();
   const toast = useToast();
+
+  const currentDateTime = getCurrentDateTime();
+
   return (
     <EventForm
       defaultValues={{
         ...defaultValues,
         author: `${user?.first_name} ${user?.last_name}`,
-        startDatetime: getCurrentDateTime(),
+        date: currentDateTime.slice(0, 10),
+        startTime: currentDateTime.slice(11, 23),
+        endTime: currentDateTime.slice(11, 23),
       }}
       formTitle="Create event"
       formDescription="Create your own event today!"
@@ -53,10 +58,10 @@ export const CreateEventForm = () => {
               allow_waitlist: values.allowWaitlist,
               capacity: values.capacity,
               description: values.description,
-              end_datetime: values.endDatetime,
+              end_datetime: `${values.date}T${values.endTime}`,
               image_filepath: values.eventImagePath,
               name: values.name,
-              start_datetime: values.startDatetime,
+              start_datetime: `${values.date}T${values.startTime}`,
               summary: values.summary,
               author_id: user?.id,
               event_type_ids: values.eventTypes.map(({ value }) => value),
@@ -86,3 +91,4 @@ export const CreateEventForm = () => {
     />
   );
 };
+

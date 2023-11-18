@@ -16,8 +16,8 @@ interface EventDateTimeProps {
 
 export const EventDateTime = ({ noIcon, fontSize = 'sm', startDateTime, endDateTime }: EventDateTimeProps) => {
   const { locale } = Intl.DateTimeFormat().resolvedOptions();
-  const eventStartDate = new Date(startDateTime);
-  const eventEndDate = new Date(endDateTime);
+  const eventStartDate = new Date(startDateTime.slice(0, 23));
+  const eventEndDate = new Date(endDateTime.slice(0, 23));
   return (
     <Stack direction="row">
       {noIcon ? null : <Icon as={FaCalendar} color="purple.500" />}
@@ -31,3 +31,4 @@ export const EventDateTime = ({ noIcon, fontSize = 'sm', startDateTime, endDateT
     </Stack>
   );
 };
+

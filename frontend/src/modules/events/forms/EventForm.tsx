@@ -62,37 +62,27 @@ const eventFormSchema = zod
       .min(1, 'Capacity must be at least 1')
       .max(100, 'Capacity must be more than 100'),
     allowWaitlist: zod.boolean(),
-    startDatetime: zod.string().min(1, 'Start time is required'),
-    endDatetime: zod.string().min(1, 'End time is required'),
+    date: zod.string().min(1, 'Date is required'),
+    startTime: zod.string().min(1, 'Start time is required'),
+    endTime: zod.string().min(1, 'End time is required'),
     ...addressFormFieldsSchema,
     eventImagePath: zod.string().nullish(),
     description: zod.string().nullish(),
   })
   .refine(
-    ({ startDatetime }) => {
+    ({ date }) => {
       const currentDateTime = getCurrentDateTime();
-      return startDatetime > currentDateTime;
+      return date > currentDateTime.slice(0, 10);
     },
     {
       message: 'Event cannot start in the past',
       path: ['startDatetime'],
     },
   )
-  .refine(({ startDatetime, endDatetime }) => endDatetime > startDatetime, {
+  .refine(({ startTime, endTime }) => endTime > startTime, {
     message: 'Event cannot end earlier than start time',
     path: ['endDatetime'],
-  })
-  .refine(
-    ({ startDatetime, endDatetime }) => {
-      const startDate = new Date(startDatetime);
-      const endDate = new Date(endDatetime);
-      return startDate.getDate() === endDate.getDate();
-    },
-    {
-      message: 'Event cannot end on a different day',
-      path: ['endDatetime'],
-    },
-  );
+  });
 
 type FormValues = zod.infer<typeof eventFormSchema>;
 
@@ -170,9 +160,10 @@ export const EventForm = ({
           </FormSection>
 
           <FormSection title="Time and place">
+            <InputField name="date" label="Date" type="date" isRequired />
             <Flex gap={2} direction={{ base: 'column', md: 'row' }}>
-              <InputField name="startDatetime" label="Start time" type="datetime-local" isRequired />
-              <InputField name="endDatetime" label="End time" type="datetime-local" isRequired />
+              <InputField name="startTime" label="Start time" type="time" isRequired />
+              <InputField name="endTime" label="End time" type="time" isRequired />
             </Flex>
             <AddressFormFields />
           </FormSection>
