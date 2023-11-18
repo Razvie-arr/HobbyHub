@@ -1,6 +1,5 @@
 import { Box, Flex, Tab, TabList, TabPanel, TabPanels, Tabs, Text } from '@chakra-ui/react';
-import { pipe, ReadonlyArray } from 'effect';
-import { match } from 'ts-pattern';
+import { ReadonlyArray } from 'effect';
 
 import { MemberItem } from './MemberItem';
 import { EventDataDetails, GroupDataDetails, WithAdditionalTabs } from './types';
@@ -17,14 +16,9 @@ export const DataDetailsTabs = ({
           <Text as="b">Description</Text>
         </Tab>
       ) : null}
-      {user ? (
+      {user && other.type === 'event' ? (
         <Tab>
-          <Text as="b">
-            {match(other)
-              .with({ type: 'event' }, () => 'Participants')
-              .with({ type: 'group' }, () => 'Members')
-              .exhaustive()}
-          </Text>
+          <Text as="b">Participants</Text>
         </Tab>
       ) : null}
       {additionalTabs
@@ -43,22 +37,16 @@ export const DataDetailsTabs = ({
           </Box>
         </TabPanel>
       ) : null}
-      {user ? (
+      {user && other.type === 'event' ? (
         <TabPanel px="0">
           <Flex justifyContent="space-between" flexWrap="wrap">
-            {pipe(
-              match(other)
-                .with({ type: 'event' }, ({ data }) => data.participants)
-                .with({ type: 'group' }, ({ data }) => data.members)
-                .exhaustive(),
-              ReadonlyArray.map((member) => (
-                <MemberItem
-                  key={member.id}
-                  name={`${member.first_name} ${member.last_name}`}
-                  primaryButtonText="MESSAGE"
-                />
-              )),
-            )}
+            {ReadonlyArray.map(other.data.participants, (member) => (
+              <MemberItem
+                key={member.id}
+                name={`${member.first_name} ${member.last_name}`}
+                primaryButtonText="MESSAGE"
+              />
+            ))}
           </Flex>
         </TabPanel>
       ) : null}
@@ -72,3 +60,4 @@ export const DataDetailsTabs = ({
     </TabPanels>
   </Tabs>
 );
+
