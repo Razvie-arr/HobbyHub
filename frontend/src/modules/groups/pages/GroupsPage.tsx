@@ -71,6 +71,7 @@ export const GroupsPage = ({ location }: EventsPageProps) => {
     <GroupFilters
       defaultValues={initialFilterValues}
       handleSubmit={async (values) => {
+        setNoMoreResults(false);
         await fetchFilteredEvents(values, DEFAULT_LIMIT);
       }}
       renderAddressBar={(renderProps) => (
