@@ -110,6 +110,7 @@ export const EventForm = ({
 }: EventFormProps) => {
   const [imageFilePath, setImageFilePath] = useState(defaultImagePath ?? DEFAULT_IMAGE_PATH);
   const [uploadEventImageRequest, uploadEventImageRequestState] = useMutation(UPLOAD_EVENT_IMAGE);
+
   return (
     <Container maxW="3xl">
       <Form onSubmit={handleSubmit} defaultValues={defaultValues} resolver={zodResolver(eventFormSchema)} noValidate>
@@ -178,7 +179,6 @@ export const EventForm = ({
                       accept="image/*"
                       p="4px"
                       type="file"
-                      value=""
                       onChange={async (event) => {
                         const result = await uploadEventImageRequest({
                           variables: { eventImage: event.target.files?.[0] ?? null },
@@ -186,7 +186,6 @@ export const EventForm = ({
                         const path = result.data?.uploadEventImage;
                         if (path) {
                           setImageFilePath(path);
-                          onChange(path);
                         }
                       }}
                     />
@@ -209,3 +208,4 @@ export const EventForm = ({
     </Container>
   );
 };
+
