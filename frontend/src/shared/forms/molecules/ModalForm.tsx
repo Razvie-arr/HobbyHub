@@ -1,6 +1,7 @@
 import { type ReactNode } from 'react';
 import * as React from 'react';
 import {
+  ButtonProps,
   Modal,
   ModalBody,
   ModalCloseButton,
@@ -27,6 +28,7 @@ export interface ModalFormProps<TFieldValues extends FieldValues = FieldValues>
   modalButtonVariant?: ThemingProps<'Button'>['variant'];
   modalTitle: ReactNode;
   submitButtonProps: SubmitButtonProps;
+  modalButtonProps?: ButtonProps;
 }
 
 export const ModalForm = <TFieldValues extends FieldValues = FieldValues>({
@@ -39,6 +41,7 @@ export const ModalForm = <TFieldValues extends FieldValues = FieldValues>({
   modalButtonVariant,
   modalTitle,
   submitButtonProps,
+  modalButtonProps,
 }: ModalFormProps<TFieldValues>) => (
   <>
     <Button
@@ -46,6 +49,7 @@ export const ModalForm = <TFieldValues extends FieldValues = FieldValues>({
       variant={modalButtonVariant}
       size={{ base: 'sm', md: 'md' }}
       onClick={disclosure.onOpen}
+      {...modalButtonProps}
     >
       {modalButtonText}
     </Button>

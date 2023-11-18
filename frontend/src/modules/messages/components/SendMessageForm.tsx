@@ -12,7 +12,8 @@ import { SEND_MESSAGE } from '../mutations';
 
 interface SendMessageFormProps extends WithAuthUser {
   otherUsers: NonEmptyArray<User>;
-  refetchMessages: () => Promise<void>;
+  refetchMessages?: () => Promise<void>;
+  onMessageSent?: () => void;
 }
 
 const schema = zod.object({
@@ -41,7 +42,9 @@ export const SendMessageForm = ({ user, otherUsers, refetchMessages }: SendMessa
       }),
     );
     await Promise.all(promises);
-    await refetchMessages();
+    if (refetchMessages) {
+      await refetchMessages();
+    }
     methods.resetField('message');
     methods.setFocus('message');
   });

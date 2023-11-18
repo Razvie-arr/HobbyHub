@@ -16,6 +16,7 @@ export const EventFragment = gql(/* GraphQL */ `
         id
         first_name
         last_name
+        email
       }
       ... on Group {
         __typename
@@ -25,6 +26,7 @@ export const EventFragment = gql(/* GraphQL */ `
           id
           first_name
           last_name
+          email
         }
       }
     }
@@ -46,6 +48,7 @@ export const EventFragment = gql(/* GraphQL */ `
       id
       first_name
       last_name
+      email
     }
   }
 `);
@@ -53,3 +56,4 @@ export const EventFragment = gql(/* GraphQL */ `
 export type EventFragmentType = FragmentType<typeof EventFragment>;
 
 export const getEventFragmentData = (event: EventFragmentType) => getFragmentData(EventFragment, event);
+

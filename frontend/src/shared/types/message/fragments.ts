@@ -11,6 +11,7 @@ export const MessageFragment = gql(/* GraphQL */ `
       id
       first_name
       last_name
+      email
     }
   }
 `);
@@ -18,3 +19,4 @@ export const MessageFragment = gql(/* GraphQL */ `
 export type MessageFragmentType = FragmentType<typeof MessageFragment>;
 
 export const getMessageFragmentData = (event: MessageFragmentType) => getFragmentData(MessageFragment, event);
+
