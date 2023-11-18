@@ -1,6 +1,6 @@
 import { useEffect, useMemo } from 'react';
-import { Avatar, Divider, HStack, Icon, Menu, MenuButton, MenuItem, MenuList, Text, Tooltip } from '@chakra-ui/react';
-import { FaBars, FaMagnifyingGlass, FaPlus, FaRegComment, FaXmark } from 'react-icons/fa6';
+import { Avatar, Button, Divider, HStack, Menu, MenuButton, MenuItem, MenuList, Text } from '@chakra-ui/react';
+import { FaBars, FaChevronDown, FaMagnifyingGlass, FaRegComment, FaXmark } from 'react-icons/fa6';
 import { NavLink, useLocation, useNavigate } from 'react-router-dom';
 
 import { AuthModalButtons, useAuth } from 'src/modules/auth';
@@ -63,17 +63,25 @@ export function TopNavigation() {
           {user ? (
             <>
               <HStack>
-                <Tooltip label="Create event">
-                  <IconButton
-                    aria-label="Create event"
-                    as={NavLink}
-                    to={route.createEvent()}
+                <Menu>
+                  <MenuButton
+                    as={Button}
                     colorScheme="purple"
-                    fontSize="xl"
-                    size="sm"
-                    icon={<Icon as={FaPlus} />}
-                  />
-                </Tooltip>
+                    _hover={{ bg: 'purple.600' }}
+                    _expanded={{ bg: 'purple.600' }}
+                    rightIcon={<FaChevronDown />}
+                  >
+                    Create
+                  </MenuButton>
+                  <MenuList>
+                    <MenuItem as={NavLink} to={route.createEvent()}>
+                      Event
+                    </MenuItem>
+                    <MenuItem as={NavLink} to={route.createGroup()}>
+                      Group
+                    </MenuItem>
+                  </MenuList>
+                </Menu>
                 <IconButton
                   as={NavLink}
                   to={route.search()}

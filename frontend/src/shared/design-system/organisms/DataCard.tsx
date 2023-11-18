@@ -130,7 +130,7 @@ export const DataCard = ({ simplified, maxFlexBasis = '24%', detailRoute, user, 
                   navigate(to);
                 }}
               >
-                Edit event
+                Edit
               </Button>
             ) : null}
             {other.type === 'event' && user && user.id !== owner.id ? (

@@ -1,5 +1,5 @@
 import { useMutation } from '@apollo/client';
-import { useToast } from '@chakra-ui/react';
+import { Alert, useToast } from '@chakra-ui/react';
 import { useNavigate } from 'react-router-dom';
 
 import { route } from '../../../route';
@@ -36,6 +36,10 @@ export const CreateEventForm = () => {
   const toast = useToast();
 
   const currentDateTime = getCurrentDateTime();
+
+  if (!user) {
+    return <Alert status="error">An error occurred. Please log in to create an event.</Alert>;
+  }
 
   return (
     <EventForm
@@ -91,4 +95,3 @@ export const CreateEventForm = () => {
     />
   );
 };
-

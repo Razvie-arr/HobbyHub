@@ -6,7 +6,6 @@ import {
   Container,
   Divider,
   Flex,
-  FormLabel,
   Image,
   Input,
   InputGroup,
@@ -137,7 +136,6 @@ export const EventForm = ({
         </Box>
         <Stack spacing={8} pb="8">
           <FormSection title="Basic information">
-            <FormLabel>Event cover image</FormLabel>
             <InputField name="author" label="Author" isRequired isDisabled />
             <InputField name="name" label="Event name" placeholder="Enter a short and clear name" isRequired />
             <MultiSelectField
@@ -159,7 +157,7 @@ export const EventForm = ({
             <InlineCheckboxField name="allowWaitlist" label="Allow waitlist" />
           </FormSection>
 
-          <FormSection title="Time and place">
+          <FormSection title="Time and location">
             <InputField name="date" label="Date" type="date" isRequired />
             <Flex gap={2} direction={{ base: 'column', md: 'row' }}>
               <InputField name="startTime" label="Start time" type="time" isRequired />
@@ -211,4 +209,3 @@ export const EventForm = ({
     </Container>
   );
 };
-

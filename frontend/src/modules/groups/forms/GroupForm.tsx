@@ -83,7 +83,7 @@ export const GroupForm = ({
   return (
     <Container maxW="3xl">
       <Form onSubmit={handleSubmit} defaultValues={defaultValues} resolver={zodResolver(groupFormSchema)} noValidate>
-        <Box position="sticky" top={{ base: '57px', md: '67px' }} width="100%" zIndex={2} bg="gray.100" pt="6">
+        <Box position="sticky" top={{ base: '57px', md: '59px' }} width="100%" zIndex={2} bg="gray.100" pt="6">
           <Flex direction={{ base: 'column', md: 'row' }}>
             <Flex direction="column">
               <Text fontSize="3xl" fontWeight="bold" color="purple.500">
@@ -117,7 +117,7 @@ export const GroupForm = ({
             <InputField name="summary" label="Summary" placeholder="Tell people what is the group about" isRequired />
           </FormSection>
 
-          <FormSection title="Time and place">
+          <FormSection title="Location">
             <AddressFormFields />
           </FormSection>
 
@@ -164,3 +164,4 @@ export const GroupForm = ({
     </Container>
   );
 };
+
