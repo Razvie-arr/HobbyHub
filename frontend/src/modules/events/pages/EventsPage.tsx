@@ -2,7 +2,6 @@ import { useEffect, useState } from 'react';
 import { useLazyQuery } from '@apollo/client';
 import { Stack } from '@chakra-ui/react';
 import { flow, Option, pipe, ReadonlyArray } from 'effect';
-import { match } from 'ts-pattern';
 
 import { SortType } from '../../../gql/graphql';
 import { DataList } from '../../../shared/design-system';

@@ -1,5 +1,5 @@
 import { PropsWithChildren, ReactNode, useEffect } from 'react';
-import { Box, Button, HStack, Stack, useDisclosure, VStack } from '@chakra-ui/react';
+import { Box, Button, HStack, Stack, useDisclosure } from '@chakra-ui/react';
 import { FormProvider, useForm, UseFormReset } from 'react-hook-form';
 import { FaFilter, FaXmark } from 'react-icons/fa6';
 import { useLocation } from 'react-router-dom';
@@ -75,15 +75,17 @@ export const EventFilters = ({
   return (
     <FormProvider {...methods}>
       <form onSubmit={handleFormSubmit} noValidate>
-        <VStack
+        <Stack
           bg="white"
           position="sticky"
           top={{ base: '57px', md: '59px' }}
           zIndex={2}
           shadow="sm"
           py="4"
-          spacing="2"
+          spacing="4"
+          direction="column"
         >
+          <ContentContainer>{renderAddressBar(renderProps)}</ContentContainer>
           <Box w="100%">
             <Button
               alignSelf="right"
@@ -98,7 +100,7 @@ export const EventFilters = ({
               Filter
             </Button>
             <ContentContainer display={{ base: mobileNav.isOpen ? 'flex' : 'none', lg: 'flex' }}>
-              <Stack direction={{ base: 'column', lg: 'row' }} width="100%" justifyContent="center">
+              <Stack direction={{ base: 'column', lg: 'row' }} width="100%">
                 <HStack>
                   <ActivityFilter label="Sports" fieldName="sports" eventTypes={eventTypes.sports} />
                   <ActivityFilter label="Games" fieldName="games" eventTypes={eventTypes.games} />
@@ -147,12 +149,11 @@ export const EventFilters = ({
               </Stack>
             </ContentContainer>
           </Box>
-        </VStack>
+        </Stack>
         <Box bg="gray.100" w="100%" my="4">
           <ContentContainer>
             <Stack direction="column" spacing={4}>
               {renderFilterPresets(renderProps)}
-              {renderAddressBar(renderProps)}
             </Stack>
           </ContentContainer>
         </Box>

@@ -1,7 +1,6 @@
 import { useEffect, useMemo } from 'react';
 import {
   Avatar,
-  Button,
   Divider,
   HStack,
   Icon,
@@ -13,9 +12,8 @@ import {
   Tooltip,
   useBreakpoint,
 } from '@chakra-ui/react';
-import { FaBars, FaChevronDown, FaPlus, FaRegBell, FaRegComment, FaXmark } from 'react-icons/fa6';
+import { FaBars, FaPlus, FaRegBell, FaRegComment, FaXmark } from 'react-icons/fa6';
 import { NavLink, useLocation, useNavigate } from 'react-router-dom';
-import { match } from 'ts-pattern';
 
 import { AuthModalButtons, useAuth } from 'src/modules/auth';
 import { route } from 'src/route';
@@ -69,21 +67,13 @@ export function TopNavigation() {
               onClick={mobileNav.onToggle}
             />
 
-            <Menu>
-              <MenuButton as={Button} rightIcon={<Icon as={FaChevronDown} />} colorScheme="purple">
-                {match(location.pathname)
-                  .with(route.events(), () => 'Events')
-                  .with(route.groups(), () => 'Groups')
-                  .otherwise(() => 'View...')}
-              </MenuButton>
-              <MenuList>
-                {menuLinks.map(({ to, title }) => (
-                  <MenuItem as={NavLink} to={to} key={to} fontWeight="medium">
-                    {title}
-                  </MenuItem>
-                ))}
-              </MenuList>
-            </Menu>
+            <HStack display={{ base: 'none', md: 'flex' }} spacing="4">
+              {menuLinks.map(({ to, title }) => (
+                <RouterNavLink to={to} key={to} fontWeight="medium">
+                  {title}
+                </RouterNavLink>
+              ))}
+            </HStack>
           </HStack>
           {user ? (
             <>

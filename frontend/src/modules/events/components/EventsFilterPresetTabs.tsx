@@ -20,7 +20,7 @@ interface TabButtonProps {
 }
 
 const TabButton = ({ handleClick, active, label }: TabButtonProps) => (
-  <Button borderRadius="full" colorScheme="purple" variant={active ? 'solid' : 'outline'} onClick={handleClick}>
+  <Button borderRadius="full" colorScheme="purple" variant={active ? 'solid' : 'ghost'} onClick={handleClick}>
     {label}
   </Button>
 );

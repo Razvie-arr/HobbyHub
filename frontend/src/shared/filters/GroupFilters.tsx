@@ -75,8 +75,18 @@ export const GroupFilters = ({
   return (
     <FormProvider {...methods}>
       <form onSubmit={handleFormSubmit} noValidate>
-        <Box position="sticky" top={{ base: '57px', md: '67px' }} zIndex={2}>
-          <Box bg="purple.100" w="100%" py="4">
+        <Stack
+          bg="white"
+          position="sticky"
+          top={{ base: '57px', md: '59px' }}
+          zIndex={2}
+          shadow="sm"
+          py="4"
+          spacing="4"
+          direction="column"
+        >
+          <ContentContainer>{renderAddressBar(renderProps)}</ContentContainer>
+          <Box bg="white" w="100%">
             <Button
               alignSelf="right"
               colorScheme="purple"
@@ -137,11 +147,8 @@ export const GroupFilters = ({
               </Stack>
             </ContentContainer>
           </Box>
-          <Box bg="gray.50" w="100%" py="4">
-            <ContentContainer>{renderAddressBar(renderProps)}</ContentContainer>
-          </Box>
-        </Box>
-        <Box bg="gray.50" w="100%" py="4">
+        </Stack>
+        <Box bg="gray.100" w="100%" py="4">
           <ContentContainer>{renderFilterPresets(renderProps)}</ContentContainer>
         </Box>
         {children}
@@ -149,3 +156,4 @@ export const GroupFilters = ({
     </FormProvider>
   );
 };
+
