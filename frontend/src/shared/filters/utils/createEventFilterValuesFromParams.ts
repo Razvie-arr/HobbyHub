@@ -5,7 +5,7 @@ import { EventFilterPreset } from '../types';
 export const createEventFilterValuesFromParams = (
   params: ReturnType<typeof useFilterSearchParams<EventFilterPreset, SortType>>['params'],
 ) => ({
-  filterPreset: params.filterPreset as EventFilterPreset,
+  filterPreset: params.filterPreset,
   sports: params.sports,
   games: params.games,
   other: params.other,
@@ -14,5 +14,5 @@ export const createEventFilterValuesFromParams = (
   dates: (params.startDate && params.endDate
     ? ([new Date(params.startDate), new Date(params.endDate)] as const)
     : ([null, null] as const)) as readonly [Date | null, Date | null],
-  sortBy: params.sortBy ?? SortType.Date,
+  sortBy: params.sortBy ?? SortType.DateCreated,
 });

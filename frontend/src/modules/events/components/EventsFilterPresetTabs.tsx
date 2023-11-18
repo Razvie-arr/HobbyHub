@@ -47,7 +47,7 @@ export const EventsFilterPresetTabs = ({
       sports: [],
       games: [],
       other: [],
-      sortBy: SortType.Date,
+      sortBy: SortType.DateCreated,
     };
     await handleFilterSubmit(values);
     reset(values);
@@ -62,7 +62,7 @@ export const EventsFilterPresetTabs = ({
       sports: getEventTypeIds('Sports', user.event_types),
       games: getEventTypeIds('Games', user.event_types),
       other: getEventTypeIds('Other', user.event_types),
-      sortBy: SortType.Date,
+      sortBy: SortType.DateCreated,
     };
     await handleFilterSubmit(values);
     reset(values);
@@ -77,7 +77,7 @@ export const EventsFilterPresetTabs = ({
       sports: [],
       games: [],
       other: [],
-      sortBy: SortType.Date,
+      sortBy: SortType.DateCreated,
     };
     await handleFilterSubmit(values);
     reset(values);
@@ -109,4 +109,3 @@ export const EventsFilterPresetTabs = ({
     </HStack>
   );
 };
-

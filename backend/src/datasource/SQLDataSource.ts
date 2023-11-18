@@ -74,8 +74,10 @@ export class SQLDataSource extends BatchedSQLDataSource {
     if (sort) {
       if (sort === SortType.Distance && filterLocation) {
         stringQuery += ' ORDER BY distance';
-      } else if (SortType.Date) {
+      } else if (sort === SortType.DateCreated) {
         stringQuery += ' ORDER BY created_at DESC';
+      } else if (sort === SortType.DateStart) {
+        stringQuery += ' ORDER BY start_datetime DESC';
       }
     }
 

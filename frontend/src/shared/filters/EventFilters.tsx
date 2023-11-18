@@ -110,10 +110,11 @@ export const EventFilters = ({
                 <DistanceSelectField />
                 <SelectField
                   name="sortBy"
-                  formControlProps={{ flexBasis: { base: 'none', lg: '13%' } }}
+                  formControlProps={{ flexBasis: { base: 'none', lg: '14%' } }}
                   {...inputProps}
                 >
-                  <option value={SortType.Date}>Sort by: Date</option>
+                  <option value={SortType.DateCreated}>Sort by: Date created</option>
+                  <option value={SortType.DateStart}>Sort by: Date start</option>
                   <option value={SortType.Distance}>Sort by: Distance</option>
                 </SelectField>
                 <Button
@@ -136,7 +137,7 @@ export const EventFilters = ({
                       methods.reset({
                         dates: [null, null],
                         distance: '20',
-                        sortBy: SortType.Date,
+                        sortBy: SortType.DateCreated,
                         sports: [],
                         games: [],
                         other: [],
@@ -162,4 +163,3 @@ export const EventFilters = ({
     </FormProvider>
   );
 };
-

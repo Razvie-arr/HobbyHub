@@ -485,7 +485,8 @@ export type SenderInput = {
 };
 
 export enum SortType {
-  Date = 'DATE',
+  DateCreated = 'DATE_CREATED',
+  DateStart = 'DATE_START',
   Distance = 'DISTANCE',
 }
 

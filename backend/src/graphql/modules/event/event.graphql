@@ -77,5 +77,6 @@ input FilterLocationInput {
 
 enum SortType {
   DISTANCE
-  DATE
+  DATE_CREATED
+  DATE_START
 }

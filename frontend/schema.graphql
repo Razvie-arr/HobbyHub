@@ -215,7 +215,8 @@ input SenderInput {
 }
 
 enum SortType {
-  DATE
+  DATE_CREATED
+  DATE_START
   DISTANCE
 }
 
