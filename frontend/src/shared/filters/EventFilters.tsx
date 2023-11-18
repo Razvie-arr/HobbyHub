@@ -4,7 +4,8 @@ import { FormProvider, useForm, UseFormReset } from 'react-hook-form';
 import { FaFilter, FaXmark } from 'react-icons/fa6';
 import { useLocation } from 'react-router-dom';
 
-import { SortType } from '../../gql/graphql';
+import { SortType } from 'src/gql/graphql';
+
 import { eventTypes } from '../constants';
 import { SelectField } from '../forms';
 import { ContentContainer } from '../layout';
@@ -137,7 +138,7 @@ export const EventFilters = ({
                       methods.reset({
                         dates: [null, null],
                         distance: '20',
-                        sortBy: SortType.DateCreated,
+                        sortBy: SortType.DateStart,
                         sports: [],
                         games: [],
                         other: [],
