@@ -2,10 +2,11 @@ import { Button, ButtonGroup, Flex, Heading, HStack, Stack } from '@chakra-ui/re
 import { Link } from 'react-router-dom';
 import { match } from 'ts-pattern';
 
-import { useDisclosure } from 'src/shared/design-system';
+import { EventStatusTag, useDisclosure } from 'src/shared/design-system';
 import { WithAuthUser } from 'src/shared/types';
 
 import { SendMessageModal } from '../../../../modules/messages/components/SendMessageModal';
+import { getCurrentDateTime } from '../../../../utils/form';
 import { ContentContainer } from '../../../layout';
 
 import { DataDetailsProps, WithDeleteButton } from './types';
@@ -42,12 +43,15 @@ const DataDetailsHeaderButtons = ({
             </>
           ) : (
             <>
-              <Button colorScheme="purple" rounded="full">
-                {match(other)
-                  .with({ type: 'event' }, () => 'Join event')
-                  .with({ type: 'group' }, () => 'Join group')
-                  .exhaustive()}
-              </Button>
+              {other.type === 'event' ? (
+                <Button
+                  colorScheme="purple"
+                  rounded="full"
+                  isDisabled={other.data.start_datetime.slice(0, 23) < getCurrentDateTime()}
+                >
+                  Join event
+                </Button>
+              ) : null}
               <SendMessageModal user={user} recipient={owner} disclosure={sendMessageModalDisclosure} />
             </>
           )}
@@ -61,9 +65,18 @@ export const DataDetailsHeader = ({ user, ...other }: DataDetailsProps & WithDel
   <Flex width="100%" bgColor="white" shadow="sm" position="sticky" top={{ base: '57px', md: '59px' }} zIndex={1} py={4}>
     <ContentContainer>
       <HStack justifyContent="space-between" bgColor="white" flexBasis="100%">
-        <Heading as="h1" size="lg">
-          {other.data.name}
-        </Heading>
+        <HStack>
+          {other.type === 'event' ? (
+            <EventStatusTag
+              hasExpired={other.type === 'event' && other.data.start_datetime.slice(0, 23) < getCurrentDateTime()}
+              hasWaitlist={other.data.allow_waitlist}
+              isFullCapacity={other.data.participants.length === other.data.capacity}
+            />
+          ) : null}
+          <Heading as="h1" size="lg">
+            {other.data.name}
+          </Heading>
+        </HStack>
         {user ? <DataDetailsHeaderButtons user={user} {...other} /> : null}
       </HStack>
     </ContentContainer>

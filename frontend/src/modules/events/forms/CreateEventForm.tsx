@@ -1,8 +1,9 @@
 import { useMutation } from '@apollo/client';
-import { Alert, useToast } from '@chakra-ui/react';
+import { useToast } from '@chakra-ui/react';
 import { useNavigate } from 'react-router-dom';
 
 import { route } from '../../../route';
+import { NotAuthorized } from '../../../shared/design-system';
 import { getCurrentDateTime } from '../../../utils/form';
 import { useAuth } from '../../auth';
 import { CREATE_EVENT } from '../mutations';
@@ -38,7 +39,7 @@ export const CreateEventForm = () => {
   const currentDateTime = getCurrentDateTime();
 
   if (!user) {
-    return <Alert status="error">An error occurred. Please log in to create an event.</Alert>;
+    return <NotAuthorized requireSignIn />;
   }
 
   return (
@@ -95,3 +96,4 @@ export const CreateEventForm = () => {
     />
   );
 };
+

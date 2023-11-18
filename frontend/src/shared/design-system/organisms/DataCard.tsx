@@ -13,6 +13,7 @@ import {
 import { EventData, GroupData, WithNullableAuthUser } from 'src/shared/types';
 
 import { route } from '../../../route';
+import { getCurrentDateTime } from '../../../utils/form';
 import { DEFAULT_IMAGE_PATH } from '../../constants';
 import { ReactRouterLink } from '../../navigation';
 
@@ -45,6 +46,11 @@ export const DataCard = ({ simplified, maxFlexBasis = '24%', detailRoute, user, 
     .with({ type: 'group' }, ({ data }) => data.admin)
     .exhaustive();
   const navigate = useNavigate();
+
+  const currentDateTime = getCurrentDateTime();
+
+  const hasEventExpired = other.type === 'event' && other.data.start_datetime.slice(0, 23) < currentDateTime;
+
   return (
     <Card
       flexBasis={{ '2xl': maxFlexBasis, lg: '32%', md: '48%' }}
@@ -61,8 +67,13 @@ export const DataCard = ({ simplified, maxFlexBasis = '24%', detailRoute, user, 
             <>
               {other.type === 'event' ? (
                 <EventStatusTag
+                  hasExpired={hasEventExpired}
                   hasWaitlist={other.data.allow_waitlist}
                   isFullCapacity={other.data.participants.length === other.data.capacity}
+                  shadow="base"
+                  position="absolute"
+                  top="4"
+                  left="4"
                   zIndex={1}
                 />
               ) : null}
@@ -139,9 +150,10 @@ export const DataCard = ({ simplified, maxFlexBasis = '24%', detailRoute, user, 
                 size="sm"
                 colorScheme="purple"
                 isDisabled={
-                  other.type === 'event' &&
-                  other.data.participants.length === other.data.capacity &&
-                  !other.data.allow_waitlist
+                  hasEventExpired ||
+                  (other.type === 'event' &&
+                    other.data.participants.length === other.data.capacity &&
+                    !other.data.allow_waitlist)
                 }
                 onClick={(e) => {
                   e.preventDefault();

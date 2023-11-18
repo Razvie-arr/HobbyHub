@@ -1,3 +1,4 @@
+import { ReactNode } from 'react';
 import { OperationVariables, QueryResult as ApolloQueryResult } from '@apollo/client';
 import { Alert, AlertDescription, AlertIcon, AlertTitle, Box, Card, Flex, Spinner } from '@chakra-ui/react';
 
@@ -8,12 +9,14 @@ interface QueryResultProps<Q, V extends OperationVariables> {
     data: NonNullable<Q[Exclude<keyof Q, '__typename'>]>,
     otherResults: Omit<ApolloQueryResult<Q, V>, 'data'>,
   ) => React.ReactNode;
+  renderOnNoData?: ReactNode;
 }
 
 export const QueryResult = <Q, V extends OperationVariables>({
   queryResult,
   queryName,
   render,
+  renderOnNoData,
 }: QueryResultProps<Q, V>) => {
   if (queryResult.error) {
     return (
@@ -39,6 +42,6 @@ export const QueryResult = <Q, V extends OperationVariables>({
     const { data, ...rest } = queryResult;
     return render(queryResult.data[queryName] as NonNullable<Q[Exclude<keyof Q, '__typename'>]>, rest);
   }
-  return <p>Nothing to show...</p>;
+  return renderOnNoData ?? <p>Nothing to show...</p>;
 };
 

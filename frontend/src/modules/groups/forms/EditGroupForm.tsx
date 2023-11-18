@@ -1,9 +1,10 @@
 import { useMutation, useQuery } from '@apollo/client';
-import { Alert, useToast } from '@chakra-ui/react';
+import { useToast } from '@chakra-ui/react';
 import { Option, pipe } from 'effect';
 import { useNavigate, useParams } from 'react-router-dom';
 
 import { route } from '../../../route';
+import { NotAuthorized } from '../../../shared/design-system';
 import { QueryResult } from '../../../shared/layout';
 import { getGroupFragmentData } from '../../../shared/types';
 import { useAuth } from '../../auth';
@@ -37,16 +38,20 @@ const EditGroupForm = ({ groupId }: EditGroupFormProps) => {
   const navigate = useNavigate();
   const toast = useToast();
 
-  if (!user) {
-    return <Alert status="error">An error occurred. Please log in to edit the group.</Alert>;
-  }
-
   return (
     <QueryResult
       queryResult={result}
       queryName="groupById"
       render={(groupFragment) => {
         const group = getGroupFragmentData(groupFragment);
+
+        if (!user) {
+          return <NotAuthorized requireSignIn wrapInContentContainer />;
+        }
+
+        if (user.id !== group.admin.id) {
+          return <NotAuthorized description="This is not your group, you cannot edit it." wrapInContentContainer />;
+        }
 
         return (
           <GroupForm

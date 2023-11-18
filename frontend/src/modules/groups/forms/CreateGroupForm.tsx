@@ -1,8 +1,9 @@
 import { useMutation } from '@apollo/client';
-import { Alert, useToast } from '@chakra-ui/react';
+import { useToast } from '@chakra-ui/react';
 import { useNavigate } from 'react-router-dom';
 
 import { route } from '../../../route';
+import { NotAuthorized } from '../../../shared/design-system';
 import { useAuth } from '../../auth';
 import { CREATE_GROUP } from '../mutations';
 
@@ -32,7 +33,7 @@ export const CreateGroupForm = () => {
   const toast = useToast();
 
   if (!user) {
-    return <Alert status="error">An error occurred. Please log in to create a group.</Alert>;
+    return <NotAuthorized requireSignIn />;
   }
 
   return (
@@ -81,3 +82,4 @@ export const CreateGroupForm = () => {
     />
   );
 };
+

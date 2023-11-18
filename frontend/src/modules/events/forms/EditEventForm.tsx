@@ -1,11 +1,12 @@
 import { useMutation, useQuery } from '@apollo/client';
-import { Alert, AlertDescription, AlertIcon, AlertTitle, useToast } from '@chakra-ui/react';
+import { useToast } from '@chakra-ui/react';
 import { Option, pipe } from 'effect';
 import { useNavigate, useParams } from 'react-router-dom';
 import { match } from 'ts-pattern';
 
 import { route } from '../../../route';
-import { ContentContainer, QueryResult } from '../../../shared/layout';
+import { NotAuthorized } from '../../../shared/design-system';
+import { QueryResult } from '../../../shared/layout';
 import { getEventFragmentData } from '../../../shared/types';
 import { useAuth } from '../../auth';
 import { DeleteEventButton } from '../components';
@@ -50,16 +51,12 @@ const EditEventForm = ({ eventId }: EditEventFormProps) => {
           .with({ __typename: 'Group' }, ({ admin }) => admin.id)
           .exhaustive();
 
-        if (!user || user.id !== authorId) {
-          return (
-            <ContentContainer mt="16">
-              <Alert status="error">
-                <AlertIcon />
-                <AlertTitle>Not authorized!</AlertTitle>
-                <AlertDescription>This is not your event, you cannot edit it.</AlertDescription>
-              </Alert>
-            </ContentContainer>
-          );
+        if (!user) {
+          return <NotAuthorized requireSignIn wrapInContentContainer />;
+        }
+
+        if (user.id !== authorId) {
+          return <NotAuthorized description="This is not your event, you cannot edit it." wrapInContentContainer />;
         }
 
         const authorName = match(event.author)
