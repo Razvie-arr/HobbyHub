@@ -2,10 +2,11 @@ import { ReactNode } from 'react';
 import { Button, HStack } from '@chakra-ui/react';
 import { Option, pipe, ReadonlyArray } from 'effect';
 
-import { EventType, SortType } from '../../../gql/graphql';
+import { EventType, SortType } from 'src/gql/graphql';
+import { useFilterSearchParams } from 'src/shared/filters/hooks';
+import { WithAuthUser } from 'src/shared/types';
+
 import { EventFilterRenderProps } from '../../../shared/filters';
-import { useFilterSearchParams } from '../../../shared/filters/hooks';
-import { WithAuthUser } from '../../../shared/types';
 
 const getEventTypeIds = (eventTypeCategory: string, eventTypes: Array<EventType>) =>
   pipe(
@@ -47,7 +48,7 @@ export const EventsFilterPresetTabs = ({
       sports: [],
       games: [],
       other: [],
-      sortBy: SortType.DateCreated,
+      sortBy: SortType.DateStart,
     };
     await handleFilterSubmit(values);
     reset(values);
@@ -62,7 +63,7 @@ export const EventsFilterPresetTabs = ({
       sports: getEventTypeIds('Sports', user.event_types),
       games: getEventTypeIds('Games', user.event_types),
       other: getEventTypeIds('Other', user.event_types),
-      sortBy: SortType.DateCreated,
+      sortBy: SortType.DateStart,
     };
     await handleFilterSubmit(values);
     reset(values);
