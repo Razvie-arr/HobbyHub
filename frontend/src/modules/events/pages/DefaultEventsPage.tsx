@@ -1,7 +1,8 @@
 import { useEffect } from 'react';
 import { createSearchParams, useNavigate } from 'react-router-dom';
 
-import { route } from '../../../route';
+import { route } from 'src/route';
+
 import { useAuth } from '../../auth';
 
 export const DefaultEventsPage = () => {
@@ -19,8 +20,8 @@ export const DefaultEventsPage = () => {
           filterPreset: 'today',
           lat: user.location.latitude.toString(),
           lng: user.location.longitude.toString(),
-          startDate: startDate.toLocaleDateString(),
-          endDate: endDate.toLocaleDateString(),
+          startDate: startDate.toISOString(),
+          endDate: endDate.toISOString(),
         }).toString(),
       });
     } else {
@@ -33,4 +34,3 @@ export const DefaultEventsPage = () => {
 
   return null;
 };
-
