@@ -30,7 +30,7 @@ import {
   zodResolver,
 } from 'src/shared/forms';
 
-import { DEFAULT_EVENT_IMAGE_PATH, eventTypes } from '../../../shared/constants';
+import { DEFAULT_IMAGE_PATH, eventTypes } from '../../../shared/constants';
 import { Field } from '../../../shared/design-system';
 import { FormSection } from '../../../shared/forms/molecules/FormSection';
 import { eventTypeToSelectOption } from '../../../shared/forms/utils';
@@ -119,7 +119,7 @@ export const EventForm = ({
   isLoading,
   submitButtonLabel,
 }: EventFormProps) => {
-  const [imageFilePath, setImageFilePath] = useState(defaultImagePath ?? DEFAULT_EVENT_IMAGE_PATH);
+  const [imageFilePath, setImageFilePath] = useState(defaultImagePath ?? DEFAULT_IMAGE_PATH);
   const [uploadEventImageRequest, uploadEventImageRequestState] = useMutation(UPLOAD_EVENT_IMAGE);
   return (
     <Container maxW="3xl">
@@ -206,12 +206,7 @@ export const EventForm = ({
                 </Field>
               )}
             />
-            <Image
-              aspectRatio="16/9"
-              objectFit="cover"
-              alt="Event Image"
-              src={imageFilePath ?? DEFAULT_EVENT_IMAGE_PATH}
-            />
+            <Image aspectRatio="16/9" objectFit="cover" alt="Event Image" src={imageFilePath ?? DEFAULT_IMAGE_PATH} />
             <TextareaField
               name="description"
               label="Description"

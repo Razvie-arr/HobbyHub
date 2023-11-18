@@ -13,7 +13,7 @@ import {
 import { EventData, GroupData, WithNullableAuthUser } from 'src/shared/types';
 
 import { route } from '../../../route';
-import { DEFAULT_EVENT_IMAGE_PATH } from '../../constants';
+import { DEFAULT_IMAGE_PATH } from '../../constants';
 import { ReactRouterLink } from '../../navigation';
 
 interface CommonProps extends WithNullableAuthUser {
@@ -69,7 +69,7 @@ export const DataCard = ({ simplified, maxFlexBasis = '24%', detailRoute, user, 
               <Image
                 aspectRatio="16/9"
                 objectFit="cover"
-                src={other.data.image_filepath ?? DEFAULT_EVENT_IMAGE_PATH}
+                src={other.data.image_filepath ?? DEFAULT_IMAGE_PATH}
                 borderTopRadius="base"
                 _groupHover={{ opacity: '0.7' }}
                 transition="0.1s ease-in-out"
