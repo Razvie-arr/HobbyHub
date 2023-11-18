@@ -54,7 +54,7 @@ const DataDetailsHeaderButtons = ({
 };
 
 export const DataDetailsHeader = ({ user, ...other }: DataDetailsProps & WithDeleteButton) => (
-  <Flex width="100%" bgColor="white" shadow="sm" position="sticky" top={{ base: '57px', md: '67px' }} zIndex={1} py={4}>
+  <Flex width="100%" bgColor="white" shadow="sm" position="sticky" top={{ base: '57px', md: '59px' }} zIndex={1} py={4}>
     <ContentContainer>
       <HStack justifyContent="space-between" bgColor="white" flexBasis="100%">
         <Heading as="h1" size="lg">
@@ -65,3 +65,4 @@ export const DataDetailsHeader = ({ user, ...other }: DataDetailsProps & WithDel
     </ContentContainer>
   </Flex>
 );
+

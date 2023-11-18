@@ -124,7 +124,7 @@ export const EventForm = ({
   return (
     <Container maxW="3xl">
       <Form onSubmit={handleSubmit} defaultValues={defaultValues} resolver={zodResolver(eventFormSchema)} noValidate>
-        <Box position="sticky" top={{ base: '57px', md: '67px' }} width="100%" zIndex={2} bg="gray.50" pt="6">
+        <Box position="sticky" top={{ base: '57px', md: '59px' }} width="100%" zIndex={2} bg="gray.100" pt="6">
           <Flex direction={{ base: 'column', md: 'row' }}>
             <Flex direction="column">
               <Text fontSize="3xl" fontWeight="bold" color="purple.500">
@@ -225,3 +225,4 @@ export const EventForm = ({
     </Container>
   );
 };
+
