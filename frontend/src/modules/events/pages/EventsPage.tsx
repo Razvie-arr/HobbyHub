@@ -81,6 +81,7 @@ export const EventsPage = ({ location }: EventsPageProps) => {
     <EventFilters
       defaultValues={initialFilterValues}
       handleSubmit={async (values) => {
+        setNoMoreResults(false);
         await fetchFilteredEvents(values, DEFAULT_LIMIT);
       }}
       renderAddressBar={(renderProps) => (
