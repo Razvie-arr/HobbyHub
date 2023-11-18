@@ -66,7 +66,7 @@ const EditGroupForm = ({ groupId }: EditGroupFormProps) => {
               summary: group.summary,
               // @ts-expect-error NonEmptyArray check
               eventTypes: group.event_types.map(({ id, name }) => ({ value: id, label: name })),
-              groupImagePath: group.image_filepath,
+              image_filepath: '',
               description: group.description ?? '',
             }}
             formDescription="Efficiently edit your group."

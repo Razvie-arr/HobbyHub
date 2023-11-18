@@ -83,7 +83,7 @@ const EditEventForm = ({ eventId }: EditEventFormProps) => {
               summary: event.summary,
               // @ts-expect-error NonEmptyArray check
               eventTypes: event.event_types.map(({ id, name }) => ({ value: id, label: name })),
-              eventImagePath: event.image_filepath,
+              eventImagePath: '',
               description: event.description ?? '',
             }}
             formDescription="Efficiently edit your events or gatherings."
