@@ -98,7 +98,9 @@ export const EventsPage = ({ location }: EventsPageProps) => {
           spacing={0}
         />
       )}
-      renderFilterPresets={(renderProps) => (user ? <EventsFilterPresetTabs user={user} {...renderProps} /> : null)}
+      renderFilterPresets={(renderProps) =>
+        user ? <EventsFilterPresetTabs user={user} currentFilterPreset={params.filterPreset} {...renderProps} /> : null
+      }
     >
       <ContentContainer>
         <QueryResult

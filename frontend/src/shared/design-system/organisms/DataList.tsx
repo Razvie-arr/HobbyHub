@@ -1,5 +1,5 @@
 import { ReactNode } from 'react';
-import { Button, Center, Divider, Flex, Heading, Stack } from '@chakra-ui/react';
+import { Button, Center, Divider, Flex, Heading, Stack, useBreakpoint } from '@chakra-ui/react';
 import { ReadonlyArray } from 'effect';
 import { match } from 'ts-pattern';
 
@@ -41,6 +41,7 @@ export const DataList = ({
     user,
     maxFlexBasis: maxColumnCount === 4 ? '24%' : ' 32%',
   };
+  const breakpoint = useBreakpoint();
   return (
     <Box>
       <Stack spacing="4">
@@ -63,8 +64,9 @@ export const DataList = ({
               // @ts-expect-error, type error on non empty array check
               mapInfos={{ user, ...other }}
               position="fixed"
-              bottom="8"
-              right="8"
+              bottom={{ base: '0', md: '8' }}
+              right={{ base: '0', md: '8' }}
+              iconOnly={breakpoint === 'base' || breakpoint === 'xs' || breakpoint === 'sm'}
             />
             <Flex flexWrap="wrap" columnGap="4" justifyContent={{ base: 'center', md: 'start' }}>
               {match(other)

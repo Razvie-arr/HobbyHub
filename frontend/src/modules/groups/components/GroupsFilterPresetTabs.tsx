@@ -4,7 +4,7 @@ import { Option, pipe, ReadonlyArray } from 'effect';
 
 import { EventType, GroupSortType } from '../../../gql/graphql';
 import { GroupFilterRenderProps } from '../../../shared/filters';
-import { useFilterSearchParams } from '../../../shared/filters/hooks';
+import { GroupFilterPreset } from '../../../shared/filters/types';
 import { WithAuthUser } from '../../../shared/types';
 
 const getEventTypeIds = (eventTypeCategory: string, eventTypes: Array<EventType>) =>
@@ -25,14 +25,17 @@ const TabButton = ({ handleClick, active, label }: TabButtonProps) => (
   </Button>
 );
 
+interface GroupsFilterPresetTabsProps extends GroupFilterRenderProps, WithAuthUser {
+  currentFilterPreset: GroupFilterPreset;
+}
+
 export const GroupsFilterPresetTabs = ({
   getFilterValues,
   handleFilterSubmit,
   reset,
   user,
-}: GroupFilterRenderProps & WithAuthUser) => {
-  const { params } = useFilterSearchParams();
-
+  currentFilterPreset,
+}: GroupsFilterPresetTabsProps) => {
   const handleNearbyGroups = async () => {
     const values = {
       filterPreset: 'nearby' as const,
@@ -64,14 +67,14 @@ export const GroupsFilterPresetTabs = ({
   return (
     <HStack>
       <TabButton
-        active={params.filterPreset === 'nearby'}
+        active={currentFilterPreset === 'nearby'}
         label="Nearby"
         handleClick={async () => {
           await handleNearbyGroups();
         }}
       />
       <TabButton
-        active={params.filterPreset === 'recommended'}
+        active={currentFilterPreset === 'recommended'}
         label="Recommended"
         handleClick={async () => {
           await handleInterestingGroups();

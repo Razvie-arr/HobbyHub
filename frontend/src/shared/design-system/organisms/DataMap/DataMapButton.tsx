@@ -6,7 +6,6 @@ import {
   ModalCloseButton,
   ModalContent,
   ModalOverlay,
-  useBreakpoint,
   useDisclosure,
 } from '@chakra-ui/react';
 import { FaMapLocationDot } from 'react-icons/fa6';
@@ -16,17 +15,11 @@ import { MapDataArray } from './types';
 
 interface InfoMapButtonProps extends ButtonProps {
   iconOnly?: boolean;
-  forceRender?: boolean;
   mapInfos: MapDataArray;
 }
 
-export const DataMapButton = ({ mapInfos, forceRender, iconOnly, ...buttonProps }: InfoMapButtonProps) => {
+export const DataMapButton = ({ mapInfos, iconOnly, ...buttonProps }: InfoMapButtonProps) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const breakpoint = useBreakpoint();
-
-  if (!forceRender && (breakpoint === 'base' || breakpoint === 'xs' || breakpoint === 'sm')) {
-    return null;
-  }
   return (
     <>
       <Button
@@ -53,3 +46,4 @@ export const DataMapButton = ({ mapInfos, forceRender, iconOnly, ...buttonProps 
     </>
   );
 };
+

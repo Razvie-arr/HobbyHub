@@ -87,7 +87,9 @@ export const GroupsPage = ({ location }: EventsPageProps) => {
           }}
         />
       )}
-      renderFilterPresets={(renderProps) => (user ? <GroupsFilterPresetTabs user={user} {...renderProps} /> : null)}
+      renderFilterPresets={(renderProps) =>
+        user ? <GroupsFilterPresetTabs user={user} currentFilterPreset={params.filterPreset} {...renderProps} /> : null
+      }
     >
       <ContentContainer>
         <QueryResult

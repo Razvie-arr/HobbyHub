@@ -3,10 +3,9 @@ import { Button, HStack } from '@chakra-ui/react';
 import { Option, pipe, ReadonlyArray } from 'effect';
 
 import { EventType, SortType } from 'src/gql/graphql';
-import { useFilterSearchParams } from 'src/shared/filters/hooks';
 import { WithAuthUser } from 'src/shared/types';
 
-import { EventFilterRenderProps } from '../../../shared/filters';
+import { EventFilterPreset, EventFilterRenderProps } from '../../../shared/filters';
 
 const getEventTypeIds = (eventTypeCategory: string, eventTypes: Array<EventType>) =>
   pipe(
@@ -26,14 +25,17 @@ const TabButton = ({ handleClick, active, label }: TabButtonProps) => (
   </Button>
 );
 
+interface EventsFilterPresetTabsProps extends EventFilterRenderProps, WithAuthUser {
+  currentFilterPreset: EventFilterPreset;
+}
+
 export const EventsFilterPresetTabs = ({
   getFilterValues,
   handleFilterSubmit,
   reset,
   user,
-}: EventFilterRenderProps & WithAuthUser) => {
-  const { params } = useFilterSearchParams();
-
+  currentFilterPreset,
+}: EventsFilterPresetTabsProps) => {
   const handleTodaysEvents = async () => {
     const startDate = new Date();
     startDate.setHours(0, 0, 0, 0);
@@ -87,21 +89,21 @@ export const EventsFilterPresetTabs = ({
   return (
     <HStack>
       <TabButton
-        active={params.filterPreset === 'today'}
+        active={currentFilterPreset === 'today'}
         label="Today"
         handleClick={async () => {
           await handleTodaysEvents();
         }}
       />
       <TabButton
-        active={params.filterPreset === 'recommended'}
+        active={currentFilterPreset === 'recommended'}
         label="Recommended"
         handleClick={async () => {
           await handleInterestingEvents();
         }}
       />
       <TabButton
-        active={params.filterPreset === 'newlyAdded'}
+        active={currentFilterPreset === 'newlyAdded'}
         label="Newly added"
         handleClick={async () => {
           await handleNewlyCreatedEvents();
