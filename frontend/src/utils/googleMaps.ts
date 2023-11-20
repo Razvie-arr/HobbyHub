@@ -1,5 +1,16 @@
 import { flow, Option } from 'effect';
 
+const callIfFunction = (f: number | (() => number)) => (typeof f === 'number' ? f : f());
+
+export const getAddressGeolocation = flow(
+  (address: google.maps.places.PlaceResult) => address.geometry?.location,
+  Option.fromNullable,
+  Option.map(({ lat, lng }) => ({
+    latitude: callIfFunction(lat),
+    longitude: callIfFunction(lng),
+  })),
+);
+
 export const getAddressComponents = flow(
   (addressComponents?: google.maps.places.PlaceResult['address_components'] | null) => addressComponents,
   Option.fromNullable,
@@ -29,3 +40,4 @@ export const getAddressName = flow(
   }),
   Option.getOrElse(() => ''),
 );
+

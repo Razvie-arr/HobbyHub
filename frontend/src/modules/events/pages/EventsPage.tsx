@@ -1,25 +1,26 @@
 import { useEffect, useState } from 'react';
 import { useLazyQuery } from '@apollo/client';
 import { Stack } from '@chakra-ui/react';
-import { flow, Option, pipe, ReadonlyArray } from 'effect';
+import { ReadonlyArray } from 'effect';
 
 import { SortType } from '../../../gql/graphql';
 import { DataList, NoData } from '../../../shared/design-system';
 import {
   AddressFilterBar,
+  BaseFilters,
   createEventFilterValuesFromParams,
   EventFilterPreset,
-  EventFilters,
   EventFiltersValues,
 } from '../../../shared/filters';
+import { DateRangeField, DistanceSelectField } from '../../../shared/filters/fields';
 import { useFilterSearchParams } from '../../../shared/filters/hooks';
+import { SelectField } from '../../../shared/forms';
 import { ContentContainer, QueryResult } from '../../../shared/layout';
 import { getEventFragmentData } from '../../../shared/types';
+import { getFilterLocationInput } from '../../../utils/form';
 import { useAuth } from '../../auth';
 import { EventsFilterPresetTabs } from '../components';
 import { FILTERED_EVENTS } from '../queries';
-
-const callIfFunction = (f: number | (() => number)) => (typeof f === 'number' ? f : f());
 
 interface EventsPageProps {
   location: google.maps.places.PlaceResult | null;
@@ -27,39 +28,21 @@ interface EventsPageProps {
 
 const DEFAULT_LIMIT = 8;
 
-const getAddressGeolocation = flow(
-  (address: google.maps.places.PlaceResult) => address.geometry?.location,
-  Option.fromNullable,
-  Option.map(({ lat, lng }) => ({
-    latitude: callIfFunction(lat),
-    longitude: callIfFunction(lng),
-  })),
-);
-
 export const EventsPage = ({ location }: EventsPageProps) => {
   const { user } = useAuth();
   const [getFilteredEvents, queryResult] = useLazyQuery(FILTERED_EVENTS);
   const [noMoreResults, setNoMoreResults] = useState(false);
-  const { params } = useFilterSearchParams<EventFilterPreset, SortType>('today', SortType.DateStart);
+  const { params, setParams } = useFilterSearchParams<EventFilterPreset, SortType>('today', SortType.DateStart);
 
   const initialFilterValues = { ...createEventFilterValuesFromParams(params), address: location };
 
   const fetchFilteredEvents = async (values: EventFiltersValues, ownLimit: number) => {
     const [startDate, endDate] = values.dates;
-    const filterLocation = pipe(
-      Option.fromNullable(values.address),
-      Option.flatMap(getAddressGeolocation),
-      Option.map((geolocation) => ({
-        ...geolocation,
-        distance: parseInt(values.distance),
-      })),
-      Option.getOrUndefined,
-    );
     const eventTypeIds = [...values.sports, ...values.games, ...values.other];
 
     await getFilteredEvents({
       variables: {
-        filterLocation: filterLocation,
+        filterLocation: getFilterLocationInput(values.address, values.distance),
         startDatetime: startDate?.toISOString(),
         endDatetime: endDate?.toISOString(),
         eventTypeIds: ReadonlyArray.isNonEmptyArray(eventTypeIds) ? eventTypeIds : undefined,
@@ -77,35 +60,76 @@ export const EventsPage = ({ location }: EventsPageProps) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [location]);
 
+  const handleFilterSubmit = async ({ address, ...values }: EventFiltersValues) => {
+    setNoMoreResults(false);
+    if (address && 'name' in address) {
+      setParams({ address: null, ...values });
+      await fetchFilteredEvents({ address: null, ...values }, DEFAULT_LIMIT);
+    } else {
+      setParams({ address, ...values });
+      await fetchFilteredEvents({ address, ...values }, DEFAULT_LIMIT);
+    }
+  };
+
   return (
-    <EventFilters
+    <BaseFilters<EventFiltersValues>
       defaultValues={initialFilterValues}
-      handleSubmit={async (values) => {
-        setNoMoreResults(false);
-        await fetchFilteredEvents(values, DEFAULT_LIMIT);
-      }}
+      handleSubmit={handleFilterSubmit}
+      createResetHandler={({ reset }) =>
+        () => {
+          reset({
+            dates: [null, null],
+            distance: '20',
+            sortBy: SortType.DateStart,
+            sports: [],
+            games: [],
+            other: [],
+          });
+        }}
+      filterFields={
+        <>
+          <DateRangeField />
+          <DistanceSelectField />
+          <SelectField
+            name="sortBy"
+            formControlProps={{ flexBasis: { base: 'none', lg: '14%' } }}
+            bg="white"
+            borderRadius="full"
+            size={{ base: 'sm', md: 'md' }}
+          >
+            <option value={SortType.DateCreated}>Sort by: Date created</option>
+            <option value={SortType.DateStart}>Sort by: Date start</option>
+            <option value={SortType.Distance}>Sort by: Distance</option>
+          </SelectField>
+        </>
+      }
       renderAddressBar={(renderProps) => (
         <AddressFilterBar
           preAddressText="Events in"
           address={location}
           onAddressSelected={async (address) => {
-            const currentFilterValues = renderProps.getFilterValues();
-            await renderProps.handleFilterSubmit({
-              ...currentFilterValues,
+            await handleFilterSubmit({
+              ...renderProps.getFilterValues(),
               address,
             });
           }}
           spacing={0}
         />
       )}
-      renderFilterPresets={(renderProps) =>
-        user ? <EventsFilterPresetTabs user={user} currentFilterPreset={params.filterPreset} {...renderProps} /> : null
+      renderFilterPresets={() =>
+        user ? (
+          <EventsFilterPresetTabs
+            user={user}
+            currentFilterPreset={params.filterPreset}
+            handleFilterSubmit={handleFilterSubmit}
+          />
+        ) : null
       }
     >
       <ContentContainer>
         <QueryResult
-          queryResult={queryResult}
           queryName="filterEvents"
+          queryResult={queryResult}
           render={(eventFragments) => {
             const events = eventFragments.map(getEventFragmentData);
             return (
@@ -132,7 +156,7 @@ export const EventsPage = ({ location }: EventsPageProps) => {
           renderOnNoData={<NoData description="Try changing your filter options to find more events." />}
         />
       </ContentContainer>
-    </EventFilters>
+    </BaseFilters>
   );
 };
 

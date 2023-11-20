@@ -1,84 +1,61 @@
-import { ReactNode } from 'react';
-import { Button, HStack } from '@chakra-ui/react';
-import { Option, pipe, ReadonlyArray } from 'effect';
+import { HStack } from '@chakra-ui/react';
+import { useFormContext } from 'react-hook-form';
 
-import { EventType, GroupSortType } from '../../../gql/graphql';
-import { GroupFilterRenderProps } from '../../../shared/filters';
-import { GroupFilterPreset } from '../../../shared/filters/types';
+import { GroupSortType } from '../../../gql/graphql';
+import { TabButton } from '../../../shared/design-system';
+import { GroupFilterPreset, GroupFiltersValues } from '../../../shared/filters/types';
 import { WithAuthUser } from '../../../shared/types';
+import { getEventTypeIds } from '../../../utils/events';
 
-const getEventTypeIds = (eventTypeCategory: string, eventTypes: Array<EventType>) =>
-  pipe(
-    eventTypes,
-    ReadonlyArray.filterMap(({ category, id }) => (category === eventTypeCategory ? Option.some(id) : Option.none())),
-  );
-
-interface TabButtonProps {
-  handleClick: () => void;
-  active: boolean;
-  label: ReactNode;
-}
-
-const TabButton = ({ handleClick, active, label }: TabButtonProps) => (
-  <Button borderRadius="full" colorScheme="purple" variant={active ? 'solid' : 'ghost'} onClick={handleClick}>
-    {label}
-  </Button>
-);
-
-interface GroupsFilterPresetTabsProps extends GroupFilterRenderProps, WithAuthUser {
+interface GroupsFilterPresetTabsProps extends WithAuthUser {
   currentFilterPreset: GroupFilterPreset;
+  handleFilterSubmit: (values: GroupFiltersValues) => Promise<void>;
 }
 
 export const GroupsFilterPresetTabs = ({
-  getFilterValues,
-  handleFilterSubmit,
-  reset,
   user,
   currentFilterPreset,
+  handleFilterSubmit,
 }: GroupsFilterPresetTabsProps) => {
-  const handleNearbyGroups = async () => {
-    const values = {
-      filterPreset: 'nearby' as const,
-      address: getFilterValues().address,
-      distance: '20',
-      sports: [],
-      games: [],
-      other: [],
-      sortBy: GroupSortType.Distance,
-    };
-    await handleFilterSubmit(values);
-    reset(values);
-  };
-
-  const handleInterestingGroups = async () => {
-    const values = {
-      filterPreset: 'recommended' as const,
-      address: getFilterValues().address,
-      distance: '20',
-      sports: getEventTypeIds('Sports', user.event_types),
-      games: getEventTypeIds('Games', user.event_types),
-      other: getEventTypeIds('Other', user.event_types),
-      sortBy: GroupSortType.Distance,
-    };
-    await handleFilterSubmit(values);
-    reset(values);
-  };
+  const methods = useFormContext<GroupFiltersValues>();
 
   return (
     <HStack>
       <TabButton
         active={currentFilterPreset === 'nearby'}
         label="Nearby"
-        handleClick={async () => {
-          await handleNearbyGroups();
-        }}
+        handleClick={methods.handleSubmit(async ({ address }) => {
+          const values = {
+            filterPreset: 'nearby' as const,
+            address,
+            distance: '20',
+            sports: [],
+            games: [],
+            other: [],
+            sortBy: GroupSortType.Distance,
+          };
+
+          methods.reset(values);
+          await handleFilterSubmit(values);
+        })}
       />
       <TabButton
         active={currentFilterPreset === 'recommended'}
         label="Recommended"
-        handleClick={async () => {
-          await handleInterestingGroups();
-        }}
+        handleClick={methods.handleSubmit(async ({ address }) => {
+          const values = {
+            filterPreset: 'recommended' as const,
+            address,
+            distance: '20',
+            sports: getEventTypeIds('Sports', user.event_types),
+            games: getEventTypeIds('Games', user.event_types),
+            other: getEventTypeIds('Other', user.event_types),
+            sortBy: GroupSortType.Distance,
+          };
+
+          methods.reset(values);
+          await handleFilterSubmit(values);
+        })}
       />
     </HStack>
   );

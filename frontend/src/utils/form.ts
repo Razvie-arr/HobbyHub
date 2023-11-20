@@ -1,3 +1,7 @@
+import { Option, pipe } from 'effect';
+
+import { getAddressGeolocation } from './googleMaps';
+
 const normalizeDateParts = (value: number) => (value < 10 ? `0${value}` : value);
 
 export const getCurrentDateTime = () => {
@@ -17,3 +21,15 @@ export const getCurrentDateTime = () => {
 
   return `${date.getFullYear()}-${monthPart}-${datePart}T${hoursPart}:${minutesPart}`;
 };
+
+export const getFilterLocationInput = (address: google.maps.places.PlaceResult | null, distance: string) =>
+  pipe(
+    Option.fromNullable(address),
+    Option.flatMap(getAddressGeolocation),
+    Option.map((geolocation) => ({
+      ...geolocation,
+      distance: parseInt(distance),
+    })),
+    Option.getOrUndefined,
+  );
+

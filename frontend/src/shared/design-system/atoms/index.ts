@@ -1,6 +1,7 @@
 export { EventTypeIcon } from './EventTypeIcon';
 export { Link, type LinkProps } from './Link';
 export { NavLink, type NavLinkProps } from './NavLink';
+export { TabButton, type TabButtonProps } from './TabButton';
 export {
   Alert,
   AlertDescription,
@@ -57,3 +58,4 @@ export {
   Textarea,
   type TextareaProps,
 } from '@chakra-ui/react';
+

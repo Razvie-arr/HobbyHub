@@ -2,6 +2,8 @@ import { ReactNode } from 'react';
 import { OperationVariables, QueryResult as ApolloQueryResult } from '@apollo/client';
 import { Alert, AlertDescription, AlertIcon, AlertTitle, Box, Card, Flex, Spinner } from '@chakra-ui/react';
 
+import { NoData } from '../design-system';
+
 interface QueryResultProps<Q, V extends OperationVariables> {
   queryResult: ApolloQueryResult<Q, V>;
   queryName: Exclude<keyof Q, '__typename'>;
@@ -31,6 +33,7 @@ export const QueryResult = <Q, V extends OperationVariables>({
       </Card>
     );
   }
+
   if (queryResult.loading && !queryResult.data) {
     return (
       <Flex justify="center" alignItems="center" width="100%" p="8" flex="1 1 auto">
@@ -38,10 +41,19 @@ export const QueryResult = <Q, V extends OperationVariables>({
       </Flex>
     );
   }
+
   if (queryResult.data && queryResult.data[queryName]) {
     const { data, ...rest } = queryResult;
-    return render(queryResult.data[queryName] as NonNullable<Q[Exclude<keyof Q, '__typename'>]>, rest);
+
+    const result = data[queryName];
+
+    if (Array.isArray(result) && result.length === 0) {
+      return renderOnNoData ?? <NoData />;
+    }
+
+    return render(result as NonNullable<Q[Exclude<keyof Q, '__typename'>]>, rest);
   }
-  return renderOnNoData ?? <p>Nothing to show...</p>;
+
+  return renderOnNoData ?? <NoData />;
 };
 

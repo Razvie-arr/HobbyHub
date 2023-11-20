@@ -1,48 +1,37 @@
 import { PropsWithChildren, ReactNode, useEffect } from 'react';
 import { Box, Button, HStack, Stack, useDisclosure } from '@chakra-ui/react';
-import { FormProvider, useForm, UseFormReset } from 'react-hook-form';
+import { FieldValues, FormProvider, useForm, UseFormProps, UseFormReset } from 'react-hook-form';
 import { FaFilter, FaXmark } from 'react-icons/fa6';
 import { useLocation } from 'react-router-dom';
 
-import { SortType } from 'src/gql/graphql';
-
 import { eventTypes } from '../constants';
-import { SelectField } from '../forms';
 import { ContentContainer } from '../layout';
 
 import { ActivityFilter } from './ActivityFilter';
-import { DateRangeField, DistanceSelectField } from './fields';
-import { useFilterSearchParams } from './hooks';
-import { EventFiltersValues } from './types';
 
-const inputProps = {
-  bg: 'white',
-  borderRadius: 'full',
-  size: { base: 'sm', md: 'md' },
-};
-
-export interface RenderProps {
-  getFilterValues: () => EventFiltersValues;
-  handleFilterSubmit: (values: EventFiltersValues) => Promise<void>;
-  reset: UseFormReset<EventFiltersValues>;
+export interface RenderProps<V extends FieldValues> {
+  getFilterValues: () => V;
+  reset: UseFormReset<V>;
 }
 
-interface MainFiltersProps {
-  defaultValues: EventFiltersValues;
-  handleSubmit: (values: EventFiltersValues) => Promise<void>;
-  renderAddressBar: (renderProps: RenderProps) => ReactNode;
-  renderFilterPresets: (renderProps: RenderProps) => ReactNode;
+interface BaseFiltersProps<V extends FieldValues> {
+  defaultValues: UseFormProps<V>['defaultValues'];
+  filterFields: ReactNode;
+  handleSubmit: (values: V) => Promise<void>;
+  createResetHandler: (renderProps: RenderProps<V>) => () => void;
+  renderAddressBar: (renderProps: RenderProps<V>) => ReactNode;
+  renderFilterPresets: (renderProps: RenderProps<V>) => ReactNode;
 }
 
-export const EventFilters = ({
+export const BaseFilters = <V extends FieldValues>({
   defaultValues,
   children,
+  filterFields,
   handleSubmit,
+  createResetHandler,
   renderAddressBar,
   renderFilterPresets,
-}: PropsWithChildren<MainFiltersProps>) => {
-  const { setParams } = useFilterSearchParams();
-
+}: PropsWithChildren<BaseFiltersProps<V>>) => {
   const methods = useForm({
     defaultValues,
   });
@@ -58,21 +47,16 @@ export const EventFilters = ({
     [location, closeFilterMenu],
   );
 
-  const handleFilterSubmit = async ({ address, ...values }: EventFiltersValues) => {
-    if (address && 'name' in address) {
-      setParams({ address: null, ...values });
-      await handleSubmit({ address: null, ...values });
-    } else {
-      setParams({ address, ...values });
-      await handleSubmit({ address, ...values });
-    }
+  const handleFilterSubmit = async (values: V) => {
+    await handleSubmit(values);
   };
 
-  const handleFormSubmit = methods.handleSubmit(async ({ filterPreset, ...values }) =>
-    handleFilterSubmit({ ...values, filterPreset: 'none' }),
-  );
+  const handleFormSubmit = methods.handleSubmit(async ({ filterPreset, ...values }) => {
+    //@ts-expect-error, 'Omit<V, "filterPreset"> & { filterPreset: string; }' is assignable to the constraint of type 'V', but 'V' could be instantiated with a different subtype of constraint 'FieldValues'.
+    await handleFilterSubmit({ ...values, filterPreset: 'none' });
+  });
 
-  const renderProps = { getFilterValues: methods.getValues, handleFilterSubmit, reset: methods.reset };
+  const renderProps = { getFilterValues: methods.getValues, reset: methods.reset };
 
   return (
     <FormProvider {...methods}>
@@ -109,17 +93,7 @@ export const EventFilters = ({
                   <ActivityFilter label="Games" fieldName="games" eventTypes={eventTypes.games} />
                   <ActivityFilter label="Other" fieldName="other" eventTypes={eventTypes.other} />
                 </HStack>
-                <DateRangeField />
-                <DistanceSelectField />
-                <SelectField
-                  name="sortBy"
-                  formControlProps={{ flexBasis: { base: 'none', lg: '14%' } }}
-                  {...inputProps}
-                >
-                  <option value={SortType.DateCreated}>Sort by: Date created</option>
-                  <option value={SortType.DateStart}>Sort by: Date start</option>
-                  <option value={SortType.Distance}>Sort by: Distance</option>
-                </SelectField>
+                {filterFields}
                 <Button
                   colorScheme="purple"
                   borderRadius="full"
@@ -136,16 +110,7 @@ export const EventFilters = ({
                   width="100%"
                   flexBasis={{ base: 'none', lg: '9%' }}
                   variant="unstyled"
-                  onClick={() => {
-                    methods.reset({
-                      dates: [null, null],
-                      distance: '20',
-                      sortBy: SortType.DateStart,
-                      sports: [],
-                      games: [],
-                      other: [],
-                    });
-                  }}
+                  onClick={createResetHandler(renderProps)}
                   size={{ base: 'sm', md: 'md' }}
                 >
                   Reset filters

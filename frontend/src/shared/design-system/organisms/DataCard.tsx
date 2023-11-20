@@ -45,6 +45,7 @@ export const DataCard = ({ simplified, maxFlexBasis = '24%', detailRoute, user, 
     )
     .with({ type: 'group' }, ({ data }) => data.admin)
     .exhaustive();
+
   const navigate = useNavigate();
 
   const currentDateTime = getCurrentDateTime();
