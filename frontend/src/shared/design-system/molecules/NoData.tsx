@@ -1,15 +1,16 @@
-import { Fragment } from 'react';
-import { Alert, AlertIcon, AlertTitle } from '@chakra-ui/react';
+import { Fragment, ReactNode } from 'react';
+import { Alert, AlertDescription, AlertIcon, AlertTitle } from '@chakra-ui/react';
 
 import { Box } from 'src/shared/design-system';
 
 import { ContentContainer } from '../../layout';
 
 interface NoDataProps {
+  description?: ReactNode;
   wrapInContentContainer?: boolean;
 }
 
-export const NoData = ({ wrapInContentContainer }: NoDataProps) => {
+export const NoData = ({ description, wrapInContentContainer }: NoDataProps) => {
   const Wrapper = wrapInContentContainer ? ContentContainer : Fragment;
   return (
     <Wrapper mt="8">
@@ -17,6 +18,7 @@ export const NoData = ({ wrapInContentContainer }: NoDataProps) => {
         <AlertIcon />
         <Box>
           <AlertTitle>No data found</AlertTitle>
+          {description ? <AlertDescription>{description}</AlertDescription> : null}
         </Box>
       </Alert>
     </Wrapper>

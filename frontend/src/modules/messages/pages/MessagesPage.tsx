@@ -5,6 +5,7 @@ import { ReadonlyArray } from 'effect';
 import { NonEmptyArray } from 'effect/dist/declarations/src/ReadonlyArray';
 
 import { User } from '../../../gql/graphql';
+import { NoData } from '../../../shared/design-system';
 import { ContentContainer, QueryResult } from '../../../shared/layout';
 import {
   getMessageFragmentData,
@@ -26,7 +27,11 @@ export const MessagesPageContainer = ({ user }: WithAuthUser) => {
       queryName="threads"
       render={(threadFragments) => {
         const threads = threadFragments.map(getThreadFragmentData);
-        return ReadonlyArray.isNonEmptyArray(threads) ? <MessagesPage user={user} threads={threads} /> : null;
+        return ReadonlyArray.isNonEmptyArray(threads) ? (
+          <MessagesPage user={user} threads={threads} />
+        ) : (
+          <NoData description="You have no messages" wrapInContentContainer />
+        );
       }}
     />
   );

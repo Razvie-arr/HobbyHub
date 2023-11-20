@@ -11,13 +11,14 @@ import {
   Text,
   useBreakpoint,
 } from '@chakra-ui/react';
-import { FaBars, FaChevronDown, FaMagnifyingGlass, FaRegComment, FaXmark } from 'react-icons/fa6';
+import { FaBars, FaChevronDown, FaMagnifyingGlass, FaXmark } from 'react-icons/fa6';
 import { NavLink, useLocation, useNavigate } from 'react-router-dom';
 
 import { AuthModalButtons, useAuth } from 'src/modules/auth';
 import { route } from 'src/route';
 import { Box, Flex, IconButton, Image, Stack, useDisclosure } from 'src/shared/design-system';
 
+import { MessageNavButton } from '../../../modules/messages';
 import { LOGO_PATH } from '../../constants';
 import { ContentContainer } from '../../layout';
 import { RouterNavLink } from '../atoms';
@@ -111,19 +112,7 @@ export function TopNavigation() {
                   icon={<FaMagnifyingGlass />}
                   size={{ base: 'sm', md: 'md' }}
                 />
-                <IconButton
-                  as={NavLink}
-                  to={route.messages()}
-                  color="purple.600"
-                  _hover={{ bg: 'purple.50' }}
-                  _active={{ bg: 'purple.50' }}
-                  alignSelf="center"
-                  aria-label="Open chats"
-                  variant="ghost"
-                  fontSize="xl"
-                  icon={<FaRegComment />}
-                  size={{ base: 'sm', md: 'md' }}
-                />
+                <MessageNavButton user={user} />
                 <Menu>
                   <MenuButton ml="2">
                     <Flex align="center" gap="2">
