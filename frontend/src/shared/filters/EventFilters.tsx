@@ -130,28 +130,26 @@ export const EventFilters = ({
                 >
                   Apply filters
                 </Button>
-                {methods.formState.isDirty ? (
-                  <Button
-                    color="purple.500"
-                    borderRadius="full"
-                    width="100%"
-                    flexBasis={{ base: 'none', lg: '9%' }}
-                    variant="unstyled"
-                    onClick={() => {
-                      methods.reset({
-                        dates: [null, null],
-                        distance: '20',
-                        sortBy: SortType.DateStart,
-                        sports: [],
-                        games: [],
-                        other: [],
-                      });
-                    }}
-                    size={{ base: 'sm', md: 'md' }}
-                  >
-                    Reset filters
-                  </Button>
-                ) : null}
+                <Button
+                  color="purple.500"
+                  borderRadius="full"
+                  width="100%"
+                  flexBasis={{ base: 'none', lg: '9%' }}
+                  variant="unstyled"
+                  onClick={() => {
+                    methods.reset({
+                      dates: [null, null],
+                      distance: '20',
+                      sortBy: SortType.DateStart,
+                      sports: [],
+                      games: [],
+                      other: [],
+                    });
+                  }}
+                  size={{ base: 'sm', md: 'md' }}
+                >
+                  Reset filters
+                </Button>
               </Stack>
             </ContentContainer>
           </Box>
