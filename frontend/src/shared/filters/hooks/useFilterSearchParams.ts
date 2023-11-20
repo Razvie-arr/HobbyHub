@@ -1,6 +1,8 @@
 import { flow, Number, Option, ReadonlyArray, String } from 'effect';
 import { useSearchParams } from 'react-router-dom';
 
+import { useAuth } from '../../../modules/auth';
+
 const processArraySearchParam = flow(
   (value: string | null) => value,
   Option.fromNullable,
@@ -15,6 +17,7 @@ const processArraySearchParam = flow(
 );
 
 export const useFilterSearchParams = <F, S>(initialFilterPreset?: F, initialSortBy?: S) => {
+  const { user } = useAuth();
   const [params, setParams] = useSearchParams();
 
   const lng = params.get('lng');
@@ -28,16 +31,16 @@ export const useFilterSearchParams = <F, S>(initialFilterPreset?: F, initialSort
   initialEndDate.setHours(0, 0, 0, 0);
 
   const updatedParams = {
-    filterPreset: (params.get('filterPreset') ?? initialFilterPreset) as F,
+    filterPreset: (params.get('filterPreset') ?? (user ? initialFilterPreset : 'none')) as F,
     sports: processArraySearchParam(params.get('sports')),
     games: processArraySearchParam(params.get('games')),
     other: processArraySearchParam(params.get('other')),
     lng: lng ? parseFloat(lng) : null,
     lat: lat ? parseFloat(lat) : null,
-    startDate: params.get('startDate') ?? initialStartDate,
-    endDate: params.get('endDate') ?? initialEndDate,
+    startDate: params.get('startDate') ?? (user ? initialStartDate : null),
+    endDate: params.get('endDate') ?? (user ? initialEndDate : null),
     distance: params.get('distance'),
-    sortBy: (params.get('sortBy') ?? initialSortBy) as S,
+    sortBy: (params.get('sortBy') ?? (user ? initialSortBy : null)) as S,
   };
 
   return {

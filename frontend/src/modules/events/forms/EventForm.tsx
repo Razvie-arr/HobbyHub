@@ -71,16 +71,16 @@ const eventFormSchema = zod
   .refine(
     ({ date }) => {
       const currentDateTime = getCurrentDateTime();
-      return date > currentDateTime.slice(0, 10);
+      return date >= currentDateTime.slice(0, 10);
     },
     {
       message: 'Event cannot start in the past',
-      path: ['startDatetime'],
+      path: ['date'],
     },
   )
   .refine(({ startTime, endTime }) => endTime > startTime, {
     message: 'Event cannot end earlier than start time',
-    path: ['endDatetime'],
+    path: ['endTime'],
   });
 
 type FormValues = zod.infer<typeof eventFormSchema>;
