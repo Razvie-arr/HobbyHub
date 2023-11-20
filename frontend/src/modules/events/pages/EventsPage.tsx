@@ -4,7 +4,7 @@ import { Stack } from '@chakra-ui/react';
 import { flow, Option, pipe, ReadonlyArray } from 'effect';
 
 import { SortType } from '../../../gql/graphql';
-import { DataList } from '../../../shared/design-system';
+import { DataList, NoData } from '../../../shared/design-system';
 import {
   AddressFilterBar,
   createEventFilterValuesFromParams,
@@ -129,6 +129,7 @@ export const EventsPage = ({ location }: EventsPageProps) => {
               </Stack>
             );
           }}
+          renderOnNoData={<NoData description="Try changing your filter options to find more events." />}
         />
       </ContentContainer>
     </EventFilters>

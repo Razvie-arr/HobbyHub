@@ -4,7 +4,7 @@ import { Stack } from '@chakra-ui/react';
 import { Option, pipe, ReadonlyArray } from 'effect';
 
 import { GroupSortType } from '../../../gql/graphql';
-import { DataList } from '../../../shared/design-system';
+import { DataList, NoData } from '../../../shared/design-system';
 import {
   AddressFilterBar,
   createGroupFilterValuesFromParams,
@@ -118,6 +118,7 @@ export const GroupsPage = ({ location }: EventsPageProps) => {
               </Stack>
             );
           }}
+          renderOnNoData={<NoData description="Try changing your filter options to find more events." />}
         />
       </ContentContainer>
     </GroupFilters>

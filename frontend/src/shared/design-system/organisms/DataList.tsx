@@ -103,7 +103,7 @@ export const DataList = ({
             ) : null}
           </>
         ) : (
-          <NoData />
+          <NoData description={`Try changing your filter options to find more ${other.type}s in your area.`} />
         )}
       </Stack>
     </Box>
