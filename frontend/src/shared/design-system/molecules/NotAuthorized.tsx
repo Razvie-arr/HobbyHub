@@ -14,7 +14,7 @@ interface NotAuthorizedProps {
 export const NotAuthorized = ({ requireSignIn, description, wrapInContentContainer }: NotAuthorizedProps) => {
   const Wrapper = wrapInContentContainer ? ContentContainer : Fragment;
   return (
-    <Wrapper mt="8">
+    <Wrapper {...(wrapInContentContainer ? { mt: '8' } : {})}>
       <Alert status="error">
         <AlertIcon />
         <Box>

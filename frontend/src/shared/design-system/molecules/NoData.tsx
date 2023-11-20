@@ -13,7 +13,7 @@ interface NoDataProps {
 export const NoData = ({ description, wrapInContentContainer }: NoDataProps) => {
   const Wrapper = wrapInContentContainer ? ContentContainer : Fragment;
   return (
-    <Wrapper mt="8">
+    <Wrapper {...(wrapInContentContainer ? { mt: '8' } : {})}>
       <Alert status="info" mb="8">
         <AlertIcon />
         <Box>

@@ -31,6 +31,7 @@ export const SearchPage = () => {
       void getSearchEventsResult(queryOptions);
       void getSearchGroupsResult(queryOptions);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const [getSearchEventsResult, searchEventsResultQueryState] = useLazyQuery(SEARCH_EVENTS);

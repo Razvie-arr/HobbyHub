@@ -59,7 +59,7 @@ export const EventsPage = ({ location }: EventsPageProps) => {
       void fetchFilteredEvents(initialFilterValues, DEFAULT_LIMIT);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [location]);
+  }, []);
 
   const handleFilterSubmit = async ({ address, ...values }: EventFiltersValues) => {
     setNoMoreResults(false);

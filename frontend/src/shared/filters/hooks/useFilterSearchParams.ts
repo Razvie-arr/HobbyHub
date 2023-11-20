@@ -30,15 +30,17 @@ export const useFilterSearchParams = <F, S>(initialFilterPreset?: F, initialSort
   initialEndDate.setDate(initialEndDate.getDate() + 1);
   initialEndDate.setHours(0, 0, 0, 0);
 
+  const filterPreset = (params.get('filterPreset') ?? (user ? initialFilterPreset : 'none')) as F;
+
   const updatedParams = {
-    filterPreset: (params.get('filterPreset') ?? (user ? initialFilterPreset : 'none')) as F,
+    filterPreset: filterPreset,
     sports: processArraySearchParam(params.get('sports')),
     games: processArraySearchParam(params.get('games')),
     other: processArraySearchParam(params.get('other')),
     lng: lng ? parseFloat(lng) : null,
     lat: lat ? parseFloat(lat) : null,
-    startDate: params.get('startDate') ?? (user ? initialStartDate : null),
-    endDate: params.get('endDate') ?? (user ? initialEndDate : null),
+    startDate: params.get('startDate') ?? (user && filterPreset === 'today' ? initialStartDate : null),
+    endDate: params.get('endDate') ?? (user && filterPreset === 'today' ? initialEndDate : null),
     distance: params.get('distance'),
     sortBy: (params.get('sortBy') ?? (user ? initialSortBy : null)) as S,
   };

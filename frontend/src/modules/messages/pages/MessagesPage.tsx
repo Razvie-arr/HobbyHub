@@ -66,6 +66,7 @@ const MessagesPage = ({ user, threads }: WithAuthUser & WithNonEmptyThreads) => 
 
   useEffect(() => {
     void handleChatTileClick(threads[0]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
