@@ -76,16 +76,15 @@ export const GroupsPage = ({ location }: EventsPageProps) => {
     <BaseFilters<GroupFiltersValues>
       defaultValues={initialFilterValues}
       handleSubmit={handleFilterSubmit}
-      createResetHandler={({ reset }) =>
-        () => {
-          reset({
-            distance: '20',
-            sortBy: GroupSortType.Distance,
-            sports: [],
-            games: [],
-            other: [],
-          });
-        }}
+      createResetHandler={(reset) => () => {
+        reset({
+          distance: '20',
+          sortBy: GroupSortType.Distance,
+          sports: [],
+          games: [],
+          other: [],
+        });
+      }}
       slotFilterFields={
         <>
           <DistanceSelectField />

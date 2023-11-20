@@ -76,17 +76,16 @@ export const EventsPage = ({ location }: EventsPageProps) => {
     <BaseFilters<EventFiltersValues>
       defaultValues={initialFilterValues}
       handleSubmit={handleFilterSubmit}
-      createResetHandler={({ reset }) =>
-        () => {
-          reset({
-            dates: [null, null],
-            distance: '20',
-            sortBy: SortType.DateStart,
-            sports: [],
-            games: [],
-            other: [],
-          });
-        }}
+      createResetHandler={(reset) => () => {
+        reset({
+          dates: [null, null],
+          distance: '20',
+          sortBy: SortType.DateStart,
+          sports: [],
+          games: [],
+          other: [],
+        });
+      }}
       slotFilterFields={
         <>
           <DateRangeField />

@@ -10,22 +10,17 @@ import { ContentContainer } from '../layout';
 import { ActivityFilter } from './ActivityFilter';
 
 const commonButtonProps = {
-  color: 'purple.500',
+  colorScheme: 'purple',
   borderRadius: 'full',
   width: '100%',
   flexBasis: { base: 'none', lg: '9%' },
   size: { base: 'sm', md: 'md' },
 };
 
-export interface RenderProps<V extends FieldValues> {
-  getFilterValues: () => V;
-  reset: UseFormReset<V>;
-}
-
 interface BaseFiltersProps<V extends FieldValues> {
   defaultValues: UseFormProps<V>['defaultValues'];
   handleSubmit: (values: V) => Promise<void>;
-  createResetHandler: (renderProps: RenderProps<V>) => () => void;
+  createResetHandler: (reset: UseFormReset<V>) => () => void;
   slotFilterFields: ReactNode;
   slotAddressFilterField: ReactNode;
   slotFilterPresets: ReactNode;
@@ -63,8 +58,6 @@ export const BaseFilters = <V extends FieldValues>({
     //@ts-expect-error, 'Omit<V, "filterPreset"> & { filterPreset: string; }' is assignable to the constraint of type 'V', but 'V' could be instantiated with a different subtype of constraint 'FieldValues'.
     await handleFilterSubmit({ ...values, filterPreset: 'none' });
   });
-
-  const renderProps = { getFilterValues: methods.getValues, reset: methods.reset };
 
   return (
     <FormProvider {...methods}>
@@ -105,7 +98,7 @@ export const BaseFilters = <V extends FieldValues>({
                 <Button {...commonButtonProps} type="submit">
                   Apply filters
                 </Button>
-                <Button {...commonButtonProps} variant="unstyled" onClick={createResetHandler(renderProps)}>
+                <Button {...commonButtonProps} variant="ghost" onClick={createResetHandler(methods.reset)}>
                   Reset filters
                 </Button>
               </Stack>
