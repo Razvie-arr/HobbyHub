@@ -81,7 +81,7 @@ const eventFormSchema = zod
   .refine(
     ({ startTime }) => {
       const currentDateTime = getCurrentDateTime();
-      return startTime >= currentDateTime.slice(0, 10);
+      return startTime >= currentDateTime.slice(11);
     },
     {
       message: 'Event cannot start in the past',
