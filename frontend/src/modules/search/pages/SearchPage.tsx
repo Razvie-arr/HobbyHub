@@ -6,6 +6,7 @@ import { useSearchParams } from 'react-router-dom';
 import { DataList } from '../../../shared/design-system';
 import { ContentContainer, QueryResult } from '../../../shared/layout';
 import { getEventFragmentData, getGroupFragmentData } from '../../../shared/types';
+import { createShowMoreHandler } from '../../../utils/dataFetch';
 import { useAuth } from '../../auth';
 import { SearchInput } from '../components';
 import { SEARCH_EVENTS, SEARCH_GROUPS } from '../queries';
@@ -70,18 +71,16 @@ export const SearchPage = () => {
                     <DataList
                       user={user}
                       type="event"
-                      dataArray={eventFragments.map(getEventFragmentData)}
+                      dataArray={events}
                       noMoreResults={noMoreResults}
-                      handleShowMore={async () => {
-                        const result = await searchEventsResultQueryState.fetchMore({
-                          variables: {
-                            offset: events.length,
-                          },
-                        });
-                        if ((result.data.searchEvents.length ?? 0) === 0) {
+                      handleShowMore={createShowMoreHandler({
+                        queryResult: searchEventsResultQueryState,
+                        queryName: 'searchEvents',
+                        offset: events.length,
+                        onNoMoreResults: () => {
                           setNoMoreResults(true);
-                        }
-                      }}
+                        },
+                      })}
                     />
                   );
                 }}
@@ -99,16 +98,14 @@ export const SearchPage = () => {
                       type="group"
                       dataArray={groups}
                       noMoreResults={noMoreResults}
-                      handleShowMore={async () => {
-                        const result = await searchGroupsResultQueryState.fetchMore({
-                          variables: {
-                            offset: groups.length,
-                          },
-                        });
-                        if ((result.data.searchGroups.length ?? 0) === 0) {
+                      handleShowMore={createShowMoreHandler({
+                        queryResult: searchGroupsResultQueryState,
+                        queryName: 'searchGroups',
+                        offset: groups.length,
+                        onNoMoreResults: () => {
                           setNoMoreResults(true);
-                        }
-                      }}
+                        },
+                      })}
                     />
                   );
                 }}

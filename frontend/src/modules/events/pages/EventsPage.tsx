@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react';
 import { useLazyQuery } from '@apollo/client';
-import { Stack } from '@chakra-ui/react';
 import { ReadonlyArray } from 'effect';
 
 import { SortType } from '../../../gql/graphql';
@@ -18,6 +17,7 @@ import {
 } from '../../../shared/filters';
 import { ContentContainer, QueryResult } from '../../../shared/layout';
 import { getEventFragmentData } from '../../../shared/types';
+import { createShowMoreHandler } from '../../../utils/dataFetch';
 import { getFilterLocationInput } from '../../../utils/form';
 import { useAuth } from '../../auth';
 import { EventsFilterPresetTabs } from '../components';
@@ -122,24 +122,20 @@ export const EventsPage = ({ location }: EventsPageProps) => {
           render={(eventFragments) => {
             const events = eventFragments.map(getEventFragmentData);
             return (
-              <Stack spacing="8">
-                <DataList
-                  type="event"
-                  dataArray={events}
-                  user={user}
-                  noMoreResults={noMoreResults}
-                  handleShowMore={async () => {
-                    const result = await queryResult.fetchMore({
-                      variables: {
-                        offset: events.length,
-                      },
-                    });
-                    if ((result.data.filterEvents?.length ?? 0) === 0) {
-                      setNoMoreResults(true);
-                    }
-                  }}
-                />
-              </Stack>
+              <DataList
+                type="event"
+                dataArray={events}
+                user={user}
+                noMoreResults={noMoreResults}
+                handleShowMore={createShowMoreHandler({
+                  queryResult,
+                  queryName: 'filterEvents',
+                  offset: events.length,
+                  onNoMoreResults: () => {
+                    setNoMoreResults(true);
+                  },
+                })}
+              />
             );
           }}
           renderOnNoData={<NoData description="Try changing your filter options to find more events." />}
