@@ -72,13 +72,15 @@ const MessagesPage = ({ user, threads }: WithAuthUser & WithNonEmptyThreads) => 
           shadow="sm"
           height="100%"
           width="60%"
-          p={5}
+          p="4"
           border="solid"
           borderWidth={1}
           borderColor="purple.100"
         >
-          <CardHeader borderBottom="solid" borderBottomWidth={2} borderColor="gray.100">
-            <Heading size="xl">Chats</Heading>
+          <CardHeader borderBottom="solid" borderBottomWidth={2} borderColor="gray.100" p="2">
+            <Heading as="h1" size="lg">
+              Chats
+            </Heading>
           </CardHeader>
           <VStack spacing="1" overflowY="auto" maxH="100%" py="4" width="100%">
             {threads.map((thread) => (

@@ -1,4 +1,4 @@
-import { Avatar, Box, Circle, Flex, HStack, Spacer, Text } from '@chakra-ui/react';
+import { Avatar, Box, Circle, Flex, HStack, Text } from '@chakra-ui/react';
 
 import { MessageData } from '../../../shared/types';
 
@@ -24,27 +24,33 @@ export const ChatTile = ({ title, lastMessage, read, onClick, isSelected }: Chat
       onClick={onClick}
       _hover={{ cursor: 'pointer' }}
     >
-      <HStack height="100%" alignItems="center" spacing={3}>
-        <Avatar boxSize="50px" name={title} bg="purple.500" />
-        <Box>
-          <Text as="b">{title}</Text>
-          <Flex alignItems="center">
-            <Text noOfLines={1} width="100%">
-              {lastMessage.text}
+      <HStack height="100%" alignItems="center" spacing={3} justifyContent="space-between">
+        <HStack flexBasis="100%">
+          <Avatar boxSize="50px" name={title} bg="purple.500" />
+          <Box>
+            <Text as="b" noOfLines={1}>
+              {title}
             </Text>
-          </Flex>
-        </Box>
-        <Spacer />
-        <Text mx={3} fontSize="sm" m="0">
-          {lastMessageSentAt.toLocaleString(locale, {
-            day: 'numeric',
-            month: 'short',
-            hour: '2-digit',
-            minute: '2-digit',
-          })}
-        </Text>
-        <Circle visibility={read ? 'hidden' : 'visible'} size="10px" bg="purple.500"></Circle>
+            <Flex alignItems="center">
+              <Text noOfLines={1} width="100%">
+                {lastMessage.text}
+              </Text>
+            </Flex>
+          </Box>
+        </HStack>
+        <HStack>
+          <Text mx={3} fontSize="sm" m="0">
+            {lastMessageSentAt.toLocaleString(locale, {
+              day: 'numeric',
+              month: 'short',
+              hour: '2-digit',
+              minute: '2-digit',
+            })}
+          </Text>
+          <Circle visibility={read ? 'hidden' : 'visible'} size="10px" bg="purple.500"></Circle>
+        </HStack>
       </HStack>
     </Box>
   );
 };
+

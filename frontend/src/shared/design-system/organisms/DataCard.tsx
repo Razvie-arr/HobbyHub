@@ -53,6 +53,7 @@ export const DataCard = ({ simplified, maxFlexBasis = '24%', detailRoute, user, 
 
   return (
     <Card
+      flexGrow={1}
       flexBasis={{ '2xl': maxFlexBasis, lg: '32%', md: '48%' }}
       backgroundColor="white"
       mb={simplified ? '0' : '12'}

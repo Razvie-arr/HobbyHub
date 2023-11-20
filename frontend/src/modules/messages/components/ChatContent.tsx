@@ -1,5 +1,5 @@
 import { Fragment, useEffect, useRef } from 'react';
-import { CardBody, CardHeader, IconButton, Text, VStack } from '@chakra-ui/react';
+import { CardBody, CardHeader, Heading, IconButton, VStack } from '@chakra-ui/react';
 import { NonEmptyArray } from 'effect/dist/declarations/src/ReadonlyArray';
 import { FaArrowLeft } from 'react-icons/fa6';
 
@@ -39,9 +39,9 @@ export const ChatContent = ({ messages, user, otherUsers, onBackClick }: ChatCon
           icon={<FaArrowLeft />}
           onClick={onBackClick}
         />
-        <Text fontSize="xl" as="b" textAlign="center">
+        <Heading fontSize="xl" as="h2">
           {otherUsers.map(({ first_name, last_name }) => `${first_name} ${last_name}`).join(', ')}
-        </Text>
+        </Heading>
       </CardHeader>
       <CardBody bg="gray.50" overflowY="auto" ref={chatContainerRef}>
         <VStack gap={8}>
@@ -68,3 +68,4 @@ export const ChatContent = ({ messages, user, otherUsers, onBackClick }: ChatCon
     </>
   );
 };
+

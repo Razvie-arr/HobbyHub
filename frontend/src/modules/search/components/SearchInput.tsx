@@ -1,23 +1,19 @@
 import { useState } from 'react';
 import { Icon, IconButton, Input, InputGroup, InputRightElement } from '@chakra-ui/react';
 import { MdSearch } from 'react-icons/md';
-import { createSearchParams, useNavigate } from 'react-router-dom';
+import { useSearchParams } from 'react-router-dom';
 
-import { route } from '../../../route';
-
-interface SearchInput {
+interface SearchInputProps {
   onSearch: (searchValue: string) => Promise<void>;
 }
 
-export const SearchInput = ({ onSearch }: SearchInput) => {
+export const SearchInput = ({ onSearch }: SearchInputProps) => {
   const [searchValue, setSearchValue] = useState('');
-  const navigate = useNavigate();
+  const [, setParams] = useSearchParams();
 
-  const navigateToSearchResults = () => {
-    navigate({
-      pathname: route.search(),
-      search: createSearchParams({ searchValue }).toString(),
-    });
+  const handleSearch = async () => {
+    await onSearch(searchValue);
+    setParams({ searchValue });
   };
 
   return (
@@ -30,11 +26,11 @@ export const SearchInput = ({ onSearch }: SearchInput) => {
         onChange={(event) => setSearchValue(event.target.value)}
         onKeyDown={async (event) => {
           if (event.key === 'Enter') {
-            await onSearch(searchValue);
-            navigateToSearchResults();
+            await handleSearch();
           }
         }}
         variant="flushed"
+        autoFocus
       />
       <InputRightElement>
         <IconButton
@@ -43,9 +39,7 @@ export const SearchInput = ({ onSearch }: SearchInput) => {
           icon={<Icon as={MdSearch} />}
           variant="ghost"
           colorScheme="purple"
-          onClick={() => {
-            navigateToSearchResults();
-          }}
+          onClick={handleSearch}
         />
       </InputRightElement>
     </InputGroup>
