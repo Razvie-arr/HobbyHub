@@ -56,6 +56,7 @@ export const SendMessageModal = ({
             position: 'top-right',
             title: 'Message sent!',
             description: 'Your message was sent successfully.',
+            isClosable: true,
           });
         },
         resolver: zodResolver(schema),

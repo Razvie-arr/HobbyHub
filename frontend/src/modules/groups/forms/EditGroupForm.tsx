@@ -101,6 +101,7 @@ const EditGroupForm = ({ groupId }: EditGroupFormProps) => {
                 position: 'top-right',
                 title: 'Group updated!',
                 description: 'Your group was updated successfully.',
+                isClosable: true,
               });
               navigate(route.groupDetails(groupId));
             }}

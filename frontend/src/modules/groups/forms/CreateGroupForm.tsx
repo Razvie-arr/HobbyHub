@@ -71,6 +71,7 @@ export const CreateGroupForm = () => {
           position: 'top-right',
           title: 'Group created!',
           description: 'Your group was created successfully.',
+          isClosable: true,
         });
         const id = result.data?.createGroup.id;
         if (id) {

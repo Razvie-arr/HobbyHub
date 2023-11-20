@@ -85,6 +85,7 @@ export const CreateEventForm = () => {
           position: 'top-right',
           title: 'Event created!',
           description: 'Your event was created successfully.',
+          isClosable: true,
         });
         const id = result.data?.createEvent.id;
         if (id) {

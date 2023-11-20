@@ -40,6 +40,7 @@ export const DeleteGroupButton = ({ group, ...buttonProps }: WithGroup & ButtonP
       position: 'top-right',
       title: 'Group deleted!',
       description: 'Your group was deleted successfully.',
+      isClosable: true,
     });
     navigate(route.home());
   };
@@ -73,3 +74,4 @@ export const DeleteGroupButton = ({ group, ...buttonProps }: WithGroup & ButtonP
     </>
   );
 };
+

@@ -122,6 +122,7 @@ const EditEventForm = ({ eventId }: EditEventFormProps) => {
                 position: 'top-right',
                 title: 'Event updated!',
                 description: 'Your event was updated successfully.',
+                isClosable: true,
               });
               navigate(route.eventDetails(eventId));
             }}

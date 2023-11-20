@@ -132,6 +132,7 @@ export const OnboardingForm = () => {
                 position: 'top-right',
                 title: 'Onboarding completed!',
                 description: 'Enjoy a personalized experience on HobbyHub!',
+                isClosable: true,
               });
               signIn({ token, user: updatedUser.data.onboardUser });
               navigate(route.home());
