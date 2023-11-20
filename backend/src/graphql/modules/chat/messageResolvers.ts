@@ -51,6 +51,7 @@ const sendMessage = async (senderId: number, recipientId: number, text: string):
       )[0];
       if (foundThreadBetweenUsersId) {
         threadId = foundThreadBetweenUsersId.thread_id;
+        await trx('Thread').update({ last_message_at: currentDateTime }).where('id', threadId);
       } else {
         threadId = (await trx('Thread').insert({ last_message_at: currentDateTime }, 'id'))[0];
         newThreadCreated = true;
