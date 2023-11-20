@@ -6,15 +6,15 @@ import { ReadonlyArray } from 'effect';
 import { GroupSortType } from '../../../gql/graphql';
 import { DataList, NoData } from '../../../shared/design-system';
 import {
-  AddressFilterBar,
+  AddressFilterField,
   BaseFilters,
   createGroupFilterValuesFromParams,
+  DistanceSelectField,
+  GroupFilterPreset,
   GroupFiltersValues,
+  SortSelectField,
+  useFilterSearchParams,
 } from '../../../shared/filters';
-import { DistanceSelectField } from '../../../shared/filters/fields';
-import { useFilterSearchParams } from '../../../shared/filters/hooks';
-import { GroupFilterPreset } from '../../../shared/filters/types';
-import { SelectField } from '../../../shared/forms';
 import { ContentContainer, QueryResult } from '../../../shared/layout';
 import { getGroupFragmentData } from '../../../shared/types';
 import { getFilterLocationInput } from '../../../utils/form';
@@ -86,34 +86,23 @@ export const GroupsPage = ({ location }: EventsPageProps) => {
             other: [],
           });
         }}
-      filterFields={
+      slotFilterFields={
         <>
           <DistanceSelectField />
-          <SelectField
-            name="sortBy"
-            formControlProps={{ flexBasis: { base: 'none', lg: '13%' } }}
-            bg="white"
-            borderRadius="full"
-            size={{ base: 'sm', md: 'md' }}
-          >
+          <SortSelectField>
             <option value={GroupSortType.Distance}>Sort by: Distance</option>
             <option value={GroupSortType.Name}>Sort by: Name</option>
-          </SelectField>
+          </SortSelectField>
         </>
       }
-      renderAddressBar={(renderProps) => (
-        <AddressFilterBar
+      slotAddressFilterField={
+        <AddressFilterField<GroupFiltersValues>
           preAddressText="Groups in"
           address={location}
-          onAddressSelected={async (address) => {
-            await handleFilterSubmit({
-              ...renderProps.getFilterValues(),
-              address,
-            });
-          }}
+          handleFilterSubmit={handleFilterSubmit}
         />
-      )}
-      renderFilterPresets={() =>
+      }
+      slotFilterPresets={
         user ? (
           <GroupsFilterPresetTabs
             user={user}

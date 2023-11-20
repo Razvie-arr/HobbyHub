@@ -6,15 +6,16 @@ import { ReadonlyArray } from 'effect';
 import { SortType } from '../../../gql/graphql';
 import { DataList, NoData } from '../../../shared/design-system';
 import {
-  AddressFilterBar,
+  AddressFilterField,
   BaseFilters,
   createEventFilterValuesFromParams,
+  DateRangeField,
+  DistanceSelectField,
   EventFilterPreset,
   EventFiltersValues,
+  SortSelectField,
+  useFilterSearchParams,
 } from '../../../shared/filters';
-import { DateRangeField, DistanceSelectField } from '../../../shared/filters/fields';
-import { useFilterSearchParams } from '../../../shared/filters/hooks';
-import { SelectField } from '../../../shared/forms';
 import { ContentContainer, QueryResult } from '../../../shared/layout';
 import { getEventFragmentData } from '../../../shared/types';
 import { getFilterLocationInput } from '../../../utils/form';
@@ -86,37 +87,26 @@ export const EventsPage = ({ location }: EventsPageProps) => {
             other: [],
           });
         }}
-      filterFields={
+      slotFilterFields={
         <>
           <DateRangeField />
           <DistanceSelectField />
-          <SelectField
-            name="sortBy"
-            formControlProps={{ flexBasis: { base: 'none', lg: '14%' } }}
-            bg="white"
-            borderRadius="full"
-            size={{ base: 'sm', md: 'md' }}
-          >
+          <SortSelectField>
             <option value={SortType.DateCreated}>Sort by: Date created</option>
             <option value={SortType.DateStart}>Sort by: Date start</option>
             <option value={SortType.Distance}>Sort by: Distance</option>
-          </SelectField>
+          </SortSelectField>
         </>
       }
-      renderAddressBar={(renderProps) => (
-        <AddressFilterBar
+      slotAddressFilterField={
+        <AddressFilterField
           preAddressText="Events in"
           address={location}
-          onAddressSelected={async (address) => {
-            await handleFilterSubmit({
-              ...renderProps.getFilterValues(),
-              address,
-            });
-          }}
+          handleFilterSubmit={handleFilterSubmit}
           spacing={0}
         />
-      )}
-      renderFilterPresets={() =>
+      }
+      slotFilterPresets={
         user ? (
           <EventsFilterPresetTabs
             user={user}

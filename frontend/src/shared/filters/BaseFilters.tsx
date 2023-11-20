@@ -9,6 +9,14 @@ import { ContentContainer } from '../layout';
 
 import { ActivityFilter } from './ActivityFilter';
 
+const commonButtonProps = {
+  color: 'purple.500',
+  borderRadius: 'full',
+  width: '100%',
+  flexBasis: { base: 'none', lg: '9%' },
+  size: { base: 'sm', md: 'md' },
+};
+
 export interface RenderProps<V extends FieldValues> {
   getFilterValues: () => V;
   reset: UseFormReset<V>;
@@ -16,21 +24,21 @@ export interface RenderProps<V extends FieldValues> {
 
 interface BaseFiltersProps<V extends FieldValues> {
   defaultValues: UseFormProps<V>['defaultValues'];
-  filterFields: ReactNode;
   handleSubmit: (values: V) => Promise<void>;
   createResetHandler: (renderProps: RenderProps<V>) => () => void;
-  renderAddressBar: (renderProps: RenderProps<V>) => ReactNode;
-  renderFilterPresets: (renderProps: RenderProps<V>) => ReactNode;
+  slotFilterFields: ReactNode;
+  slotAddressFilterField: ReactNode;
+  slotFilterPresets: ReactNode;
 }
 
 export const BaseFilters = <V extends FieldValues>({
-  defaultValues,
   children,
-  filterFields,
+  defaultValues,
   handleSubmit,
   createResetHandler,
-  renderAddressBar,
-  renderFilterPresets,
+  slotFilterFields,
+  slotAddressFilterField,
+  slotFilterPresets,
 }: PropsWithChildren<BaseFiltersProps<V>>) => {
   const methods = useForm({
     defaultValues,
@@ -71,7 +79,7 @@ export const BaseFilters = <V extends FieldValues>({
           spacing={{ base: '0', xl: '4' }}
           direction="column"
         >
-          <ContentContainer>{renderAddressBar(renderProps)}</ContentContainer>
+          <ContentContainer>{slotAddressFilterField}</ContentContainer>
           <Box w="100%">
             <Button
               alignSelf="right"
@@ -93,26 +101,11 @@ export const BaseFilters = <V extends FieldValues>({
                   <ActivityFilter label="Games" fieldName="games" eventTypes={eventTypes.games} />
                   <ActivityFilter label="Other" fieldName="other" eventTypes={eventTypes.other} />
                 </HStack>
-                {filterFields}
-                <Button
-                  colorScheme="purple"
-                  borderRadius="full"
-                  width="100%"
-                  flexBasis={{ base: 'none', lg: '9%' }}
-                  type="submit"
-                  size={{ base: 'sm', md: 'md' }}
-                >
+                {slotFilterFields}
+                <Button {...commonButtonProps} type="submit">
                   Apply filters
                 </Button>
-                <Button
-                  color="purple.500"
-                  borderRadius="full"
-                  width="100%"
-                  flexBasis={{ base: 'none', lg: '9%' }}
-                  variant="unstyled"
-                  onClick={createResetHandler(renderProps)}
-                  size={{ base: 'sm', md: 'md' }}
-                >
+                <Button {...commonButtonProps} variant="unstyled" onClick={createResetHandler(renderProps)}>
                   Reset filters
                 </Button>
               </Stack>
@@ -122,7 +115,7 @@ export const BaseFilters = <V extends FieldValues>({
         <Box bg="gray.100" w="100%" my="4">
           <ContentContainer>
             <Stack direction="column" spacing={4}>
-              {renderFilterPresets(renderProps)}
+              {slotFilterPresets}
             </Stack>
           </ContentContainer>
         </Box>
