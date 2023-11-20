@@ -41,7 +41,7 @@ export const EventFilters = ({
   renderAddressBar,
   renderFilterPresets,
 }: PropsWithChildren<MainFiltersProps>) => {
-  const { setParams } = useFilterSearchParams('today', SortType.DateStart);
+  const { setParams } = useFilterSearchParams();
 
   const methods = useForm({
     defaultValues,

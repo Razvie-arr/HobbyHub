@@ -32,7 +32,7 @@ export const EventsFilterPresetTabs = ({
   reset,
   user,
 }: EventFilterRenderProps & WithAuthUser) => {
-  const { params } = useFilterSearchParams('today', SortType.DateStart);
+  const { params } = useFilterSearchParams();
 
   const handleTodaysEvents = async () => {
     const startDate = new Date();

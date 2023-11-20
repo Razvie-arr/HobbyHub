@@ -14,7 +14,7 @@ const processArraySearchParam = flow(
   Option.getOrElse((): number[] => []),
 );
 
-export const useFilterSearchParams = <F, S>(initialFilterPreset: F, initialSortBy: S) => {
+export const useFilterSearchParams = <F, S>(initialFilterPreset?: F, initialSortBy?: S) => {
   const [params, setParams] = useSearchParams();
 
   const lng = params.get('lng');

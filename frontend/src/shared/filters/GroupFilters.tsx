@@ -40,7 +40,7 @@ export const GroupFilters = ({
   renderAddressBar,
   renderFilterPresets,
 }: PropsWithChildren<GroupFiltersProps>) => {
-  const { setParams } = useFilterSearchParams('nearby', GroupSortType.Distance);
+  const { setParams } = useFilterSearchParams();
 
   const methods = useForm({
     defaultValues,
