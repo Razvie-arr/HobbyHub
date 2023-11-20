@@ -49,7 +49,7 @@ export const CreateEventForm = () => {
         author: `${user?.first_name} ${user?.last_name}`,
         date: currentDateTime.slice(0, 10),
         startTime: currentDateTime.slice(11, 23),
-        endTime: currentDateTime.slice(11, 23),
+        endTime: '',
       }}
       formTitle="Create event"
       formDescription="Create your own event today!"

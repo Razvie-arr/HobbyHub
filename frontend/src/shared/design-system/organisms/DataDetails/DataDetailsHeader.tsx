@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { match } from 'ts-pattern';
 
 import { EventStatusTag, useDisclosure } from 'src/shared/design-system';
-import { WithAuthUser } from 'src/shared/types';
+import { WithNullableAuthUser } from 'src/shared/types';
 
 import { SendMessageModal } from '../../../../modules/messages/components/SendMessageModal';
 import { getCurrentDateTime } from '../../../../utils/form';
@@ -16,7 +16,7 @@ const DataDetailsHeaderButtons = ({
   editRoute,
   deleteButton,
   ...other
-}: DataDetailsProps & WithAuthUser & WithDeleteButton) => {
+}: DataDetailsProps & WithNullableAuthUser & WithDeleteButton) => {
   const owner = match(other)
     .with({ type: 'event' }, ({ data }) =>
       match(data.author)
@@ -27,7 +27,7 @@ const DataDetailsHeaderButtons = ({
     .with({ type: 'group' }, ({ data }) => data.admin)
     .exhaustive();
 
-  const isUserInfoOwner = user.id === owner.id;
+  const isUserInfoOwner = user && user.id === owner.id;
 
   const sendMessageModalDisclosure = useDisclosure();
   return (
@@ -53,7 +53,7 @@ const DataDetailsHeaderButtons = ({
                   Join event
                 </Button>
               ) : null}
-              <SendMessageModal user={user} recipient={owner} disclosure={sendMessageModalDisclosure} />
+              {user ? <SendMessageModal user={user} recipient={owner} disclosure={sendMessageModalDisclosure} /> : null}
             </>
           )}
         </Stack>
@@ -78,7 +78,7 @@ export const DataDetailsHeader = ({ user, ...other }: DataDetailsProps & WithDel
             {other.data.name}
           </Heading>
         </HStack>
-        {user ? <DataDetailsHeaderButtons user={user} {...other} /> : null}
+        <DataDetailsHeaderButtons user={user} {...other} />
       </Stack>
     </ContentContainer>
   </Flex>

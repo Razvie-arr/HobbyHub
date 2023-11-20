@@ -145,7 +145,7 @@ export const DataCard = ({ simplified, maxFlexBasis = '24%', detailRoute, user, 
                 Edit
               </Button>
             ) : null}
-            {other.type === 'event' && user && user.id !== owner.id ? (
+            {other.type === 'event' && user?.id !== owner.id ? (
               <Button
                 borderRadius="full"
                 size="sm"
