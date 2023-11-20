@@ -40,7 +40,7 @@ export const GroupFilters = ({
   renderAddressBar,
   renderFilterPresets,
 }: PropsWithChildren<GroupFiltersProps>) => {
-  const { setParams } = useFilterSearchParams();
+  const { setParams } = useFilterSearchParams('nearby', GroupSortType.Distance);
 
   const methods = useForm({
     defaultValues,
@@ -127,27 +127,25 @@ export const GroupFilters = ({
                 >
                   Apply filters
                 </Button>
-                {methods.formState.isDirty ? (
-                  <Button
-                    color="purple.500"
-                    borderRadius="full"
-                    width="100%"
-                    flexBasis={{ base: 'none', lg: '9%' }}
-                    variant="unstyled"
-                    onClick={() => {
-                      methods.reset({
-                        distance: '20',
-                        sortBy: GroupSortType.Distance,
-                        sports: [],
-                        games: [],
-                        other: [],
-                      });
-                    }}
-                    size={{ base: 'sm', md: 'md' }}
-                  >
-                    Reset filters
-                  </Button>
-                ) : null}
+                <Button
+                  color="purple.500"
+                  borderRadius="full"
+                  width="100%"
+                  flexBasis={{ base: 'none', lg: '9%' }}
+                  variant="unstyled"
+                  onClick={() => {
+                    methods.reset({
+                      distance: '20',
+                      sortBy: GroupSortType.Distance,
+                      sports: [],
+                      games: [],
+                      other: [],
+                    });
+                  }}
+                  size={{ base: 'sm', md: 'md' }}
+                >
+                  Reset filters
+                </Button>
               </Stack>
             </ContentContainer>
           </Box>

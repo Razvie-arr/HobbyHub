@@ -14,23 +14,30 @@ const processArraySearchParam = flow(
   Option.getOrElse((): number[] => []),
 );
 
-export const useFilterSearchParams = <F, S>() => {
+export const useFilterSearchParams = <F, S>(initialFilterPreset: F, initialSortBy: S) => {
   const [params, setParams] = useSearchParams();
 
   const lng = params.get('lng');
   const lat = params.get('lat');
 
+  const initialStartDate = new Date();
+  initialStartDate.setHours(0, 0, 0, 0);
+
+  const initialEndDate = new Date();
+  initialEndDate.setDate(initialEndDate.getDate() + 1);
+  initialEndDate.setHours(0, 0, 0, 0);
+
   const updatedParams = {
-    filterPreset: (params.get('filterPreset') ?? 'none') as F,
+    filterPreset: (params.get('filterPreset') ?? initialFilterPreset) as F,
     sports: processArraySearchParam(params.get('sports')),
     games: processArraySearchParam(params.get('games')),
     other: processArraySearchParam(params.get('other')),
     lng: lng ? parseFloat(lng) : null,
     lat: lat ? parseFloat(lat) : null,
-    startDate: params.get('startDate') ?? null,
-    endDate: params.get('endDate') ?? null,
+    startDate: params.get('startDate') ?? initialStartDate,
+    endDate: params.get('endDate') ?? initialEndDate,
     distance: params.get('distance'),
-    sortBy: params.get('sortBy') as S,
+    sortBy: (params.get('sortBy') ?? initialSortBy) as S,
   };
 
   return {
@@ -94,3 +101,4 @@ export const useFilterSearchParams = <F, S>() => {
       updatedParams.sortBy === null,
   };
 };
+

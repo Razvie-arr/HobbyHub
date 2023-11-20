@@ -31,7 +31,7 @@ export const GroupsPage = ({ location }: EventsPageProps) => {
   const { user } = useAuth();
   const [getFilteredGroups, queryResult] = useLazyQuery(FILTERED_GROUPS);
   const [noMoreResults, setNoMoreResults] = useState(false);
-  const { params } = useFilterSearchParams<GroupFilterPreset, GroupSortType>();
+  const { params } = useFilterSearchParams<GroupFilterPreset, GroupSortType>('nearby', GroupSortType.Distance);
 
   const initialFilterValues = { ...createGroupFilterValuesFromParams(params), address: location };
 

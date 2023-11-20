@@ -40,7 +40,7 @@ export const EventsPage = ({ location }: EventsPageProps) => {
   const { user } = useAuth();
   const [getFilteredEvents, queryResult] = useLazyQuery(FILTERED_EVENTS);
   const [noMoreResults, setNoMoreResults] = useState(false);
-  const { params } = useFilterSearchParams<EventFilterPreset, SortType>();
+  const { params } = useFilterSearchParams<EventFilterPreset, SortType>('today', SortType.DateStart);
 
   const initialFilterValues = { ...createEventFilterValuesFromParams(params), address: location };
 

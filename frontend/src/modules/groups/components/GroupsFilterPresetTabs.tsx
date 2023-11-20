@@ -31,7 +31,7 @@ export const GroupsFilterPresetTabs = ({
   reset,
   user,
 }: GroupFilterRenderProps & WithAuthUser) => {
-  const { params } = useFilterSearchParams();
+  const { params } = useFilterSearchParams('nearby', GroupSortType.Distance);
 
   const handleNearbyGroups = async () => {
     const values = {
@@ -80,3 +80,4 @@ export const GroupsFilterPresetTabs = ({
     </HStack>
   );
 };
+
