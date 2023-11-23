@@ -10,6 +10,7 @@ export const GroupDetails = ({ group }: WithGroup) => {
   const groupEvents = group.events.map(getEventFragmentData);
   if (groupEvents[0] && groupEvents[0].author.__typename === 'User') {
   }
+  console.log(group);
   return (
     <DataDetails
       user={user}

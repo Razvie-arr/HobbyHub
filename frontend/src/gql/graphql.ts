@@ -30,6 +30,7 @@ export type AuthUser = {
   email: Scalars['String']['output'];
   event_types: Array<EventType>;
   first_name: Scalars['String']['output'];
+  groups: Array<Group>;
   id: Scalars['Int']['output'];
   last_name: Scalars['String']['output'];
   location?: Maybe<Location>;
@@ -603,6 +604,7 @@ export type SignInMutation = {
         longitude: number;
       } | null;
       event_types: Array<{ __typename?: 'EventType'; id: number; name: string; category: string }>;
+      groups: Array<{ __typename?: 'Group'; id: number; name: string }>;
     };
   };
 };
@@ -1578,6 +1580,17 @@ export const SignInDocument = {
                             { kind: 'Field', name: { kind: 'Name', value: 'id' } },
                             { kind: 'Field', name: { kind: 'Name', value: 'name' } },
                             { kind: 'Field', name: { kind: 'Name', value: 'category' } },
+                          ],
+                        },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'groups' },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                            { kind: 'Field', name: { kind: 'Name', value: 'name' } },
                           ],
                         },
                       },

@@ -278,11 +278,8 @@ export class SQLDataSource extends BatchedSQLDataSource {
         .where('group_id', groupId),
     getGroupMembers: (groupId: number) =>
       this.db.query('User_UserGroup').innerJoin('User', 'User_UserGroup.user_id', 'User.id').where('group_id', groupId),
-    getGroupEvents: (groupId: number) =>
-      this.db
-        .query('Event_UserGroup')
-        .innerJoin('Event', 'Event_UserGroup.event_id', 'Event.id')
-        .where('Event_UserGroup.group_id', groupId),
+    getGroupEvents: (groupId: number) => this.db.query('Event').where('group_id', groupId),
+    getGroupsByAdminId: (adminId: number) => this.db.query('UserGroup').where('admin_id', adminId),
   };
 
   threads = {
@@ -316,3 +313,4 @@ export class SQLDataSource extends BatchedSQLDataSource {
     },
   };
 }
+

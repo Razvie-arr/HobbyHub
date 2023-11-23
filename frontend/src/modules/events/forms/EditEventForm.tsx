@@ -59,17 +59,13 @@ const EditEventForm = ({ eventId }: EditEventFormProps) => {
           return <NotAuthorized description="This is not your event, you cannot edit it." wrapInContentContainer />;
         }
 
-        const authorName = match(event.author)
-          .with({ __typename: 'User' }, ({ first_name, last_name }) => `${first_name} ${last_name}`)
-          .with({ __typename: 'Group' }, ({ name }) => name)
-          .exhaustive();
-
         return (
           <EventForm
+            user={user}
             additionalButton={<DeleteEventButton event={event} colorScheme="purple" flex={1} />}
             defaultImagePath={event.image_filepath}
             defaultValues={{
-              author: authorName,
+              author: event.author.id,
               allowWaitlist: event.allow_waitlist,
               capacity: event.capacity,
               city: event.location.city,
@@ -102,7 +98,8 @@ const EditEventForm = ({ eventId }: EditEventFormProps) => {
                     name: values.name,
                     start_datetime: `${values.date}T${values.startTime}`,
                     summary: values.summary,
-                    author_id: user?.id,
+                    author_id: values.author === user.id ? values.author : undefined,
+                    group_id: values.author !== user.id ? values.author : undefined,
                     event_type_ids: values.eventTypes.map(({ value }) => value),
                     image_filepath: values.eventImagePath,
                     description: values.description,

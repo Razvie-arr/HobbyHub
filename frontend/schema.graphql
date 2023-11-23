@@ -8,6 +8,7 @@ type AuthUser {
   email: String!
   event_types: [EventType!]!
   first_name: String!
+  groups: [Group!]!
   id: Int!
   last_name: String!
   location: Location

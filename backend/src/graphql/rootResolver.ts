@@ -58,6 +58,7 @@ import {
 import { locationByIdResolver, locationsByIdsResolver, locationsResolver } from './modules/location/locationResolvers';
 import { searchEventsResolver, searchGroupsResolver } from './modules/search/searchResolver';
 import {
+  authUserAdminGroupsResolver,
   authUserEventTypesResolver,
   authUserLocationResolver,
   requestResetPasswordResolver,
@@ -122,6 +123,7 @@ export const rootResolver: Resolvers = {
   AuthUser: {
     event_types: authUserEventTypesResolver,
     location: authUserLocationResolver,
+    groups: authUserAdminGroupsResolver,
   },
 
   Event: {
@@ -196,3 +198,4 @@ export const rootResolver: Resolvers = {
     sender: messageSenderResolver,
   },
 };
+

@@ -32,6 +32,7 @@ export type AuthUser = {
   email: Scalars['String']['output'];
   event_types: Array<EventType>;
   first_name: Scalars['String']['output'];
+  groups: Array<Group>;
   id: Scalars['Int']['output'];
   last_name: Scalars['String']['output'];
   location?: Maybe<Location>;
@@ -696,6 +697,7 @@ export type AuthUserResolvers<
   email?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   event_types?: Resolver<Array<ResolversTypes['EventType']>, ParentType, ContextType>;
   first_name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  groups?: Resolver<Array<ResolversTypes['Group']>, ParentType, ContextType>;
   id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   last_name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   location?: Resolver<Maybe<ResolversTypes['Location']>, ParentType, ContextType>;

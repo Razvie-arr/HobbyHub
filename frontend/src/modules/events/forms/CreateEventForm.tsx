@@ -44,9 +44,10 @@ export const CreateEventForm = () => {
 
   return (
     <EventForm
+      user={user}
       defaultValues={{
         ...defaultValues,
-        author: `${user?.first_name} ${user?.last_name}`,
+        author: user.id,
         date: currentDateTime.slice(0, 10),
         startTime: currentDateTime.slice(11, 23),
         endTime: '',
@@ -68,7 +69,8 @@ export const CreateEventForm = () => {
               name: values.name,
               start_datetime: `${values.date}T${values.startTime}`,
               summary: values.summary,
-              author_id: user?.id,
+              author_id: values.author === user.id ? values.author : undefined,
+              group_id: values.author !== user.id ? values.author : undefined,
               event_type_ids: values.eventTypes.map(({ value }) => value),
             },
             location: {

@@ -25,8 +25,13 @@ export const SIGN_IN_MUTATION = gql(/* GraphQL */ `
           name
           category
         }
+        groups {
+          id
+          name
+        }
       }
       token
     }
   }
 `);
+

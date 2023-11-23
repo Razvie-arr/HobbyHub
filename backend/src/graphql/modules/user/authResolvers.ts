@@ -9,6 +9,7 @@ import {
   ContextualResolverWithParent,
   type CustomContext,
   EventType,
+  Group,
   Location,
   type MutationRequestResetPasswordArgs,
   type MutationResetPasswordArgs,
@@ -64,6 +65,12 @@ export const authUserLocationResolver: ContextualResolverWithParent<Location | n
 ) =>
   parent.location_id ? ((await dataSources.sql.locations.getById(parent.location_id)) as unknown as Location) : null;
 
+export const authUserAdminGroupsResolver: ContextualResolverWithParent<Array<Group>, AuthUser> = async (
+  parent,
+  _,
+  { dataSources },
+) => await dataSources.sql.groups.getGroupsByAdminId(parent.id);
+
 export const signUpResolver = async (
   _: unknown,
   { email: rawEmail, password, first_name, last_name }: MutationSignUpArgs,
@@ -108,6 +115,7 @@ export const signUpResolver = async (
     password: passwordHash,
     verified: false,
     event_types: [],
+    groups: [],
     location_id: 0,
   };
 
@@ -208,3 +216,4 @@ export const resetPasswordResolver = async (
 
   return true;
 };
+

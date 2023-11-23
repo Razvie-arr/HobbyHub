@@ -15,6 +15,7 @@ import {
   Stack,
   Text,
 } from '@chakra-ui/react';
+import { ReadonlyArray } from 'effect';
 import { Controller } from 'react-hook-form';
 
 import {
@@ -24,6 +25,7 @@ import {
   InlineCheckboxField,
   InputField,
   MultiSelectField,
+  SelectField,
   TextareaField,
   zod,
   zodResolver,
@@ -33,6 +35,7 @@ import { DEFAULT_IMAGE_PATH, eventTypes } from '../../../shared/constants';
 import { Field } from '../../../shared/design-system';
 import { FormSection } from '../../../shared/forms/molecules/FormSection';
 import { eventTypeToSelectOption } from '../../../shared/forms/utils';
+import { WithAuthUser } from '../../../shared/types';
 import { getCurrentDateTime } from '../../../utils/form';
 import { UPLOAD_EVENT_IMAGE } from '../mutations';
 
@@ -46,7 +49,7 @@ const options = [
 
 const eventFormSchema = zod
   .object({
-    author: zod.string().min(1, 'Event name is required').max(100, 'Name cannot be more than 100 characters long'),
+    author: zod.coerce.number(),
     name: zod.string().min(1, 'Event name is required').max(100, 'Name cannot be more than 100 characters long'),
     summary: zod
       .string()
@@ -79,9 +82,9 @@ const eventFormSchema = zod
     },
   )
   .refine(
-    ({ startTime }) => {
+    ({ date, startTime }) => {
       const currentDateTime = getCurrentDateTime();
-      return startTime >= currentDateTime.slice(11);
+      return `${date}T${startTime}` >= currentDateTime.slice(11);
     },
     {
       message: 'Event cannot start in the past',
@@ -95,7 +98,7 @@ const eventFormSchema = zod
 
 type FormValues = zod.infer<typeof eventFormSchema>;
 
-interface EventFormProps {
+interface EventFormProps extends WithAuthUser {
   additionalButton?: ReactNode;
   defaultImagePath?: string | null;
   defaultValues: FormValues;
@@ -108,6 +111,7 @@ interface EventFormProps {
 }
 
 export const EventForm = ({
+  user,
   additionalButton,
   defaultImagePath,
   defaultValues,
@@ -147,7 +151,14 @@ export const EventForm = ({
         </Box>
         <Stack spacing={8} pb="8">
           <FormSection title="Basic information">
-            <InputField name="author" label="Author" isRequired isDisabled />
+            <SelectField name="author" label="Author" isDisabled={ReadonlyArray.isEmptyArray(user.groups)} isRequired>
+              <option value={user.id}>{`${user.first_name} ${user.last_name}`}</option>
+              {user.groups.map(({ id, name }) => (
+                <option key={id} value={id}>
+                  {name}
+                </option>
+              ))}
+            </SelectField>
             <InputField name="name" label="Event name" placeholder="Enter a short and clear name" isRequired />
             <MultiSelectField
               name="eventTypes"

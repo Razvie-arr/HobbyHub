@@ -44,6 +44,7 @@ type AuthUser { # Private info about user (e.g. with email address, ...)
   location: Location
 
   description: String
+  groups: [Group!]!
 }
 
 type AuthInfo {
@@ -62,3 +63,4 @@ input UserInput {
 
   event_type_ids: [Int!]!
 }
+
