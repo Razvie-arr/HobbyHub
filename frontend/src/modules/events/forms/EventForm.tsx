@@ -151,7 +151,12 @@ export const EventForm = ({
         </Box>
         <Stack spacing={8} pb="8">
           <FormSection title="Basic information">
-            <SelectField name="author" label="Author" isDisabled={ReadonlyArray.isEmptyArray(user.groups)} isRequired>
+            <SelectField
+              name="author"
+              label="Author"
+              isDisabled={!(user.groups && ReadonlyArray.isNonEmptyArray(user.groups))}
+              isRequired
+            >
               <option value={user.id}>{`${user.first_name} ${user.last_name}`}</option>
               {user.groups.map(({ id, name }) => (
                 <option key={id} value={id}>
