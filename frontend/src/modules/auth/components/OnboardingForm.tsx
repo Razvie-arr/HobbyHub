@@ -71,10 +71,6 @@ const ONBOARD_USER = gql(`
         name
         category
       }
-      groups {
-        id
-        name
-      }
     }
   }
 `);
@@ -138,8 +134,7 @@ export const OnboardingForm = () => {
                 description: 'Enjoy a personalized experience on HobbyHub!',
                 isClosable: true,
               });
-              // @ts-expect-error, not providing all group fields, needs to be solved with fragments
-              signIn({ token, user: updatedUser.data.onboardUser });
+              signIn({ token, user: { ...updatedUser.data.onboardUser, groups: [] } });
               navigate(route.home());
             }
           }}
