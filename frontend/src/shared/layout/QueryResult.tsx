@@ -13,6 +13,7 @@ interface QueryResultProps<Q, V extends OperationVariables> {
   ) => React.ReactNode;
   renderOnNoData?: ReactNode;
   noDataDescription?: ReactNode;
+  noDataTitle?: ReactNode;
 }
 
 export const QueryResult = <Q, V extends OperationVariables>({
@@ -21,6 +22,7 @@ export const QueryResult = <Q, V extends OperationVariables>({
   render,
   renderOnNoData,
   noDataDescription,
+  noDataTitle,
 }: QueryResultProps<Q, V>) => {
   if (queryResult.error) {
     return (
@@ -50,12 +52,12 @@ export const QueryResult = <Q, V extends OperationVariables>({
     const result = data[queryName];
 
     if (Array.isArray(result) && result.length === 0) {
-      return renderOnNoData ?? <NoData description={noDataDescription} />;
+      return renderOnNoData ?? <NoData description={noDataDescription} title={noDataTitle}/>;
     }
 
     return render(result as NonNullable<Q[Exclude<keyof Q, '__typename'>]>, rest);
   }
 
-  return renderOnNoData ?? <NoData description={noDataDescription} />;
+  return renderOnNoData ?? <NoData description={noDataDescription} title={noDataTitle} />;
 };
 

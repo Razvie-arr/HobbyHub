@@ -23,7 +23,7 @@ export const MessagesPageContainer = ({ user }: WithAuthUser) => {
     <QueryResult
       queryResult={threadQueryResult}
       queryName="threads"
-      noDataDescription="You have no messages"
+      noDataTitle="You have no messages"
       render={(threadFragments) => {
         const threads = threadFragments.map(getThreadFragmentData);
         //@ts-expect-error
