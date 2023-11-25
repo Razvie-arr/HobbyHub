@@ -17,17 +17,11 @@ export const EventDetails = ({ event }: WithEvent) => {
       additionalTabs={[
         {
           title: 'Similar events',
-          content: (
-            <SimilarEvents
-              city={event.location.city}
-              eventId={event.id}
-              eventTypeIds={event.event_types.map(({ id }) => id)}
-              user={user}
-            />
-          ),
+          content: <SimilarEvents event={event} user={user} />,
         },
       ]}
       deleteButton={<DeleteEventButton event={event} borderRadius="full" colorScheme="purple" variant="outline" />}
     />
   );
 };
+

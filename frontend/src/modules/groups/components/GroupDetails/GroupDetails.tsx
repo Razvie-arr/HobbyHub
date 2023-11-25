@@ -10,7 +10,6 @@ export const GroupDetails = ({ group }: WithGroup) => {
   const groupEvents = group.events.map(getEventFragmentData);
   if (groupEvents[0] && groupEvents[0].author.__typename === 'User') {
   }
-  console.log(group);
   return (
     <DataDetails
       user={user}
@@ -21,14 +20,7 @@ export const GroupDetails = ({ group }: WithGroup) => {
         { title: 'Events', content: <DataList user={user} type="event" dataArray={groupEvents} maxColumnCount={3} /> },
         {
           title: 'Similar groups',
-          content: (
-            <SimilarGroups
-              city={group.location.city}
-              groupId={group.id}
-              eventTypeIds={group.event_types.map(({ id }) => id)}
-              user={user}
-            />
-          ),
+          content: <SimilarGroups user={user} group={group} />,
         },
       ]}
     />

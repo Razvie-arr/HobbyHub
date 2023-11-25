@@ -1,27 +1,39 @@
-import { Fragment, ReactNode } from 'react';
-import { Alert, AlertDescription, AlertIcon, AlertTitle } from '@chakra-ui/react';
+import { Fragment, ReactNode, useState } from 'react';
+import { Alert, AlertDescription, AlertTitle, Image } from '@chakra-ui/react';
 
 import { Box } from 'src/shared/design-system';
 
+import { NO_RESULTS_IMAGE_PATH } from '../../../shared/constants';
 import { ContentContainer } from '../../layout';
 
 interface NoDataProps {
+  noResultsImagePath?: string | null;
   description?: ReactNode;
   wrapInContentContainer?: boolean;
+  title?: ReactNode;
 }
 
-export const NoData = ({ description, wrapInContentContainer }: NoDataProps) => {
+export const NoData = ({ description, wrapInContentContainer, noResultsImagePath, title="No data found" }: NoDataProps) => {
   const Wrapper = wrapInContentContainer ? ContentContainer : Fragment;
+  const [imageFilePath] = useState(noResultsImagePath ?? NO_RESULTS_IMAGE_PATH);
   return (
-    <Wrapper {...(wrapInContentContainer ? { mt: '8' } : {})}>
-      <Alert status="info" mb="8">
-        <AlertIcon />
+    <Wrapper {...(wrapInContentContainer ? { mt: '10' } : {})}>
+      <Alert
+        status="info"
+        variant="subtle"
+        flexDirection="column"
+        alignItems="center"
+        justifyContent="center"
+        textAlign="center"
+        height="300px"
+        colorScheme="gray"
+      >
+        <Image boxSize="200px" objectFit="contain" alt="No result" src={imageFilePath ?? NO_RESULTS_IMAGE_PATH} />
         <Box>
-          <AlertTitle>No data found</AlertTitle>
+          <AlertTitle>{title}</AlertTitle>
           {description ? <AlertDescription>{description}</AlertDescription> : null}
         </Box>
       </Alert>
     </Wrapper>
   );
 };
-
