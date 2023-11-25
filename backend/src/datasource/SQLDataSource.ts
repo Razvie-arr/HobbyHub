@@ -161,15 +161,17 @@ export class SQLDataSource extends BatchedSQLDataSource {
       .offset(offset)
       .limit(limit);
 
-  public executeSearchByEventNameAuthorName = (text: string, offset: number, limit: number) => {
+  public executeSearchByEventNameAuthorNameGroupName = (text: string, offset: number, limit: number) => {
     const textLowerCase = text.toLowerCase();
     return this.db.query
       .select('Event.*')
       .from('Event')
-      .join('User', 'Event.author_id', 'User.id')
+      .leftJoin('User', 'Event.author_id', 'User.id')
+      .leftJoin('UserGroup', 'Event.group_id', 'UserGroup.id')
       .whereRaw('LOWER(Event.name) like ?', `%${textLowerCase}%`)
       .or.whereRaw('LOWER(User.first_name) like ?', `%${textLowerCase}%`)
       .or.whereRaw('LOWER(User.last_name) like ?', `%${textLowerCase}%`)
+      .or.whereRaw('LOWER(UserGroup.name) like ?', `%${textLowerCase}%`)
       .orderBy('start_datetime', 'desc')
       .offset(offset)
       .limit(limit);
@@ -313,4 +315,3 @@ export class SQLDataSource extends BatchedSQLDataSource {
     },
   };
 }
-
