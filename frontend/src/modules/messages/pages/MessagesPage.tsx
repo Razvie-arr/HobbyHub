@@ -1,11 +1,9 @@
 import { useEffect, useState } from 'react';
 import { useLazyQuery, useMutation, useQuery } from '@apollo/client';
 import { Card, CardFooter, CardHeader, Heading, Stack, Text, VStack } from '@chakra-ui/react';
-import { ReadonlyArray } from 'effect';
 import { NonEmptyArray } from 'effect/dist/declarations/src/ReadonlyArray';
 
 import { User } from '../../../gql/graphql';
-import { NoData } from '../../../shared/design-system';
 import { ContentContainer, QueryResult } from '../../../shared/layout';
 import {
   getMessageFragmentData,
@@ -25,13 +23,11 @@ export const MessagesPageContainer = ({ user }: WithAuthUser) => {
     <QueryResult
       queryResult={threadQueryResult}
       queryName="threads"
+      noDataTitle="You have no messages"
       render={(threadFragments) => {
         const threads = threadFragments.map(getThreadFragmentData);
-        return ReadonlyArray.isNonEmptyArray(threads) ? (
-          <MessagesPage user={user} threads={threads} />
-        ) : (
-          <NoData description="You have no messages" wrapInContentContainer />
-        );
+        //@ts-expect-error
+          return <MessagesPage user={user} threads={threads} />;
       }}
     />
   );

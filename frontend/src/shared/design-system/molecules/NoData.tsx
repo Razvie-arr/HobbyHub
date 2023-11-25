@@ -10,9 +10,10 @@ interface NoDataProps {
   noResultsImagePath?: string | null;
   description?: ReactNode;
   wrapInContentContainer?: boolean;
+  title?: ReactNode;
 }
 
-export const NoData = ({ description, wrapInContentContainer, noResultsImagePath }: NoDataProps) => {
+export const NoData = ({ description, wrapInContentContainer, noResultsImagePath, title="No data found" }: NoDataProps) => {
   const Wrapper = wrapInContentContainer ? ContentContainer : Fragment;
   const [imageFilePath] = useState(noResultsImagePath ?? NO_RESULTS_IMAGE_PATH);
   return (
@@ -29,7 +30,7 @@ export const NoData = ({ description, wrapInContentContainer, noResultsImagePath
       >
         <Image boxSize="200px" objectFit="contain" alt="No result" src={imageFilePath ?? NO_RESULTS_IMAGE_PATH} />
         <Box>
-          <AlertTitle>No data found</AlertTitle>
+          <AlertTitle>{title}</AlertTitle>
           {description ? <AlertDescription>{description}</AlertDescription> : null}
         </Box>
       </Alert>
