@@ -167,7 +167,7 @@ export const similarEventsResolver = async (
   offset = offset ?? 0;
   limit = limit ?? DEFAULT_LIMIT;
 
-  const similarEventsWithinSameCity: Array<Event> = await dataSources.sql.getEventsWithSameTypeInCity(
+  const similarEventsWithinSameCity: Array<Event> = await dataSources.sql.events.getEventsWithSameTypeInCity(
     eventId,
     eventTypeIds,
     city,
@@ -178,7 +178,7 @@ export const similarEventsResolver = async (
   const similarEventsCount = similarEventsWithinSameCity.length;
 
   if (similarEventsCount < MINIMUM_COUNT_SIMILAR_EVENTS) {
-    const similarEventsOutsideCity = await dataSources.sql.getEventsWithSameTypeExceptCity(
+    const similarEventsOutsideCity = await dataSources.sql.events.getEventsWithSameTypeExceptCity(
       eventId,
       eventTypeIds,
       city,
@@ -344,7 +344,7 @@ export const filterEventResolver = async (
 ): Promise<Array<Event>> => {
   offset = offset ?? 0;
   limit = limit ?? DEFAULT_LIMIT;
-  const events = await dataSources.sql.getFilteredEvents(
+  const events = await dataSources.sql.events.getFilteredEvents(
     offset,
     limit,
     eventTypeIds,
