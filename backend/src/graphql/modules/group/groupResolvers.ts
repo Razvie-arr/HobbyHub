@@ -89,7 +89,7 @@ export const filterGroupsResolver = async (
 ): Promise<Array<Group>> => {
   offset = offset ?? 0;
   limit = limit ?? DEFAULT_LIMIT;
-  const groups = await dataSources.sql.getFilteredGroups(
+  const groups = await dataSources.sql.groups.getFilteredGroups(
     offset,
     limit,
     eventTypeIds,
@@ -159,7 +159,7 @@ export const similarGroupsResolver = async (
   offset = offset ?? 0;
   limit = limit ?? DEFAULT_LIMIT;
 
-  const similarGroupsWithinSameCity: Array<Group> = await dataSources.sql.getGroupsWithSameTypeInCity(
+  const similarGroupsWithinSameCity: Array<Group> = await dataSources.sql.groups.getGroupsWithSameTypeInCity(
     groupId,
     eventTypeIds,
     city,
@@ -170,7 +170,7 @@ export const similarGroupsResolver = async (
   const similarGroupsCount = similarGroupsWithinSameCity.length;
 
   if (similarGroupsCount < MINIMUM_COUNT_SIMILAR_GROUPS) {
-    const similarGroupsOutsideCity: Array<Group> = await dataSources.sql.getGroupsWithSameTypeExceptCity(
+    const similarGroupsOutsideCity: Array<Group> = await dataSources.sql.groups.getGroupsWithSameTypeExceptCity(
       groupId,
       eventTypeIds,
       city,
