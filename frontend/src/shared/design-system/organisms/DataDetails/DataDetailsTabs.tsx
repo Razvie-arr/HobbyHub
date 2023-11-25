@@ -1,6 +1,8 @@
 import { Box, Flex, Tab, TabList, TabPanel, TabPanels, Tabs, Text } from '@chakra-ui/react';
 import { ReadonlyArray } from 'effect';
 
+import { NoData } from '../../molecules';
+
 import { MemberItem } from './MemberItem';
 import { EventDataDetails, GroupDataDetails, WithAdditionalTabs } from './types';
 
@@ -40,9 +42,13 @@ export const DataDetailsTabs = ({
       {user && other.type === 'event' ? (
         <TabPanel px="0">
           <Flex justifyContent="space-between" flexWrap="wrap">
-            {ReadonlyArray.map(other.data.participants, (member) => (
-              <MemberItem key={member.id} user={user} member={member} />
-            ))}
+            {ReadonlyArray.isNonEmptyArray(other.data.participants) ? (
+              ReadonlyArray.map(other.data.participants, (member) => (
+                <MemberItem key={member.id} user={user} member={member} />
+              ))
+            ) : (
+              <NoData description={`There are no participants for ${other.data.name} yet`} />
+            )}
           </Flex>
         </TabPanel>
       ) : null}

@@ -571,7 +571,6 @@ export type OnboardUserMutation = {
       longitude: number;
     } | null;
     event_types: Array<{ __typename?: 'EventType'; id: number; name: string; category: string }>;
-    groups: Array<{ __typename?: 'Group'; id: number; name: string }>;
   };
 };
 
@@ -1492,17 +1491,6 @@ export const OnboardUserDocument = {
                       { kind: 'Field', name: { kind: 'Name', value: 'id' } },
                       { kind: 'Field', name: { kind: 'Name', value: 'name' } },
                       { kind: 'Field', name: { kind: 'Name', value: 'category' } },
-                    ],
-                  },
-                },
-                {
-                  kind: 'Field',
-                  name: { kind: 'Name', value: 'groups' },
-                  selectionSet: {
-                    kind: 'SelectionSet',
-                    selections: [
-                      { kind: 'Field', name: { kind: 'Name', value: 'id' } },
-                      { kind: 'Field', name: { kind: 'Name', value: 'name' } },
                     ],
                   },
                 },
