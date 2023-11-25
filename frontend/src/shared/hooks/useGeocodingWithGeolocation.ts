@@ -1,19 +1,20 @@
 import { useEffect, useState } from 'react';
 
-import { useFilterSearchParams } from '../filters/hooks';
+import { latLngSchema } from '../schemas';
 
 import { useGeolocation } from './useGeolocation';
+import { useUrlState } from './useUrlState';
 
 export const useGeocodingWithGeolocation = () => {
-  const { params } = useFilterSearchParams();
+  const [params] = useUrlState(latLngSchema);
   const { geolocation } = useGeolocation();
 
   const [isLoading, setIsLoading] = useState(true);
   const [location, setLocation] = useState<google.maps.places.PlaceResult | null>(null);
 
   useEffect(() => {
-    const lat = params.lat ?? geolocation?.coords.latitude;
-    const lng = params.lng ?? geolocation?.coords.longitude;
+    const lat = params?.lat ?? geolocation?.coords.latitude;
+    const lng = params?.lng ?? geolocation?.coords.longitude;
     const getPlace = async () => {
       if (lat && lng) {
         const result = await fetch(
@@ -37,3 +38,4 @@ export const useGeocodingWithGeolocation = () => {
 
   return { isLoading, location };
 };
+

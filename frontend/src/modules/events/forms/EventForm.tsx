@@ -20,7 +20,6 @@ import { Controller } from 'react-hook-form';
 
 import {
   AddressFormFields,
-  addressFormFieldsSchema,
   Form,
   InlineCheckboxField,
   InputField,
@@ -36,8 +35,8 @@ import { Field } from '../../../shared/design-system';
 import { FormSection } from '../../../shared/forms/molecules/FormSection';
 import { eventTypeToSelectOption } from '../../../shared/forms/utils';
 import { WithAuthUser } from '../../../shared/types';
-import { getCurrentDateTime } from '../../../utils/form';
 import { UPLOAD_EVENT_IMAGE } from '../mutations';
+import { eventFormSchema } from '../schemas';
 
 const { sports, games, other } = eventTypes;
 
@@ -46,55 +45,6 @@ const options = [
   { label: 'Games', options: games.map(eventTypeToSelectOption) },
   { label: 'Other', options: other.map(eventTypeToSelectOption) },
 ];
-
-const eventFormSchema = zod
-  .object({
-    author: zod.coerce.number(),
-    name: zod.string().min(1, 'Event name is required').max(100, 'Name cannot be more than 100 characters long'),
-    summary: zod
-      .string()
-      .min(1, 'Event summary is required')
-      .max(300, 'Summary cannot be more than 300 characters long'),
-    eventTypes: zod
-      .array(zod.object({ value: zod.number(), label: zod.string() }))
-      .nonempty('You must specify at least one event type'),
-    capacity: zod.coerce
-      .number()
-      .int('Fractional people will not be able to come to your event, please input integer numbers')
-      .min(1, 'Capacity must be at least 1')
-      .max(100, 'Capacity must be more than 100'),
-    allowWaitlist: zod.boolean(),
-    date: zod.string().min(1, 'Date is required'),
-    startTime: zod.string().min(1, 'Start time is required'),
-    endTime: zod.string().min(1, 'End time is required'),
-    ...addressFormFieldsSchema,
-    eventImagePath: zod.string().nullish(),
-    description: zod.string().nullish(),
-  })
-  .refine(
-    ({ date }) => {
-      const currentDateTime = getCurrentDateTime();
-      return date >= currentDateTime.slice(0, 10);
-    },
-    {
-      message: 'Event cannot start in the past',
-      path: ['date'],
-    },
-  )
-  .refine(
-    ({ date, startTime }) => {
-      const currentDateTime = getCurrentDateTime();
-      return `${date}T${startTime}` >= currentDateTime.slice(11);
-    },
-    {
-      message: 'Event cannot start in the past',
-      path: ['startTime'],
-    },
-  )
-  .refine(({ startTime, endTime }) => endTime > startTime, {
-    message: 'Event cannot end earlier than start time',
-    path: ['endTime'],
-  });
 
 type FormValues = zod.infer<typeof eventFormSchema>;
 

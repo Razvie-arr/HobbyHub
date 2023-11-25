@@ -1,4 +1,4 @@
-import { flow, Option } from 'effect';
+import { flow, Number, Option } from 'effect';
 
 const callIfFunction = (f: number | (() => number)) => (typeof f === 'number' ? f : f());
 
@@ -40,4 +40,19 @@ export const getAddressName = flow(
   }),
   Option.getOrElse(() => ''),
 );
+
+export const getLngLatFromPlaceResult = (address: google.maps.places.PlaceResult) => {
+  // eslint-disable-next-line @typescript-eslint/unbound-method
+  const placeLng = address.geometry?.location?.lng;
+  // eslint-disable-next-line @typescript-eslint/unbound-method
+  const placeLat = address.geometry?.location?.lat;
+
+  const finalPlaceLng = Number.isNumber(placeLng) ? placeLng : placeLng ? placeLng() : undefined;
+  const finalPlaceLat = Number.isNumber(placeLat) ? placeLat : placeLat ? placeLat() : undefined;
+
+  return {
+    lat: finalPlaceLat,
+    lng: finalPlaceLng,
+  };
+};
 

@@ -1,0 +1,2 @@
+export { latLngSchema } from './latLngSchema';
+

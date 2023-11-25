@@ -7,21 +7,21 @@ import { DataList, NoData } from '../../../shared/design-system';
 import {
   AddressFilterField,
   BaseFilters,
-  createEventFilterValuesFromParams,
   DateRangeField,
   DistanceSelectField,
-  EventFilterPreset,
   EventFiltersValues,
   SortSelectField,
-  useFilterSearchParams,
 } from '../../../shared/filters';
+import { useUrlState } from '../../../shared/hooks/useUrlState';
 import { ContentContainer, QueryResult } from '../../../shared/layout';
 import { getEventFragmentData } from '../../../shared/types';
 import { createShowMoreHandler } from '../../../utils/dataFetch';
 import { getFilterLocationInput } from '../../../utils/form';
+import { getLngLatFromPlaceResult } from '../../../utils/googleMaps';
 import { useAuth } from '../../auth';
 import { EventsFilterPresetTabs } from '../components';
 import { FILTERED_EVENTS } from '../queries';
+import { eventFilterUrlSchema } from '../schemas';
 
 interface EventsPageProps {
   location: google.maps.places.PlaceResult | null;
@@ -33,9 +33,25 @@ export const EventsPage = ({ location }: EventsPageProps) => {
   const { user } = useAuth();
   const [getFilteredEvents, queryResult] = useLazyQuery(FILTERED_EVENTS);
   const [noMoreResults, setNoMoreResults] = useState(false);
-  const { params, setParams } = useFilterSearchParams<EventFilterPreset, SortType>('today', SortType.DateStart);
+  const [params, setParams] = useUrlState(eventFilterUrlSchema);
 
-  const initialFilterValues = { ...createEventFilterValuesFromParams(params), address: location };
+  const initialStartDate = new Date();
+  initialStartDate.setHours(0, 0, 0, 0);
+
+  const initialEndDate = new Date();
+  initialEndDate.setDate(initialEndDate.getDate() + 1);
+  initialEndDate.setHours(0, 0, 0, 0);
+
+  const initialFilterValues = {
+    address: location,
+    sports: params?.sports ?? [],
+    games: params?.games ?? [],
+    other: params?.other ?? [],
+    dates: [params?.startDate ?? initialStartDate, params?.endDate ?? initialEndDate] as const,
+    distance: (params?.distance ?? 20).toString(),
+    sortBy: SortType.DateStart,
+    filterPreset: params?.filterPreset ?? 'today',
+  };
 
   const fetchFilteredEvents = async (values: EventFiltersValues, ownLimit: number) => {
     const [startDate, endDate] = values.dates;
@@ -61,15 +77,16 @@ export const EventsPage = ({ location }: EventsPageProps) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const handleFilterSubmit = async ({ address, ...values }: EventFiltersValues) => {
+  const handleFilterSubmit = async ({ address, dates, distance, ...values }: EventFiltersValues) => {
     setNoMoreResults(false);
-    if (address && 'name' in address) {
-      setParams({ address: null, ...values });
-      await fetchFilteredEvents({ address: null, ...values }, DEFAULT_LIMIT);
-    } else {
-      setParams({ address, ...values });
-      await fetchFilteredEvents({ address, ...values }, DEFAULT_LIMIT);
-    }
+    setParams({
+      ...(address ? getLngLatFromPlaceResult(address) : {}),
+      startDate: dates[0],
+      endDate: dates[1],
+      distance: parseInt(distance),
+      ...values,
+    });
+    await fetchFilteredEvents({ address, dates, distance, ...values }, DEFAULT_LIMIT);
   };
 
   return (
@@ -109,7 +126,7 @@ export const EventsPage = ({ location }: EventsPageProps) => {
         user ? (
           <EventsFilterPresetTabs
             user={user}
-            currentFilterPreset={params.filterPreset}
+            currentFilterPreset={params?.filterPreset ?? initialFilterValues.filterPreset}
             handleFilterSubmit={handleFilterSubmit}
           />
         ) : null

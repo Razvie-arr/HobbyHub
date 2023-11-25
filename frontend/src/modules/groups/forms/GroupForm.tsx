@@ -19,7 +19,6 @@ import { Controller } from 'react-hook-form';
 
 import {
   AddressFormFields,
-  addressFormFieldsSchema,
   Form,
   InputField,
   MultiSelectField,
@@ -33,6 +32,7 @@ import { Field } from '../../../shared/design-system';
 import { FormSection } from '../../../shared/forms/molecules/FormSection';
 import { eventTypeToSelectOption } from '../../../shared/forms/utils';
 import { UPLOAD_GROUP_IMAGE } from '../../groups/mutations';
+import { groupFormSchema } from '../schemas';
 
 const { sports, games, other } = eventTypes;
 
@@ -41,17 +41,6 @@ const options = [
   { label: 'Games', options: games.map(eventTypeToSelectOption) },
   { label: 'Other', options: other.map(eventTypeToSelectOption) },
 ];
-
-const groupFormSchema = zod.object({
-  name: zod.string().min(1, 'Group name is required').max(100, 'Name cannot be more than 100 characters long'),
-  summary: zod.string().min(1, 'Group summary is required').max(300, 'Summary cannot be more than 300 characters long'),
-  eventTypes: zod
-    .array(zod.object({ value: zod.number(), label: zod.string() }))
-    .nonempty('You must specify at least one group type'),
-  ...addressFormFieldsSchema,
-  groupImagePath: zod.string().nullish(),
-  description: zod.string().nullish(),
-});
 
 type FormValues = zod.infer<typeof groupFormSchema>;
 

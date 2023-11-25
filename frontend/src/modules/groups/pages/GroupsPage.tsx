@@ -7,20 +7,20 @@ import { DataList, NoData } from '../../../shared/design-system';
 import {
   AddressFilterField,
   BaseFilters,
-  createGroupFilterValuesFromParams,
   DistanceSelectField,
-  GroupFilterPreset,
   GroupFiltersValues,
   SortSelectField,
-  useFilterSearchParams,
 } from '../../../shared/filters';
+import { useUrlState } from '../../../shared/hooks/useUrlState';
 import { ContentContainer, QueryResult } from '../../../shared/layout';
 import { getGroupFragmentData } from '../../../shared/types';
 import { createShowMoreHandler } from '../../../utils/dataFetch';
 import { getFilterLocationInput } from '../../../utils/form';
+import { getLngLatFromPlaceResult } from '../../../utils/googleMaps';
 import { useAuth } from '../../auth';
 import { GroupsFilterPresetTabs } from '../components';
 import { FILTERED_GROUPS } from '../queries';
+import { groupFilterUrlSchema } from '../schemas';
 
 interface EventsPageProps {
   location: google.maps.places.PlaceResult | null;
@@ -32,12 +32,17 @@ export const GroupsPage = ({ location }: EventsPageProps) => {
   const { user } = useAuth();
   const [getFilteredGroups, queryResult] = useLazyQuery(FILTERED_GROUPS);
   const [noMoreResults, setNoMoreResults] = useState(false);
-  const { params, setParams } = useFilterSearchParams<GroupFilterPreset, GroupSortType>(
-    'nearby',
-    GroupSortType.Distance,
-  );
+  const [params, setParams] = useUrlState(groupFilterUrlSchema);
 
-  const initialFilterValues = { ...createGroupFilterValuesFromParams(params), address: location };
+  const initialFilterValues = {
+    address: location,
+    sports: params?.sports ?? [],
+    games: params?.games ?? [],
+    other: params?.other ?? [],
+    distance: (params?.distance ?? 20).toString(),
+    sortBy: GroupSortType.Name,
+    filterPreset: params?.filterPreset ?? 'nearby',
+  };
 
   const fetchFilteredGroups = async (values: GroupFiltersValues, ownLimit: number) => {
     const eventTypeIds = [...values.sports, ...values.games, ...values.other];
@@ -61,15 +66,14 @@ export const GroupsPage = ({ location }: EventsPageProps) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [location]);
 
-  const handleFilterSubmit = async ({ address, ...values }: GroupFiltersValues) => {
+  const handleFilterSubmit = async ({ address, distance, ...values }: GroupFiltersValues) => {
     setNoMoreResults(false);
-    if (address && 'name' in address) {
-      setParams({ address: null, ...values });
-      await fetchFilteredGroups({ address: null, ...values }, DEFAULT_LIMIT);
-    } else {
-      setParams({ address, ...values });
-      await fetchFilteredGroups({ address, ...values }, DEFAULT_LIMIT);
-    }
+    setParams({
+      ...(address ? getLngLatFromPlaceResult(address) : {}),
+      distance: parseInt(distance),
+      ...values,
+    });
+    await fetchFilteredGroups({ address, distance, ...values }, DEFAULT_LIMIT);
   };
 
   return (
@@ -105,7 +109,7 @@ export const GroupsPage = ({ location }: EventsPageProps) => {
         user ? (
           <GroupsFilterPresetTabs
             user={user}
-            currentFilterPreset={params.filterPreset}
+            currentFilterPreset={params?.filterPreset ?? initialFilterValues.filterPreset}
             handleFilterSubmit={handleFilterSubmit}
           />
         ) : null

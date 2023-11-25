@@ -1,10 +1,11 @@
 import { Flex, Spinner } from '@chakra-ui/react';
 
-import { useFilterSearchParams } from '../../../shared/filters/hooks';
 import { useGeocoding } from '../../../shared/hooks/useGeocoding';
 import { useGeocodingWithGeolocation } from '../../../shared/hooks/useGeocodingWithGeolocation';
+import { useUrlState } from '../../../shared/hooks/useUrlState';
 import { WithOnboardedUser } from '../../../shared/types';
 import { useAuth } from '../../auth';
+import { groupFilterUrlSchema } from '../schemas';
 
 import { GroupsPage } from './GroupsPage';
 
@@ -24,11 +25,11 @@ export const GroupsPageContainer = () => {
 };
 
 export const PersonalizedGroupsPageContainer = ({ user }: WithOnboardedUser) => {
-  const { params } = useFilterSearchParams();
+  const [params] = useUrlState(groupFilterUrlSchema);
 
   const { isLoading, location } = useGeocoding({
-    lng: params.lng ?? user.location.longitude,
-    lat: params.lat ?? user.location.latitude,
+    lng: params?.lng ?? user.location.longitude,
+    lat: params?.lat ?? user.location.latitude,
   });
 
   return isLoading ? <PageSpinner /> : <GroupsPage location={location} />;
@@ -38,3 +39,4 @@ export const PublicGroupsPageContainer = () => {
   const { isLoading, location } = useGeocodingWithGeolocation();
   return isLoading ? <PageSpinner /> : <GroupsPage location={location} />;
 };
+
