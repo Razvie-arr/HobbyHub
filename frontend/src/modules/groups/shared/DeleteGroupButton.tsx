@@ -15,7 +15,7 @@ import {
 import { useNavigate } from 'react-router-dom';
 
 import { route } from '../../../route';
-import { WithGroup } from '../../../shared/types';
+import { getLocationFragmentData, WithGroup } from '../../../shared/types';
 import { DELETE_GROUP } from '../mutations';
 
 export const DeleteGroupButton = ({ group, ...buttonProps }: WithGroup & ButtonProps) => {
@@ -31,7 +31,7 @@ export const DeleteGroupButton = ({ group, ...buttonProps }: WithGroup & ButtonP
     await deleteGroupRequest({
       variables: {
         groupId: group.id,
-        locationId: group.location.id,
+        locationId: getLocationFragmentData(group.location).id,
       },
     });
     toast({

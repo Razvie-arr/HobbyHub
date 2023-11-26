@@ -2,8 +2,6 @@ import { DocumentType } from '../../../gql';
 
 import { GroupFragment } from './fragments';
 
-export type GroupFragmentResultType = DocumentType<typeof GroupFragment>;
-
 export type GroupData = DocumentType<typeof GroupFragment>;
 
 export interface WithGroup {
@@ -17,3 +15,4 @@ export interface WithGroups {
 export interface WithNonEmptyGroups {
   groups: [GroupData, ...GroupData[]];
 }
+

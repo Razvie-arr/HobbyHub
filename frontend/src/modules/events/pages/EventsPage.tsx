@@ -3,7 +3,7 @@ import { useLazyQuery } from '@apollo/client';
 import { ReadonlyArray } from 'effect';
 
 import { SortType } from '../../../gql/graphql';
-import { DataList, NoData } from '../../../shared/design-system';
+import { NoData } from '../../../shared/design-system';
 import {
   AddressFilterField,
   BaseFilters,
@@ -14,7 +14,7 @@ import {
 } from '../../../shared/filters';
 import { useUrlState } from '../../../shared/hooks/useUrlState';
 import { ContentContainer, QueryResult } from '../../../shared/layout';
-import { getEventFragmentData } from '../../../shared/types';
+import { renderEventList } from '../../../shared/renderers';
 import { createShowMoreHandler } from '../../../utils/dataFetch';
 import { getFilterLocationInput } from '../../../utils/form';
 import { getLngLatFromPlaceResult } from '../../../utils/googleMaps';
@@ -103,7 +103,7 @@ export const EventsPage = ({ location }: EventsPageProps) => {
           other: [],
         });
       }}
-      slotFilterFields={
+      filterFields={
         <>
           <DateRangeField />
           <DistanceSelectField />
@@ -114,7 +114,7 @@ export const EventsPage = ({ location }: EventsPageProps) => {
           </SortSelectField>
         </>
       }
-      slotAddressFilterField={
+      addressFilterField={
         <AddressFilterField
           preAddressText="Events in"
           address={location}
@@ -122,7 +122,7 @@ export const EventsPage = ({ location }: EventsPageProps) => {
           spacing={0}
         />
       }
-      slotFilterPresets={
+      filterPresets={
         user ? (
           <EventsFilterPresetTabs
             user={user}
@@ -136,25 +136,19 @@ export const EventsPage = ({ location }: EventsPageProps) => {
         <QueryResult
           queryName="filterEvents"
           queryResult={queryResult}
-          render={(eventFragments) => {
-            const events = eventFragments.map(getEventFragmentData);
-            return (
-              <DataList
-                type="event"
-                dataArray={events}
-                user={user}
-                noMoreResults={noMoreResults}
-                handleShowMore={createShowMoreHandler({
-                  queryResult,
-                  queryName: 'filterEvents',
-                  offset: events.length,
-                  onNoMoreResults: () => {
-                    setNoMoreResults(true);
-                  },
-                })}
-              />
-            );
-          }}
+          render={renderEventList((events) => ({
+            user,
+            noMoreResults,
+            handleShowMore: createShowMoreHandler({
+              queryResult,
+              queryName: 'filterEvents',
+              offset: events.length,
+              onNoMoreResults: () => {
+                setNoMoreResults(true);
+              },
+            }),
+            withMap: true,
+          }))}
           renderOnNoData={<NoData description="Try changing your filter options to find more events." />}
         />
       </ContentContainer>

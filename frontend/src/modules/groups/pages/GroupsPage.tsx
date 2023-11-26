@@ -3,7 +3,7 @@ import { useLazyQuery } from '@apollo/client';
 import { ReadonlyArray } from 'effect';
 
 import { GroupSortType } from '../../../gql/graphql';
-import { DataList, NoData } from '../../../shared/design-system';
+import { NoData } from '../../../shared/design-system';
 import {
   AddressFilterField,
   BaseFilters,
@@ -13,7 +13,7 @@ import {
 } from '../../../shared/filters';
 import { useUrlState } from '../../../shared/hooks/useUrlState';
 import { ContentContainer, QueryResult } from '../../../shared/layout';
-import { getGroupFragmentData } from '../../../shared/types';
+import { renderGroupList } from '../../../shared/renderers/renderGroupList';
 import { createShowMoreHandler } from '../../../utils/dataFetch';
 import { getFilterLocationInput } from '../../../utils/form';
 import { getLngLatFromPlaceResult } from '../../../utils/googleMaps';
@@ -89,7 +89,7 @@ export const GroupsPage = ({ location }: EventsPageProps) => {
           other: [],
         });
       }}
-      slotFilterFields={
+      filterFields={
         <>
           <DistanceSelectField />
           <SortSelectField>
@@ -98,14 +98,14 @@ export const GroupsPage = ({ location }: EventsPageProps) => {
           </SortSelectField>
         </>
       }
-      slotAddressFilterField={
+      addressFilterField={
         <AddressFilterField<GroupFiltersValues>
           preAddressText="Groups in"
           address={location}
           handleFilterSubmit={handleFilterSubmit}
         />
       }
-      slotFilterPresets={
+      filterPresets={
         user ? (
           <GroupsFilterPresetTabs
             user={user}
@@ -119,25 +119,19 @@ export const GroupsPage = ({ location }: EventsPageProps) => {
         <QueryResult
           queryResult={queryResult}
           queryName="filterGroups"
-          render={(groupFragments) => {
-            const groups = groupFragments.map(getGroupFragmentData);
-            return (
-              <DataList
-                type="group"
-                dataArray={groups}
-                user={user}
-                noMoreResults={noMoreResults}
-                handleShowMore={createShowMoreHandler({
-                  queryResult,
-                  queryName: 'filterGroups',
-                  offset: groups.length,
-                  onNoMoreResults: () => {
-                    setNoMoreResults(true);
-                  },
-                })}
-              />
-            );
-          }}
+          render={renderGroupList((groups) => ({
+            user,
+            noMoreResults,
+            handleShowMore: createShowMoreHandler({
+              queryResult,
+              queryName: 'filterGroups',
+              offset: groups.length,
+              onNoMoreResults: () => {
+                setNoMoreResults(true);
+              },
+            }),
+            withMap: true,
+          }))}
           renderOnNoData={<NoData description="Try changing your filter options to find more events." />}
         />
       </ContentContainer>

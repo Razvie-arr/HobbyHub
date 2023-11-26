@@ -17,3 +17,4 @@ export const AddressInfo = ({ noIcon, fontSize = 'sm', location }: AddressInfoPr
     </Text>
   </Stack>
 );
+

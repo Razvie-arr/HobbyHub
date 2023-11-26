@@ -4,6 +4,7 @@ import { match } from 'ts-pattern';
 
 import { AddressInfo, EventDateTime, EventParticipants, EventTypeTag } from 'src/shared/design-system';
 
+import { getLocationFragmentData } from '../../../types';
 import { DataMap } from '../DataMap';
 
 import { DataRowItem } from './DataRowItem';
@@ -75,21 +76,10 @@ export const DataDetailsCard = (props: DataDetailsProps) => (
         </>
       ) : null}
       <DataRowItem icon={MdLocationOn}>
-        <AddressInfo noIcon fontSize="md" location={props.data.location} />
+        <AddressInfo noIcon fontSize="md" location={getLocationFragmentData(props.data.location)} />
       </DataRowItem>
-      <DataMap
-        mapDataArray={match(props)
-          .with({ type: 'event' }, ({ data, ...other }) => ({
-            ...other,
-            dataArray: [data] as const,
-          }))
-          .with({ type: 'group' }, ({ data, ...other }) => ({
-            ...other,
-            dataArray: [data] as const,
-          }))
-          .exhaustive()}
-        height="22.7vh"
-      />
+      <DataMap type="single" data={props.data} height="22.7vh" />
     </VStack>
   </Card>
 );
+

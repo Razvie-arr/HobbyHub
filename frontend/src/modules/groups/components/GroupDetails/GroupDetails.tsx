@@ -1,5 +1,8 @@
+import { pipe } from 'effect';
+
 import { route } from '../../../../route';
-import { DataDetails, DataList } from '../../../../shared/design-system';
+import { DataDetails } from '../../../../shared/design-system';
+import { renderEventList } from '../../../../shared/renderers';
 import { getEventFragmentData, WithGroup } from '../../../../shared/types';
 import { useAuth } from '../../../auth';
 
@@ -17,10 +20,10 @@ export const GroupDetails = ({ group }: WithGroup) => {
       data={group}
       editRoute={route.editGroup(group.id)}
       additionalTabs={[
-        { title: 'Events', content: <DataList user={user} type="event" dataArray={groupEvents} maxColumnCount={3} /> },
+        { title: 'Events', content: pipe(group.events, renderEventList({ user, maxColumnCount: 3 })) },
         {
           title: 'Similar groups',
-          content: <SimilarGroups user={user} group={group} />,
+          content: <SimilarGroups group={group} />,
         },
       ]}
     />

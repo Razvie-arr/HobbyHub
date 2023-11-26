@@ -10,7 +10,7 @@ const setQuery = (data: T) => {
 };
 
 export const useUrlState = <T>(schema: ZodSchema<T>): [T | undefined, (nextState: T) => void] => {
-  const [initialState] = useState(() => {
+  const [urlState, setUrlState] = useState(() => {
     const result = schema.safeParse(
       queryString.parse(window.location.search, { arrayFormat: 'index', parseNumbers: true }),
     );
@@ -19,8 +19,13 @@ export const useUrlState = <T>(schema: ZodSchema<T>): [T | undefined, (nextState
 
   const handleSetState = useCallback((nextState: T) => {
     setQuery(nextState);
+    const url = new URL(window.location.href);
+    // @ts-expect-error
+    url.search = queryString.stringify(nextState, { arrayFormat: 'index' });
+    window.history.replaceState(window.history.state, '', url);
+    setUrlState(nextState);
   }, []);
 
-  return [initialState, handleSetState];
+  return [urlState, handleSetState];
 };
 

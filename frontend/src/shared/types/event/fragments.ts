@@ -31,13 +31,7 @@ export const EventFragment = gql(/* GraphQL */ `
       }
     }
     location {
-      id
-      country
-      city
-      street_name
-      street_number
-      longitude
-      latitude
+      ...LocationFragment
     }
     summary
     description

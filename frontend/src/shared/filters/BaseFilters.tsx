@@ -21,9 +21,9 @@ interface BaseFiltersProps<V extends FieldValues> {
   defaultValues: UseFormProps<V>['defaultValues'];
   handleSubmit: (values: V) => Promise<void>;
   createResetHandler: (reset: UseFormReset<V>) => () => void;
-  slotFilterFields: ReactNode;
-  slotAddressFilterField: ReactNode;
-  slotFilterPresets: ReactNode;
+  filterFields: ReactNode;
+  addressFilterField: ReactNode;
+  filterPresets: ReactNode;
 }
 
 export const BaseFilters = <V extends FieldValues>({
@@ -31,9 +31,9 @@ export const BaseFilters = <V extends FieldValues>({
   defaultValues,
   handleSubmit,
   createResetHandler,
-  slotFilterFields,
-  slotAddressFilterField,
-  slotFilterPresets,
+  filterFields: slotFilterFields,
+  addressFilterField: slotAddressFilterField,
+  filterPresets: slotFilterPresets,
 }: PropsWithChildren<BaseFiltersProps<V>>) => {
   const methods = useForm({
     defaultValues,

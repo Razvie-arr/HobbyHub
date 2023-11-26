@@ -2,8 +2,6 @@ import { DocumentType } from '../../../gql';
 
 import { EventFragment } from './fragments';
 
-export type EventFragmentResultType = DocumentType<typeof EventFragment>;
-
 export type EventData = DocumentType<typeof EventFragment>;
 
 export interface WithEvent {
@@ -42,3 +40,4 @@ export type EventTypeName =
   | 'Ferata'
   | 'Walking the dog'
   | 'Strollering';
+

@@ -15,7 +15,7 @@ import {
 import { useNavigate } from 'react-router-dom';
 
 import { route } from '../../../../route';
-import { WithEvent } from '../../../../shared/types';
+import { getLocationFragmentData, WithEvent } from '../../../../shared/types';
 import { DELETE_EVENT } from '../../mutations';
 
 export const DeleteEventButton = ({ event, ...buttonProps }: WithEvent & ButtonProps) => {
@@ -31,7 +31,7 @@ export const DeleteEventButton = ({ event, ...buttonProps }: WithEvent & ButtonP
     await deleteEventRequest({
       variables: {
         eventId: event.id,
-        locationId: event.location.id,
+        locationId: getLocationFragmentData(event.location).id,
       },
     });
     toast({

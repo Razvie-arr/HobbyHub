@@ -7,7 +7,7 @@ import { match } from 'ts-pattern';
 import { route } from '../../../route';
 import { NotAuthorized } from '../../../shared/design-system';
 import { QueryResult } from '../../../shared/layout';
-import { getEventFragmentData } from '../../../shared/types';
+import { getEventFragmentData, getLocationFragmentData } from '../../../shared/types';
 import { useAuth } from '../../auth';
 import { DeleteEventButton } from '../components';
 import { EDIT_EVENT } from '../mutations';
@@ -45,6 +45,7 @@ const EditEventForm = ({ eventId }: EditEventFormProps) => {
       queryName="eventById"
       render={(eventFragment) => {
         const event = getEventFragmentData(eventFragment);
+        const location = getLocationFragmentData(event.location);
 
         const authorId = match(event.author)
           .with({ __typename: 'User' }, ({ id }) => id)
@@ -68,14 +69,14 @@ const EditEventForm = ({ eventId }: EditEventFormProps) => {
               author: event.author.id,
               allowWaitlist: event.allow_waitlist,
               capacity: event.capacity,
-              city: event.location.city,
-              country: event.location.country,
+              city: location.city,
+              country: location.country,
               date: event.start_datetime.slice(0, 10),
               endTime: event.end_datetime.slice(11, 23),
               name: event.name,
               startTime: event.start_datetime.slice(11, 23),
-              streetName: event.location.street_name,
-              streetNumber: event.location.street_number,
+              streetName: location.street_name,
+              streetNumber: location.street_number,
               summary: event.summary,
               // @ts-expect-error NonEmptyArray check
               eventTypes: event.event_types.map(({ id, name }) => ({ value: id, label: name })),
@@ -105,7 +106,7 @@ const EditEventForm = ({ eventId }: EditEventFormProps) => {
                     description: values.description,
                   },
                   location: {
-                    id: event.location.id,
+                    id: location.id,
                     city: values.city,
                     country: values.country,
                     street_name: values.streetName,

@@ -3,24 +3,19 @@ import { Box } from '@chakra-ui/react';
 import { GoogleMap, InfoWindowF, MarkerF, useLoadScript } from '@react-google-maps/api';
 import { match } from 'ts-pattern';
 
-import { route } from '../../../../route';
-import { DataCard } from '../DataCard';
+import { getLocationFragmentData } from '../../../types';
 
-import { MapData, MapDataArray } from './types';
-
-interface MapProps {
-  height?: string;
-  mapDataArray: MapDataArray;
-}
+import { DataMapProps, MapData, MultipleDataMapProps, SingleDataMapProps } from './types';
 
 const mapContainerStyle = {
   height: '100%',
   width: '100%',
 };
 
-export const SingleMapData = (props: MapData) => {
+export const SingleDataMap = <T extends MapData>({ data }: SingleDataMapProps<T>) => {
   const [mapRef, setMapRef] = useState<google.maps.Map>();
-  const position = { lat: props.data.location.latitude, lng: props.data.location.longitude };
+  const location = getLocationFragmentData(data.location);
+  const position = { lat: location.latitude, lng: location.longitude };
   return (
     <GoogleMap
       mapContainerStyle={mapContainerStyle}
@@ -40,22 +35,26 @@ export const SingleMapData = (props: MapData) => {
   );
 };
 
-export const MultipleMapDatas = (props: MapDataArray) => {
+export const MultipleDataMap = <T extends MapData>(props: MultipleDataMapProps<T>) => {
   const [mapRef, setMapRef] = useState<google.maps.Map>();
   const [isOpen, setIsOpen] = useState(false);
-  const [infoWindowData, setInfoWindowData] = useState<MapData>();
+  const [infoWindowData, setInfoWindowData] = useState<T>();
   return (
     <GoogleMap
       mapContainerStyle={mapContainerStyle}
       onLoad={(map) => {
         setMapRef(map);
         const bounds = new google.maps.LatLngBounds();
-        props.dataArray.forEach(({ location }) => bounds.extend({ lat: location.latitude, lng: location.longitude }));
+        props.data.forEach((dataPoint) => {
+          const location = getLocationFragmentData(dataPoint.location);
+          return bounds.extend({ lat: location.latitude, lng: location.longitude });
+        });
         map.fitBounds(bounds);
       }}
       onClick={() => setIsOpen(false)}
     >
-      {props.dataArray.map(({ location, ...rest }, index) => {
+      {props.data.map((dataPoint, index) => {
+        const location = getLocationFragmentData(dataPoint.location);
         const position = { lat: location.latitude, lng: location.longitude };
         return (
           <MarkerF
@@ -63,30 +62,17 @@ export const MultipleMapDatas = (props: MapDataArray) => {
             position={position}
             onClick={() => {
               mapRef?.panTo(position);
-              setInfoWindowData({ type: props.type, data: { location, ...rest } } as MapData);
+              setInfoWindowData(dataPoint);
               setIsOpen(true);
             }}
           >
-            {isOpen && infoWindowData?.data.id === rest.id && (
+            {isOpen && infoWindowData?.id === dataPoint.id && (
               <InfoWindowF
                 onCloseClick={() => {
                   setIsOpen(false);
                 }}
               >
-                <DataCard
-                  user={props.user}
-                  {...match(infoWindowData)
-                    .with({ type: 'event' }, (eventProps) => ({
-                      ...eventProps,
-                      detailRoute: route.eventDetails(infoWindowData.data.id),
-                    }))
-                    .with({ type: 'group' }, (groupProps) => ({
-                      ...groupProps,
-                      detailRoute: route.groupDetails(infoWindowData.data.id),
-                    }))
-                    .exhaustive()}
-                  simplified
-                />
+                {props.renderMarkerContent(dataPoint)}
               </InfoWindowF>
             )}
           </MarkerF>
@@ -96,7 +82,7 @@ export const MultipleMapDatas = (props: MapDataArray) => {
   );
 };
 
-export const DataMap = ({ height = '79vh', mapDataArray }: MapProps) => {
+export const DataMap = <T extends MapData>({ height = '79vh', ...other }: DataMapProps<T>) => {
   const { isLoaded } = useLoadScript({
     googleMapsApiKey: import.meta.env.VITE_GOOGLE_API_KEY,
   });
@@ -105,16 +91,13 @@ export const DataMap = ({ height = '79vh', mapDataArray }: MapProps) => {
     <Box h={height} w="100%" borderRadius="base">
       {!isLoaded ? (
         <h1>Loading...</h1>
-      ) : mapDataArray.dataArray.length > 1 ? (
-        <MultipleMapDatas {...mapDataArray} />
       ) : (
-        <SingleMapData
-          {...match(mapDataArray)
-            .with({ type: 'event' }, ({ type, dataArray: data }) => ({ type, data: data[0] }))
-            .with({ type: 'group' }, ({ type, dataArray: data }) => ({ type, data: data[0] }))
-            .exhaustive()}
-        />
+        match(other)
+          .with({ type: 'single' }, (props) => <SingleDataMap {...props} />)
+          .with({ type: 'multiple' }, (props) => <MultipleDataMap {...props} />)
+          .exhaustive()
       )}
     </Box>
   );
 };
+

@@ -15,13 +15,7 @@ export const GroupFragment = gql(/* GraphQL */ `
       name
     }
     location {
-      id
-      country
-      city
-      street_name
-      street_number
-      longitude
-      latitude
+      ...LocationFragment
     }
     events {
       ...EventFragment

@@ -6,7 +6,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { route } from '../../../route';
 import { NotAuthorized } from '../../../shared/design-system';
 import { QueryResult } from '../../../shared/layout';
-import { getGroupFragmentData } from '../../../shared/types';
+import { getGroupFragmentData, getLocationFragmentData } from '../../../shared/types';
 import { useAuth } from '../../auth';
 import { EDIT_GROUP } from '../mutations';
 import { GROUP } from '../queries';
@@ -44,6 +44,7 @@ const EditGroupForm = ({ groupId }: EditGroupFormProps) => {
       queryName="groupById"
       render={(groupFragment) => {
         const group = getGroupFragmentData(groupFragment);
+        const location = getLocationFragmentData(group.location);
 
         if (!user) {
           return <NotAuthorized requireSignIn wrapInContentContainer />;
@@ -58,11 +59,11 @@ const EditGroupForm = ({ groupId }: EditGroupFormProps) => {
             additionalButton={<DeleteGroupButton group={group} colorScheme="purple" flex={1} />}
             defaultImagePath={group.image_filepath}
             defaultValues={{
-              city: group.location.city,
-              country: group.location.country,
+              city: location.city,
+              country: location.country,
               name: group.name,
-              streetName: group.location.street_name,
-              streetNumber: group.location.street_number,
+              streetName: location.street_name,
+              streetNumber: location.street_number,
               summary: group.summary,
               // @ts-expect-error NonEmptyArray check
               eventTypes: group.event_types.map(({ id, name }) => ({ value: id, label: name })),
@@ -87,7 +88,7 @@ const EditGroupForm = ({ groupId }: EditGroupFormProps) => {
                     description: values.description,
                   },
                   location: {
-                    id: group.location.id,
+                    id: location.id,
                     city: values.city,
                     country: values.country,
                     street_name: values.streetName,

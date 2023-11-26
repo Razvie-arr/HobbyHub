@@ -1,27 +1,24 @@
-import { NonEmptyReadonlyArray } from 'effect/dist/declarations/src/ReadonlyArray';
+import { ReactNode } from 'react';
+import { NonEmptyArray } from 'effect/ReadonlyArray';
 
-import { EventData, GroupData, WithNullableAuthUser } from '../../../types';
+import { WithId, WithLocationFragment } from '../../../types';
 
-interface EventMapDataArray extends WithNullableAuthUser {
-  type: 'event';
-  dataArray: NonEmptyReadonlyArray<EventData>;
+export type MapData = WithLocationFragment & WithId;
+
+interface CommonProps {
+  height?: string;
 }
 
-interface GroupMapDataArray extends WithNullableAuthUser {
-  type: 'group';
-  dataArray: NonEmptyReadonlyArray<GroupData>;
+export interface SingleDataMapProps<T extends MapData> extends CommonProps {
+  type: 'single';
+  data: T;
 }
 
-export type MapDataArray = EventMapDataArray | GroupMapDataArray;
-
-interface EventMapData {
-  type: 'event';
-  data: EventData;
+export interface MultipleDataMapProps<T extends MapData> extends CommonProps {
+  type: 'multiple';
+  data: NonEmptyArray<T>;
+  renderMarkerContent: (data: T) => ReactNode;
 }
 
-interface GroupMapData {
-  type: 'group';
-  data: GroupData;
-}
+export type DataMapProps<T extends MapData> = SingleDataMapProps<T> | MultipleDataMapProps<T>;
 
-export type MapData = EventMapData | GroupMapData;
