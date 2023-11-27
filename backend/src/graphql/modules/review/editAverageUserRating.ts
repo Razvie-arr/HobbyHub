@@ -6,7 +6,7 @@ export const editAverageUserRating = async (userId: number, dataSources: { sql: 
 
   const averageRating = computeAverageRating(ratings);
 
-  return dataSources.sql.reviews.editUserAverageReview(userId, averageRating);
+  return dataSources.sql.reviews.updateUserAverageReview(userId, averageRating);
 };
 export const computeAverageRating = (ratings: number[]) => {
   let sum = 0;

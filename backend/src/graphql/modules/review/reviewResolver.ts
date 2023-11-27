@@ -38,7 +38,7 @@ export const createReviewResolver = async (
   { userId, reviewerId, text, rating }: MutationCreateReviewArgs,
   { dataSources, requestSenderUrl }: CustomContext,
 ) => {
-  const createUserResponse = await dataSources.sql.reviews.createReview(
+  const createUserResponse = await dataSources.sql.reviews.insertReview(
     userId,
     reviewerId,
     text as unknown as string,
