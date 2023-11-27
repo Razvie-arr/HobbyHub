@@ -23,6 +23,7 @@ type User { # Public info about user
   verified: Boolean!
   location_id: Int
   description: String
+  average_rating: Float!
 
   event_types: [EventType!]!
   location: Location

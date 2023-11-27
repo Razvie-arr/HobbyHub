@@ -544,6 +544,7 @@ export type Thread = {
 
 export type User = {
   __typename?: 'User';
+  average_rating: Scalars['Float']['output'];
   description?: Maybe<Scalars['String']['output']>;
   email: Scalars['String']['output'];
   event_types: Array<EventType>;
@@ -1129,6 +1130,7 @@ export type UserResolvers<
   ContextType = CustomContext,
   ParentType extends ResolversParentTypes['User'] = ResolversParentTypes['User'],
 > = {
+  average_rating?: Resolver<ResolversTypes['Float'], ParentType, ContextType>;
   description?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   email?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   event_types?: Resolver<Array<ResolversTypes['EventType']>, ParentType, ContextType>;
