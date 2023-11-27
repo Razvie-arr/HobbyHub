@@ -170,6 +170,7 @@ export type Mutation = {
   createEvent: Event;
   createGroup: Group;
   createLocation?: Maybe<Location>;
+  createReview: Review;
   deleteEvent: Scalars['String']['output'];
   deleteGroup: Scalars['String']['output'];
   deleteLocation: Scalars['String']['output'];
@@ -206,6 +207,13 @@ export type MutationCreateGroupArgs = {
 
 export type MutationCreateLocationArgs = {
   location: LocationInputWithoutCoords;
+};
+
+export type MutationCreateReviewArgs = {
+  rating: Scalars['Float']['input'];
+  reviewerId: Scalars['Int']['input'];
+  text?: InputMaybe<Scalars['String']['input']>;
+  userId: Scalars['Int']['input'];
 };
 
 export type MutationDeleteEventArgs = {
@@ -842,6 +850,12 @@ export type MutationResolvers<
     ParentType,
     ContextType,
     RequireFields<MutationCreateLocationArgs, 'location'>
+  >;
+  createReview?: Resolver<
+    ResolversTypes['Review'],
+    ParentType,
+    ContextType,
+    RequireFields<MutationCreateReviewArgs, 'rating' | 'reviewerId' | 'userId'>
   >;
   deleteEvent?: Resolver<
     ResolversTypes['String'],

@@ -3,6 +3,10 @@ extend type Query {
   reviewById(reviewId: Int!): Review
 }
 
+extend type Mutation {
+  createReview(userId: Int!, reviewerId: Int!, text: String, rating: Float!): Review!
+}
+
 type Review {
   id: Int!
   user_id: Int!

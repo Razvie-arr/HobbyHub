@@ -57,11 +57,12 @@ import {
 } from './modules/group/groupResolvers';
 import { locationByIdResolver, locationsByIdsResolver, locationsResolver } from './modules/location/locationResolvers';
 import {
+  createReviewResolver,
   reviewByIdResolver,
   reviewReviewerResolver,
   reviewsByUserIdResolver,
   reviewUserResolver,
-} from './modules/Review/reviewResolver';
+} from './modules/review/reviewResolver';
 import { searchEventsResolver, searchGroupsResolver } from './modules/search/searchResolver';
 import {
   authUserAdminGroupsResolver,
@@ -164,6 +165,8 @@ export const rootResolver: Resolvers = {
 
     sendMessage: sendMessageResolver,
     editReadThread: editReadThreadResolver,
+
+    createReview: createReviewResolver,
   },
 
   Upload: GraphQLUpload,
