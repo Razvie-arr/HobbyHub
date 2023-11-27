@@ -1,6 +1,5 @@
 import { GraphQLError } from 'graphql/error';
 
-import { SQLDataSource } from '../../../datasource';
 import {
   ContextualNullableResolver,
   ContextualResolver,
@@ -37,7 +36,7 @@ export const reviewReviewerResolver: ContextualResolverWithParent<User, Review> 
 export const createReviewResolver = async (
   _: unknown,
   { userId, reviewerId, text, rating }: MutationCreateReviewArgs,
-  { dataSources }: CustomContext,
+  { dataSources, requestSenderUrl }: CustomContext,
 ) => {
   const createUserResponse = await dataSources.sql.reviews.createReview(
     userId,
@@ -60,7 +59,7 @@ export const createReviewResolver = async (
     throw new GraphQLError(`Error while fetching Review!`);
   }
 
-  await sendReviewNotification(createdReview);
+  await sendReviewNotification(createdReview, dataSources, requestSenderUrl);
 
   return createdReview;
 };
