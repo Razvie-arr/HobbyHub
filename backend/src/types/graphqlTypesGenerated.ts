@@ -317,6 +317,8 @@ export type Query = {
   messagesByThreadId: Array<Message>;
   nearbyGroups: Array<Group>;
   newlyCreatedNearbyEvents: Array<Event>;
+  reviewById?: Maybe<Review>;
+  reviewsByUserId: Array<Review>;
   searchEvents: Array<Event>;
   searchGroups: Array<Group>;
   similarEvents: Array<Event>;
@@ -438,6 +440,16 @@ export type QueryNewlyCreatedNearbyEventsArgs = {
   offset?: InputMaybe<Scalars['Int']['input']>;
 };
 
+export type QueryReviewByIdArgs = {
+  reviewId: Scalars['Int']['input'];
+};
+
+export type QueryReviewsByUserIdArgs = {
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  userId: Scalars['Int']['input'];
+};
+
 export type QuerySearchEventsArgs = {
   limit?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
@@ -496,6 +508,17 @@ export type RecipientInput = {
   email: Scalars['String']['input'];
   first_name: Scalars['String']['input'];
   id: Scalars['Int']['input'];
+};
+
+export type Review = {
+  __typename?: 'Review';
+  id: Scalars['Int']['output'];
+  rating: Scalars['Float']['output'];
+  reviewer: User;
+  reviewer_id: Scalars['Int']['output'];
+  text?: Maybe<Scalars['String']['output']>;
+  user: User;
+  user_id: Scalars['Int']['output'];
 };
 
 export type SenderInput = {
@@ -642,6 +665,7 @@ export type ResolversTypes = {
   Mutation: ResolverTypeWrapper<{}>;
   Query: ResolverTypeWrapper<{}>;
   RecipientInput: RecipientInput;
+  Review: ResolverTypeWrapper<Review>;
   SenderInput: SenderInput;
   SortType: SortType;
   String: ResolverTypeWrapper<Scalars['String']['output']>;
@@ -672,6 +696,7 @@ export type ResolversParentTypes = {
   Mutation: {};
   Query: {};
   RecipientInput: RecipientInput;
+  Review: Review;
   SenderInput: SenderInput;
   String: Scalars['String']['output'];
   Thread: Thread;
@@ -1011,6 +1036,18 @@ export type QueryResolvers<
     ContextType,
     RequireFields<QueryNewlyCreatedNearbyEventsArgs, 'latitude' | 'longitude'>
   >;
+  reviewById?: Resolver<
+    Maybe<ResolversTypes['Review']>,
+    ParentType,
+    ContextType,
+    RequireFields<QueryReviewByIdArgs, 'reviewId'>
+  >;
+  reviewsByUserId?: Resolver<
+    Array<ResolversTypes['Review']>,
+    ParentType,
+    ContextType,
+    RequireFields<QueryReviewsByUserIdArgs, 'userId'>
+  >;
   searchEvents?: Resolver<
     Array<ResolversTypes['Event']>,
     ParentType,
@@ -1055,6 +1092,20 @@ export type QueryResolvers<
     ContextType,
     RequireFields<QueryUsersByIdsArgs, 'ids'>
   >;
+};
+
+export type ReviewResolvers<
+  ContextType = CustomContext,
+  ParentType extends ResolversParentTypes['Review'] = ResolversParentTypes['Review'],
+> = {
+  id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  rating?: Resolver<ResolversTypes['Float'], ParentType, ContextType>;
+  reviewer?: Resolver<ResolversTypes['User'], ParentType, ContextType>;
+  reviewer_id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  text?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  user?: Resolver<ResolversTypes['User'], ParentType, ContextType>;
+  user_id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
 export type ThreadResolvers<
@@ -1103,6 +1154,7 @@ export type Resolvers<ContextType = CustomContext> = {
   Message?: MessageResolvers<ContextType>;
   Mutation?: MutationResolvers<ContextType>;
   Query?: QueryResolvers<ContextType>;
+  Review?: ReviewResolvers<ContextType>;
   Thread?: ThreadResolvers<ContextType>;
   Upload?: GraphQLScalarType;
   User?: UserResolvers<ContextType>;

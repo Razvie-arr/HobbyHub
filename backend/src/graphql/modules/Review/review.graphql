@@ -1,4 +1,15 @@
-type Rating {
+extend type Query {
+  reviewsByUserId(userId: Int!, offset: Int, limit: Int): [Review!]!
+  reviewById(reviewId: Int!): Review
+}
+
+type Review {
   id: Int!
-  
+  user_id: Int!
+  reviewer_id: Int!
+  text: String
+  rating: Float!
+
+  user: User!
+  reviewer: User!
 }

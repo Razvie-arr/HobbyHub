@@ -56,6 +56,7 @@ import {
   uploadGroupImageResolver,
 } from './modules/group/groupResolvers';
 import { locationByIdResolver, locationsByIdsResolver, locationsResolver } from './modules/location/locationResolvers';
+import { reviewByIdResolver, reviewReviewerResolver, reviewUserResolver } from './modules/Review/reviewResolver';
 import { searchEventsResolver, searchGroupsResolver } from './modules/search/searchResolver';
 import {
   authUserAdminGroupsResolver,
@@ -118,6 +119,8 @@ export const rootResolver: Resolvers = {
     similarGroups: similarGroupsResolver,
 
     searchGroups: searchGroupsResolver,
+
+    reviewById: reviewByIdResolver,
   },
 
   AuthUser: {
@@ -173,6 +176,10 @@ export const rootResolver: Resolvers = {
     events: groupEventsResolver,
     event_types: groupEventTypesResolver,
   },
+  Review: {
+    user: reviewUserResolver,
+    reviewer: reviewReviewerResolver,
+  },
 
   Author: {
     __resolveType: (obj) => {
@@ -198,4 +205,3 @@ export const rootResolver: Resolvers = {
     sender: messageSenderResolver,
   },
 };
-

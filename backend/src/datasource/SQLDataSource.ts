@@ -6,6 +6,7 @@ import {
   eventsDataSource,
   groupsDataSource,
   messagesDataSource,
+  reviewDataSource,
   threadsDataSource,
   usersDataSource,
 } from './entitydatasource';
@@ -98,5 +99,11 @@ export class SQLDataSource extends BatchedSQLDataSource {
 
   messages = {
     ...messagesDataSource(this.db),
+  };
+
+  reviews = {
+    // @ts-ignore, no actual type error but ts-node is erroneously detecting errors
+    ...this.createBaseQueries('Review'),
+    ...reviewDataSource(this.db),
   };
 }
