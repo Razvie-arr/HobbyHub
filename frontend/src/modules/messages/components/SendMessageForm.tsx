@@ -1,6 +1,6 @@
 import { useMutation } from '@apollo/client';
 import { Box, Icon, IconButton, InputGroup, InputRightElement } from '@chakra-ui/react';
-import { NonEmptyArray } from 'effect/dist/declarations/src/ReadonlyArray';
+import { NonEmptyArray } from 'effect/ReadonlyArray';
 import { FormProvider, useForm } from 'react-hook-form';
 import { MdSend } from 'react-icons/md';
 
@@ -78,3 +78,4 @@ export const SendMessageForm = ({ user, otherUsers, refetchMessages }: SendMessa
     </FormProvider>
   );
 };
+

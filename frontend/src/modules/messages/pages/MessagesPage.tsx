@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useLazyQuery, useMutation, useQuery } from '@apollo/client';
 import { Card, CardFooter, CardHeader, Heading, Stack, Text, VStack } from '@chakra-ui/react';
-import { NonEmptyArray } from 'effect/dist/declarations/src/ReadonlyArray';
+import { NonEmptyArray } from 'effect/ReadonlyArray';
 
 import { User } from '../../../gql/graphql';
 import { ContentContainer, QueryResult } from '../../../shared/layout';
@@ -27,7 +27,7 @@ export const MessagesPageContainer = ({ user }: WithAuthUser) => {
       render={(threadFragments) => {
         const threads = threadFragments.map(getThreadFragmentData);
         //@ts-expect-error
-          return <MessagesPage user={user} threads={threads} />;
+        return <MessagesPage user={user} threads={threads} />;
       }}
     />
   );
