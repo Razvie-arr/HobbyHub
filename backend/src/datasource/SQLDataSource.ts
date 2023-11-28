@@ -2,6 +2,8 @@
 import { BatchedSQLDataSource } from '@nic-jennings/sql-datasource';
 import { Tables } from 'knex/types/tables';
 
+import { eventTypeDataSource } from './entitydatasource/eventTypeDataSource';
+import { locationsDataSource } from './entitydatasource/locationsDataSource';
 import {
   eventsDataSource,
   groupsDataSource,
@@ -74,9 +76,15 @@ export class SQLDataSource extends BatchedSQLDataSource {
   };
 
   // @ts-ignore, no actual type error but ts-node is erroneously detecting errors
-  eventTypes = this.createBaseQueries('EventType');
+  eventTypes = {
+    ...this.createBaseQueries('EventType'),
+    ...eventTypeDataSource(this.db),
+  };
   // @ts-ignore, no actual type error but ts-node is erroneously detecting errors
-  locations = this.createBaseQueries('Location');
+  locations = {
+    ...this.createBaseQueries('Location'),
+    ...locationsDataSource(this.db),
+  };
 
   users = {
     // @ts-ignore, no actual type error but ts-node is erroneously detecting errors

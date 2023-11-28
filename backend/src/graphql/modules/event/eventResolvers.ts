@@ -27,7 +27,6 @@ import {
   User,
 } from '../../../types';
 import { createEventInput, getPublicStorageFilePath } from '../../../utils/helpers';
-import { createLocation, updateLocation } from '../location/locationResolvers';
 
 const DEFAULT_DISTANCE = 20;
 const DEFAULT_LIMIT = 4;
@@ -221,7 +220,7 @@ export const createEventResolver = async (
     throw new GraphQLError("Event can't have both author_id and group_id!");
   }
 
-  event.location_id = await createLocation(location, dataSources, googleMapsClient);
+  event.location_id = await dataSources.sql.locations.createLocation(location, googleMapsClient);
 
   const dbResponse = await dataSources.sql.db.write('Event').insert(createEventInput(event));
   if (!dbResponse[0]) {
@@ -270,32 +269,9 @@ export const editEventResolver = async (
   }
 
   location.id = location.id ? location.id : event.location_id;
-  await updateLocation(location, dataSources, googleMapsClient);
+  await dataSources.sql.locations.updateLocation(location, googleMapsClient);
 
-  const event_id = event.id;
-  const dbDeleteEventEventTypeResponse = await dataSources.sql.db
-    .write('Event_EventType')
-    .where('event_id', event_id)
-    .delete();
-
-  if (!dbDeleteEventEventTypeResponse) {
-    throw new GraphQLError(`Error while updating Event_EventType table part 1!`);
-  }
-  // Use map to create an array of insert promises
-  const insertPromises = event.event_type_ids.map((eventTypeId) =>
-    dataSources.sql.db
-      .write('Event_EventType')
-      .where('event_id', event_id)
-      .insert({ event_id: event_id, event_type_id: eventTypeId }),
-  );
-
-  // Await all insertions
-  const dbEventEventTypeResponses = await Promise.all(insertPromises);
-
-  // Check if any of the insertions failed
-  if (dbEventEventTypeResponses.some((response) => !response)) {
-    throw new GraphQLError(`Error while updating Event_EventType table part 2!`);
-  }
+  await dataSources.sql.eventTypes.updateEvent_EventTypeRelation(event.id, event.event_type_ids);
 
   const dbResponse = await dataSources.sql.db.write('Event').where('id', '=', event.id).update(createEventInput(event));
 

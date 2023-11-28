@@ -18,7 +18,6 @@ import {
   User,
 } from '../../../types';
 import { createUserInput } from '../../../utils/helpers';
-import { createLocation, updateLocation } from '../location/locationResolvers';
 
 export const usersResolver: ContextualResolver<Array<User>, QueryUsersArgs> = async (
   _,
@@ -77,30 +76,10 @@ export const editUserResolver = async (
   }
 
   location.id = location.id ? location.id : user.location_id;
-  await updateLocation(location, dataSources, googleMapsClient);
+  await dataSources.sql.locations.updateLocation(location, googleMapsClient);
 
-  const user_id = user.id;
-  //Swap old Event Types for new ones
-  const dbDeleteUserEventTypeResponse = await dataSources.sql.db
-    .write('User_EventType')
-    .where('user_id', user_id)
-    .delete();
+  await dataSources.sql.eventTypes.updateUser_EventTypeRelation(user.id, user.event_type_ids);
 
-  if (!dbDeleteUserEventTypeResponse) {
-    throw new GraphQLError(`Error while updating User_EventType table part 1!`);
-  }
-  // Use map to create an array of insert promises
-  const insertPromises = user.event_type_ids.map((eventTypeId) =>
-    dataSources.sql.db.write('User_EventType').insert({ user_id: user_id, event_type_id: eventTypeId }),
-  );
-
-  // Await all insertions
-  const dbUserEventTypeResponses = await Promise.all(insertPromises);
-
-  // Check if any of the insertions failed
-  if (dbUserEventTypeResponses.some((response) => !response)) {
-    throw new GraphQLError(`Error while updating User_EventType table part 2!`);
-  }
   const dbUpdateUserResponse = await dataSources.sql.db
     .write('User')
     .where('id', user.id)
@@ -128,7 +107,7 @@ export const onboardUserResolver = async (
     throw new GraphQLError('EventTypeId needs to be filled in order to onboard!');
   }
 
-  user.location_id = await createLocation(location, dataSources, googleMapsClient);
+  user.location_id = await dataSources.sql.locations.createLocation(location, googleMapsClient);
 
   const dbUpdateUserResponse = await dataSources.sql.db
     .write('User')
