@@ -15,5 +15,7 @@ export const route = {
   onboarding: () => `/onboarding` as const,
   verifyUser: () => `/auth/verifyUser` as const,
   messages: () => `/messages` as const,
+  signin: () => `/signin` as const,
+  signup: () => `/signup` as const,
 };
 
