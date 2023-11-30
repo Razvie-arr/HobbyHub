@@ -1,6 +1,6 @@
 import { Fragment, useEffect, useRef } from 'react';
 import { CardBody, CardHeader, Heading, IconButton, VStack } from '@chakra-ui/react';
-import { NonEmptyArray } from 'effect/dist/declarations/src/ReadonlyArray';
+import { NonEmptyArray } from 'effect/ReadonlyArray';
 import { FaArrowLeft } from 'react-icons/fa6';
 
 import { User } from '../../../gql/graphql';
