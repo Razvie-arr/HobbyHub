@@ -58,7 +58,9 @@ import {
 import { locationByIdResolver, locationsByIdsResolver, locationsResolver } from './modules/location/locationResolvers';
 import {
   createReviewResolver,
+  maxRatingAllParticipantsResolver,
   reviewByIdResolver,
+  reviewEventResolver,
   reviewReviewerResolver,
   reviewsByUserIdResolver,
   reviewUserResolver,
@@ -167,6 +169,7 @@ export const rootResolver: Resolvers = {
     editReadThread: editReadThreadResolver,
 
     createReview: createReviewResolver,
+    maxRatingAllParticipants: maxRatingAllParticipantsResolver,
   },
 
   Upload: GraphQLUpload,
@@ -188,6 +191,7 @@ export const rootResolver: Resolvers = {
   Review: {
     user: reviewUserResolver,
     reviewer: reviewReviewerResolver,
+    event: reviewEventResolver,
   },
 
   Author: {

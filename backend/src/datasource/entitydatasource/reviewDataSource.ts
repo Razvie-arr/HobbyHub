@@ -10,8 +10,10 @@ export const reviewDataSource = (db: { query: DataSourceKnex; write: DataSourceK
     return limit ? query.limit(limit) : query;
   },
 
-  insertReview: (userId: number, reviewerId: number, text: string | null, rating: number) =>
-    db.write('Review').insert({ user_id: userId, reviewer_id: reviewerId, rating: rating, text: text }),
+  insertReview: (userId: number, reviewerId: number, text: string, rating: number, eventId: number) =>
+    db
+      .write('Review')
+      .insert({ user_id: userId, reviewer_id: reviewerId, rating: rating, text: text, event_id: eventId }),
 
   updateUserAverageReview: (userId: number, averageRating: number) =>
     db.write('User').where('id', userId).update({ average_rating: averageRating }),

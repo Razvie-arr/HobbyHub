@@ -1,3 +1,5 @@
+import { GraphQLError } from 'graphql/error';
+
 import { SQLDataSource } from '../../../datasource';
 import { sendEmail } from '../../../libs/nodeMailer';
 import { Review, User } from '../../../types';
@@ -10,14 +12,14 @@ export const sendReviewNotification = async (
   const user = (await dataSources.sql.users.getById(review.user_id)) as unknown as User;
   const reviewer = (await dataSources.sql.users.getById(review.reviewer_id)) as unknown as User;
   if (!user) {
-    throw Error('User does not exist');
+    throw new GraphQLError('User does not exist');
   }
   if (!reviewer) {
-    throw Error('Reviewer does not exist');
+    throw new GraphQLError('Reviewer does not exist');
   }
 
   const userName = user.first_name;
-  const reviewerFullName = reviewer.first_name + reviewer.last_name;
+  const reviewerFullName = reviewer.first_name + ' ' + reviewer.last_name;
 
   const reviewSubject = 'New review in HobbyHub';
   const emailTextMessage = `Hi ${userName}! You just got a new review from ${reviewerFullName}\n 

@@ -180,6 +180,7 @@ export type Mutation = {
   editLocation?: Maybe<Location>;
   editReadThread: Scalars['String']['output'];
   editUser: User;
+  maxRatingAllParticipants: Scalars['Boolean']['output'];
   onboardUser: AuthUser;
   requestResetPassword: Scalars['Boolean']['output'];
   resetPassword: Scalars['Boolean']['output'];
@@ -210,9 +211,10 @@ export type MutationCreateLocationArgs = {
 };
 
 export type MutationCreateReviewArgs = {
+  eventId: Scalars['Int']['input'];
   rating: Scalars['Float']['input'];
   reviewerId: Scalars['Int']['input'];
-  text?: InputMaybe<Scalars['String']['input']>;
+  text: Scalars['String']['input'];
   userId: Scalars['Int']['input'];
 };
 
@@ -257,6 +259,11 @@ export type MutationEditReadThreadArgs = {
 export type MutationEditUserArgs = {
   location: LocationInputWithoutCoords;
   user: UserInput;
+};
+
+export type MutationMaxRatingAllParticipantsArgs = {
+  adminId: Scalars['Int']['input'];
+  eventId: Scalars['Int']['input'];
 };
 
 export type MutationOnboardUserArgs = {
@@ -520,11 +527,13 @@ export type RecipientInput = {
 
 export type Review = {
   __typename?: 'Review';
+  event: Event;
+  event_id: Scalars['Int']['output'];
   id: Scalars['Int']['output'];
   rating: Scalars['Float']['output'];
   reviewer: User;
   reviewer_id: Scalars['Int']['output'];
-  text?: Maybe<Scalars['String']['output']>;
+  text: Scalars['String']['output'];
   user: User;
   user_id: Scalars['Int']['output'];
 };
@@ -855,7 +864,7 @@ export type MutationResolvers<
     ResolversTypes['Review'],
     ParentType,
     ContextType,
-    RequireFields<MutationCreateReviewArgs, 'rating' | 'reviewerId' | 'userId'>
+    RequireFields<MutationCreateReviewArgs, 'eventId' | 'rating' | 'reviewerId' | 'text' | 'userId'>
   >;
   deleteEvent?: Resolver<
     ResolversTypes['String'],
@@ -905,6 +914,12 @@ export type MutationResolvers<
     ParentType,
     ContextType,
     RequireFields<MutationEditUserArgs, 'location' | 'user'>
+  >;
+  maxRatingAllParticipants?: Resolver<
+    ResolversTypes['Boolean'],
+    ParentType,
+    ContextType,
+    RequireFields<MutationMaxRatingAllParticipantsArgs, 'adminId' | 'eventId'>
   >;
   onboardUser?: Resolver<
     ResolversTypes['AuthUser'],
@@ -1113,11 +1128,13 @@ export type ReviewResolvers<
   ContextType = CustomContext,
   ParentType extends ResolversParentTypes['Review'] = ResolversParentTypes['Review'],
 > = {
+  event?: Resolver<ResolversTypes['Event'], ParentType, ContextType>;
+  event_id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   rating?: Resolver<ResolversTypes['Float'], ParentType, ContextType>;
   reviewer?: Resolver<ResolversTypes['User'], ParentType, ContextType>;
   reviewer_id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
-  text?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  text?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   user?: Resolver<ResolversTypes['User'], ParentType, ContextType>;
   user_id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;

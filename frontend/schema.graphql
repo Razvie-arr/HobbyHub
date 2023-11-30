@@ -266,9 +266,11 @@ type Review {
   id: Int!
   user_id: Int!
   reviewer_id: Int!
-  text: String
+  text: String!
   rating: Float!
+  event_id: Int!
 
   user: User!
   reviewer: User!
+  event: Event!
 }

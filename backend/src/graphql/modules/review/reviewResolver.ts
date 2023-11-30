@@ -5,15 +5,16 @@ import {
   ContextualResolver,
   ContextualResolverWithParent,
   CustomContext,
+  Event,
   MutationCreateReviewArgs,
+  MutationMaxRatingAllParticipantsArgs,
   QueryReviewByIdArgs,
   QueryReviewsByUserIdArgs,
   Review,
   User,
 } from '../../../types';
 
-import { editAverageUserRating } from './editAverageUserRating';
-import { sendReviewNotification } from './sendReviewNotification';
+import { createUserReview } from './createUserReview';
 
 export const reviewByIdResolver: ContextualNullableResolver<Review, QueryReviewByIdArgs> = async (
   _,
@@ -33,33 +34,31 @@ export const reviewUserResolver: ContextualResolverWithParent<User, Review> = as
 export const reviewReviewerResolver: ContextualResolverWithParent<User, Review> = async (parent, _, { dataSources }) =>
   (await dataSources.sql.users.getById(parent.reviewer_id)) as unknown as User;
 
+export const reviewEventResolver: ContextualResolverWithParent<Event, Review> = async (parent, _, { dataSources }) =>
+  (await dataSources.sql.events.getById(parent.event_id)) as unknown as Event;
+
 export const createReviewResolver = async (
   _: unknown,
-  { userId, reviewerId, text, rating }: MutationCreateReviewArgs,
+  { userId, reviewerId, eventId, text, rating }: MutationCreateReviewArgs,
+  { dataSources, requestSenderUrl }: CustomContext,
+) => createUserReview(userId, reviewerId, text, rating, eventId, dataSources, requestSenderUrl);
+
+export const maxRatingAllParticipantsResolver = async (
+  _: unknown,
+  { adminId, eventId }: MutationMaxRatingAllParticipantsArgs,
   { dataSources, requestSenderUrl }: CustomContext,
 ) => {
-  const createUserResponse = await dataSources.sql.reviews.insertReview(
-    userId,
-    reviewerId,
-    text as unknown as string,
-    rating,
-  );
-  if (!createUserResponse) {
-    throw new GraphQLError('Error while creating Review');
-  }
-  const createdReviewId: number = createUserResponse[0] as number;
+  const maxRating = 5;
+  const text = 'Great!';
 
-  const editAverageRatingResponse = await editAverageUserRating(userId, dataSources);
-  if (!editAverageRatingResponse) {
-    throw new GraphQLError(`Error while editing average user review!`);
+  const eventParticipants = await dataSources.sql.events.getEventParticipants(eventId);
+  if (!eventParticipants) {
+    throw new GraphQLError('Event does not exist or does not have participants');
   }
 
-  const createdReview = await dataSources.sql.reviews.getById(createdReviewId);
-  if (!createdReview) {
-    throw new GraphQLError(`Error while fetching Review!`);
-  }
+  eventParticipants.forEach(async (participant) => {
+    await createUserReview(participant.id, adminId, text, maxRating, eventId, dataSources, requestSenderUrl);
+  });
 
-  await sendReviewNotification(createdReview, dataSources, requestSenderUrl);
-
-  return createdReview;
+  return true;
 };
