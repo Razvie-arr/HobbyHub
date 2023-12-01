@@ -59,8 +59,10 @@ import { locationByIdResolver, locationsByIdsResolver, locationsResolver } from 
 import { searchEventsResolver, searchGroupsResolver } from './modules/search/searchResolver';
 import {
   authUserAdminGroupsResolver,
+  authUserByIdResolver,
   authUserEventTypesResolver,
   authUserLocationResolver,
+  editAuthUserResolver,
   requestResetPasswordResolver,
   resetPasswordResolver,
   signInResolver,
@@ -106,6 +108,8 @@ export const rootResolver: Resolvers = {
     userById: userByIdResolver,
     usersByIds: usersByIdsResolver,
 
+    authUserById: authUserByIdResolver,
+
     threads: threadsResolver,
     messagesByThreadId: messagesByThreadIdResolver,
 
@@ -147,6 +151,8 @@ export const rootResolver: Resolvers = {
 
     editUser: editUserResolver,
     onboardUser: onboardUserResolver,
+
+    editAuthUser: editAuthUserResolver,
 
     createGroup: createGroupResolver,
     editGroup: editGroupResolver,
@@ -198,4 +204,3 @@ export const rootResolver: Resolvers = {
     sender: messageSenderResolver,
   },
 };
-

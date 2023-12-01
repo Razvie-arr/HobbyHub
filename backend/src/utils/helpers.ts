@@ -2,7 +2,7 @@ import path from 'path';
 import uniqueSlug from 'unique-slug';
 
 import { FRONTEND_PUBLIC_FOLDER } from '../config';
-import { EventInput, GroupInput, LocationInput, UserInput } from '../types';
+import { AuthUserInput, EventInput, GroupInput, LocationInput, UserInput } from '../types';
 
 export function createEventInput(event: EventInput) {
   return {
@@ -45,6 +45,18 @@ export function createUserInput(user: UserInput) {
   };
 }
 
+export function createAuthUserInput(user: AuthUserInput) {
+  return {
+    id: getValue(user.id),
+    email: getValue(user.email),
+    password: getValue(user.password),
+    first_name: getValue(user.first_name),
+    last_name: getValue(user.last_name),
+    verified: getValue(user.verified),
+    location_id: getValue(user.location_id),
+    description: getValue(user.description),
+  };
+}
 export function createGroupInput(group: GroupInput) {
   return {
     id: getValue(group.id),

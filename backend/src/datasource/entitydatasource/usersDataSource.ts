@@ -1,5 +1,7 @@
 import { DataSourceKnex } from '@nic-jennings/sql-datasource';
 
+import { AuthUser } from '../../types';
+
 export const usersDataSource = (db: { query: DataSourceKnex; write: DataSourceKnex }) => ({
   getUserEventTypes: (userId: number) =>
     db
@@ -12,4 +14,6 @@ export const usersDataSource = (db: { query: DataSourceKnex; write: DataSourceKn
 
   getUserGroups: (userId: number) =>
     db.query('User_UserGroup').innerJoin('Group', 'User_UserGroup.group_id', 'UserGroup.id').where('user_id', userId),
+
+  getAuthById: (id: number) => (db.query('User').where('id', id).first('*') as unknown as AuthUser) ?? null,
 });

@@ -6,21 +6,32 @@ import { sendEmail } from '../../../libs/nodeMailer';
 import {
   type AuthInfo,
   AuthUser,
+  ContextualNullableResolver,
   ContextualResolverWithParent,
   type CustomContext,
   EventType,
   Group,
   Location,
+  MutationEditAuthUserArgs,
   type MutationRequestResetPasswordArgs,
   type MutationResetPasswordArgs,
   type MutationSignInArgs,
   type MutationSignUpArgs,
   type MutationVerifyArgs,
+  QueryAuthUserByIdArgs,
 } from '../../../types';
+import { createAuthUserInput } from '../../../utils/helpers';
 
 const tokenExpirationTime = 60 * 60;
 const SUBJECT_VERIFY = 'Verification email';
 const SUBJECT_RESET_PASSWORD = 'Reset password link';
+
+export const authUserByIdResolver: ContextualNullableResolver<AuthUser, QueryAuthUserByIdArgs> = async (
+  _: unknown,
+  { id },
+  { dataSources },
+  // eslint-disable-next-line @typescript-eslint/await-thenable
+) => await dataSources.sql.users.getAuthById(id);
 
 export const signInResolver = async (
   _: unknown,
@@ -217,3 +228,41 @@ export const resetPasswordResolver = async (
   return true;
 };
 
+export const editAuthUserResolver = async (
+  _: unknown,
+  { location, user }: MutationEditAuthUserArgs,
+  { dataSources, googleMapsClient }: CustomContext,
+) => {
+  if (!user.id) {
+    throw new GraphQLError('User id must be filled!');
+  }
+  if (!user.location_id && !location.id) {
+    throw new GraphQLError('Location id must be filled!');
+  }
+  if (user.event_type_ids.some((eventTypeId) => !eventTypeId)) {
+    throw new GraphQLError('EventTypeId needs to be filled in order to update!');
+  }
+
+  location.id = location.id ? location.id : user.location_id;
+  await dataSources.sql.locations.updateLocation(location, googleMapsClient);
+
+  await dataSources.sql.eventTypes.updateUser_EventTypeRelation(user.id, user.event_type_ids);
+
+  const dbUpdateUserResponse = await dataSources.sql.db
+    .write('User')
+    .where('id', user.id)
+    .update(createAuthUserInput(user));
+
+  if (!dbUpdateUserResponse) {
+    throw new GraphQLError(`Error while updating User!`);
+  }
+
+  // eslint-disable-next-line @typescript-eslint/await-thenable
+  const dbUserResponse = await dataSources.sql.users.getAuthById(user.id);
+
+  if (!dbUserResponse) {
+    throw new GraphQLError(`Error while fetching User!`);
+  }
+
+  return dbUserResponse;
+};

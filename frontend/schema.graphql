@@ -17,6 +17,18 @@ type AuthUser {
   verified: Boolean!
 }
 
+input AuthUserInput {
+  description: String
+  email: String!
+  event_type_ids: [Int!]!
+  first_name: String!
+  id: Int!
+  last_name: String!
+  location_id: Int
+  password: String!
+  verified: Boolean!
+}
+
 union Author = Group | User
 
 type Event {
