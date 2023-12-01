@@ -1,6 +1,7 @@
 import { GraphQLResolveInfo, GraphQLScalarType, GraphQLScalarTypeConfig } from 'graphql';
 import { CustomContext } from './types';
 import type { FileUpload } from 'graphql-upload/Upload';
+
 export type Maybe<T> = T | null;
 export type InputMaybe<T> = Maybe<T>;
 export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
@@ -37,8 +38,20 @@ export type AuthUser = {
   last_name: Scalars['String']['output'];
   location?: Maybe<Location>;
   location_id?: Maybe<Scalars['Int']['output']>;
-  password: Scalars['String']['output'];
+  password?: Maybe<Scalars['String']['output']>;
   verified: Scalars['Boolean']['output'];
+};
+
+export type AuthUserInput = {
+  description?: InputMaybe<Scalars['String']['input']>;
+  email: Scalars['String']['input'];
+  event_type_ids: Array<Scalars['Int']['input']>;
+  first_name: Scalars['String']['input'];
+  id: Scalars['Int']['input'];
+  last_name: Scalars['String']['input'];
+  location_id?: InputMaybe<Scalars['Int']['input']>;
+  password: Scalars['String']['input'];
+  verified: Scalars['Boolean']['input'];
 };
 
 export type Author = Group | User;
@@ -174,6 +187,7 @@ export type Mutation = {
   deleteGroup: Scalars['String']['output'];
   deleteLocation: Scalars['String']['output'];
   deleteUser: Scalars['String']['output'];
+  editAuthUser: AuthUser;
   editEvent: Event;
   editGroup: Group;
   editLocation?: Maybe<Location>;
@@ -224,6 +238,11 @@ export type MutationDeleteLocationArgs = {
 
 export type MutationDeleteUserArgs = {
   id: Scalars['Int']['input'];
+};
+
+export type MutationEditAuthUserArgs = {
+  location: LocationInputWithoutCoords;
+  user: AuthUserInput;
 };
 
 export type MutationEditEventArgs = {
@@ -298,6 +317,7 @@ export type MutationVerifyArgs = {
 export type Query = {
   __typename?: 'Query';
   _empty?: Maybe<Scalars['String']['output']>;
+  authUserById?: Maybe<AuthUser>;
   eventById?: Maybe<Event>;
   eventTypeById?: Maybe<EventType>;
   eventTypes: Array<EventType>;
@@ -330,6 +350,10 @@ export type Query = {
 
 export type Query_EmptyArgs = {
   nothing?: InputMaybe<Scalars['String']['input']>;
+};
+
+export type QueryAuthUserByIdArgs = {
+  id: Scalars['Int']['input'];
 };
 
 export type QueryEventByIdArgs = {
@@ -624,6 +648,7 @@ export type ResolversUnionTypes<RefType extends Record<string, unknown>> = {
 export type ResolversTypes = {
   AuthInfo: ResolverTypeWrapper<AuthInfo>;
   AuthUser: ResolverTypeWrapper<AuthUser>;
+  AuthUserInput: AuthUserInput;
   Author: ResolverTypeWrapper<ResolversUnionTypes<ResolversTypes>['Author']>;
   Boolean: ResolverTypeWrapper<Scalars['Boolean']['output']>;
   Event: ResolverTypeWrapper<Omit<Event, 'author'> & { author: ResolversTypes['Author'] }>;
@@ -655,6 +680,7 @@ export type ResolversTypes = {
 export type ResolversParentTypes = {
   AuthInfo: AuthInfo;
   AuthUser: AuthUser;
+  AuthUserInput: AuthUserInput;
   Author: ResolversUnionTypes<ResolversParentTypes>['Author'];
   Boolean: Scalars['Boolean']['output'];
   Event: Omit<Event, 'author'> & { author: ResolversParentTypes['Author'] };
@@ -702,7 +728,7 @@ export type AuthUserResolvers<
   last_name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   location?: Resolver<Maybe<ResolversTypes['Location']>, ParentType, ContextType>;
   location_id?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
-  password?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  password?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   verified?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
@@ -836,6 +862,12 @@ export type MutationResolvers<
     RequireFields<MutationDeleteLocationArgs, 'id'>
   >;
   deleteUser?: Resolver<ResolversTypes['String'], ParentType, ContextType, RequireFields<MutationDeleteUserArgs, 'id'>>;
+  editAuthUser?: Resolver<
+    ResolversTypes['AuthUser'],
+    ParentType,
+    ContextType,
+    RequireFields<MutationEditAuthUserArgs, 'location' | 'user'>
+  >;
   editEvent?: Resolver<
     ResolversTypes['Event'],
     ParentType,
@@ -922,6 +954,12 @@ export type QueryResolvers<
   ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query'],
 > = {
   _empty?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType, Partial<Query_EmptyArgs>>;
+  authUserById?: Resolver<
+    Maybe<ResolversTypes['AuthUser']>,
+    ParentType,
+    ContextType,
+    RequireFields<QueryAuthUserByIdArgs, 'id'>
+  >;
   eventById?: Resolver<
     Maybe<ResolversTypes['Event']>,
     ParentType,

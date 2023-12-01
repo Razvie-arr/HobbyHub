@@ -1,9 +1,9 @@
 /* eslint-disable @typescript-eslint/prefer-ts-expect-error */
-import { BatchedSQLDataSource } from '@nic-jennings/sql-datasource';
-import { Tables } from 'knex/types/tables';
+import {BatchedSQLDataSource} from '@nic-jennings/sql-datasource';
+import {Tables} from 'knex/types/tables';
 
-import { eventTypeDataSource } from './entitydatasource/eventTypeDataSource';
-import { locationsDataSource } from './entitydatasource/locationsDataSource';
+import {eventTypeDataSource} from './entitydatasource/eventTypeDataSource';
+import {locationsDataSource} from './entitydatasource/locationsDataSource';
 import {
   eventsDataSource,
   groupsDataSource,
@@ -75,13 +75,14 @@ export class SQLDataSource extends BatchedSQLDataSource {
     ...eventsDataSource(this.db),
   };
 
-  // @ts-ignore, no actual type error but ts-node is erroneously detecting errors
   eventTypes = {
+    // @ts-ignore, no actual type error but ts-node is erroneously detecting errors
     ...this.createBaseQueries('EventType'),
     ...eventTypeDataSource(this.db),
   };
-  // @ts-ignore, no actual type error but ts-node is erroneously detecting errors
+
   locations = {
+    // @ts-ignore, no actual type error but ts-node is erroneously detecting errors
     ...this.createBaseQueries('Location'),
     ...locationsDataSource(this.db),
   };

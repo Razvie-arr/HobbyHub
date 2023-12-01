@@ -1,5 +1,6 @@
 /* eslint-disable */
-import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';
+import {TypedDocumentNode as DocumentNode} from '@graphql-typed-document-node/core';
+
 export type Maybe<T> = T | null;
 export type InputMaybe<T> = Maybe<T>;
 export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
@@ -37,6 +38,18 @@ export type AuthUser = {
   location_id?: Maybe<Scalars['Int']['output']>;
   password: Scalars['String']['output'];
   verified: Scalars['Boolean']['output'];
+};
+
+export type AuthUserInput = {
+  description?: InputMaybe<Scalars['String']['input']>;
+  email: Scalars['String']['input'];
+  event_type_ids: Array<Scalars['Int']['input']>;
+  first_name: Scalars['String']['input'];
+  id: Scalars['Int']['input'];
+  last_name: Scalars['String']['input'];
+  location_id?: InputMaybe<Scalars['Int']['input']>;
+  password: Scalars['String']['input'];
+  verified: Scalars['Boolean']['input'];
 };
 
 export type Author = Group | User;

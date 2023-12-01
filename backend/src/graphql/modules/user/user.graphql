@@ -2,6 +2,8 @@ extend type Query {
   users(offset: Int, limit: Int): [User!]!
   userById(id: Int!): User
   usersByIds(ids: [Int!]!): [User!]!
+
+  authUserById(id: Int!): AuthUser
 }
 
 extend type Mutation {
@@ -13,6 +15,8 @@ extend type Mutation {
   editUser(user: UserInput!, location: LocationInputWithoutCoords!): User!
   deleteUser(id: Int!): String!
   onboardUser(user: UserInput!, location: LocationInputWithoutCoords!): AuthUser!
+
+  editAuthUser(user: AuthUserInput!, location: LocationInputWithoutCoords!): AuthUser!
 }
 
 type User { # Public info about user
@@ -62,5 +66,19 @@ input UserInput {
   description: String
 
   event_type_ids: [Int!]!
+}
+
+input AuthUserInput {
+  id: Int!
+  first_name: String!
+  last_name: String!
+  email: String!
+  password: String!
+  verified: Boolean!
+  description: String
+
+  event_type_ids: [Int!]!
+
+  location_id: Int
 }
 
