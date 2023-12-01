@@ -4,6 +4,7 @@ import { OnboardingForm, useAuth, VerifyUserPage } from 'src/modules/auth';
 import { CreateEventForm, EditEventForm, EventDetailsPage, EventsPage } from 'src/modules/events';
 import { NotFoundPage } from 'src/shared/navigation';
 
+import { SignInPage, SignUpPage } from './modules/auth/pages';
 import { CreateGroupForm, EditGroupForm, GroupDetailsPage, GroupsPage } from './modules/groups';
 import { MessagesPage } from './modules/messages';
 import { SearchPage } from './modules/search';
@@ -26,6 +27,8 @@ export const Routes = () => {
 
       <Route path={route.onboarding()} element={<OnboardingForm />} />
       <Route path={route.verifyUser()} element={<VerifyUserPage />} />
+      <Route path={route.signin()} element={<SignInPage />} />
+      <Route path={route.signup()} element={<SignUpPage />} />
 
       {user ? <Route path={route.messages()} element={<MessagesPage user={user} />} /> : null}
 
