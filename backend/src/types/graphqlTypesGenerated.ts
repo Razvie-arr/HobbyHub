@@ -183,6 +183,7 @@ export type Mutation = {
   createEvent: Event;
   createGroup: Group;
   createLocation?: Maybe<Location>;
+  createReview: Review;
   deleteEvent: Scalars['String']['output'];
   deleteGroup: Scalars['String']['output'];
   deleteLocation: Scalars['String']['output'];
@@ -193,6 +194,7 @@ export type Mutation = {
   editLocation?: Maybe<Location>;
   editReadThread: Scalars['String']['output'];
   editUser: User;
+  maxRatingAllParticipants: Scalars['Boolean']['output'];
   onboardUser: AuthUser;
   requestResetPassword: Scalars['Boolean']['output'];
   resetPassword: Scalars['Boolean']['output'];
@@ -220,6 +222,14 @@ export type MutationCreateGroupArgs = {
 
 export type MutationCreateLocationArgs = {
   location: LocationInputWithoutCoords;
+};
+
+export type MutationCreateReviewArgs = {
+  eventId: Scalars['Int']['input'];
+  rating: Scalars['Float']['input'];
+  reviewerId: Scalars['Int']['input'];
+  text: Scalars['String']['input'];
+  userId: Scalars['Int']['input'];
 };
 
 export type MutationDeleteEventArgs = {
@@ -268,6 +278,11 @@ export type MutationEditReadThreadArgs = {
 export type MutationEditUserArgs = {
   location: LocationInputWithoutCoords;
   user: UserInput;
+};
+
+export type MutationMaxRatingAllParticipantsArgs = {
+  adminId: Scalars['Int']['input'];
+  eventId: Scalars['Int']['input'];
 };
 
 export type MutationOnboardUserArgs = {
@@ -337,6 +352,8 @@ export type Query = {
   messagesByThreadId: Array<Message>;
   nearbyGroups: Array<Group>;
   newlyCreatedNearbyEvents: Array<Event>;
+  reviewById?: Maybe<Review>;
+  reviewsByUserId: Array<Review>;
   searchEvents: Array<Event>;
   searchGroups: Array<Group>;
   similarEvents: Array<Event>;
@@ -462,6 +479,16 @@ export type QueryNewlyCreatedNearbyEventsArgs = {
   offset?: InputMaybe<Scalars['Int']['input']>;
 };
 
+export type QueryReviewByIdArgs = {
+  reviewId: Scalars['Int']['input'];
+};
+
+export type QueryReviewsByUserIdArgs = {
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  userId: Scalars['Int']['input'];
+};
+
 export type QuerySearchEventsArgs = {
   limit?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
@@ -522,6 +549,19 @@ export type RecipientInput = {
   id: Scalars['Int']['input'];
 };
 
+export type Review = {
+  __typename?: 'Review';
+  event: Event;
+  event_id: Scalars['Int']['output'];
+  id: Scalars['Int']['output'];
+  rating: Scalars['Float']['output'];
+  reviewer: User;
+  reviewer_id: Scalars['Int']['output'];
+  text: Scalars['String']['output'];
+  user: User;
+  user_id: Scalars['Int']['output'];
+};
+
 export type SenderInput = {
   first_name: Scalars['String']['input'];
   id: Scalars['Int']['input'];
@@ -545,6 +585,7 @@ export type Thread = {
 
 export type User = {
   __typename?: 'User';
+  average_rating: Scalars['Float']['output'];
   description?: Maybe<Scalars['String']['output']>;
   email: Scalars['String']['output'];
   event_types: Array<EventType>;
@@ -667,6 +708,7 @@ export type ResolversTypes = {
   Mutation: ResolverTypeWrapper<{}>;
   Query: ResolverTypeWrapper<{}>;
   RecipientInput: RecipientInput;
+  Review: ResolverTypeWrapper<Review>;
   SenderInput: SenderInput;
   SortType: SortType;
   String: ResolverTypeWrapper<Scalars['String']['output']>;
@@ -698,6 +740,7 @@ export type ResolversParentTypes = {
   Mutation: {};
   Query: {};
   RecipientInput: RecipientInput;
+  Review: Review;
   SenderInput: SenderInput;
   String: Scalars['String']['output'];
   Thread: Thread;
@@ -843,6 +886,12 @@ export type MutationResolvers<
     ContextType,
     RequireFields<MutationCreateLocationArgs, 'location'>
   >;
+  createReview?: Resolver<
+    ResolversTypes['Review'],
+    ParentType,
+    ContextType,
+    RequireFields<MutationCreateReviewArgs, 'eventId' | 'rating' | 'reviewerId' | 'text' | 'userId'>
+  >;
   deleteEvent?: Resolver<
     ResolversTypes['String'],
     ParentType,
@@ -897,6 +946,12 @@ export type MutationResolvers<
     ParentType,
     ContextType,
     RequireFields<MutationEditUserArgs, 'location' | 'user'>
+  >;
+  maxRatingAllParticipants?: Resolver<
+    ResolversTypes['Boolean'],
+    ParentType,
+    ContextType,
+    RequireFields<MutationMaxRatingAllParticipantsArgs, 'adminId' | 'eventId'>
   >;
   onboardUser?: Resolver<
     ResolversTypes['AuthUser'],
@@ -1049,6 +1104,18 @@ export type QueryResolvers<
     ContextType,
     RequireFields<QueryNewlyCreatedNearbyEventsArgs, 'latitude' | 'longitude'>
   >;
+  reviewById?: Resolver<
+    Maybe<ResolversTypes['Review']>,
+    ParentType,
+    ContextType,
+    RequireFields<QueryReviewByIdArgs, 'reviewId'>
+  >;
+  reviewsByUserId?: Resolver<
+    Array<ResolversTypes['Review']>,
+    ParentType,
+    ContextType,
+    RequireFields<QueryReviewsByUserIdArgs, 'userId'>
+  >;
   searchEvents?: Resolver<
     Array<ResolversTypes['Event']>,
     ParentType,
@@ -1095,6 +1162,22 @@ export type QueryResolvers<
   >;
 };
 
+export type ReviewResolvers<
+  ContextType = CustomContext,
+  ParentType extends ResolversParentTypes['Review'] = ResolversParentTypes['Review'],
+> = {
+  event?: Resolver<ResolversTypes['Event'], ParentType, ContextType>;
+  event_id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  rating?: Resolver<ResolversTypes['Float'], ParentType, ContextType>;
+  reviewer?: Resolver<ResolversTypes['User'], ParentType, ContextType>;
+  reviewer_id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  text?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  user?: Resolver<ResolversTypes['User'], ParentType, ContextType>;
+  user_id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
 export type ThreadResolvers<
   ContextType = CustomContext,
   ParentType extends ResolversParentTypes['Thread'] = ResolversParentTypes['Thread'],
@@ -1116,6 +1199,7 @@ export type UserResolvers<
   ContextType = CustomContext,
   ParentType extends ResolversParentTypes['User'] = ResolversParentTypes['User'],
 > = {
+  average_rating?: Resolver<ResolversTypes['Float'], ParentType, ContextType>;
   description?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   email?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   event_types?: Resolver<Array<ResolversTypes['EventType']>, ParentType, ContextType>;
@@ -1141,6 +1225,7 @@ export type Resolvers<ContextType = CustomContext> = {
   Message?: MessageResolvers<ContextType>;
   Mutation?: MutationResolvers<ContextType>;
   Query?: QueryResolvers<ContextType>;
+  Review?: ReviewResolvers<ContextType>;
   Thread?: ThreadResolvers<ContextType>;
   Upload?: GraphQLScalarType;
   User?: UserResolvers<ContextType>;

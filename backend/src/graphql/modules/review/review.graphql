@@ -1,0 +1,22 @@
+extend type Query {
+  reviewsByUserId(userId: Int!, offset: Int, limit: Int): [Review!]!
+  reviewById(reviewId: Int!): Review
+}
+
+extend type Mutation {
+  createReview(userId: Int!, reviewerId: Int!, eventId: Int!, text: String!, rating: Float!): Review!
+  maxRatingAllParticipants(adminId: Int!, eventId: Int!): Boolean!
+}
+
+type Review {
+  id: Int!
+  user_id: Int!
+  reviewer_id: Int!
+  text: String!
+  rating: Float!
+  event_id: Int!
+
+  user: User!
+  reviewer: User!
+  event: Event!
+}

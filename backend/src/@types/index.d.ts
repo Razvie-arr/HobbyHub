@@ -1,6 +1,6 @@
 import { Knex } from 'knex';
 
-import { Event, EventType, Group, Location, Thread, User } from '../types';
+import { Event, EventType, Group, Location, Review, Thread, User } from '../types';
 
 declare module 'knex/types/tables' {
   interface Tables {
@@ -11,6 +11,7 @@ declare module 'knex/types/tables' {
     Thread: Thread;
     Message: Message;
     UserGroup: Group;
+    Review: Review;
 
     Event_EventType: { event_id: number; event_type_id: number };
     Event_User: { event_id: number; user_id: number };
