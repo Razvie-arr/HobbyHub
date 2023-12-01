@@ -56,6 +56,15 @@ import {
   uploadGroupImageResolver,
 } from './modules/group/groupResolvers';
 import { locationByIdResolver, locationsByIdsResolver, locationsResolver } from './modules/location/locationResolvers';
+import {
+  createReviewResolver,
+  maxRatingAllParticipantsResolver,
+  reviewByIdResolver,
+  reviewEventResolver,
+  reviewReviewerResolver,
+  reviewsByUserIdResolver,
+  reviewUserResolver,
+} from './modules/review/reviewResolver';
 import { searchEventsResolver, searchGroupsResolver } from './modules/search/searchResolver';
 import {
   authUserAdminGroupsResolver,
@@ -118,6 +127,9 @@ export const rootResolver: Resolvers = {
     similarGroups: similarGroupsResolver,
 
     searchGroups: searchGroupsResolver,
+
+    reviewById: reviewByIdResolver,
+    reviewsByUserId: reviewsByUserIdResolver,
   },
 
   AuthUser: {
@@ -155,6 +167,9 @@ export const rootResolver: Resolvers = {
 
     sendMessage: sendMessageResolver,
     editReadThread: editReadThreadResolver,
+
+    createReview: createReviewResolver,
+    maxRatingAllParticipants: maxRatingAllParticipantsResolver,
   },
 
   Upload: GraphQLUpload,
@@ -172,6 +187,11 @@ export const rootResolver: Resolvers = {
     members: groupMembersResolver,
     events: groupEventsResolver,
     event_types: groupEventTypesResolver,
+  },
+  Review: {
+    user: reviewUserResolver,
+    reviewer: reviewReviewerResolver,
+    event: reviewEventResolver,
   },
 
   Author: {
@@ -198,4 +218,3 @@ export const rootResolver: Resolvers = {
     sender: messageSenderResolver,
   },
 };
-
