@@ -26,7 +26,6 @@ import {
   User,
 } from '../../../types';
 import { createGroupInput, getPublicStorageFilePath } from '../../../utils/helpers';
-import { createLocation, updateLocation } from '../location/locationResolvers';
 
 const DEFAULT_LIMIT = 4;
 const FRONTEND_PROFILE_IMAGE_RELATIVE_PATH = 'uploads/group_image';
@@ -209,7 +208,7 @@ export const createGroupResolver = async (
   { location, group }: MutationCreateGroupArgs,
   { dataSources, googleMapsClient }: CustomContext,
 ) => {
-  group.location_id = await createLocation(location, dataSources, googleMapsClient);
+  group.location_id = await dataSources.sql.locations.createLocation(location, googleMapsClient);
 
   const dbResponse = await dataSources.sql.db.write('UserGroup').insert(createGroupInput(group));
   if (!dbResponse[0]) {
@@ -255,32 +254,9 @@ export const editGroupResolver = async (
   }
 
   location.id = location.id ? location.id : group.location_id;
-  await updateLocation(location, dataSources, googleMapsClient);
+  await dataSources.sql.locations.updateLocation(location, googleMapsClient);
 
-  const group_id = group.id;
-  const dbDeleteGroupEventTypeResponse = await dataSources.sql.db
-    .write('UserGroup_EventType')
-    .where('group_id', group_id)
-    .delete();
-
-  if (!dbDeleteGroupEventTypeResponse) {
-    throw new GraphQLError(`Error while updating UserGroup_EventType table part 1!`);
-  }
-  // Use map to create an array of insert promises
-  const insertPromises = group.event_type_ids.map((eventTypeId) =>
-    dataSources.sql.db
-      .write('UserGroup_EventType')
-      .where('group_id', group_id)
-      .insert({ group_id: group_id, event_type_id: eventTypeId }),
-  );
-
-  // Await all insertions
-  const dbGroupEventTypeResponses = await Promise.all(insertPromises);
-
-  // Check if any of the insertions failed
-  if (dbGroupEventTypeResponses.some((response) => !response)) {
-    throw new GraphQLError(`Error while updating UserGroup_EventType table part 2!`);
-  }
+  await dataSources.sql.eventTypes.updateGroup_EventTypeRelation(group.id, group.event_type_ids);
 
   const dbResponse = await dataSources.sql.db
     .write('UserGroup')
