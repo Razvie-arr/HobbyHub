@@ -11,6 +11,7 @@ import {
   QueryReviewByIdArgs,
   QueryReviewsByUserIdArgs,
   QueryReviewsCountArgs,
+  QueryUnreviewedEventParticipantsArgs,
   Review,
   User,
 } from '../../../types';
@@ -99,4 +100,39 @@ export const askForFeedbackResolver = async (
   }
 
   return sentEvents;
+
+export const unreviewedEventParticipantsResolver = async (
+  _: unknown,
+  { userId, eventId }: QueryUnreviewedEventParticipantsArgs,
+  { dataSources }: CustomContext,
+) => {
+  const event = await dataSources.sql.events.getById(eventId);
+  if (!event) {
+    throw new GraphQLError('Event does not exist.');
+  }
+
+  const eventParticipants: User[] = await dataSources.sql.events.getEventParticipants(eventId);
+
+  const userIsParticipant = eventParticipants.find((participant) => participant.id === userId) !== undefined;
+  if (!userIsParticipant) {
+    throw new GraphQLError('User is not participant of this event.');
+  }
+
+  //if user is not author or admin resolver should return event author or group admin
+  const eventBossId = await getEventBossId(event);
+  if (eventBossId !== userId) {
+    const eventBoss = await dataSources.sql.users.getById(eventBossId);
+    if (!eventBoss) {
+      throw new GraphQLError('Event admin or author does not exist');
+    }
+    return [eventBoss];
+  }
+
+  const eventReviews = await dataSources.sql.reviews.getAllByEventId(eventId);
+  if (eventReviews.length === 0) {
+    return eventParticipants;
+  }
+
+  const reviewedUserIds = eventReviews.map((eventReview) => eventReview.user_id);
+  return eventParticipants.filter((participant) => !reviewedUserIds.includes(participant.id));
 };

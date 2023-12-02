@@ -68,6 +68,7 @@ import {
   reviewsByUserIdResolver,
   reviewsCountResolver,
   reviewUserResolver,
+  unreviewedEventParticipantsResolver,
 } from './modules/review/reviewResolver';
 import { searchEventsResolver, searchGroupsResolver } from './modules/search/searchResolver';
 import {
@@ -143,6 +144,7 @@ export const rootResolver: Resolvers = {
     reviewById: reviewByIdResolver,
     reviewsByUserId: reviewsByUserIdResolver,
     reviewsCount: reviewsCountResolver,
+    unreviewedEventParticipants: unreviewedEventParticipantsResolver,
   },
 
   AuthUser: {
