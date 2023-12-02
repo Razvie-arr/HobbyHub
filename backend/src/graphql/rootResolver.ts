@@ -59,6 +59,7 @@ import {
 } from './modules/group/groupResolvers';
 import { locationByIdResolver, locationsByIdsResolver, locationsResolver } from './modules/location/locationResolvers';
 import {
+  askForFeedbackResolver,
   createReviewResolver,
   maxRatingAllParticipantsResolver,
   reviewByIdResolver,
@@ -184,6 +185,7 @@ export const rootResolver: Resolvers = {
 
     createReview: createReviewResolver,
     maxRatingAllParticipants: maxRatingAllParticipantsResolver,
+    askForFeedback: askForFeedbackResolver,
   },
 
   Upload: GraphQLUpload,

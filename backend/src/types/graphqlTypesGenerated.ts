@@ -65,6 +65,7 @@ export type Event = {
   description?: Maybe<Scalars['String']['output']>;
   end_datetime: Scalars['String']['output'];
   event_types: Array<EventType>;
+  feedback_request_sent: Scalars['Boolean']['output'];
   group_id?: Maybe<Scalars['Int']['output']>;
   id: Scalars['Int']['output'];
   image_filepath?: Maybe<Scalars['String']['output']>;
@@ -179,6 +180,7 @@ export type Message = {
 export type Mutation = {
   __typename?: 'Mutation';
   _empty?: Maybe<Scalars['String']['output']>;
+  askForFeedback: Array<Scalars['String']['output']>;
   createEvent: Event;
   createGroup: Group;
   createLocation?: Maybe<Location>;
@@ -813,6 +815,7 @@ export type EventResolvers<
   description?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   end_datetime?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   event_types?: Resolver<Array<ResolversTypes['EventType']>, ParentType, ContextType>;
+  feedback_request_sent?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
   group_id?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
   id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   image_filepath?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
@@ -886,6 +889,7 @@ export type MutationResolvers<
   ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation'],
 > = {
   _empty?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType, Partial<Mutation_EmptyArgs>>;
+  askForFeedback?: Resolver<Array<ResolversTypes['String']>, ParentType, ContextType>;
   createEvent?: Resolver<
     ResolversTypes['Event'],
     ParentType,

@@ -15,6 +15,7 @@ import {
   User,
 } from '../../../types';
 
+import { askForFeedback } from './askForFeedback';
 import { createUserReview } from './createUserReview';
 
 export const reviewByIdResolver: ContextualNullableResolver<Review, QueryReviewByIdArgs> = async (
@@ -76,4 +77,26 @@ export const maxRatingAllParticipantsResolver = async (
   });
 
   return true;
+};
+
+export const askForFeedbackResolver = async (
+  _: unknown,
+  __: unknown,
+  { dataSources, requestSenderUrl }: CustomContext,
+) => {
+  const events = await dataSources.sql.events.getEventsForFeedback();
+  const sentEvents: string[] = [];
+
+  for (const event of events) {
+    const users = await dataSources.sql.events.getEventParticipants(event.id);
+
+    for (const user of users) {
+      await askForFeedback(user, event, requestSenderUrl);
+    }
+
+    sentEvents.push(event.name);
+    await dataSources.sql.events.setFeedbackSentStatus(event.id, true);
+  }
+
+  return sentEvents;
 };

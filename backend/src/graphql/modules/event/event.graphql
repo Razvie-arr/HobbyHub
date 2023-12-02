@@ -41,6 +41,7 @@ type Event {
   capacity: Int!
   allow_waitlist: Boolean!
   created_at: String!
+  feedback_request_sent: Boolean!
 
   author_id: Int
   group_id: Int
