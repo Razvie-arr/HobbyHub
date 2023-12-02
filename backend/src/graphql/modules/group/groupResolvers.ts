@@ -23,6 +23,7 @@ import {
   QueryInterestingNearbyGroupsArgs,
   QueryNearbyGroupsArgs,
   QuerySimilarGroupsArgs,
+  QueryUserAdminGroupsArgs,
   User,
 } from '../../../types';
 import { createGroupInput, getPublicStorageFilePath } from '../../../utils/helpers';
@@ -303,3 +304,9 @@ export const deleteGroupResolver = async (
   }
   return 'Group and location deleted!';
 };
+
+export const userAdminGroupsResolver = async (
+  _: unknown,
+  { userId, offset, limit }: QueryUserAdminGroupsArgs,
+  { dataSources }: CustomContext,
+) => dataSources.sql.groups.getUserAdminGroups(userId, offset, limit);

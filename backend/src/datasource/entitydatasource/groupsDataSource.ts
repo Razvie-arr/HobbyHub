@@ -96,4 +96,12 @@ export const groupsDataSource = (db: { query: DataSourceKnex; write: DataSourceK
     stringQuery += ` LIMIT ${limit} OFFSET ${offset} `;
     return db.query.raw(stringQuery);
   },
+
+  getUserAdminGroups: (userId: number, offset?: number | null, limit?: number | null) => {
+    const query = db
+      .query('UserGroup')
+      .where('admin_id', userId)
+      .offset(offset ?? 0);
+    return limit ? query.limit(limit) : query;
+  },
 });

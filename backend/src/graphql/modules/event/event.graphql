@@ -17,6 +17,8 @@ extend type Query {
     filterLocation: FilterLocationInput
     sort: SortType
   ): [Event!]
+
+  userCreatedEvents(userId: Int!, offset: Int, limit: Int): [Event]!
 }
 
 extend type Mutation {
