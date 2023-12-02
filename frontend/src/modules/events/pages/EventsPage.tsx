@@ -42,15 +42,20 @@ export const EventsPage = ({ location }: EventsPageProps) => {
   initialEndDate.setDate(initialEndDate.getDate() + 1);
   initialEndDate.setHours(0, 0, 0, 0);
 
+  const initialFilterPreset = params?.filterPreset ?? 'today';
+
   const initialFilterValues = {
     address: location,
     sports: params?.sports ?? [],
     games: params?.games ?? [],
     other: params?.other ?? [],
-    dates: [params?.startDate ?? initialStartDate, params?.endDate ?? initialEndDate] as const,
+    dates: [
+      initialFilterPreset === 'today' ? initialStartDate : params?.startDate ?? null,
+      initialFilterPreset === 'today' ? initialEndDate : params?.endDate ?? null,
+    ] as const,
     distance: (params?.distance ?? 20).toString(),
     sortBy: SortType.DateStart,
-    filterPreset: params?.filterPreset ?? 'today',
+    filterPreset: initialFilterPreset,
   };
 
   const fetchFilteredEvents = async (values: EventFiltersValues, ownLimit: number) => {
