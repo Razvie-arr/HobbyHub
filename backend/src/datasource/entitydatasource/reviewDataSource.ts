@@ -10,6 +10,8 @@ export const reviewDataSource = (db: { query: DataSourceKnex; write: DataSourceK
     return limit ? query.limit(limit) : query;
   },
 
+  getAllByEventId: (eventId: number) => db.query('Review').where('event_id', eventId),
+
   insertReview: (userId: number, reviewerId: number, text: string, rating: number, eventId: number) =>
     db
       .write('Review')

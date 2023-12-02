@@ -340,6 +340,7 @@ export type Query = {
   similarGroups: Array<Group>;
   threads: Array<Thread>;
   todaysNearbyEvents: Array<Event>;
+  unreviewedEventParticipants: Array<User>;
   userById?: Maybe<User>;
   users: Array<User>;
   usersByIds: Array<User>;
@@ -504,6 +505,11 @@ export type QueryTodaysNearbyEventsArgs = {
   limit?: InputMaybe<Scalars['Int']['input']>;
   longitude: Scalars['Float']['input'];
   offset?: InputMaybe<Scalars['Int']['input']>;
+};
+
+export type QueryUnreviewedEventParticipantsArgs = {
+  eventId: Scalars['Int']['input'];
+  userId: Scalars['Int']['input'];
 };
 
 export type QueryUserByIdArgs = {
@@ -1113,6 +1119,12 @@ export type QueryResolvers<
     ParentType,
     ContextType,
     RequireFields<QueryTodaysNearbyEventsArgs, 'latitude' | 'longitude'>
+  >;
+  unreviewedEventParticipants?: Resolver<
+    Array<ResolversTypes['User']>,
+    ParentType,
+    ContextType,
+    RequireFields<QueryUnreviewedEventParticipantsArgs, 'eventId' | 'userId'>
   >;
   userById?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType, RequireFields<QueryUserByIdArgs, 'id'>>;
   users?: Resolver<Array<ResolversTypes['User']>, ParentType, ContextType, Partial<QueryUsersArgs>>;
