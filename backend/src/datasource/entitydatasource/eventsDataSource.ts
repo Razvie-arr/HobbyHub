@@ -102,4 +102,12 @@ export const eventsDataSource = (db: { query: DataSourceKnex; write: DataSourceK
       .whereIn('EventType.id', eventTypeIds)
       .offset(offset)
       .limit(limit),
+
+  getUserCreatedEvents: (userId: number, offset?: number | null, limit?: number | null) => {
+    const query = db
+      .query('Event')
+      .where('author_id', userId)
+      .offset(offset ?? 0);
+    return limit ? query.limit(limit) : query;
+  },
 });

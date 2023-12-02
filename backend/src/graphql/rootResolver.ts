@@ -31,6 +31,7 @@ import {
   similarEventsResolver,
   todaysNearbyEventsResolver,
   uploadEventImageResolver,
+  userCreatedEventsResolver,
 } from './modules/event/eventResolvers';
 import {
   eventTypeByIdResolver,
@@ -54,6 +55,7 @@ import {
   nearbyGroupsResolver,
   similarGroupsResolver,
   uploadGroupImageResolver,
+  userAdminGroupsResolver,
 } from './modules/group/groupResolvers';
 import { locationByIdResolver, locationsByIdsResolver, locationsResolver } from './modules/location/locationResolvers';
 import {
@@ -63,6 +65,7 @@ import {
   reviewEventResolver,
   reviewReviewerResolver,
   reviewsByUserIdResolver,
+  reviewsCountResolver,
   reviewUserResolver,
 } from './modules/review/reviewResolver';
 import { searchEventsResolver, searchGroupsResolver } from './modules/search/searchResolver';
@@ -113,6 +116,8 @@ export const rootResolver: Resolvers = {
 
     filterEvents: filterEventResolver,
 
+    userCreatedEvents: userCreatedEventsResolver,
+
     users: usersResolver,
     userById: userByIdResolver,
     usersByIds: usersByIdsResolver,
@@ -132,8 +137,11 @@ export const rootResolver: Resolvers = {
 
     searchGroups: searchGroupsResolver,
 
+    userAdminGroups: userAdminGroupsResolver,
+
     reviewById: reviewByIdResolver,
     reviewsByUserId: reviewsByUserIdResolver,
+    reviewsCount: reviewsCountResolver,
   },
 
   AuthUser: {

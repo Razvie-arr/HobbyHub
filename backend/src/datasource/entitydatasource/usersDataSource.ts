@@ -13,7 +13,10 @@ export const usersDataSource = (db: { query: DataSourceKnex; write: DataSourceKn
     db.query('Event_User').innerJoin('Event', 'Event_User.event_id', 'Event.id').where('Event_User.user_id', userId),
 
   getUserGroups: (userId: number) =>
-    db.query('User_UserGroup').innerJoin('Group', 'User_UserGroup.group_id', 'UserGroup.id').where('user_id', userId),
+    db
+      .query('User_UserGroup')
+      .innerJoin('UserGroup', 'User_UserGroup.group_id', 'UserGroup.id')
+      .where('user_id', userId),
 
   getAuthById: (id: number) => (db.query('User').where('id', id).first('*') as unknown as AuthUser) ?? null,
 });
