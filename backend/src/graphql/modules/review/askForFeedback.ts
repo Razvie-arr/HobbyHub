@@ -3,9 +3,8 @@ import { Event, User } from '../../../types';
 
 export const askForFeedback = async (user: User, event: Event, serverUrl: string) => {
   const userFirstName = user.first_name;
-
   const reviewSubject = 'Please leave your feedback';
-  const link = `${serverUrl}/addReview?eventId=${event.id}`;
+  const link = getAskForFeedbackLink(serverUrl, event.id);
 
   const emailTextMessage = `Hey ${userFirstName}!\n
   Hope you rocked the ${event.name}! 🚀 We're dying to hear what's on your mind. 
@@ -25,4 +24,12 @@ export const askForFeedback = async (user: User, event: Event, serverUrl: string
   } catch (error) {
     throw error;
   }
+};
+
+const getAskForFeedbackLink = (serverUrl: string, eventId: number) => {
+  const protocol = 'https://';
+  const frontendUrl = serverUrl.includes('dev')
+    ? 'dev-frontend-team01-vse.handson.pro'
+    : 'frontend-team01-vse.handson.pro';
+  return protocol + frontendUrl + `/addReview?eventId=${eventId}`;
 };
