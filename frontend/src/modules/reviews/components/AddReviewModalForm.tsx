@@ -1,5 +1,5 @@
 import { useMutation } from '@apollo/client';
-import { Text } from '@chakra-ui/react';
+import { Text, useToast } from '@chakra-ui/react';
 
 import { useDisclosure } from 'src/shared/design-system';
 import { ModalForm, TextareaField, zod, zodResolver } from 'src/shared/forms';
@@ -33,6 +33,7 @@ interface AddReviewModalFormProps extends WithAuthUser {
 
 export const AddReviewModalForm = ({ eventId, user, member }: AddReviewModalFormProps) => {
   const disclosure = useDisclosure();
+  const toast = useToast();
   const [addReviewRequest, addReviewRequestState] = useMutation(ADD_REVIEW, {
     onCompleted: () => {
       disclosure.onClose();
@@ -55,6 +56,14 @@ export const AddReviewModalForm = ({ eventId, user, member }: AddReviewModalForm
               text: formValues.comment,
               userId: member.id,
             },
+          });
+          toast({
+            variant: 'left-accent',
+            status: 'success',
+            position: 'top-right',
+            title: 'Message sent!',
+            description: 'Your message was sent successfully.',
+            isClosable: true,
           });
         },
         resolver: zodResolver(schema),

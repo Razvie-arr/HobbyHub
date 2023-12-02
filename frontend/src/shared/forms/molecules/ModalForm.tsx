@@ -51,7 +51,10 @@ export const ModalForm = <TFieldValues extends FieldValues = FieldValues>({
       colorScheme="purple"
       variant={modalButtonVariant}
       size={{ base: 'sm', md: 'md' }}
-      onClick={disclosure.onOpen}
+      onClick={(event) => {
+        event.preventDefault();
+        disclosure.onOpen();
+      }}
       {...modalButtonProps}
     >
       {modalButtonText}

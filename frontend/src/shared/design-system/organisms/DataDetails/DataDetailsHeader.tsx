@@ -5,6 +5,7 @@ import { match } from 'ts-pattern';
 import { EventStatusTag, useDisclosure } from 'src/shared/design-system';
 import { WithNullableAuthUser } from 'src/shared/types';
 
+import { JoinEventModal } from '../../../../modules/events';
 import { SendMessageModal } from '../../../../modules/messages/components/SendMessageModal';
 import { getCurrentDateTime } from '../../../../utils/form';
 import { ContentContainer } from '../../../layout';
@@ -43,16 +44,7 @@ const DataDetailsHeaderButtons = ({
             </>
           ) : (
             <>
-              {other.type === 'event' ? (
-                <Button
-                  colorScheme="purple"
-                  rounded="full"
-                  isDisabled={other.data.start_datetime.slice(0, 23) < getCurrentDateTime()}
-                  size={{ base: 'sm', md: 'md' }}
-                >
-                  Join event
-                </Button>
-              ) : null}
+              {other.type === 'event' ? <JoinEventModal user={user} event={other.data} /> : null}
               {user ? <SendMessageModal user={user} recipient={owner} disclosure={sendMessageModalDisclosure} /> : null}
             </>
           )}

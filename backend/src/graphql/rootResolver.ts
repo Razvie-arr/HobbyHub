@@ -232,3 +232,4 @@ export const rootResolver: Resolvers = {
     sender: messageSenderResolver,
   },
 };
+

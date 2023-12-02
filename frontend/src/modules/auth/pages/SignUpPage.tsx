@@ -37,8 +37,7 @@ export const SignUpPage = () => {
   const emailVerificationModalDisclosure = useDisclosure();
   const navigate = useNavigate();
   const [signUpRequest, signUpRequestState] = useMutation(SIGN_UP_MUTATION, {
-    onCompleted: ({ signUp }) => {
-      const { id } = signUp.user;
+    onCompleted: () => {
       emailVerificationModalDisclosure.onOpen();
       navigate(route.home());
     },
@@ -60,10 +59,10 @@ export const SignUpPage = () => {
             }}
           >
             <VStack gap={3}>
-                <NameField name="first_name" label="First name" autoFocus />
-                <NameField name="last_name" label="Last name" />
-                <EmailField />
-                <PasswordField confirmPassword />
+              <NameField name="first_name" label="First name" autoFocus />
+              <NameField name="last_name" label="Last name" />
+              <EmailField />
+              <PasswordField confirmPassword />
             </VStack>
             <SubmitButton isLoading={signUpRequestState.loading} text="Sign up"></SubmitButton>
           </Form>

@@ -1,4 +1,5 @@
 export { AddressInfo } from './AddressInfo';
+export { AuthPromptModal } from './AuthPromptModal';
 export { ErrorBanner, type ErrorBannerProps } from './ErrorBanner';
 export { EventDateTime } from './EventDateTime';
 export { EventParticipants } from './EventParticipants';

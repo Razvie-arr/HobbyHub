@@ -1,10 +1,8 @@
 import { HStack, Stack, Text } from '@chakra-ui/react';
-import { useNavigate } from 'react-router-dom';
 import { match } from 'ts-pattern';
 
 import {
   AddressInfo,
-  Button,
   DataCard,
   EventDateTime,
   EventParticipants,
@@ -12,6 +10,7 @@ import {
   EventTypeTag,
 } from 'src/shared/design-system';
 
+import { JoinEventModal } from '../../../../modules/events';
 import { route } from '../../../../route';
 import { getCurrentDateTime } from '../../../../utils/form';
 import { getLocationFragmentData, WithEvent, WithNullableAuthUser } from '../../../types';
@@ -21,47 +20,9 @@ interface EventCardProps extends WithNullableAuthUser, WithEvent {
   maxFlexBasis?: string;
 }
 
-const EventCardButton = ({
-  event,
-  isOwner,
-  hasEventExpired,
-}: WithEvent & { isOwner: boolean; hasEventExpired: boolean }) => {
-  const navigate = useNavigate();
-  return (
-    <Button
-      borderRadius="full"
-      size="sm"
-      colorScheme="purple"
-      variant={isOwner ? 'outline' : 'solid'}
-      isDisabled={
-        !isOwner && (hasEventExpired || (event.participants.length === event.capacity && !event.allow_waitlist))
-      }
-      onClick={(e) => {
-        e.preventDefault();
-        if (isOwner) {
-          navigate(route.eventDetails(event.id));
-        }
-      }}
-    >
-      {isOwner
-        ? 'Edit'
-        : event.participants.length === event.capacity && event.allow_waitlist
-        ? 'Join Waitlist'
-        : 'Join'}
-    </Button>
-  );
-};
-
 export const EventCard = ({ user, event, ...other }: EventCardProps) => {
   const currentDateTime = getCurrentDateTime();
   const hasEventExpired = event.start_datetime.slice(0, 23) < currentDateTime;
-
-  const owner = match(event.author)
-    .with({ __typename: 'User' }, (author) => author)
-    .with({ __typename: 'Group' }, ({ admin }) => admin)
-    .exhaustive();
-
-  const isOwner = user ? user.id === owner.id : false;
 
   return (
     <DataCard
@@ -80,7 +41,7 @@ export const EventCard = ({ user, event, ...other }: EventCardProps) => {
       }
       imageFilepath={event.image_filepath}
       title={event.name}
-      actionButton={<EventCardButton event={event} hasEventExpired={hasEventExpired} isOwner={isOwner} />}
+      actionButton={<JoinEventModal user={user} event={event} />}
       {...other}
     >
       <HStack>
