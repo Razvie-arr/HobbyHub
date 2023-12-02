@@ -16,7 +16,11 @@ export const renderGroupList = (props: GroupListProps | ((events: Array<GroupDat
     return (
       <>
         {withMap && ReadonlyArray.isNonEmptyArray(groups) ? (
-          <DataMapButton type="multiple" data={groups} renderMarkerContent={(data) => <GroupCard group={data} />} />
+          <DataMapButton
+            type="multiple"
+            data={groups}
+            renderMarkerContent={(data) => <GroupCard group={data} simplified />}
+          />
         ) : null}
         <DataList {...dataListProps}>
           {groups.map((group) => (

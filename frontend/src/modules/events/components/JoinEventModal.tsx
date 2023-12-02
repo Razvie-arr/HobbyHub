@@ -30,6 +30,7 @@ export const JoinEventModal = ({ user, event }: WithNullableAuthUser & WithEvent
       <AuthPromptModal
         modalButtonLabel="Join event"
         modalButtonProps={{
+          size: 'sm',
           colorScheme: 'purple',
           borderRadius: 'full',
         }}
@@ -81,7 +82,7 @@ export const JoinEventModal = ({ user, event }: WithNullableAuthUser & WithEvent
         // isLoading: sendMessageRequestState.loading,
         text: "I'm in!",
       }}
-      modalButtonProps={{ rounded: 'full', isDisabled }}
+      modalButtonProps={{ size: 'sm', rounded: 'full', isDisabled }}
     >
       <InputField
         name="message"

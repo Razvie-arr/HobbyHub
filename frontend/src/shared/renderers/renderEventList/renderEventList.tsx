@@ -19,7 +19,7 @@ export const renderEventList = (props: EventListProps | ((events: Array<EventDat
           <DataMapButton
             type="multiple"
             data={events}
-            renderMarkerContent={(data) => <EventCard user={user} event={data} />}
+            renderMarkerContent={(data) => <EventCard user={user} event={data} simplified />}
           />
         ) : null}
         <DataList {...dataListProps}>
