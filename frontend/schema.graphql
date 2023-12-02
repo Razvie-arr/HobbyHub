@@ -152,15 +152,18 @@ type Mutation {
   createEvent(event: EventInput!, location: LocationInputWithoutCoords!): Event!
   createGroup(group: GroupInput!, location: LocationInputWithoutCoords!): Group!
   createLocation(location: LocationInputWithoutCoords!): Location
+  createReview(eventId: Int!, rating: Float!, reviewerId: Int!, text: String!, userId: Int!): Review!
   deleteEvent(event_id: Int!, location_id: Int!): String!
   deleteGroup(group_id: Int!, location_id: Int!): String!
   deleteLocation(id: Int!): String!
   deleteUser(id: Int!): String!
+  editAuthUser(location: LocationInputWithoutCoords!, user: AuthUserInput!): AuthUser!
   editEvent(event: EventInput!, location: LocationInputWithoutCoords!): Event!
   editGroup(group: GroupInput!, location: LocationInputWithoutCoords!): Group!
   editLocation(location: LocationInputWithoutCoords!): Location
   editReadThread(read: Boolean!, threadId: Int!, userId: Int!): String!
   editUser(location: LocationInputWithoutCoords!, user: UserInput!): User!
+  maxRatingAllParticipants(adminId: Int!, eventId: Int!): Boolean!
   onboardUser(location: LocationInputWithoutCoords!, user: UserInput!): AuthUser!
   requestResetPassword(email: String!): Boolean!
   resetPassword(password: String!, token: String!): Boolean!
@@ -174,6 +177,7 @@ type Mutation {
 
 type Query {
   _empty(nothing: String): String
+  authUserById(id: Int!): AuthUser
   eventById(id: Int!): Event
   eventTypeById(id: Int!): EventType
   eventTypes(limit: Int, offset: Int): [EventType!]!
@@ -207,6 +211,8 @@ type Query {
   messagesByThreadId(limit: Int, offset: Int, threadId: Int!): [Message!]!
   nearbyGroups(latitude: Float!, limit: Int, longitude: Float!, offset: Int): [Group!]!
   newlyCreatedNearbyEvents(latitude: Float!, limit: Int, longitude: Float!, offset: Int): [Event!]!
+  reviewById(reviewId: Int!): Review
+  reviewsByUserId(limit: Int, offset: Int, userId: Int!): [Review!]!
   searchEvents(limit: Int, offset: Int, text: String!): [Event!]!
   searchGroups(limit: Int, offset: Int, text: String!): [Group!]!
   similarEvents(city: String!, eventId: Int!, eventTypeIds: [Int!]!, limit: Int, offset: Int): [Event!]!
@@ -222,6 +228,18 @@ input RecipientInput {
   email: String!
   first_name: String!
   id: Int!
+}
+
+type Review {
+  event: Event!
+  event_id: Int!
+  id: Int!
+  rating: Float!
+  reviewer: User!
+  reviewer_id: Int!
+  text: String!
+  user: User!
+  user_id: Int!
 }
 
 input SenderInput {
@@ -250,6 +268,7 @@ The `Upload` scalar type represents a file upload.
 scalar Upload
 
 type User {
+  average_rating: Float!
   description: String
   email: String!
   event_types: [EventType!]!
@@ -272,17 +291,4 @@ input UserInput {
   last_name: String!
   location_id: Int
   verified: Boolean!
-}
-
-type Review {
-  id: Int!
-  user_id: Int!
-  reviewer_id: Int!
-  text: String!
-  rating: Float!
-  event_id: Int!
-
-  user: User!
-  reviewer: User!
-  event: Event!
 }

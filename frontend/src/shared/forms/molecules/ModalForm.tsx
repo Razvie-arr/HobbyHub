@@ -8,6 +8,7 @@ import {
   ModalContent,
   ModalHeader,
   ModalOverlay,
+  Text,
   ThemingProps,
 } from '@chakra-ui/react';
 import { type FieldValues } from 'react-hook-form';
@@ -27,6 +28,7 @@ export interface ModalFormProps<TFieldValues extends FieldValues = FieldValues>
   modalButtonText: ReactNode;
   modalButtonVariant?: ThemingProps<'Button'>['variant'];
   modalTitle: ReactNode;
+  modalDescription?: ReactNode;
   submitButtonProps: SubmitButtonProps;
   modalButtonProps?: ButtonProps;
 }
@@ -40,6 +42,7 @@ export const ModalForm = <TFieldValues extends FieldValues = FieldValues>({
   modalButtonText,
   modalButtonVariant,
   modalTitle,
+  modalDescription,
   submitButtonProps,
   modalButtonProps,
 }: ModalFormProps<TFieldValues>) => (
@@ -59,16 +62,20 @@ export const ModalForm = <TFieldValues extends FieldValues = FieldValues>({
         <ModalHeader>{modalTitle}</ModalHeader>
         <ModalCloseButton />
         <ModalBody px={6} pb={6}>
-          <Form {...formProps}>
-            <Stack spacing="3">
-              {error ? <ErrorBanner title={error} /> : null}
-              {children}
-            </Stack>
-            <SubmitButton {...submitButtonProps} />
-            {additionalButtons ?? null}
-          </Form>
+          <Stack spacing="3">
+            {modalDescription ? <Text>{modalDescription}</Text> : null}
+            <Form {...formProps}>
+              <Stack spacing="3">
+                {error ? <ErrorBanner title={error} /> : null}
+                {children}
+              </Stack>
+              <SubmitButton {...submitButtonProps} />
+              {additionalButtons ?? null}
+            </Form>
+          </Stack>
         </ModalBody>
       </ModalContent>
     </Modal>
   </>
 );
+

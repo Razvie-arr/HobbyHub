@@ -331,3 +331,4 @@ export const filterEventResolver = async (
   );
   return events[0];
 };
+

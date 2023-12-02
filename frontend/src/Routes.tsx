@@ -7,6 +7,7 @@ import { NotFoundPage } from 'src/shared/navigation';
 import { SignInPage, SignUpPage } from './modules/auth/pages';
 import { CreateGroupForm, EditGroupForm, GroupDetailsPage, GroupsPage } from './modules/groups';
 import { MessagesPage } from './modules/messages';
+import { AddReviewPage } from './modules/reviews';
 import { SearchPage } from './modules/search';
 import { route } from './route';
 
@@ -29,6 +30,8 @@ export const Routes = () => {
       <Route path={route.verifyUser()} element={<VerifyUserPage />} />
       <Route path={route.signin()} element={<SignInPage />} />
       <Route path={route.signup()} element={<SignUpPage />} />
+
+      <Route path={route.addReview()} element={<AddReviewPage />} />
 
       {user ? <Route path={route.messages()} element={<MessagesPage user={user} />} /> : null}
 

@@ -1,6 +1,5 @@
 /* eslint-disable */
-import {TypedDocumentNode as DocumentNode} from '@graphql-typed-document-node/core';
-
+import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';
 export type Maybe<T> = T | null;
 export type InputMaybe<T> = Maybe<T>;
 export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
@@ -181,15 +180,18 @@ export type Mutation = {
   createEvent: Event;
   createGroup: Group;
   createLocation?: Maybe<Location>;
+  createReview: Review;
   deleteEvent: Scalars['String']['output'];
   deleteGroup: Scalars['String']['output'];
   deleteLocation: Scalars['String']['output'];
   deleteUser: Scalars['String']['output'];
+  editAuthUser: AuthUser;
   editEvent: Event;
   editGroup: Group;
   editLocation?: Maybe<Location>;
   editReadThread: Scalars['String']['output'];
   editUser: User;
+  maxRatingAllParticipants: Scalars['Boolean']['output'];
   onboardUser: AuthUser;
   requestResetPassword: Scalars['Boolean']['output'];
   resetPassword: Scalars['Boolean']['output'];
@@ -219,6 +221,14 @@ export type MutationCreateLocationArgs = {
   location: LocationInputWithoutCoords;
 };
 
+export type MutationCreateReviewArgs = {
+  eventId: Scalars['Int']['input'];
+  rating: Scalars['Float']['input'];
+  reviewerId: Scalars['Int']['input'];
+  text: Scalars['String']['input'];
+  userId: Scalars['Int']['input'];
+};
+
 export type MutationDeleteEventArgs = {
   event_id: Scalars['Int']['input'];
   location_id: Scalars['Int']['input'];
@@ -235,6 +245,11 @@ export type MutationDeleteLocationArgs = {
 
 export type MutationDeleteUserArgs = {
   id: Scalars['Int']['input'];
+};
+
+export type MutationEditAuthUserArgs = {
+  location: LocationInputWithoutCoords;
+  user: AuthUserInput;
 };
 
 export type MutationEditEventArgs = {
@@ -260,6 +275,11 @@ export type MutationEditReadThreadArgs = {
 export type MutationEditUserArgs = {
   location: LocationInputWithoutCoords;
   user: UserInput;
+};
+
+export type MutationMaxRatingAllParticipantsArgs = {
+  adminId: Scalars['Int']['input'];
+  eventId: Scalars['Int']['input'];
 };
 
 export type MutationOnboardUserArgs = {
@@ -309,6 +329,7 @@ export type MutationVerifyArgs = {
 export type Query = {
   __typename?: 'Query';
   _empty?: Maybe<Scalars['String']['output']>;
+  authUserById?: Maybe<AuthUser>;
   eventById?: Maybe<Event>;
   eventTypeById?: Maybe<EventType>;
   eventTypes: Array<EventType>;
@@ -328,6 +349,8 @@ export type Query = {
   messagesByThreadId: Array<Message>;
   nearbyGroups: Array<Group>;
   newlyCreatedNearbyEvents: Array<Event>;
+  reviewById?: Maybe<Review>;
+  reviewsByUserId: Array<Review>;
   searchEvents: Array<Event>;
   searchGroups: Array<Group>;
   similarEvents: Array<Event>;
@@ -341,6 +364,10 @@ export type Query = {
 
 export type Query_EmptyArgs = {
   nothing?: InputMaybe<Scalars['String']['input']>;
+};
+
+export type QueryAuthUserByIdArgs = {
+  id: Scalars['Int']['input'];
 };
 
 export type QueryEventByIdArgs = {
@@ -449,6 +476,16 @@ export type QueryNewlyCreatedNearbyEventsArgs = {
   offset?: InputMaybe<Scalars['Int']['input']>;
 };
 
+export type QueryReviewByIdArgs = {
+  reviewId: Scalars['Int']['input'];
+};
+
+export type QueryReviewsByUserIdArgs = {
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  userId: Scalars['Int']['input'];
+};
+
 export type QuerySearchEventsArgs = {
   limit?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
@@ -509,6 +546,19 @@ export type RecipientInput = {
   id: Scalars['Int']['input'];
 };
 
+export type Review = {
+  __typename?: 'Review';
+  event: Event;
+  event_id: Scalars['Int']['output'];
+  id: Scalars['Int']['output'];
+  rating: Scalars['Float']['output'];
+  reviewer: User;
+  reviewer_id: Scalars['Int']['output'];
+  text: Scalars['String']['output'];
+  user: User;
+  user_id: Scalars['Int']['output'];
+};
+
 export type SenderInput = {
   first_name: Scalars['String']['input'];
   id: Scalars['Int']['input'];
@@ -532,6 +582,7 @@ export type Thread = {
 
 export type User = {
   __typename?: 'User';
+  average_rating: Scalars['Float']['output'];
   description?: Maybe<Scalars['String']['output']>;
   email: Scalars['String']['output'];
   event_types: Array<EventType>;
@@ -915,6 +966,16 @@ export type MessagesByThreadIdQuery = {
     { __typename?: 'Message' } & { ' $fragmentRefs'?: { MessageFragmentFragment: MessageFragmentFragment } }
   >;
 };
+
+export type CreateReviewMutationVariables = Exact<{
+  userId: Scalars['Int']['input'];
+  reviewerId: Scalars['Int']['input'];
+  eventId: Scalars['Int']['input'];
+  text: Scalars['String']['input'];
+  rating: Scalars['Float']['input'];
+}>;
+
+export type CreateReviewMutation = { __typename?: 'Mutation'; createReview: { __typename?: 'Review'; id: number } };
 
 export type SearchEventsQueryVariables = Exact<{
   text: Scalars['String']['input'];
@@ -5166,6 +5227,83 @@ export const MessagesByThreadIdDocument = {
     },
   ],
 } as unknown as DocumentNode<MessagesByThreadIdQuery, MessagesByThreadIdQueryVariables>;
+export const CreateReviewDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'mutation',
+      name: { kind: 'Name', value: 'CreateReview' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'userId' } },
+          type: { kind: 'NonNullType', type: { kind: 'NamedType', name: { kind: 'Name', value: 'Int' } } },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'reviewerId' } },
+          type: { kind: 'NonNullType', type: { kind: 'NamedType', name: { kind: 'Name', value: 'Int' } } },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'eventId' } },
+          type: { kind: 'NonNullType', type: { kind: 'NamedType', name: { kind: 'Name', value: 'Int' } } },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'text' } },
+          type: { kind: 'NonNullType', type: { kind: 'NamedType', name: { kind: 'Name', value: 'String' } } },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'rating' } },
+          type: { kind: 'NonNullType', type: { kind: 'NamedType', name: { kind: 'Name', value: 'Float' } } },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'createReview' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'userId' },
+                value: { kind: 'Variable', name: { kind: 'Name', value: 'userId' } },
+              },
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'reviewerId' },
+                value: { kind: 'Variable', name: { kind: 'Name', value: 'reviewerId' } },
+              },
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'eventId' },
+                value: { kind: 'Variable', name: { kind: 'Name', value: 'eventId' } },
+              },
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'text' },
+                value: { kind: 'Variable', name: { kind: 'Name', value: 'text' } },
+              },
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'rating' },
+                value: { kind: 'Variable', name: { kind: 'Name', value: 'rating' } },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [{ kind: 'Field', name: { kind: 'Name', value: 'id' } }],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<CreateReviewMutation, CreateReviewMutationVariables>;
 export const SearchEventsDocument = {
   kind: 'Document',
   definitions: [
