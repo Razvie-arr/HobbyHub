@@ -110,4 +110,10 @@ export const eventsDataSource = (db: { query: DataSourceKnex; write: DataSourceK
       .offset(offset ?? 0);
     return limit ? query.limit(limit) : query;
   },
+
+  getEventsForFeedback: () =>
+    db.query('Event').whereRaw('CURRENT_TIMESTAMP > end_datetime').andWhere('feedback_request_sent', 0),
+
+  setFeedbackSentStatus: (eventId: number, sent: boolean) =>
+    db.write('Event').where('id', eventId).update({ feedback_request_sent: sent }),
 });

@@ -7,6 +7,7 @@ extend type Query {
 extend type Mutation {
   createReview(userId: Int!, reviewerId: Int!, eventId: Int!, text: String!, rating: Float!): Review!
   maxRatingAllParticipants(adminId: Int!, eventId: Int!): Boolean!
+  askForFeedback: [String!]!
 }
 
 type Review {
