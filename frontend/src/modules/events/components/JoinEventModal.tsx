@@ -76,6 +76,7 @@ export const JoinEventModal = ({ user, event }: WithNullableAuthUser & WithEvent
           <span>Tell the organizer more about you.</span>
         </>
       }
+      // @ts-expect-error
       submitButtonProps={{
         // isLoading: sendMessageRequestState.loading,
         text: "I'm in!",

@@ -63,6 +63,7 @@ export type Event = {
   description?: Maybe<Scalars['String']['output']>;
   end_datetime: Scalars['String']['output'];
   event_types: Array<EventType>;
+  feedback_request_sent: Scalars['Boolean']['output'];
   group_id?: Maybe<Scalars['Int']['output']>;
   id: Scalars['Int']['output'];
   image_filepath?: Maybe<Scalars['String']['output']>;
@@ -177,6 +178,7 @@ export type Message = {
 export type Mutation = {
   __typename?: 'Mutation';
   _empty?: Maybe<Scalars['String']['output']>;
+  askForFeedback: Array<Scalars['String']['output']>;
   createEvent: Event;
   createGroup: Group;
   createLocation?: Maybe<Location>;
@@ -358,6 +360,7 @@ export type Query = {
   similarGroups: Array<Group>;
   threads: Array<Thread>;
   todaysNearbyEvents: Array<Event>;
+  unreviewedEventParticipants: Array<User>;
   userAdminGroups: Array<Group>;
   userById?: Maybe<User>;
   userCreatedEvents: Array<Maybe<Event>>;
@@ -532,6 +535,11 @@ export type QueryTodaysNearbyEventsArgs = {
   limit?: InputMaybe<Scalars['Int']['input']>;
   longitude: Scalars['Float']['input'];
   offset?: InputMaybe<Scalars['Int']['input']>;
+};
+
+export type QueryUnreviewedEventParticipantsArgs = {
+  eventId: Scalars['Int']['input'];
+  userId: Scalars['Int']['input'];
 };
 
 export type QueryUserAdminGroupsArgs = {

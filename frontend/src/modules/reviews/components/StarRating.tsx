@@ -1,16 +1,7 @@
 import { Box } from '@chakra-ui/react';
 
 export const StarRating = ({ rating }: { rating: number }) => (
-  <Box
-    display="inline-block"
-    color="#D9D9D9"
-    fontSize="48px"
-    width="100%"
-    margin="0"
-    position="relative"
-    padding="0"
-    flexBasis="70%"
-  >
+  <Box display="inline-block" color="#D9D9D9" fontSize="48px" margin="0" position="relative" padding="0">
     <Box
       color="#FFC746"
       padding="0"
@@ -20,7 +11,7 @@ export const StarRating = ({ rating }: { rating: number }) => (
       top="0"
       left="0"
       overflow="hidden"
-      width={`${rating === 0 ? 0 : (70 / 5) * rating}%`}
+      width={`${rating === 0 ? 0 : rating * (100 / 5)}%`}
     >
       <span>★</span>
       <span>★</span>
