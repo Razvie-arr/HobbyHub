@@ -14,6 +14,8 @@ extend type Query {
   nearbyGroups(longitude: Float!, latitude: Float!, offset: Int, limit: Int): [Group!]!
   interestingNearbyGroups(longitude: Float!, latitude: Float!, userId: Int!, offset: Int, limit: Int): [Group!]!
   similarGroups(groupId: Int!, city: String!, eventTypeIds: [Int!]!, offset: Int, limit: Int): [Group!]!
+
+  userAdminGroups(userId: Int!, offset: Int, limit: Int): [Group!]!
 }
 
 extend type Mutation {

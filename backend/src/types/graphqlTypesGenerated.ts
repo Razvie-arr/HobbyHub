@@ -1,7 +1,6 @@
 import { GraphQLResolveInfo, GraphQLScalarType, GraphQLScalarTypeConfig } from 'graphql';
 import { CustomContext } from './types';
 import type { FileUpload } from 'graphql-upload/Upload';
-
 export type Maybe<T> = T | null;
 export type InputMaybe<T> = Maybe<T>;
 export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
@@ -38,7 +37,7 @@ export type AuthUser = {
   last_name: Scalars['String']['output'];
   location?: Maybe<Location>;
   location_id?: Maybe<Scalars['Int']['output']>;
-  password?: Maybe<Scalars['String']['output']>;
+  password: Scalars['String']['output'];
   verified: Scalars['Boolean']['output'];
 };
 
@@ -354,13 +353,16 @@ export type Query = {
   newlyCreatedNearbyEvents: Array<Event>;
   reviewById?: Maybe<Review>;
   reviewsByUserId: Array<Review>;
+  reviewsCount: Scalars['Int']['output'];
   searchEvents: Array<Event>;
   searchGroups: Array<Group>;
   similarEvents: Array<Event>;
   similarGroups: Array<Group>;
   threads: Array<Thread>;
   todaysNearbyEvents: Array<Event>;
+  userAdminGroups: Array<Group>;
   userById?: Maybe<User>;
+  userCreatedEvents: Array<Maybe<Event>>;
   users: Array<User>;
   usersByIds: Array<User>;
 };
@@ -489,6 +491,10 @@ export type QueryReviewsByUserIdArgs = {
   userId: Scalars['Int']['input'];
 };
 
+export type QueryReviewsCountArgs = {
+  userId: Scalars['Int']['input'];
+};
+
 export type QuerySearchEventsArgs = {
   limit?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
@@ -530,8 +536,20 @@ export type QueryTodaysNearbyEventsArgs = {
   offset?: InputMaybe<Scalars['Int']['input']>;
 };
 
+export type QueryUserAdminGroupsArgs = {
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  userId: Scalars['Int']['input'];
+};
+
 export type QueryUserByIdArgs = {
   id: Scalars['Int']['input'];
+};
+
+export type QueryUserCreatedEventsArgs = {
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  userId: Scalars['Int']['input'];
 };
 
 export type QueryUsersArgs = {
@@ -771,7 +789,7 @@ export type AuthUserResolvers<
   last_name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   location?: Resolver<Maybe<ResolversTypes['Location']>, ParentType, ContextType>;
   location_id?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
-  password?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  password?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   verified?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
@@ -1116,6 +1134,12 @@ export type QueryResolvers<
     ContextType,
     RequireFields<QueryReviewsByUserIdArgs, 'userId'>
   >;
+  reviewsCount?: Resolver<
+    ResolversTypes['Int'],
+    ParentType,
+    ContextType,
+    RequireFields<QueryReviewsCountArgs, 'userId'>
+  >;
   searchEvents?: Resolver<
     Array<ResolversTypes['Event']>,
     ParentType,
@@ -1152,7 +1176,19 @@ export type QueryResolvers<
     ContextType,
     RequireFields<QueryTodaysNearbyEventsArgs, 'latitude' | 'longitude'>
   >;
+  userAdminGroups?: Resolver<
+    Array<ResolversTypes['Group']>,
+    ParentType,
+    ContextType,
+    RequireFields<QueryUserAdminGroupsArgs, 'userId'>
+  >;
   userById?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType, RequireFields<QueryUserByIdArgs, 'id'>>;
+  userCreatedEvents?: Resolver<
+    Array<Maybe<ResolversTypes['Event']>>,
+    ParentType,
+    ContextType,
+    RequireFields<QueryUserCreatedEventsArgs, 'userId'>
+  >;
   users?: Resolver<Array<ResolversTypes['User']>, ParentType, ContextType, Partial<QueryUsersArgs>>;
   usersByIds?: Resolver<
     Array<ResolversTypes['User']>,

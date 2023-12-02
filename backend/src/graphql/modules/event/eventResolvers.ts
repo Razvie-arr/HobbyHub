@@ -24,6 +24,7 @@ import {
   QueryNewlyCreatedNearbyEventsArgs,
   QuerySimilarEventsArgs,
   QueryTodaysNearbyEventsArgs,
+  QueryUserCreatedEventsArgs,
   User,
 } from '../../../types';
 import { createEventInput, getPublicStorageFilePath } from '../../../utils/helpers';
@@ -331,3 +332,9 @@ export const filterEventResolver = async (
   );
   return events[0];
 };
+
+export const userCreatedEventsResolver: ContextualResolver<Array<Event>, QueryUserCreatedEventsArgs> = async (
+  _: unknown,
+  { userId, offset, limit },
+  { dataSources },
+) => await dataSources.sql.events.getUserCreatedEvents(userId, offset, limit);

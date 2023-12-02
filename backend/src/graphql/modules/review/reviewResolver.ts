@@ -10,6 +10,7 @@ import {
   MutationMaxRatingAllParticipantsArgs,
   QueryReviewByIdArgs,
   QueryReviewsByUserIdArgs,
+  QueryReviewsCountArgs,
   Review,
   User,
 } from '../../../types';
@@ -27,6 +28,20 @@ export const reviewsByUserIdResolver: ContextualResolver<Array<Review>, QueryRev
   { userId, offset, limit },
   { dataSources },
 ) => await dataSources.sql.reviews.getAllByUserId(userId, offset, limit);
+
+export const reviewsCountResolver: ContextualResolver<number, QueryReviewsCountArgs> = async (
+  _,
+  { userId },
+  { dataSources },
+) => {
+  const dbResponse = await dataSources.sql.reviews.getUserReviewsCount(userId);
+  if (!dbResponse[0]) {
+    return 0;
+  }
+
+  // @ts-expect-error
+  return parseInt(dbResponse[0]['count(*)']);
+};
 
 export const reviewUserResolver: ContextualResolverWithParent<User, Review> = async (parent, _, { dataSources }) =>
   (await dataSources.sql.users.getById(parent.user_id)) as unknown as User;
