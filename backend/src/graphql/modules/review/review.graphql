@@ -2,6 +2,7 @@ extend type Query {
   reviewsByUserId(userId: Int!, offset: Int, limit: Int): [Review!]!
   reviewById(reviewId: Int!): Review
   reviewsCount(userId: Int!): Int!
+  unreviewedEventParticipants(userId: Int!, eventId: Int!): [User!]!
 }
 
 extend type Mutation {
