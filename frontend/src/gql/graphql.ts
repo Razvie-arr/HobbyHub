@@ -351,13 +351,16 @@ export type Query = {
   newlyCreatedNearbyEvents: Array<Event>;
   reviewById?: Maybe<Review>;
   reviewsByUserId: Array<Review>;
+  reviewsCount: Scalars['Int']['output'];
   searchEvents: Array<Event>;
   searchGroups: Array<Group>;
   similarEvents: Array<Event>;
   similarGroups: Array<Group>;
   threads: Array<Thread>;
   todaysNearbyEvents: Array<Event>;
+  userAdminGroups: Array<Group>;
   userById?: Maybe<User>;
+  userCreatedEvents: Array<Maybe<Event>>;
   users: Array<User>;
   usersByIds: Array<User>;
 };
@@ -486,6 +489,10 @@ export type QueryReviewsByUserIdArgs = {
   userId: Scalars['Int']['input'];
 };
 
+export type QueryReviewsCountArgs = {
+  userId: Scalars['Int']['input'];
+};
+
 export type QuerySearchEventsArgs = {
   limit?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
@@ -527,8 +534,20 @@ export type QueryTodaysNearbyEventsArgs = {
   offset?: InputMaybe<Scalars['Int']['input']>;
 };
 
+export type QueryUserAdminGroupsArgs = {
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  userId: Scalars['Int']['input'];
+};
+
 export type QueryUserByIdArgs = {
   id: Scalars['Int']['input'];
+};
+
+export type QueryUserCreatedEventsArgs = {
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  userId: Scalars['Int']['input'];
 };
 
 export type QueryUsersArgs = {

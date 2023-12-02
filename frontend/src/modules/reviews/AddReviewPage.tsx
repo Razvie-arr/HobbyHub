@@ -5,7 +5,7 @@ import { QueryResult } from '../../shared/layout';
 import { getEventFragmentData, WithAuthUser } from '../../shared/types';
 import { useAuth } from '../auth';
 
-import { ReviewEventParticipants } from './components';
+import { ReviewEventMembers } from './components';
 import { EVENT } from './queries';
 
 export const AddReviewPageContainer = () => {
@@ -28,7 +28,7 @@ const AddReviewPage = ({ user, eventId }: AddReviewPageProps) => {
     <QueryResult
       queryResult={eventQueryResult}
       queryName="eventById"
-      render={(eventFragment) => <ReviewEventParticipants user={user} event={getEventFragmentData(eventFragment)} />}
+      render={(eventFragment) => <ReviewEventMembers user={user} event={getEventFragmentData(eventFragment)} />}
       // renderOnNoData={<NoData wrapInContentContainer />}
     />
   );

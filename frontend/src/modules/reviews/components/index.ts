@@ -1,2 +1,2 @@
-export { ReviewEventParticipants } from './ReviewEventMembers';
+export { ReviewEventMembers } from './ReviewEventMembers';
 
