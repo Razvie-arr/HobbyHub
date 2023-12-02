@@ -15,6 +15,7 @@ import {
   Review,
   User,
 } from '../../../types';
+import { getEventBossId } from '../event/getEventBossId';
 
 import { askForFeedback } from './askForFeedback';
 import { createUserReview } from './createUserReview';
@@ -100,6 +101,7 @@ export const askForFeedbackResolver = async (
   }
 
   return sentEvents;
+};
 
 export const unreviewedEventParticipantsResolver = async (
   _: unknown,
