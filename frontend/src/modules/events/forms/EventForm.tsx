@@ -162,6 +162,7 @@ export const EventForm = ({
                         const path = result.data?.uploadEventImage;
                         if (path) {
                           setImageFilePath(path);
+                          onChange(path);
                         }
                       }}
                     />
