@@ -16,22 +16,24 @@ export const Routes = () => {
   return (
     <RouterRoutes>
       <Route path={route.events()} element={<EventsPage />} />
-      <Route path={route.search()} element={<SearchPage />} />
-      <Route path={route.createEvent()} element={<CreateEventForm />} />
-      <Route path={route.editEvent()} element={<EditEventForm />} />
       <Route path={route.eventDetails()} element={<EventDetailsPage />} />
 
       <Route path={route.groups()} element={<GroupsPage />} />
       <Route path={route.groupDetails()} element={<GroupDetailsPage />} />
-      <Route path={route.createGroup()} element={<CreateGroupForm />} />
-      <Route path={route.editGroup()} element={<EditGroupForm />} />
 
-      <Route path={route.onboarding()} element={<OnboardingForm />} />
-      <Route path={route.verifyUser()} element={<VerifyUserPage />} />
+      <Route path={route.search()} element={<SearchPage />} />
+
       <Route path={route.signin()} element={<SignInPage />} />
       <Route path={route.signup()} element={<SignUpPage />} />
+      <Route path={route.verifyUser()} element={<VerifyUserPage />} />
 
       <Route path={route.addReview()} element={<AddReviewPage />} />
+
+      <Route path={route.createEvent()} element={<CreateEventForm />} />
+      <Route path={route.editEvent()} element={<EditEventForm />} />
+      <Route path={route.createGroup()} element={<CreateGroupForm />} />
+      <Route path={route.editGroup()} element={<EditGroupForm />} />
+      <Route path={route.onboarding()} element={<OnboardingForm />} />
 
       {user ? <Route path={route.messages()} element={<MessagesPage user={user} />} /> : null}
 

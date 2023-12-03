@@ -1,4 +1,5 @@
 import { Box, Text } from '@chakra-ui/react';
+import { Option, pipe, ReadonlyArray } from 'effect';
 import { MdAccountCircle, MdInfo, MdLocationOn } from 'react-icons/md';
 import { Link } from 'react-router-dom';
 
@@ -10,7 +11,9 @@ import {
   DataDetailsContent,
   DataDetailsHeader,
   EventTypeTag,
+  NoData,
 } from '../../../../shared/design-system';
+import { renderEventList } from '../../../../shared/renderers';
 import { getLocationFragmentData, WithGroup } from '../../../../shared/types';
 import { useAuth } from '../../../auth';
 import { SendMessageModal } from '../../../messages';
@@ -73,6 +76,19 @@ export const GroupDetails = ({ group }: WithGroup) => {
               <Box p={4} boxShadow="sm" bgColor="white">
                 <Text whiteSpace="pre-line">{group.description}</Text>
               </Box>
+            ),
+          },
+          {
+            title: 'Events',
+            content: pipe(
+              Option.fromNullable(group.events),
+              Option.filter(ReadonlyArray.isNonEmptyArray),
+              Option.match({
+                onNone: () => (
+                  <NoData title="No events" description={`${group.name} has not organized any events yet`} />
+                ),
+                onSome: renderEventList({ user, maxColumnCount: 3 }),
+              }),
             ),
           },
           {

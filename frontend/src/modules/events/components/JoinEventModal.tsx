@@ -1,10 +1,12 @@
 import { useMutation } from '@apollo/client';
-import { useDisclosure, useToast } from '@chakra-ui/react';
+import { Box, Tag, useDisclosure, useToast } from '@chakra-ui/react';
+import { Option, pipe, ReadonlyArray } from 'effect';
 import { match } from 'ts-pattern';
 
 import { ModalForm, TextareaField, zod, zodResolver } from 'src/shared/forms';
 import { WithEvent, WithNullableAuthUser } from 'src/shared/types';
 
+import { ParticipantState } from '../../../gql/graphql';
 import { AuthPromptModal } from '../../../shared/design-system';
 import { getCurrentDateTime } from '../../../utils/form';
 import { REQUEST_EVENT_REGISTRATION } from '../mutations';
@@ -24,6 +26,14 @@ const initialValues: FormValues = {
 interface JoinEventModalProps extends WithNullableAuthUser, WithEvent {
   buttonSize?: 'sm' | 'md' | 'lg' | 'xs';
 }
+
+const commonTagProps = {
+  rounded: 'full',
+  w: '100%',
+  display: 'block',
+  lineHeight: 2.2,
+  variant: 'solid',
+};
 
 export const JoinEventModal = ({ user, event, buttonSize = 'md' }: JoinEventModalProps) => {
   const disclosure = useDisclosure();
@@ -53,6 +63,30 @@ export const JoinEventModal = ({ user, event, buttonSize = 'md' }: JoinEventModa
   if (isUserOrganizer) {
     return (
       <EditEventButton eventId={event.id} rounded="full" size={buttonSize} colorScheme="purple" variant="outline" />
+    );
+  }
+
+  const userParticipant = pipe(
+    event.participants,
+    ReadonlyArray.findFirst((participant) => participant.user.id === user.id),
+  );
+
+  if (Option.isSome(userParticipant)) {
+    return (
+      <Box textAlign="center" w="100%">
+        {match(userParticipant.value.state)
+          .with(ParticipantState.Accepted, () => (
+            <Tag {...commonTagProps} colorScheme="green">
+              Accepted
+            </Tag>
+          ))
+          .with(ParticipantState.Pending, () => (
+            <Tag {...commonTagProps} colorScheme="orange">
+              Pending
+            </Tag>
+          ))
+          .exhaustive()}
+      </Box>
     );
   }
 

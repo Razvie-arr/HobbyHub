@@ -29,6 +29,7 @@ const AddReviewPage = ({ user, eventId }: AddReviewPageProps) => {
   const unreviewedEventParticipantsQueryResult = useQuery(UNREVIEWED_EVENT_PARTICIPANTS, {
     variables: { userId: user.id, eventId },
   });
+
   return (
     <QueryResult
       queryResult={eventQueryResult}
