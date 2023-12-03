@@ -33,6 +33,8 @@ export const EventFragment = gql(/* GraphQL */ `
     location {
       ...LocationFragment
     }
+    author_id
+    group_id
     summary
     description
     image_filepath

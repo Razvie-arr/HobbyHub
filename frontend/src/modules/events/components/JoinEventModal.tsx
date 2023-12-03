@@ -5,8 +5,9 @@ import { match } from 'ts-pattern';
 import { ModalForm, TextareaField, zod, zodResolver } from 'src/shared/forms';
 import { WithEvent, WithNullableAuthUser } from 'src/shared/types';
 
-import { AuthPromptModal } from '../../../shared/design-system/molecules/AuthPromptModal';
+import { AuthPromptModal } from '../../../shared/design-system';
 import { getCurrentDateTime } from '../../../utils/form';
+import { REQUEST_EVENT_REGISTRATION } from '../mutations';
 
 import { EditEventButton } from './shared';
 
@@ -27,9 +28,7 @@ interface JoinEventModalProps extends WithNullableAuthUser, WithEvent {
 export const JoinEventModal = ({ user, event, buttonSize = 'md' }: JoinEventModalProps) => {
   const disclosure = useDisclosure();
   const toast = useToast();
-  // const [sendMessage, sendMessageRequestState] = useMutation(SEND_MESSAGE, {
-  //   onCompleted: disclosure.onClose,
-  // });
+  const [requestEventRegistration, requestEventRegistrationRequestState] = useMutation(REQUEST_EVENT_REGISTRATION);
 
   if (!user) {
     return (
@@ -65,17 +64,33 @@ export const JoinEventModal = ({ user, event, buttonSize = 'md' }: JoinEventModa
   return (
     <ModalForm
       disclosure={disclosure}
-      // error={sendMessageRequestState.error?.message}
+      error={requestEventRegistrationRequestState.error?.message}
       formProps={{
         defaultValues: initialValues,
         noValidate: true,
         onSubmit: async (formValues) => {
+          await requestEventRegistration({
+            variables: {
+              eventRegistration: {
+                event_id: event.id,
+                event_name: event.name,
+                text: formValues.message,
+                user_email: user.email,
+                user_id: user.id,
+                user_name: `${user.first_name} ${user.last_name}`,
+                author_id: event.author_id,
+                group_id: event.group_id,
+              },
+            },
+          });
+          disclosure.onClose();
           toast({
             variant: 'left-accent',
             status: 'success',
             position: 'top-right',
-            title: 'Message sent!',
-            description: 'Your message was sent successfully.',
+            title: 'Join request submitted!',
+            description:
+              "Your join request was submitted successfully. What's left is to wait for the organizer's response.",
             isClosable: true,
           });
         },
@@ -90,9 +105,8 @@ export const JoinEventModal = ({ user, event, buttonSize = 'md' }: JoinEventModa
           <span>Tell the organizer more about you.</span>
         </>
       }
-      // @ts-expect-error
       submitButtonProps={{
-        // isLoading: sendMessageRequestState.loading,
+        isLoading: requestEventRegistrationRequestState.loading,
         text: "I'm in!",
       }}
       modalButtonProps={{ size: buttonSize, rounded: 'full', isDisabled }}
@@ -101,7 +115,7 @@ export const JoinEventModal = ({ user, event, buttonSize = 'md' }: JoinEventModa
         autoFocus
         name="message"
         placeholder="Write a message..."
-        // isDisabled={sendMessageRequestState.loading}
+        isDisabled={requestEventRegistrationRequestState.loading}
       />
     </ModalForm>
   );

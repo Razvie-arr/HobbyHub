@@ -28,6 +28,10 @@ const documents = {
     types.DeleteEventDocument,
   '\n  mutation UploadEventImage($eventImage: Upload) {\n    uploadEventImage(event_image: $eventImage)\n}\n':
     types.UploadEventImageDocument,
+  '\n  mutation RequestEventRegistration($eventRegistration: RequestEventRegistrationInput!) {\n    requestEventRegistration(eventRegistration: $eventRegistration)\n  }\n':
+    types.RequestEventRegistrationDocument,
+  '\n  mutation ResolveEventRegistration($resolve: ResolveEventRegistrationInput!) {\n    resolveEventRegistration(resolve: $resolve)\n  }\n':
+    types.ResolveEventRegistrationDocument,
   '\n  query GetLocationAwareEvents($userId: Int!, $longitude: Float!, $latitude: Float!, $offset: Int, $limit: Int) {\n    todaysNearbyEvents(longitude: $longitude, latitude: $latitude, offset: $offset, limit: $limit) {\n      ...EventFragment\n    }\n    interestingNearbyEvents(\n      longitude: $longitude\n      latitude: $latitude\n      userId: $userId\n      offset: $offset\n      limit: $limit\n    ) {\n      ...EventFragment\n    }\n    newlyCreatedNearbyEvents(longitude: $longitude, latitude: $latitude, offset: $offset, limit: $limit) {\n      ...EventFragment\n    }\n  }\n':
     types.GetLocationAwareEventsDocument,
   '\n  query Events($offset: Int, $limit: Int) {\n    events(offset: $offset, limit: $limit) {\n      ...EventFragment\n    }\n  }\n':
@@ -38,8 +42,8 @@ const documents = {
     types.InterestingNearbyEventsDocument,
   '\n  query NewlyCreatedNearbyEvents($longitude: Float!, $latitude: Float!, $offset: Int, $limit: Int) {\n    newlyCreatedNearbyEvents(longitude: $longitude, latitude: $latitude, offset: $offset, limit: $limit) {\n      ...EventFragment\n    }\n  }\n':
     types.NewlyCreatedNearbyEventsDocument,
-  '\n  query Query($eventId: Int!) {\n    eventById(id: $eventId) {\n      ...EventFragment\n    }\n  }\n':
-    types.QueryDocument,
+  '\n  query Event($eventId: Int!) {\n    eventById(id: $eventId) {\n      ...EventFragment\n    }\n  }\n':
+    types.EventDocument,
   '\n  query FilterEvents($offset: Int, $limit: Int, $eventTypeIds: [Int!], $startDatetime: String, $endDatetime: String, $filterLocation: FilterLocationInput, $sort: SortType) {\n    filterEvents(offset: $offset, limit: $limit, eventTypeIds: $eventTypeIds, start_datetime: $startDatetime, end_datetime: $endDatetime, filterLocation: $filterLocation, sort: $sort) {\n      ...EventFragment\n    }\n  }\n':
     types.FilterEventsDocument,
   '\n  query SimilarEvents($eventId: Int!, $city: String!, $eventTypeIds: [Int!]!) {\n    similarEvents(eventId: $eventId, city: $city, eventTypeIds: $eventTypeIds) {\n      ...EventFragment\n    }\n  }\n':
@@ -78,7 +82,7 @@ const documents = {
     types.SearchEventsDocument,
   '\n  query SearchGroups($text: String!, $offset: Int, $limit: Int) {\n    searchGroups(text: $text, offset: $offset, limit: $limit) {\n      ...GroupFragment\n    }\n  }\n':
     types.SearchGroupsDocument,
-  '\n  fragment EventFragment on Event {\n    id\n    name\n    start_datetime\n    end_datetime\n    event_types {\n      id\n      name\n    }\n    author {\n      ... on User {\n        __typename\n        id\n        first_name\n        last_name\n        email\n      }\n      ... on Group {\n        __typename\n        id\n        name\n        admin {\n          id\n          first_name\n          last_name\n          email\n        }\n      }\n    }\n    location {\n      ...LocationFragment\n    }\n    summary\n    description\n    image_filepath\n    capacity\n    allow_waitlist\n    participants {\n      user {\n        id\n        first_name\n        last_name\n        email\n      }\n      state\n      text\n    }\n  }\n':
+  '\n  fragment EventFragment on Event {\n    id\n    name\n    start_datetime\n    end_datetime\n    event_types {\n      id\n      name\n    }\n    author {\n      ... on User {\n        __typename\n        id\n        first_name\n        last_name\n        email\n      }\n      ... on Group {\n        __typename\n        id\n        name\n        admin {\n          id\n          first_name\n          last_name\n          email\n        }\n      }\n    }\n    location {\n      ...LocationFragment\n    }\n    author_id\n    group_id\n    summary\n    description\n    image_filepath\n    capacity\n    allow_waitlist\n    participants {\n      user {\n        id\n        first_name\n        last_name\n        email\n      }\n      state\n      text\n    }\n  }\n':
     types.EventFragmentFragmentDoc,
   '\n  fragment GroupFragment on Group {\n    id\n    name\n    admin {\n      id\n      first_name\n      last_name\n      email\n    }\n    event_types {\n      id\n      name\n    }\n    location {\n      ...LocationFragment\n    }\n    events {\n      ...EventFragment\n    }\n    members {\n      id\n      first_name\n      last_name\n      email\n    }\n    summary\n    description\n    image_filepath\n  }\n':
     types.GroupFragmentFragmentDoc,
@@ -156,6 +160,18 @@ export function gql(
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function gql(
+  source: '\n  mutation RequestEventRegistration($eventRegistration: RequestEventRegistrationInput!) {\n    requestEventRegistration(eventRegistration: $eventRegistration)\n  }\n',
+): (typeof documents)['\n  mutation RequestEventRegistration($eventRegistration: RequestEventRegistrationInput!) {\n    requestEventRegistration(eventRegistration: $eventRegistration)\n  }\n'];
+/**
+ * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function gql(
+  source: '\n  mutation ResolveEventRegistration($resolve: ResolveEventRegistrationInput!) {\n    resolveEventRegistration(resolve: $resolve)\n  }\n',
+): (typeof documents)['\n  mutation ResolveEventRegistration($resolve: ResolveEventRegistrationInput!) {\n    resolveEventRegistration(resolve: $resolve)\n  }\n'];
+/**
+ * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function gql(
   source: '\n  query GetLocationAwareEvents($userId: Int!, $longitude: Float!, $latitude: Float!, $offset: Int, $limit: Int) {\n    todaysNearbyEvents(longitude: $longitude, latitude: $latitude, offset: $offset, limit: $limit) {\n      ...EventFragment\n    }\n    interestingNearbyEvents(\n      longitude: $longitude\n      latitude: $latitude\n      userId: $userId\n      offset: $offset\n      limit: $limit\n    ) {\n      ...EventFragment\n    }\n    newlyCreatedNearbyEvents(longitude: $longitude, latitude: $latitude, offset: $offset, limit: $limit) {\n      ...EventFragment\n    }\n  }\n',
 ): (typeof documents)['\n  query GetLocationAwareEvents($userId: Int!, $longitude: Float!, $latitude: Float!, $offset: Int, $limit: Int) {\n    todaysNearbyEvents(longitude: $longitude, latitude: $latitude, offset: $offset, limit: $limit) {\n      ...EventFragment\n    }\n    interestingNearbyEvents(\n      longitude: $longitude\n      latitude: $latitude\n      userId: $userId\n      offset: $offset\n      limit: $limit\n    ) {\n      ...EventFragment\n    }\n    newlyCreatedNearbyEvents(longitude: $longitude, latitude: $latitude, offset: $offset, limit: $limit) {\n      ...EventFragment\n    }\n  }\n'];
 /**
@@ -186,8 +202,8 @@ export function gql(
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function gql(
-  source: '\n  query Query($eventId: Int!) {\n    eventById(id: $eventId) {\n      ...EventFragment\n    }\n  }\n',
-): (typeof documents)['\n  query Query($eventId: Int!) {\n    eventById(id: $eventId) {\n      ...EventFragment\n    }\n  }\n'];
+  source: '\n  query Event($eventId: Int!) {\n    eventById(id: $eventId) {\n      ...EventFragment\n    }\n  }\n',
+): (typeof documents)['\n  query Event($eventId: Int!) {\n    eventById(id: $eventId) {\n      ...EventFragment\n    }\n  }\n'];
 /**
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
@@ -306,8 +322,8 @@ export function gql(
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function gql(
-  source: '\n  fragment EventFragment on Event {\n    id\n    name\n    start_datetime\n    end_datetime\n    event_types {\n      id\n      name\n    }\n    author {\n      ... on User {\n        __typename\n        id\n        first_name\n        last_name\n        email\n      }\n      ... on Group {\n        __typename\n        id\n        name\n        admin {\n          id\n          first_name\n          last_name\n          email\n        }\n      }\n    }\n    location {\n      ...LocationFragment\n    }\n    summary\n    description\n    image_filepath\n    capacity\n    allow_waitlist\n    participants {\n      user {\n        id\n        first_name\n        last_name\n        email\n      }\n      state\n      text\n    }\n  }\n',
-): (typeof documents)['\n  fragment EventFragment on Event {\n    id\n    name\n    start_datetime\n    end_datetime\n    event_types {\n      id\n      name\n    }\n    author {\n      ... on User {\n        __typename\n        id\n        first_name\n        last_name\n        email\n      }\n      ... on Group {\n        __typename\n        id\n        name\n        admin {\n          id\n          first_name\n          last_name\n          email\n        }\n      }\n    }\n    location {\n      ...LocationFragment\n    }\n    summary\n    description\n    image_filepath\n    capacity\n    allow_waitlist\n    participants {\n      user {\n        id\n        first_name\n        last_name\n        email\n      }\n      state\n      text\n    }\n  }\n'];
+  source: '\n  fragment EventFragment on Event {\n    id\n    name\n    start_datetime\n    end_datetime\n    event_types {\n      id\n      name\n    }\n    author {\n      ... on User {\n        __typename\n        id\n        first_name\n        last_name\n        email\n      }\n      ... on Group {\n        __typename\n        id\n        name\n        admin {\n          id\n          first_name\n          last_name\n          email\n        }\n      }\n    }\n    location {\n      ...LocationFragment\n    }\n    author_id\n    group_id\n    summary\n    description\n    image_filepath\n    capacity\n    allow_waitlist\n    participants {\n      user {\n        id\n        first_name\n        last_name\n        email\n      }\n      state\n      text\n    }\n  }\n',
+): (typeof documents)['\n  fragment EventFragment on Event {\n    id\n    name\n    start_datetime\n    end_datetime\n    event_types {\n      id\n      name\n    }\n    author {\n      ... on User {\n        __typename\n        id\n        first_name\n        last_name\n        email\n      }\n      ... on Group {\n        __typename\n        id\n        name\n        admin {\n          id\n          first_name\n          last_name\n          email\n        }\n      }\n    }\n    location {\n      ...LocationFragment\n    }\n    author_id\n    group_id\n    summary\n    description\n    image_filepath\n    capacity\n    allow_waitlist\n    participants {\n      user {\n        id\n        first_name\n        last_name\n        email\n      }\n      state\n      text\n    }\n  }\n'];
 /**
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */

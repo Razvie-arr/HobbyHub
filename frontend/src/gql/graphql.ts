@@ -790,6 +790,18 @@ export type UploadEventImageMutationVariables = Exact<{
 
 export type UploadEventImageMutation = { __typename?: 'Mutation'; uploadEventImage?: string | null };
 
+export type RequestEventRegistrationMutationVariables = Exact<{
+  eventRegistration: RequestEventRegistrationInput;
+}>;
+
+export type RequestEventRegistrationMutation = { __typename?: 'Mutation'; requestEventRegistration: string };
+
+export type ResolveEventRegistrationMutationVariables = Exact<{
+  resolve: ResolveEventRegistrationInput;
+}>;
+
+export type ResolveEventRegistrationMutation = { __typename?: 'Mutation'; resolveEventRegistration: string };
+
 export type GetLocationAwareEventsQueryVariables = Exact<{
   userId: Scalars['Int']['input'];
   longitude: Scalars['Float']['input'];
@@ -864,11 +876,11 @@ export type NewlyCreatedNearbyEventsQuery = {
   >;
 };
 
-export type QueryQueryVariables = Exact<{
+export type EventQueryVariables = Exact<{
   eventId: Scalars['Int']['input'];
 }>;
 
-export type QueryQuery = {
+export type EventQuery = {
   __typename?: 'Query';
   eventById?:
     | ({ __typename?: 'Event' } & { ' $fragmentRefs'?: { EventFragmentFragment: EventFragmentFragment } })
@@ -1093,6 +1105,8 @@ export type EventFragmentFragment = {
   name: string;
   start_datetime: string;
   end_datetime: string;
+  author_id?: number | null;
+  group_id?: number | null;
   summary: string;
   description?: string | null;
   image_filepath?: string | null;
@@ -1266,6 +1280,8 @@ export const EventFragmentFragmentDoc = {
               selections: [{ kind: 'FragmentSpread', name: { kind: 'Name', value: 'LocationFragment' } }],
             },
           },
+          { kind: 'Field', name: { kind: 'Name', value: 'author_id' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'group_id' } },
           { kind: 'Field', name: { kind: 'Name', value: 'summary' } },
           { kind: 'Field', name: { kind: 'Name', value: 'description' } },
           { kind: 'Field', name: { kind: 'Name', value: 'image_filepath' } },
@@ -1483,6 +1499,8 @@ export const GroupFragmentFragmentDoc = {
               selections: [{ kind: 'FragmentSpread', name: { kind: 'Name', value: 'LocationFragment' } }],
             },
           },
+          { kind: 'Field', name: { kind: 'Name', value: 'author_id' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'group_id' } },
           { kind: 'Field', name: { kind: 'Name', value: 'summary' } },
           { kind: 'Field', name: { kind: 'Name', value: 'description' } },
           { kind: 'Field', name: { kind: 'Name', value: 'image_filepath' } },
@@ -2107,6 +2125,78 @@ export const UploadEventImageDocument = {
     },
   ],
 } as unknown as DocumentNode<UploadEventImageMutation, UploadEventImageMutationVariables>;
+export const RequestEventRegistrationDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'mutation',
+      name: { kind: 'Name', value: 'RequestEventRegistration' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'eventRegistration' } },
+          type: {
+            kind: 'NonNullType',
+            type: { kind: 'NamedType', name: { kind: 'Name', value: 'RequestEventRegistrationInput' } },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'requestEventRegistration' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'eventRegistration' },
+                value: { kind: 'Variable', name: { kind: 'Name', value: 'eventRegistration' } },
+              },
+            ],
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<RequestEventRegistrationMutation, RequestEventRegistrationMutationVariables>;
+export const ResolveEventRegistrationDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'mutation',
+      name: { kind: 'Name', value: 'ResolveEventRegistration' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'resolve' } },
+          type: {
+            kind: 'NonNullType',
+            type: { kind: 'NamedType', name: { kind: 'Name', value: 'ResolveEventRegistrationInput' } },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'resolveEventRegistration' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'resolve' },
+                value: { kind: 'Variable', name: { kind: 'Name', value: 'resolve' } },
+              },
+            ],
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<ResolveEventRegistrationMutation, ResolveEventRegistrationMutationVariables>;
 export const GetLocationAwareEventsDocument = {
   kind: 'Document',
   definitions: [
@@ -2337,6 +2427,8 @@ export const GetLocationAwareEventsDocument = {
               selections: [{ kind: 'FragmentSpread', name: { kind: 'Name', value: 'LocationFragment' } }],
             },
           },
+          { kind: 'Field', name: { kind: 'Name', value: 'author_id' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'group_id' } },
           { kind: 'Field', name: { kind: 'Name', value: 'summary' } },
           { kind: 'Field', name: { kind: 'Name', value: 'description' } },
           { kind: 'Field', name: { kind: 'Name', value: 'image_filepath' } },
@@ -2511,6 +2603,8 @@ export const EventsDocument = {
               selections: [{ kind: 'FragmentSpread', name: { kind: 'Name', value: 'LocationFragment' } }],
             },
           },
+          { kind: 'Field', name: { kind: 'Name', value: 'author_id' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'group_id' } },
           { kind: 'Field', name: { kind: 'Name', value: 'summary' } },
           { kind: 'Field', name: { kind: 'Name', value: 'description' } },
           { kind: 'Field', name: { kind: 'Name', value: 'image_filepath' } },
@@ -2705,6 +2799,8 @@ export const TodaysNearbyEventsDocument = {
               selections: [{ kind: 'FragmentSpread', name: { kind: 'Name', value: 'LocationFragment' } }],
             },
           },
+          { kind: 'Field', name: { kind: 'Name', value: 'author_id' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'group_id' } },
           { kind: 'Field', name: { kind: 'Name', value: 'summary' } },
           { kind: 'Field', name: { kind: 'Name', value: 'description' } },
           { kind: 'Field', name: { kind: 'Name', value: 'image_filepath' } },
@@ -2909,6 +3005,8 @@ export const InterestingNearbyEventsDocument = {
               selections: [{ kind: 'FragmentSpread', name: { kind: 'Name', value: 'LocationFragment' } }],
             },
           },
+          { kind: 'Field', name: { kind: 'Name', value: 'author_id' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'group_id' } },
           { kind: 'Field', name: { kind: 'Name', value: 'summary' } },
           { kind: 'Field', name: { kind: 'Name', value: 'description' } },
           { kind: 'Field', name: { kind: 'Name', value: 'image_filepath' } },
@@ -3103,6 +3201,8 @@ export const NewlyCreatedNearbyEventsDocument = {
               selections: [{ kind: 'FragmentSpread', name: { kind: 'Name', value: 'LocationFragment' } }],
             },
           },
+          { kind: 'Field', name: { kind: 'Name', value: 'author_id' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'group_id' } },
           { kind: 'Field', name: { kind: 'Name', value: 'summary' } },
           { kind: 'Field', name: { kind: 'Name', value: 'description' } },
           { kind: 'Field', name: { kind: 'Name', value: 'image_filepath' } },
@@ -3137,13 +3237,13 @@ export const NewlyCreatedNearbyEventsDocument = {
     },
   ],
 } as unknown as DocumentNode<NewlyCreatedNearbyEventsQuery, NewlyCreatedNearbyEventsQueryVariables>;
-export const QueryDocument = {
+export const EventDocument = {
   kind: 'Document',
   definitions: [
     {
       kind: 'OperationDefinition',
       operation: 'query',
-      name: { kind: 'Name', value: 'Query' },
+      name: { kind: 'Name', value: 'Event' },
       variableDefinitions: [
         {
           kind: 'VariableDefinition',
@@ -3267,6 +3367,8 @@ export const QueryDocument = {
               selections: [{ kind: 'FragmentSpread', name: { kind: 'Name', value: 'LocationFragment' } }],
             },
           },
+          { kind: 'Field', name: { kind: 'Name', value: 'author_id' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'group_id' } },
           { kind: 'Field', name: { kind: 'Name', value: 'summary' } },
           { kind: 'Field', name: { kind: 'Name', value: 'description' } },
           { kind: 'Field', name: { kind: 'Name', value: 'image_filepath' } },
@@ -3300,7 +3402,7 @@ export const QueryDocument = {
       },
     },
   ],
-} as unknown as DocumentNode<QueryQuery, QueryQueryVariables>;
+} as unknown as DocumentNode<EventQuery, EventQueryVariables>;
 export const FilterEventsDocument = {
   kind: 'Document',
   definitions: [
@@ -3494,6 +3596,8 @@ export const FilterEventsDocument = {
               selections: [{ kind: 'FragmentSpread', name: { kind: 'Name', value: 'LocationFragment' } }],
             },
           },
+          { kind: 'Field', name: { kind: 'Name', value: 'author_id' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'group_id' } },
           { kind: 'Field', name: { kind: 'Name', value: 'summary' } },
           { kind: 'Field', name: { kind: 'Name', value: 'description' } },
           { kind: 'Field', name: { kind: 'Name', value: 'image_filepath' } },
@@ -3684,6 +3788,8 @@ export const SimilarEventsDocument = {
               selections: [{ kind: 'FragmentSpread', name: { kind: 'Name', value: 'LocationFragment' } }],
             },
           },
+          { kind: 'Field', name: { kind: 'Name', value: 'author_id' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'group_id' } },
           { kind: 'Field', name: { kind: 'Name', value: 'summary' } },
           { kind: 'Field', name: { kind: 'Name', value: 'description' } },
           { kind: 'Field', name: { kind: 'Name', value: 'image_filepath' } },
@@ -4034,6 +4140,8 @@ export const GroupsDocument = {
               selections: [{ kind: 'FragmentSpread', name: { kind: 'Name', value: 'LocationFragment' } }],
             },
           },
+          { kind: 'Field', name: { kind: 'Name', value: 'author_id' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'group_id' } },
           { kind: 'Field', name: { kind: 'Name', value: 'summary' } },
           { kind: 'Field', name: { kind: 'Name', value: 'description' } },
           { kind: 'Field', name: { kind: 'Name', value: 'image_filepath' } },
@@ -4266,6 +4374,8 @@ export const GroupByIdDocument = {
               selections: [{ kind: 'FragmentSpread', name: { kind: 'Name', value: 'LocationFragment' } }],
             },
           },
+          { kind: 'Field', name: { kind: 'Name', value: 'author_id' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'group_id' } },
           { kind: 'Field', name: { kind: 'Name', value: 'summary' } },
           { kind: 'Field', name: { kind: 'Name', value: 'description' } },
           { kind: 'Field', name: { kind: 'Name', value: 'image_filepath' } },
@@ -4541,6 +4651,8 @@ export const FilterGroupsDocument = {
               selections: [{ kind: 'FragmentSpread', name: { kind: 'Name', value: 'LocationFragment' } }],
             },
           },
+          { kind: 'Field', name: { kind: 'Name', value: 'author_id' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'group_id' } },
           { kind: 'Field', name: { kind: 'Name', value: 'summary' } },
           { kind: 'Field', name: { kind: 'Name', value: 'description' } },
           { kind: 'Field', name: { kind: 'Name', value: 'image_filepath' } },
@@ -4843,6 +4955,8 @@ export const GetLocationAwareGroupsDocument = {
               selections: [{ kind: 'FragmentSpread', name: { kind: 'Name', value: 'LocationFragment' } }],
             },
           },
+          { kind: 'Field', name: { kind: 'Name', value: 'author_id' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'group_id' } },
           { kind: 'Field', name: { kind: 'Name', value: 'summary' } },
           { kind: 'Field', name: { kind: 'Name', value: 'description' } },
           { kind: 'Field', name: { kind: 'Name', value: 'image_filepath' } },
@@ -5101,6 +5215,8 @@ export const SimilarGroupsDocument = {
               selections: [{ kind: 'FragmentSpread', name: { kind: 'Name', value: 'LocationFragment' } }],
             },
           },
+          { kind: 'Field', name: { kind: 'Name', value: 'author_id' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'group_id' } },
           { kind: 'Field', name: { kind: 'Name', value: 'summary' } },
           { kind: 'Field', name: { kind: 'Name', value: 'description' } },
           { kind: 'Field', name: { kind: 'Name', value: 'image_filepath' } },
@@ -5760,6 +5876,8 @@ export const SearchEventsDocument = {
               selections: [{ kind: 'FragmentSpread', name: { kind: 'Name', value: 'LocationFragment' } }],
             },
           },
+          { kind: 'Field', name: { kind: 'Name', value: 'author_id' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'group_id' } },
           { kind: 'Field', name: { kind: 'Name', value: 'summary' } },
           { kind: 'Field', name: { kind: 'Name', value: 'description' } },
           { kind: 'Field', name: { kind: 'Name', value: 'image_filepath' } },
@@ -5944,6 +6062,8 @@ export const SearchGroupsDocument = {
               selections: [{ kind: 'FragmentSpread', name: { kind: 'Name', value: 'LocationFragment' } }],
             },
           },
+          { kind: 'Field', name: { kind: 'Name', value: 'author_id' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'group_id' } },
           { kind: 'Field', name: { kind: 'Name', value: 'summary' } },
           { kind: 'Field', name: { kind: 'Name', value: 'description' } },
           { kind: 'Field', name: { kind: 'Name', value: 'image_filepath' } },

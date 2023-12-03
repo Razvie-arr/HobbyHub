@@ -27,3 +27,16 @@ export const UPLOAD_EVENT_IMAGE = gql(`
     uploadEventImage(event_image: $eventImage)
 }
 `);
+
+export const REQUEST_EVENT_REGISTRATION = gql(`
+  mutation RequestEventRegistration($eventRegistration: RequestEventRegistrationInput!) {
+    requestEventRegistration(eventRegistration: $eventRegistration)
+  }
+`);
+
+export const RESOLVE_EVENT_REGISTRATION = gql(`
+  mutation ResolveEventRegistration($resolve: ResolveEventRegistrationInput!) {
+    resolveEventRegistration(resolve: $resolve)
+  }
+`);
+

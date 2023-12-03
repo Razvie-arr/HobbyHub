@@ -1,5 +1,5 @@
 import { Box, Flex, Text } from '@chakra-ui/react';
-import { ReadonlyArray } from 'effect';
+import { Option, pipe, ReadonlyArray } from 'effect';
 import { MdAccountCircle, MdCalendarToday, MdGroups, MdInfo, MdLocationOn } from 'react-icons/md';
 import { match } from 'ts-pattern';
 
@@ -105,12 +105,20 @@ export const EventDetails = ({ event }: WithEvent) => {
             title: 'Participants',
             content: (
               <Flex justifyContent="space-between" flexWrap="wrap">
-                {ReadonlyArray.isNonEmptyArray(event.participants) ? (
-                  ReadonlyArray.map(event.participants, (participant) => (
-                    <EventParticipantItem key={participant.user.id} user={user} member={participant.user} />
-                  ))
-                ) : (
-                  <NoData description={`There are no participants for ${event.name} yet`} />
+                {pipe(
+                  Option.fromNullable(event.participants),
+                  Option.filter(ReadonlyArray.isNonEmptyArray),
+                  Option.map(
+                    ReadonlyArray.map((participant) => (
+                      <EventParticipantItem
+                        key={participant.user.id}
+                        user={user}
+                        event={event}
+                        participant={participant}
+                      />
+                    )),
+                  ),
+                  Option.getOrElse(() => <NoData description={`There are no participants for ${event.name} yet`} />),
                 )}
               </Flex>
             ),

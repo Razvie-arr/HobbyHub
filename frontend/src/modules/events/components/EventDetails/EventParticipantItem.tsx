@@ -1,19 +1,20 @@
-import { Box, HStack, IconButton, Text } from '@chakra-ui/react';
+import { Box, HStack, Icon, IconButton, Text } from '@chakra-ui/react';
+import { FaCheck } from 'react-icons/fa6';
 import { MdAccountCircle } from 'react-icons/md';
+import { match } from 'ts-pattern';
 
-import { WithNullableAuthUser } from '../../../../shared/types';
+import { ParticipantState } from '../../../../gql/graphql';
+import { WithEvent, WithNullableAuthUser } from '../../../../shared/types';
 import { SendMessageModal } from '../../../messages';
+import { WithParticipant } from '../../types';
 
-interface EventParticipantItemProps extends WithNullableAuthUser {
-  member: {
-    id: number;
-    first_name: string;
-    last_name: string;
-    email: string;
-  };
-}
+import { ResolveRequestModal } from './ResolveRequestModal';
 
-export const EventParticipantItem = ({ user, member }: EventParticipantItemProps) => (
+export const EventParticipantItem = ({
+  user,
+  event,
+  participant,
+}: WithNullableAuthUser & WithEvent & WithParticipant) => (
   <HStack
     justifyContent="space-between"
     bgColor="white"
@@ -33,11 +34,15 @@ export const EventParticipantItem = ({ user, member }: EventParticipantItemProps
         icon={<MdAccountCircle />}
         fontSize="40"
       />
-      <Text>{`${member.first_name} ${member.last_name}`}</Text>
+      <Text>{`${participant.user.first_name} ${participant.user.last_name}`}</Text>
+      {match(participant.state)
+        .with(ParticipantState.Pending, () => <ResolveRequestModal event={event} participant={participant} />)
+        .with(ParticipantState.Accepted, () => <Icon as={FaCheck} color="green.500" />)
+        .exhaustive()}
     </HStack>
     {user ? (
       <Box>
-        <SendMessageModal recipient={member} user={user} />
+        <SendMessageModal recipient={participant.user} user={user} />
       </Box>
     ) : null}
   </HStack>

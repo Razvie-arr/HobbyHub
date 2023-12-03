@@ -53,7 +53,7 @@ export const NEWLY_CREATED_NEARBY_EVENTS = gql(`
 `);
 
 export const EVENT = gql(`
-  query Query($eventId: Int!) {
+  query Event($eventId: Int!) {
     eventById(id: $eventId) {
       ...EventFragment
     }
