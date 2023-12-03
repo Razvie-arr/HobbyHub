@@ -1,28 +1,25 @@
 import { Box, Flex, Text } from '@chakra-ui/react';
 import { ReadonlyArray } from 'effect';
 import { MdAccountCircle, MdCalendarToday, MdGroups, MdInfo, MdLocationOn } from 'react-icons/md';
-import { Link } from 'react-router-dom';
 import { match } from 'ts-pattern';
 
-import { route } from '../../../../route';
 import {
   AddressInfo,
-  Button,
   DataDetailsContainer,
   DataDetailsContent,
   DataDetailsHeader,
   EventDateTime,
   EventParticipants,
   EventTypeTag,
-  MemberItem,
   NoData,
 } from '../../../../shared/design-system';
 import { getLocationFragmentData, WithEvent } from '../../../../shared/types';
 import { useAuth } from '../../../auth';
 import { SendMessageModal } from '../../../messages';
 import { JoinEventModal } from '../JoinEventModal';
-import { DeleteEventButton } from '../shared';
+import { DeleteEventButton, EditEventButton } from '../shared';
 
+import { EventParticipantItem } from './EventParticipantItem';
 import { SimilarEvents } from './SimilarEvents';
 
 export const EventDetails = ({ event }: WithEvent) => {
@@ -42,9 +39,7 @@ export const EventDetails = ({ event }: WithEvent) => {
         actionButtons={
           isUserOwner ? (
             <>
-              <Button as={Link} to={route.editEvent(event.id)} colorScheme="purple" rounded="full">
-                Edit
-              </Button>
+              <EditEventButton eventId={event.id} colorScheme="purple" rounded="full" />
               <DeleteEventButton event={event} borderRadius="full" colorScheme="purple" variant="outline" />
             </>
           ) : (
@@ -112,7 +107,7 @@ export const EventDetails = ({ event }: WithEvent) => {
               <Flex justifyContent="space-between" flexWrap="wrap">
                 {ReadonlyArray.isNonEmptyArray(event.participants) ? (
                   ReadonlyArray.map(event.participants, (participant) => (
-                    <MemberItem key={participant.user.id} user={user} member={participant.user} />
+                    <EventParticipantItem key={participant.user.id} user={user} member={participant.user} />
                   ))
                 ) : (
                   <NoData description={`There are no participants for ${event.name} yet`} />

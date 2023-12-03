@@ -2,11 +2,13 @@ import { useMutation } from '@apollo/client';
 import { useDisclosure, useToast } from '@chakra-ui/react';
 import { match } from 'ts-pattern';
 
-import { InputField, ModalForm, zod, zodResolver } from 'src/shared/forms';
+import { ModalForm, TextareaField, zod, zodResolver } from 'src/shared/forms';
 import { WithEvent, WithNullableAuthUser } from 'src/shared/types';
 
 import { AuthPromptModal } from '../../../shared/design-system/molecules/AuthPromptModal';
 import { getCurrentDateTime } from '../../../utils/form';
+
+import { EditEventButton } from './shared';
 
 const schema = zod.object({
   message: zod.string().min(1, { message: 'Message cannot be empty' }),
@@ -18,7 +20,11 @@ const initialValues: FormValues = {
   message: '',
 };
 
-export const JoinEventModal = ({ user, event }: WithNullableAuthUser & WithEvent) => {
+interface JoinEventModalProps extends WithNullableAuthUser, WithEvent {
+  buttonSize?: 'sm' | 'md' | 'lg' | 'xs';
+}
+
+export const JoinEventModal = ({ user, event, buttonSize = 'md' }: JoinEventModalProps) => {
   const disclosure = useDisclosure();
   const toast = useToast();
   // const [sendMessage, sendMessageRequestState] = useMutation(SEND_MESSAGE, {
@@ -30,7 +36,7 @@ export const JoinEventModal = ({ user, event }: WithNullableAuthUser & WithEvent
       <AuthPromptModal
         modalButtonLabel="Join event"
         modalButtonProps={{
-          size: 'sm',
+          size: buttonSize,
           colorScheme: 'purple',
           borderRadius: 'full',
         }}
@@ -44,6 +50,13 @@ export const JoinEventModal = ({ user, event }: WithNullableAuthUser & WithEvent
     .exhaustive();
 
   const isOwner = user ? user.id === owner.id : false;
+
+  if (isOwner) {
+    return (
+      <EditEventButton eventId={event.id} rounded="full" size={buttonSize} colorScheme="purple" variant="outline" />
+    );
+  }
+
   const hasEventExpired = event.start_datetime.slice(0, 23) < getCurrentDateTime();
 
   const isDisabled =
@@ -82,9 +95,10 @@ export const JoinEventModal = ({ user, event }: WithNullableAuthUser & WithEvent
         // isLoading: sendMessageRequestState.loading,
         text: "I'm in!",
       }}
-      modalButtonProps={{ size: 'sm', rounded: 'full', isDisabled }}
+      modalButtonProps={{ size: buttonSize, rounded: 'full', isDisabled }}
     >
-      <InputField
+      <TextareaField
+        autoFocus
         name="message"
         placeholder="Write a message..."
         // isDisabled={sendMessageRequestState.loading}

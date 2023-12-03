@@ -2,7 +2,7 @@ import { useMutation } from '@apollo/client';
 import { useDisclosure, useToast } from '@chakra-ui/react';
 
 import { SEND_MESSAGE } from 'src/modules/messages/mutations';
-import { InputField, ModalForm, zod, zodResolver } from 'src/shared/forms';
+import { ModalForm, TextareaField, zod, zodResolver } from 'src/shared/forms';
 import { WithAuthUser } from 'src/shared/types';
 
 import { WithRecipient } from '../types';
@@ -60,7 +60,12 @@ export const SendMessageModal = ({ user, recipient }: WithAuthUser & WithRecipie
       }}
       modalButtonProps={{ rounded: 'full' }}
     >
-      <InputField name="message" placeholder="Write a message..." isDisabled={sendMessageRequestState.loading} />
+      <TextareaField
+        autoFocus
+        name="message"
+        placeholder="Write a message..."
+        isDisabled={sendMessageRequestState.loading}
+      />
     </ModalForm>
   );
 };

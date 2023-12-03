@@ -41,7 +41,7 @@ export const EventCard = ({ user, event, ...other }: EventCardProps) => {
       }
       imageFilepath={event.image_filepath}
       title={event.name}
-      actionButton={<JoinEventModal user={user} event={event} />}
+      actionButton={<JoinEventModal user={user} event={event} buttonSize="sm" />}
       {...other}
     >
       <HStack>

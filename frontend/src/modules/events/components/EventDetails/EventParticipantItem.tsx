@@ -1,10 +1,10 @@
 import { Box, HStack, IconButton, Text } from '@chakra-ui/react';
 import { MdAccountCircle } from 'react-icons/md';
 
-import { SendMessageModal } from '../../../modules/messages';
-import { WithNullableAuthUser } from '../../types';
+import { WithNullableAuthUser } from '../../../../shared/types';
+import { SendMessageModal } from '../../../messages';
 
-interface MemberItemProps extends WithNullableAuthUser {
+interface EventParticipantItemProps extends WithNullableAuthUser {
   member: {
     id: number;
     first_name: string;
@@ -13,7 +13,7 @@ interface MemberItemProps extends WithNullableAuthUser {
   };
 }
 
-export const MemberItem = ({ user, member }: MemberItemProps) => (
+export const EventParticipantItem = ({ user, member }: EventParticipantItemProps) => (
   <HStack
     justifyContent="space-between"
     bgColor="white"
