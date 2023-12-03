@@ -37,7 +37,7 @@ export const eventFormSchema = z
   .refine(
     ({ date, startTime }) => {
       const currentDateTime = getCurrentDateTime();
-      return `${date}T${startTime}` >= currentDateTime.slice(11);
+      return `${date}T${startTime}` > currentDateTime;
     },
     {
       message: 'Event cannot start in the past',
