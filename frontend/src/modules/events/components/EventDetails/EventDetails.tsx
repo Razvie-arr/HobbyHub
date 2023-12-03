@@ -111,8 +111,8 @@ export const EventDetails = ({ event }: WithEvent) => {
             content: (
               <Flex justifyContent="space-between" flexWrap="wrap">
                 {ReadonlyArray.isNonEmptyArray(event.participants) ? (
-                  ReadonlyArray.map(event.participants, (member) => (
-                    <MemberItem key={member.id} user={user} member={member} />
+                  ReadonlyArray.map(event.participants, (participant) => (
+                    <MemberItem key={participant.user.id} user={user} member={participant.user} />
                   ))
                 ) : (
                   <NoData description={`There are no participants for ${event.name} yet`} />

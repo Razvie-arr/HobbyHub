@@ -1,9 +1,12 @@
 import { gql } from '../../gql';
 
-export const EVENT = gql(`
-  query Query($eventId: Int!) {
-    eventById(id: $eventId) {
-      ...EventFragment
+export const UNREVIEWED_EVENT_PARTICIPANTS = gql(`
+  query UnreviewedEventParticipants($userId: Int!, $eventId: Int!) {
+    unreviewedEventParticipants(userId: $userId, eventId: $eventId) {
+      id
+      first_name
+      last_name
+      email
     }
   }
 `);

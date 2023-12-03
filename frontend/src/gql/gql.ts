@@ -72,6 +72,8 @@ const documents = {
     types.MessagesByThreadIdDocument,
   '\n  mutation CreateReview($userId: Int!, $reviewerId: Int!, $eventId: Int!, $text: String!, $rating: Float!) {\n    createReview(userId: $userId, reviewerId: $reviewerId, eventId: $eventId, text: $text, rating: $rating) {\n      id\n    }\n  }\n':
     types.CreateReviewDocument,
+  '\n  query UnreviewedEventParticipants($userId: Int!, $eventId: Int!) {\n    unreviewedEventParticipants(userId: $userId, eventId: $eventId) {\n      id\n      first_name\n      last_name\n      email\n    }\n  }\n':
+    types.UnreviewedEventParticipantsDocument,
   '\n  query SearchEvents($text: String!, $offset: Int, $limit: Int) {\n    searchEvents(text: $text, offset: $offset, limit: $limit) {\n      ...EventFragment\n    }\n  }\n':
     types.SearchEventsDocument,
   '\n  query SearchGroups($text: String!, $offset: Int, $limit: Int) {\n    searchGroups(text: $text, offset: $offset, limit: $limit) {\n      ...GroupFragment\n    }\n  }\n':
@@ -282,6 +284,12 @@ export function gql(
 export function gql(
   source: '\n  mutation CreateReview($userId: Int!, $reviewerId: Int!, $eventId: Int!, $text: String!, $rating: Float!) {\n    createReview(userId: $userId, reviewerId: $reviewerId, eventId: $eventId, text: $text, rating: $rating) {\n      id\n    }\n  }\n',
 ): (typeof documents)['\n  mutation CreateReview($userId: Int!, $reviewerId: Int!, $eventId: Int!, $text: String!, $rating: Float!) {\n    createReview(userId: $userId, reviewerId: $reviewerId, eventId: $eventId, text: $text, rating: $rating) {\n      id\n    }\n  }\n'];
+/**
+ * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function gql(
+  source: '\n  query UnreviewedEventParticipants($userId: Int!, $eventId: Int!) {\n    unreviewedEventParticipants(userId: $userId, eventId: $eventId) {\n      id\n      first_name\n      last_name\n      email\n    }\n  }\n',
+): (typeof documents)['\n  query UnreviewedEventParticipants($userId: Int!, $eventId: Int!) {\n    unreviewedEventParticipants(userId: $userId, eventId: $eventId) {\n      id\n      first_name\n      last_name\n      email\n    }\n  }\n'];
 /**
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */

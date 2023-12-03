@@ -1,6 +1,5 @@
 /* eslint-disable */
 import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';
-
 export type Maybe<T> = T | null;
 export type InputMaybe<T> = Maybe<T>;
 export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
@@ -1045,6 +1044,22 @@ export type CreateReviewMutationVariables = Exact<{
 }>;
 
 export type CreateReviewMutation = { __typename?: 'Mutation'; createReview: { __typename?: 'Review'; id: number } };
+
+export type UnreviewedEventParticipantsQueryVariables = Exact<{
+  userId: Scalars['Int']['input'];
+  eventId: Scalars['Int']['input'];
+}>;
+
+export type UnreviewedEventParticipantsQuery = {
+  __typename?: 'Query';
+  unreviewedEventParticipants: Array<{
+    __typename?: 'User';
+    id: number;
+    first_name: string;
+    last_name: string;
+    email: string;
+  }>;
+};
 
 export type SearchEventsQueryVariables = Exact<{
   text: Scalars['String']['input'];
@@ -5543,6 +5558,58 @@ export const CreateReviewDocument = {
     },
   ],
 } as unknown as DocumentNode<CreateReviewMutation, CreateReviewMutationVariables>;
+export const UnreviewedEventParticipantsDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'query',
+      name: { kind: 'Name', value: 'UnreviewedEventParticipants' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'userId' } },
+          type: { kind: 'NonNullType', type: { kind: 'NamedType', name: { kind: 'Name', value: 'Int' } } },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'eventId' } },
+          type: { kind: 'NonNullType', type: { kind: 'NamedType', name: { kind: 'Name', value: 'Int' } } },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'unreviewedEventParticipants' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'userId' },
+                value: { kind: 'Variable', name: { kind: 'Name', value: 'userId' } },
+              },
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'eventId' },
+                value: { kind: 'Variable', name: { kind: 'Name', value: 'eventId' } },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'first_name' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'last_name' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'email' } },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<UnreviewedEventParticipantsQuery, UnreviewedEventParticipantsQueryVariables>;
 export const SearchEventsDocument = {
   kind: 'Document',
   definitions: [

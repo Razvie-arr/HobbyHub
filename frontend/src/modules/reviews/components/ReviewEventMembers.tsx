@@ -1,29 +1,23 @@
 import { Stack } from '@chakra-ui/react';
-import { match } from 'ts-pattern';
 
+import { User } from '../../../gql/graphql';
 import { ContentContainer } from '../../../shared/layout';
-import { WithAuthUser, WithEvent } from '../../../shared/types';
+import { WithAuthUser } from '../../../shared/types';
 
 import { ReviewEventMember } from './ReviewEventMember';
 
-export const ReviewEventMembers = ({ user, event }: WithAuthUser & WithEvent) => {
-  const owner = match(event.author)
-    .with({ __typename: 'User' }, (author) => author)
-    .with({ __typename: 'Group' }, ({ admin }) => admin)
-    .exhaustive();
+interface ReviewEventMemberProps extends WithAuthUser {
+  eventId: number;
+  participants: Array<Pick<User, 'id' | 'first_name' | 'last_name' | 'email'>>;
+}
 
-  return (
-    <ContentContainer maxW="lg">
-      <Stack mt={12} spacing={6}>
-        {user.id === owner.id ? (
-          event.participants.map(({ id, ...other }) => (
-            <ReviewEventMember key={id} eventId={event.id} user={user} member={{ id, ...other }} />
-          ))
-        ) : (
-          <ReviewEventMember key={owner.id} eventId={event.id} user={user} member={owner} />
-        )}
-      </Stack>
-    </ContentContainer>
-  );
-};
+export const ReviewEventMembers = ({ eventId, user, participants }: ReviewEventMemberProps) => (
+  <ContentContainer maxW="lg">
+    <Stack mt={12} spacing={6}>
+      {participants.map((member) => (
+        <ReviewEventMember key={member.id} eventId={eventId} user={user} member={member} />
+      ))}
+    </Stack>
+  </ContentContainer>
+);
 
