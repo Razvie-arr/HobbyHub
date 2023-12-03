@@ -110,7 +110,7 @@ export const OnboardingForm = () => {
             streetNumber,
             ...values
           }: FormValues) => {
-            const { event_types, location, password, __typename, ...rest } = user;
+            const { event_types, groups, location, password, __typename, ...rest } = user;
             const updatedUser = await onboardUserRequest({
               variables: {
                 user: {
