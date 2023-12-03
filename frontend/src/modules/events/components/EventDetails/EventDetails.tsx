@@ -10,10 +10,12 @@ import {
   DataDetailsHeader,
   EventDateTime,
   EventParticipants,
+  EventStatusTag,
   EventTypeTag,
   NoData,
 } from '../../../../shared/design-system';
 import { getLocationFragmentData, WithEvent } from '../../../../shared/types';
+import { getCurrentDateTime } from '../../../../utils/form';
 import { useAuth } from '../../../auth';
 import { SendMessageModal } from '../../../messages';
 import { JoinEventModal } from '../JoinEventModal';
@@ -25,19 +27,29 @@ import { SimilarEvents } from './SimilarEvents';
 export const EventDetails = ({ event }: WithEvent) => {
   const { user } = useAuth();
 
-  const owner = match(event.author)
+  const organizer = match(event.author)
     .with({ __typename: 'User' }, (author) => author)
     .with({ __typename: 'Group' }, ({ admin }) => admin)
     .exhaustive();
 
-  const isUserOwner = user && user.id === owner.id;
+  const isUserOrganizer = user && user.id === organizer.id;
+  const hasEventExpired = event.start_datetime.slice(0, 23) < getCurrentDateTime();
 
   return (
     <DataDetailsContainer>
       <DataDetailsHeader
-        title={event.name}
+        title={
+          <>
+            {event.name}{' '}
+            <EventStatusTag
+              hasExpired={hasEventExpired}
+              hasWaitlist={event.allow_waitlist}
+              isFullCapacity={event.participants.length === event.capacity}
+            />
+          </>
+        }
         actionButtons={
-          isUserOwner ? (
+          isUserOrganizer ? (
             <>
               <EditEventButton eventId={event.id} colorScheme="purple" rounded="full" />
               <DeleteEventButton event={event} borderRadius="full" colorScheme="purple" variant="outline" />
@@ -45,7 +57,7 @@ export const EventDetails = ({ event }: WithEvent) => {
           ) : (
             <>
               <JoinEventModal user={user} event={event} />
-              {user ? <SendMessageModal user={user} recipient={owner} /> : null}
+              {user ? <SendMessageModal user={user} recipient={organizer} /> : null}
             </>
           )
         }
@@ -61,7 +73,7 @@ export const EventDetails = ({ event }: WithEvent) => {
               icon: MdAccountCircle,
               content: (
                 <Text>
-                  Hosted by: <Text as="b">{`${owner.first_name} ${owner.last_name}`}</Text>
+                  Hosted by: <Text as="b">{`${organizer.first_name} ${organizer.last_name}`}</Text>
                 </Text>
               ),
             },

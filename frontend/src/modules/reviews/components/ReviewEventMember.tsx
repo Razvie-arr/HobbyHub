@@ -16,7 +16,14 @@ interface ReviewEventMemberProps extends WithAuthUser {
 }
 
 export const ReviewEventMember = ({ eventId, user, member }: ReviewEventMemberProps) => (
-  <HStack justifyContent="space-between" bgColor="white" p={3} borderRadius={10} shadow="sm">
+  <HStack
+    justifyContent="space-between"
+    bgColor="white"
+    p={3}
+    borderRadius={10}
+    shadow="sm"
+    flexBasis={{ base: '100%', md: '45%' }}
+  >
     <HStack>
       <IconButton
         isRound={true}

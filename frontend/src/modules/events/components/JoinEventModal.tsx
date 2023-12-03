@@ -43,14 +43,14 @@ export const JoinEventModal = ({ user, event, buttonSize = 'md' }: JoinEventModa
     );
   }
 
-  const owner = match(event.author)
+  const organizer = match(event.author)
     .with({ __typename: 'User' }, (author) => author)
     .with({ __typename: 'Group' }, ({ admin }) => admin)
     .exhaustive();
 
-  const isOwner = user ? user.id === owner.id : false;
+  const isUserOrganizer = user ? user.id === organizer.id : false;
 
-  if (isOwner) {
+  if (isUserOrganizer) {
     return (
       <EditEventButton eventId={event.id} rounded="full" size={buttonSize} colorScheme="purple" variant="outline" />
     );
@@ -59,7 +59,7 @@ export const JoinEventModal = ({ user, event, buttonSize = 'md' }: JoinEventModa
   const hasEventExpired = event.start_datetime.slice(0, 23) < getCurrentDateTime();
 
   const isDisabled =
-    !isOwner && (hasEventExpired || (event.participants.length === event.capacity && !event.allow_waitlist));
+    !isUserOrganizer && (hasEventExpired || (event.participants.length === event.capacity && !event.allow_waitlist));
 
   return (
     <ModalForm
