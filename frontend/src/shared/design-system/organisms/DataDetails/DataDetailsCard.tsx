@@ -1,16 +1,11 @@
 import { Card, Divider, Heading, Stack, Text, VStack } from '@chakra-ui/react';
-import { MdAccountCircle, MdCalendarToday, MdGroups, MdInfo, MdLocationOn } from 'react-icons/md';
-import { match } from 'ts-pattern';
 
-import { AddressInfo, EventDateTime, EventParticipants, EventTypeTag } from 'src/shared/design-system';
-
-import { getLocationFragmentData } from '../../../types';
 import { DataMap } from '../DataMap';
 
 import { DataRowItem } from './DataRowItem';
-import { DataDetailsProps } from './types';
+import { WithSideCardProps } from './types';
 
-export const DataDetailsCard = (props: DataDetailsProps) => (
+export const DataDetailsCard = ({ sideCardProps }: WithSideCardProps) => (
   <Card
     p={4}
     boxShadow="lg"
@@ -21,64 +16,16 @@ export const DataDetailsCard = (props: DataDetailsProps) => (
   >
     <VStack alignItems="start" spacing={4} justifyContent="center">
       <Stack>
-        <Heading fontSize="lg">Summary</Heading>
-        <Text>{props.data.summary}</Text>
+        <Heading fontSize="lg">{sideCardProps.title}</Heading>
+        <Text>{sideCardProps.description}</Text>
       </Stack>
       <Divider />
-      <DataRowItem icon={MdAccountCircle}>
-        <Text>
-          {match(props)
-            .with({ type: 'event' }, ({ data }) => (
-              <>
-                Hosted by:{' '}
-                <Text as="b">
-                  {match(data.author)
-                    .with({ __typename: 'User' }, ({ first_name, last_name }) => `${first_name} ${last_name}`)
-                    .with({ __typename: 'Group' }, ({ name }) => name)
-                    .exhaustive()}
-                </Text>
-              </>
-            ))
-            .with({ type: 'group' }, ({ data }) => (
-              <>
-                Admin:{' '}
-                <Text as="b">
-                  {data.admin.first_name} {data.admin.last_name}
-                </Text>
-              </>
-            ))
-            .exhaustive()}
-        </Text>
-      </DataRowItem>
-      <DataRowItem icon={MdInfo}>
-        {props.data.event_types.map((eventType) => (
-          <EventTypeTag key={eventType.id} eventType={eventType} />
-        ))}
-      </DataRowItem>
-      {props.type === 'event' ? (
-        <>
-          <DataRowItem icon={MdGroups}>
-            <EventParticipants
-              noIcon
-              fontSize="md"
-              capacity={props.data.capacity}
-              participants={props.data.participants}
-            />
-          </DataRowItem>
-          <DataRowItem icon={MdCalendarToday}>
-            <EventDateTime
-              noIcon
-              fontSize="md"
-              startDateTime={props.data.start_datetime}
-              endDateTime={props.data.end_datetime}
-            />
-          </DataRowItem>
-        </>
-      ) : null}
-      <DataRowItem icon={MdLocationOn}>
-        <AddressInfo noIcon fontSize="md" location={getLocationFragmentData(props.data.location)} />
-      </DataRowItem>
-      <DataMap type="single" data={props.data} height="22.7vh" />
+      {sideCardProps.items.map(({ icon, content }, index) => (
+        <DataRowItem key={index} icon={icon}>
+          {content}
+        </DataRowItem>
+      ))}
+      <DataMap type="single" data={sideCardProps.mapData} height="22.7vh" />
     </VStack>
   </Card>
 );

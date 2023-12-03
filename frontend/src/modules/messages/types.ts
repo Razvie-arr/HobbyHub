@@ -1,16 +1,9 @@
-interface Message {
-  id: string;
-  thread_id: string;
-  sender_id: string;
-  text: string;
-  sent_at: string;
+export interface WithRecipient {
+  recipient: {
+    id: number;
+    first_name: string;
+    last_name: string;
+    email: string;
+  };
 }
 
-interface Thread {
-  id: string;
-  users: string[];
-  thread_read: boolean;
-  messages: Message[];
-  last_message_at: string;
-  lastMessage: Message | null;
-}

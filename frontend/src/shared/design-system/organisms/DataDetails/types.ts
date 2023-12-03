@@ -1,7 +1,9 @@
 import { ReactNode } from 'react';
+import { IconType } from 'react-icons/lib';
 import { To } from 'react-router-dom';
 
 import { EventData, GroupData, WithAuthUser } from '../../../types';
+import { MapData } from '../DataMap';
 
 interface CommonProps {
   user: WithAuthUser['user'] | null;
@@ -24,6 +26,20 @@ export interface WithAdditionalTabs {
   additionalTabs?: Array<{ title: ReactNode; content: ReactNode }>;
 }
 
+export interface WithTabsProps {
+  tabsProps: Array<{ title: ReactNode; content: ReactNode }>;
+}
+
+export interface WithSideCardProps {
+  sideCardProps: {
+    title: string;
+    description: string;
+    items: Array<{ icon: IconType; content: ReactNode }>;
+    mapData: MapData;
+  };
+}
+
 export interface WithDeleteButton {
   deleteButton?: ReactNode;
 }
+

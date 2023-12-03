@@ -1,3 +1,4 @@
-export { DataDetails } from './DataDetails';
-export { SendMessageModal } from '../../../../modules/messages/components/SendMessageModal';
+export { DataDetailsContainer } from './DataDetailsContainer';
+export { DataDetailsContent } from './DataDetailsContent';
+export { DataDetailsHeader } from './DataDetailsHeader';
 

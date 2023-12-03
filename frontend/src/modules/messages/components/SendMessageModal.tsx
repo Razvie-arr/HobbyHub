@@ -1,10 +1,11 @@
 import { useMutation } from '@apollo/client';
-import { useToast } from '@chakra-ui/react';
+import { useDisclosure, useToast } from '@chakra-ui/react';
 
 import { SEND_MESSAGE } from 'src/modules/messages/mutations';
-import { WithDisclosure } from 'src/shared/design-system';
 import { InputField, ModalForm, zod, zodResolver } from 'src/shared/forms';
 import { WithAuthUser } from 'src/shared/types';
+
+import { WithRecipient } from '../types';
 
 const schema = zod.object({
   message: zod.string().min(1, { message: 'Message cannot be empty' }),
@@ -16,23 +17,13 @@ const initialValues: FormValues = {
   message: '',
 };
 
-export const SendMessageModal = ({
-  disclosure,
-  user,
-  recipient,
-}: WithDisclosure &
-  WithAuthUser & {
-    recipient: {
-      id: number;
-      first_name: string;
-      last_name: string;
-      email: string;
-    };
-  }) => {
+export const SendMessageModal = ({ user, recipient }: WithAuthUser & WithRecipient) => {
+  const disclosure = useDisclosure();
+  const toast = useToast();
+
   const [sendMessage, sendMessageRequestState] = useMutation(SEND_MESSAGE, {
     onCompleted: disclosure.onClose,
   });
-  const toast = useToast();
 
   return (
     <ModalForm
