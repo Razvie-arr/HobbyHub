@@ -40,13 +40,14 @@ type Event {
   description: String
   end_datetime: String!
   event_types: [EventType!]!
+  feedback_request_sent: Boolean!
   group_id: Int
   id: Int!
   image_filepath: String
   location: Location!
   location_id: Int!
   name: String!
-  participants: [User!]!
+  participants: [ParticipantType!]!
   start_datetime: String!
   summary: String!
 }
@@ -149,6 +150,7 @@ type Message {
 
 type Mutation {
   _empty(nothing: String): String
+  askForFeedback: [String!]!
   createEvent(event: EventInput!, location: LocationInputWithoutCoords!): Event!
   createGroup(group: GroupInput!, location: LocationInputWithoutCoords!): Group!
   createLocation(location: LocationInputWithoutCoords!): Location
@@ -165,14 +167,27 @@ type Mutation {
   editUser(location: LocationInputWithoutCoords!, user: UserInput!): User!
   maxRatingAllParticipants(adminId: Int!, eventId: Int!): Boolean!
   onboardUser(location: LocationInputWithoutCoords!, user: UserInput!): AuthUser!
+  requestEventRegistration(eventRegistration: RequestEventRegistrationInput!): String!
   requestResetPassword(email: String!): Boolean!
   resetPassword(password: String!, token: String!): Boolean!
+  resolveEventRegistration(resolve: ResolveEventRegistrationInput!): String!
   sendMessage(recipient: RecipientInput!, sender: SenderInput!, text: String!): String!
   signIn(email: String!, password: String!): AuthInfo!
   signUp(email: String!, first_name: String!, last_name: String!, password: String!): AuthInfo!
   uploadEventImage(event_image: Upload): String
   uploadGroupImage(group_image: Upload): String
   verify(token: String!): String!
+}
+
+enum ParticipantState {
+  ACCEPTED
+  PENDING
+}
+
+type ParticipantType {
+  state: ParticipantState!
+  text: String
+  user: User!
 }
 
 type Query {
@@ -213,13 +228,17 @@ type Query {
   newlyCreatedNearbyEvents(latitude: Float!, limit: Int, longitude: Float!, offset: Int): [Event!]!
   reviewById(reviewId: Int!): Review
   reviewsByUserId(limit: Int, offset: Int, userId: Int!): [Review!]!
+  reviewsCount(userId: Int!): Int!
   searchEvents(limit: Int, offset: Int, text: String!): [Event!]!
   searchGroups(limit: Int, offset: Int, text: String!): [Group!]!
   similarEvents(city: String!, eventId: Int!, eventTypeIds: [Int!]!, limit: Int, offset: Int): [Event!]!
   similarGroups(city: String!, eventTypeIds: [Int!]!, groupId: Int!, limit: Int, offset: Int): [Group!]!
   threads(limit: Int, offset: Int, userId: Int!): [Thread!]!
   todaysNearbyEvents(latitude: Float!, limit: Int, longitude: Float!, offset: Int): [Event!]!
+  unreviewedEventParticipants(eventId: Int!, userId: Int!): [User!]!
+  userAdminGroups(limit: Int, offset: Int, userId: Int!): [Group!]!
   userById(id: Int!): User
+  userCreatedEvents(limit: Int, offset: Int, userId: Int!): [Event]!
   users(limit: Int, offset: Int): [User!]!
   usersByIds(ids: [Int!]!): [User!]!
 }
@@ -228,6 +247,25 @@ input RecipientInput {
   email: String!
   first_name: String!
   id: Int!
+}
+
+input RequestEventRegistrationInput {
+  author_id: Int
+  event_id: Int!
+  event_name: String!
+  group_id: Int
+  text: String!
+  user_email: String!
+  user_id: Int!
+  user_name: String!
+}
+
+input ResolveEventRegistrationInput {
+  event_id: Int!
+  event_name: String!
+  resolution: Boolean!
+  user_email: String!
+  user_id: Int!
 }
 
 type Review {
@@ -291,17 +329,4 @@ input UserInput {
   last_name: String!
   location_id: Int
   verified: Boolean!
-}
-
-type Review {
-  id: Int!
-  user_id: Int!
-  reviewer_id: Int!
-  text: String!
-  rating: Float!
-  event_id: Int!
-
-  user: User!
-  reviewer: User!
-  event: Event!
 }

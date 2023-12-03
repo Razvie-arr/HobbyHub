@@ -1,6 +1,7 @@
 import { GraphQLResolveInfo, GraphQLScalarType, GraphQLScalarTypeConfig } from 'graphql';
 import { CustomContext } from './types';
 import type { FileUpload } from 'graphql-upload/Upload';
+
 export type Maybe<T> = T | null;
 export type InputMaybe<T> = Maybe<T>;
 export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
@@ -72,7 +73,7 @@ export type Event = {
   location: Location;
   location_id: Scalars['Int']['output'];
   name: Scalars['String']['output'];
-  participants: Array<User>;
+  participants: Array<ParticipantType>;
   start_datetime: Scalars['String']['output'];
   summary: Scalars['String']['output'];
 };
@@ -197,8 +198,10 @@ export type Mutation = {
   editUser: User;
   maxRatingAllParticipants: Scalars['Boolean']['output'];
   onboardUser: AuthUser;
+  requestEventRegistration: Scalars['String']['output'];
   requestResetPassword: Scalars['Boolean']['output'];
   resetPassword: Scalars['Boolean']['output'];
+  resolveEventRegistration: Scalars['String']['output'];
   sendMessage: Scalars['String']['output'];
   signIn: AuthInfo;
   signUp: AuthInfo;
@@ -291,6 +294,10 @@ export type MutationOnboardUserArgs = {
   user: UserInput;
 };
 
+export type MutationRequestEventRegistrationArgs = {
+  eventRegistration: RequestEventRegistrationInput;
+};
+
 export type MutationRequestResetPasswordArgs = {
   email: Scalars['String']['input'];
 };
@@ -298,6 +305,10 @@ export type MutationRequestResetPasswordArgs = {
 export type MutationResetPasswordArgs = {
   password: Scalars['String']['input'];
   token: Scalars['String']['input'];
+};
+
+export type MutationResolveEventRegistrationArgs = {
+  resolve: ResolveEventRegistrationInput;
 };
 
 export type MutationSendMessageArgs = {
@@ -328,6 +339,18 @@ export type MutationUploadGroupImageArgs = {
 
 export type MutationVerifyArgs = {
   token: Scalars['String']['input'];
+};
+
+export enum ParticipantState {
+  Accepted = 'ACCEPTED',
+  Pending = 'PENDING',
+}
+
+export type ParticipantType = {
+  __typename?: 'ParticipantType';
+  state: ParticipantState;
+  text?: Maybe<Scalars['String']['output']>;
+  user: User;
 };
 
 export type Query = {
@@ -575,6 +598,25 @@ export type RecipientInput = {
   id: Scalars['Int']['input'];
 };
 
+export type RequestEventRegistrationInput = {
+  author_id?: InputMaybe<Scalars['Int']['input']>;
+  event_id: Scalars['Int']['input'];
+  event_name: Scalars['String']['input'];
+  group_id?: InputMaybe<Scalars['Int']['input']>;
+  text: Scalars['String']['input'];
+  user_email: Scalars['String']['input'];
+  user_id: Scalars['Int']['input'];
+  user_name: Scalars['String']['input'];
+};
+
+export type ResolveEventRegistrationInput = {
+  event_id: Scalars['Int']['input'];
+  event_name: Scalars['String']['input'];
+  resolution: Scalars['Boolean']['input'];
+  user_email: Scalars['String']['input'];
+  user_id: Scalars['Int']['input'];
+};
+
 export type Review = {
   __typename?: 'Review';
   event: Event;
@@ -732,8 +774,12 @@ export type ResolversTypes = {
   LocationInputWithoutCoords: LocationInputWithoutCoords;
   Message: ResolverTypeWrapper<Message>;
   Mutation: ResolverTypeWrapper<{}>;
+  ParticipantState: ParticipantState;
+  ParticipantType: ResolverTypeWrapper<ParticipantType>;
   Query: ResolverTypeWrapper<{}>;
   RecipientInput: RecipientInput;
+  RequestEventRegistrationInput: RequestEventRegistrationInput;
+  ResolveEventRegistrationInput: ResolveEventRegistrationInput;
   Review: ResolverTypeWrapper<Review>;
   SenderInput: SenderInput;
   SortType: SortType;
@@ -764,8 +810,11 @@ export type ResolversParentTypes = {
   LocationInputWithoutCoords: LocationInputWithoutCoords;
   Message: Message;
   Mutation: {};
+  ParticipantType: ParticipantType;
   Query: {};
   RecipientInput: RecipientInput;
+  RequestEventRegistrationInput: RequestEventRegistrationInput;
+  ResolveEventRegistrationInput: ResolveEventRegistrationInput;
   Review: Review;
   SenderInput: SenderInput;
   String: Scalars['String']['output'];
@@ -828,7 +877,7 @@ export type EventResolvers<
   location?: Resolver<ResolversTypes['Location'], ParentType, ContextType>;
   location_id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  participants?: Resolver<Array<ResolversTypes['User']>, ParentType, ContextType>;
+  participants?: Resolver<Array<ResolversTypes['ParticipantType']>, ParentType, ContextType>;
   start_datetime?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   summary?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
@@ -987,6 +1036,12 @@ export type MutationResolvers<
     ContextType,
     RequireFields<MutationOnboardUserArgs, 'location' | 'user'>
   >;
+  requestEventRegistration?: Resolver<
+    ResolversTypes['String'],
+    ParentType,
+    ContextType,
+    RequireFields<MutationRequestEventRegistrationArgs, 'eventRegistration'>
+  >;
   requestResetPassword?: Resolver<
     ResolversTypes['Boolean'],
     ParentType,
@@ -998,6 +1053,12 @@ export type MutationResolvers<
     ParentType,
     ContextType,
     RequireFields<MutationResetPasswordArgs, 'password' | 'token'>
+  >;
+  resolveEventRegistration?: Resolver<
+    ResolversTypes['String'],
+    ParentType,
+    ContextType,
+    RequireFields<MutationResolveEventRegistrationArgs, 'resolve'>
   >;
   sendMessage?: Resolver<
     ResolversTypes['String'],
@@ -1030,6 +1091,16 @@ export type MutationResolvers<
     Partial<MutationUploadGroupImageArgs>
   >;
   verify?: Resolver<ResolversTypes['String'], ParentType, ContextType, RequireFields<MutationVerifyArgs, 'token'>>;
+};
+
+export type ParticipantTypeResolvers<
+  ContextType = CustomContext,
+  ParentType extends ResolversParentTypes['ParticipantType'] = ResolversParentTypes['ParticipantType'],
+> = {
+  state?: Resolver<ResolversTypes['ParticipantState'], ParentType, ContextType>;
+  text?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  user?: Resolver<ResolversTypes['User'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
 export type QueryResolvers<
@@ -1276,6 +1347,7 @@ export type Resolvers<ContextType = CustomContext> = {
   Location?: LocationResolvers<ContextType>;
   Message?: MessageResolvers<ContextType>;
   Mutation?: MutationResolvers<ContextType>;
+  ParticipantType?: ParticipantTypeResolvers<ContextType>;
   Query?: QueryResolvers<ContextType>;
   Review?: ReviewResolvers<ContextType>;
   Thread?: ThreadResolvers<ContextType>;

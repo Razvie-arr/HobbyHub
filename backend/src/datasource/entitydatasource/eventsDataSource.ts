@@ -9,8 +9,14 @@ export const eventsDataSource = (db: { query: DataSourceKnex; write: DataSourceK
       .innerJoin('EventType', 'Event_EventType.event_type_id', 'EventType.id')
       .where('event_id', eventId),
 
-  getEventParticipants: (eventId: number) =>
+  getAcceptedEventParticipants: (eventId: number) =>
     db.query('Event_User').innerJoin('User', 'Event_User.user_id', 'User.id').where('event_id', eventId),
+
+  getPendingEventParticipants: (eventId: number) =>
+    db.query('Event_UserRequest').innerJoin('User', 'Event_UserRequest.user_id', 'User.id').where('event_id', eventId),
+
+  getPendingEventText: (eventId: number) =>
+    db.query('Event_UserRequest').innerJoin('User', 'Event_UserRequest.user_id', 'User.id').where('event_id', eventId),
 
   getFilteredEvents: (
     offset: number,

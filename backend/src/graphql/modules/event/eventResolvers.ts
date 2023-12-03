@@ -2,6 +2,7 @@ import * as fs from 'fs';
 import * as fsPromises from 'fs/promises';
 import { GraphQLError } from 'graphql/error';
 
+import { sendEmail } from '../../../libs/nodeMailer';
 import { HAVERSINE_FORMULA } from '../../../sharedConstants';
 import {
   ContextualNullableResolver,
@@ -15,7 +16,11 @@ import {
   MutationCreateEventArgs,
   MutationDeleteEventArgs,
   MutationEditEventArgs,
+  MutationRequestEventRegistrationArgs,
+  MutationResolveEventRegistrationArgs,
   MutationUploadEventImageArgs,
+  ParticipantState,
+  ParticipantType,
   QueryEventByIdArgs,
   QueryEventsArgs,
   QueryEventsByIdsArgs,
@@ -67,11 +72,27 @@ export const eventEventTypesResolver: ContextualResolverWithParent<Array<EventTy
   { dataSources },
 ) => await dataSources.sql.events.getEventEventTypes(parent.id);
 
-export const eventParticipantsResolver: ContextualResolverWithParent<Array<User>, Event> = async (
+export const eventParticipantsResolver: ContextualResolverWithParent<Array<ParticipantType>, Event> = async (
   parent,
   _,
   { dataSources },
-) => await dataSources.sql.events.getEventParticipants(parent.id);
+) => {
+  const pending = await dataSources.sql.events.getPendingEventParticipants(parent.id);
+  const accepted = await dataSources.sql.events.getAcceptedEventParticipants(parent.id);
+  const pendingText = await dataSources.sql.events.getPendingEventText(parent.id);
+
+  return [
+    ...pending.map((user, index) => ({
+      user: user,
+      state: ParticipantState.Pending,
+      text: pendingText[index]?.text,
+    })),
+    ...accepted.map((user) => ({
+      user: user,
+      state: ParticipantState.Accepted,
+    })),
+  ];
+};
 
 export const eventByIdResolver: ContextualNullableResolver<Event, QueryEventByIdArgs> = async (
   _,
@@ -339,3 +360,107 @@ export const userCreatedEventsResolver: ContextualResolver<Array<Event>, QueryUs
   { dataSources },
 ) => await dataSources.sql.events.getUserCreatedEvents(userId, offset, limit);
 
+export const requestEventRegistrationResolver = async (
+  _: unknown,
+  { eventRegistration }: MutationRequestEventRegistrationArgs,
+  { dataSources }: CustomContext,
+): Promise<string> => {
+  let author;
+
+  if (eventRegistration.author_id) {
+    author = await dataSources.sql.users.getById(eventRegistration.author_id);
+  } else if (eventRegistration.group_id) {
+    author = await dataSources.sql.groups.getGroupAdmin(eventRegistration.group_id);
+  } else {
+    throw new GraphQLError('Event registration needs to have at least one author id!');
+  }
+
+  if (!author) {
+    throw new GraphQLError(`Invalid user or group id as event author!`);
+  }
+
+  await dataSources.sql.db
+    .write('Event_UserRequest')
+    .insert({ event_id: eventRegistration.event_id, user_id: eventRegistration.user_id, text: eventRegistration.text })
+    .catch(() => {
+      throw new GraphQLError('There was an unexpected error while inserting into Event_UserRequest table!');
+    });
+
+  try {
+    await sendEmail(eventRegistration.user_email, 'Event registration', {
+      text: 'Thank you for your interest! Admin of the event received information about your application. You will receive an email notification right after his/her approval.',
+    });
+  } catch (error) {
+    throw error;
+  }
+
+  try {
+    await sendEmail(author.email, 'User requested event registration', {
+      text: `User ${eventRegistration.user_name} requested registration for your event ${eventRegistration.event_name}.`,
+      html: `User ${eventRegistration.user_name} requested registration for your event <a href="https://frontend-team01-vse.handson.pro/event/${eventRegistration.event_id}">${eventRegistration.event_name}</a>.`,
+    });
+  } catch (error) {
+    throw error;
+  }
+
+  return `Registration request for event ${eventRegistration.event_name} by user ${eventRegistration.user_name} was sent!`;
+};
+
+export const resolveEventRegistrationResolver = async (
+  _: unknown,
+  { resolve }: MutationResolveEventRegistrationArgs,
+  { dataSources }: CustomContext,
+): Promise<string> => {
+  if (resolve.resolution) {
+    await dataSources.sql.db
+      .write('Event_User')
+      .insert({
+        event_id: resolve.event_id,
+        user_id: resolve.user_id,
+      })
+      .catch(() => {
+        throw new GraphQLError('Error while inserting into Event_User table!');
+      })
+      .then(async () => {
+        await dataSources.sql.db
+          .write('Event_UserRequest')
+          .where('event_id', resolve.event_id)
+          .andWhere('user_id', resolve.user_id)
+          .delete();
+      })
+      .catch(() => {
+        throw new GraphQLError('Error while deleting from Event_UserRequest table!');
+      })
+      .then(async () => {
+        try {
+          await sendEmail(resolve.user_email, 'Event registration confirmed', {
+            text: `Your registration for event ${resolve.event_id} has been confirmed!`,
+            html: `Your registration for event <a href="https://frontend-team01-vse.handson.pro/event/${resolve.event_id}">${resolve.event_name}</a> has been confirmed!`,
+          });
+        } catch (error) {
+          throw error;
+        }
+      });
+  } else {
+    await dataSources.sql.db
+      .write('Event_UserRequest')
+      .where('event_id', resolve.event_id)
+      .andWhere('user_id', resolve.user_id)
+      .delete()
+      .catch(() => {
+        throw new GraphQLError('Error while deleting from Event_UserRequest table!');
+      })
+      .then(async () => {
+        try {
+          await sendEmail(resolve.user_email, 'Event registration declined', {
+            text: `Unfortunately, your registration for event ${resolve.event_id} has been declined.`,
+            html: `Unfortunately, your registration for event <a href="https://frontend-team01-vse.handson.pro/event/${resolve.event_id}">${resolve.event_name}</a> has been declined.`,
+          });
+        } catch (error) {
+          throw error;
+        }
+      });
+  }
+
+  return 'Event registration resolved.';
+};
