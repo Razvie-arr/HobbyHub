@@ -3,6 +3,7 @@ import { Option, pipe, ReadonlyArray } from 'effect';
 import { MdAccountCircle, MdCalendarToday, MdGroups, MdInfo, MdLocationOn } from 'react-icons/md';
 import { match } from 'ts-pattern';
 
+import { ParticipantState } from '../../../../gql/graphql';
 import {
   AddressInfo,
   DataDetailsContainer,
@@ -121,14 +122,18 @@ export const EventDetails = ({ event }: WithEvent) => {
                   Option.fromNullable(event.participants),
                   Option.filter(ReadonlyArray.isNonEmptyArray),
                   Option.map(
-                    ReadonlyArray.map((participant) => (
-                      <EventParticipantItem
-                        key={participant.user.id}
-                        user={user}
-                        event={event}
-                        participant={participant}
-                      />
-                    )),
+                    ReadonlyArray.filterMap((participant) =>
+                      isUserOrganizer || participant.state === ParticipantState.Accepted
+                        ? Option.some(
+                            <EventParticipantItem
+                              key={participant.user.id}
+                              user={user}
+                              event={event}
+                              participant={participant}
+                            />,
+                          )
+                        : Option.none(),
+                    ),
                   ),
                   Option.getOrElse(() => <NoData description={`There are no participants for ${event.name} yet`} />),
                 )}
