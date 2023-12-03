@@ -146,7 +146,7 @@ export const EventForm = ({
           <FormSection title="Event information">
             <Controller
               name="eventImagePath"
-              render={({ field: { onChange, ...field }, fieldState }) => (
+              render={({ field: { onChange, value, ...field }, fieldState }) => (
                 <Field label="Event image" error={fieldState.error?.message}>
                   <InputGroup>
                     <Input
