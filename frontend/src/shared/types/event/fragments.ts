@@ -39,10 +39,14 @@ export const EventFragment = gql(/* GraphQL */ `
     capacity
     allow_waitlist
     participants {
-      id
-      first_name
-      last_name
-      email
+      user {
+        id
+        first_name
+        last_name
+        email
+      }
+      state
+      text
     }
   }
 `);
@@ -50,4 +54,3 @@ export const EventFragment = gql(/* GraphQL */ `
 export type EventFragmentType = FragmentType<typeof EventFragment>;
 
 export const getEventFragmentData = (event: EventFragmentType) => getFragmentData(EventFragment, event);
-

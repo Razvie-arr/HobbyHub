@@ -1,6 +1,6 @@
 import { DataSourceKnex } from '@nic-jennings/sql-datasource';
 
-import { FilterLocationInput, GroupSortType } from '../../types';
+import { FilterLocationInput, GroupSortType, User } from '../../types';
 
 export const groupsDataSource = (db: { query: DataSourceKnex; write: DataSourceKnex }) => ({
   getGroupEventTypes: (groupId: number) =>
@@ -104,4 +104,12 @@ export const groupsDataSource = (db: { query: DataSourceKnex; write: DataSourceK
       .offset(offset ?? 0);
     return limit ? query.limit(limit) : query;
   },
+
+  getGroupAdmin: async (group_id: number): Promise<User> =>
+    (await db
+      .query('User.*')
+      .from('User')
+      .join('UserGroup', 'User.id', 'UserGroup.admin_id')
+      .where('UserGroup.id', group_id)
+      .first('*')) ?? null,
 });

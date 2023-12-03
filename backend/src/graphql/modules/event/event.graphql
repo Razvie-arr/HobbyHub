@@ -26,6 +26,9 @@ extend type Mutation {
   editEvent(event: EventInput!, location: LocationInputWithoutCoords!): Event!
   deleteEvent(event_id: Int!, location_id: Int!): String!
   uploadEventImage(event_image: Upload): String
+
+  requestEventRegistration( eventRegistration: RequestEventRegistrationInput!): String!
+  resolveEventRegistration(resolve: ResolveEventRegistrationInput!): String!
 }
 
 union Author = User | Group
@@ -51,7 +54,7 @@ type Event {
 
   event_types: [EventType!]!
   location: Location!
-  participants: [User!]!
+  participants: [ParticipantType!]!
 }
 
 input EventInput {
@@ -82,4 +85,39 @@ enum SortType {
   DISTANCE
   DATE_CREATED
   DATE_START
+}
+
+input RequestEventRegistrationInput{
+  user_id: Int!
+  user_name: String!
+  user_email: String!
+
+  event_id: Int!
+  event_name: String!
+
+  text: String!
+
+  author_id: Int
+  group_id: Int
+}
+
+input ResolveEventRegistrationInput{
+  event_id: Int!
+  event_name: String!
+
+  user_id: Int!
+  user_email:String!
+
+  resolution: Boolean!
+}
+
+type ParticipantType{
+  user: User!
+  state: ParticipantState!
+  text: String
+}
+
+enum ParticipantState{
+  PENDING
+  ACCEPTED
 }

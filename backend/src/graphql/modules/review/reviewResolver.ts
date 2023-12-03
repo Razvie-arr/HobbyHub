@@ -69,7 +69,7 @@ export const maxRatingAllParticipantsResolver = async (
   const maxRating = 5;
   const text = 'Great!';
 
-  const eventParticipants = await dataSources.sql.events.getEventParticipants(eventId);
+  const eventParticipants = await dataSources.sql.events.getAcceptedEventParticipants(eventId);
   if (!eventParticipants) {
     throw new GraphQLError('Event does not exist or does not have participants');
   }
@@ -90,7 +90,7 @@ export const askForFeedbackResolver = async (
   const sentEvents: string[] = [];
 
   for (const event of events) {
-    const users = await dataSources.sql.events.getEventParticipants(event.id);
+    const users = await dataSources.sql.events.getAcceptedEventParticipants(event.id);
 
     for (const user of users) {
       await askForFeedback(user, event, requestSenderUrl);
@@ -113,7 +113,7 @@ export const unreviewedEventParticipantsResolver = async (
     throw new GraphQLError('Event does not exist.');
   }
 
-  const eventParticipants: User[] = await dataSources.sql.events.getEventParticipants(eventId);
+  const eventParticipants: User[] = await dataSources.sql.events.getAcceptedEventParticipants(eventId);
 
   const userIsParticipant = eventParticipants.find((participant) => participant.id === userId) !== undefined;
   if (!userIsParticipant) {
