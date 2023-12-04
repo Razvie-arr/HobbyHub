@@ -27,7 +27,7 @@ export const sendReviewNotification = async (
                                         View reviews using this link ${serverUrl}/users/${user.id}`;
   const emailHtmlMessage = `Hi ${userName}! You just got a new review from ${reviewerFullName}
                                         <br>Review text: ${review.text}, rating: ${review.rating} <br>
-                                        <br> View reviews using this <a href="${serverUrl}/users/${user.id}">link </a>`;
+                                        <br> View reviews using this <a href="${serverUrl}/profile">link </a>`;
 
   try {
     await sendEmail(user.email, reviewSubject, {
@@ -38,3 +38,4 @@ export const sendReviewNotification = async (
     throw error;
   }
 };
+
