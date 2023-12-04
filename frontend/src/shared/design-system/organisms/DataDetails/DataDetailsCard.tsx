@@ -1,8 +1,8 @@
 import { Card, Divider, Heading, Stack, Text, VStack } from '@chakra-ui/react';
 
+import { DataRowItem } from '../../molecules';
 import { DataMap } from '../DataMap';
 
-import { DataRowItem } from './DataRowItem';
 import { WithSideCardProps } from './types';
 
 export const DataDetailsCard = ({ sideCardProps }: WithSideCardProps) => (

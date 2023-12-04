@@ -1,0 +1,41 @@
+import { Avatar, Box, Card, CardBody, CardHeader, Flex, Heading, Text } from '@chakra-ui/react';
+
+import { Review, User } from '../../../gql/graphql';
+import { route } from '../../../route';
+import { DEFAULT_IMAGE_PATH } from '../../../shared/constants';
+import { Link, StarRating } from '../../../shared/design-system';
+import { ReactRouterLink } from '../../../shared/navigation';
+
+type ProfileReviewProps = Pick<Review, 'rating' | 'text'> & {
+  reviewer: Pick<User, 'email' | 'first_name' | 'id' | 'last_name'>;
+} & {
+  avatarImage?: string;
+};
+
+export const ProfileReview = ({ avatarImage, rating, reviewer, text }: ProfileReviewProps) => (
+  <Card variant="elevated" size="xs" p="6">
+    <CardHeader>
+      <Flex>
+        <Flex flex="1" gap="4" alignItems="center" flexWrap="wrap">
+          <Avatar name={`${reviewer.first_name} ${reviewer.last_name}`} src={avatarImage ?? DEFAULT_IMAGE_PATH} />
+          <Box ml="5px">
+            <Heading size="sm">
+              <Link
+                as={ReactRouterLink}
+                // @ts-expect-error
+                to={route.profile(reviewer.id)}
+              >
+                {reviewer.first_name} {reviewer.last_name}
+              </Link>
+            </Heading>
+            <StarRating rating={rating} size="24px" />
+          </Box>
+        </Flex>
+      </Flex>
+    </CardHeader>
+    <CardBody>
+      <Text mt="10px">{text}</Text>
+    </CardBody>
+  </Card>
+);
+

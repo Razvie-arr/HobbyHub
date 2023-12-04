@@ -1,0 +1,1 @@
+export {ProfileDetailsPageContainer as ProfileDetailsPage } from './ProfileDetailsPage';

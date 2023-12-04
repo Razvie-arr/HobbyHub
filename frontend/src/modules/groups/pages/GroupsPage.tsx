@@ -120,7 +120,6 @@ export const GroupsPage = ({ location }: EventsPageProps) => {
           queryResult={queryResult}
           queryName="filterGroups"
           render={renderGroupList((groups) => ({
-            user,
             noMoreResults,
             handleShowMore: createShowMoreHandler({
               queryResult,

@@ -1,9 +1,12 @@
-import { Box, HStack, Icon, IconButton, Text } from '@chakra-ui/react';
+import { Box, HStack, Icon, IconButton } from '@chakra-ui/react';
 import { FaCheck } from 'react-icons/fa6';
 import { MdAccountCircle } from 'react-icons/md';
 import { match } from 'ts-pattern';
 
 import { ParticipantState } from '../../../../gql/graphql';
+import { route } from '../../../../route';
+import { Link } from '../../../../shared/design-system';
+import { ReactRouterLink } from '../../../../shared/navigation';
 import { WithEvent, WithNullableAuthUser } from '../../../../shared/types';
 import { SendMessageModal } from '../../../messages';
 import { WithParticipant } from '../../types';
@@ -34,7 +37,13 @@ export const EventParticipantItem = ({
         icon={<MdAccountCircle />}
         fontSize="40"
       />
-      <Text>{`${participant.user.first_name} ${participant.user.last_name}`}</Text>
+      <Link
+        as={ReactRouterLink}
+        // @ts-expect-error
+        to={route.profile(participant.user.id)}
+      >
+        {participant.user.first_name} {participant.user.last_name}
+      </Link>
       {match(participant.state)
         .with(ParticipantState.Pending, () => <ResolveRequestModal event={event} participant={participant} />)
         .with(ParticipantState.Accepted, () => <Icon as={FaCheck} color="green.500" />)

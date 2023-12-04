@@ -17,6 +17,8 @@ export const route = {
   messages: () => `/messages` as const,
   signin: () => `/signin` as const,
   signup: () => `/signup` as const,
+  currentProfile: () => '/profile' as const,
+  profile: (userId?: number) => `/profile/${userId ?? ':userId'}` as const,
 
   addReview: (eventId?: number) => `/addReview${eventId ? `?eventId=${eventId}` : ''}` as const,
 };
