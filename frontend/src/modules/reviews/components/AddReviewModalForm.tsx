@@ -83,7 +83,7 @@ export const AddReviewModalForm = ({ eventId, user, member }: AddReviewModalForm
       }
       submitButtonProps={{
         isLoading: addReviewRequestState.loading,
-        text: 'Submit',
+        text: 'Send',
       }}
     >
       <RatingSection />
