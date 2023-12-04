@@ -53,7 +53,7 @@ export const ReviewsTabPanel = ({ userProfile }: WithUserProfile) => {
             </Center>
           </Stack>
         )}
-        renderOnNoData={<NoData description="This user has no created events." />}
+        renderOnNoData={<NoData description="This user has not received reviews." />}
       />
     </TabPanel>
   );

@@ -1,5 +1,6 @@
 export { AddressInfo } from './AddressInfo';
 export { AuthPromptModal } from './AuthPromptModal';
+export { AuthPromptWarning } from './AuthPromptWarning';
 export { DataRowItem } from './DataRowItem';
 export { ErrorBanner, type ErrorBannerProps } from './ErrorBanner';
 export { EventDateTime } from './EventDateTime';

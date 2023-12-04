@@ -2,7 +2,7 @@ import { useQuery } from '@apollo/client';
 import { Alert, AlertIcon, Heading, HStack, Stack, Text } from '@chakra-ui/react';
 import { useParams } from 'react-router-dom';
 
-import { EventTypeTag } from 'src/shared/design-system';
+import { AuthPromptWarning, EventTypeTag } from 'src/shared/design-system';
 import { ContentContainer, QueryResult } from 'src/shared/layout';
 import { getLocationFragmentData } from 'src/shared/types';
 
@@ -14,6 +14,10 @@ import { USER_PROFILE } from '../queries';
 export const ProfileDetailsPageContainer = () => {
   const { userId } = useParams();
   const { user } = useAuth();
+
+  if (!user) {
+    return <AuthPromptWarning text="Only registered users can view user profiles." />;
+  }
 
   if (!userId && user) {
     return <ProfileDetailsPage userId={user.id} />;
