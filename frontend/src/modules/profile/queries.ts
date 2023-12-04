@@ -49,6 +49,9 @@ export const USER_RECEIVED_REVIEWS = gql(`
         id
         last_name
       }
+      event {
+        ...EventFragment
+      }
     }
   }
 `);

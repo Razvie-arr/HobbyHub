@@ -5,10 +5,11 @@ import { Button, Center, Heading, Stack, TabPanel } from '@chakra-ui/react';
 import { NoData } from 'src/shared/design-system';
 import { QueryResult } from 'src/shared/layout';
 
+import { getEventFragmentData } from '../../../../shared/types';
 import { createShowMoreHandler } from '../../../../utils/dataFetch';
 import { USER_RECEIVED_REVIEWS } from '../../queries';
 import { WithUserProfile } from '../../types';
-import { ProfileReview } from '../ProfileDetailsRatings';
+import { ProfileReview } from '../ProfileReview';
 
 export const ReviewsTabPanel = ({ userProfile }: WithUserProfile) => {
   const [noMoreResults, setNoMoreResults] = useState(false);
@@ -31,8 +32,8 @@ export const ReviewsTabPanel = ({ userProfile }: WithUserProfile) => {
         queryResult={queryResult}
         render={(reviews) => (
           <Stack spacing="4">
-            {reviews.map((review) => (
-              <ProfileReview key={review.id} {...review} />
+            {reviews.map(({ event, ...review }) => (
+              <ProfileReview key={review.id} event={getEventFragmentData(event)} {...review} />
             ))}
             <Center mb="16">
               <Button

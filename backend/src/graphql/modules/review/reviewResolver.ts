@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/prefer-ts-expect-error */
 import { GraphQLError } from 'graphql/error';
 
 import {
@@ -114,13 +115,14 @@ export const unreviewedEventParticipantsResolver = async (
   }
 
   const eventParticipants: User[] = await dataSources.sql.events.getAcceptedEventParticipants(eventId);
-
   const userIsParticipant = eventParticipants.find((participant) => participant.id === userId) !== undefined;
-  if (!userIsParticipant) {
+
+  // @ts-ignore
+  if (!(userIsParticipant || userId === event.author_id)) {
     throw new GraphQLError('User is not participant of this event.');
   }
 
-  //if user is not author or admin resolver should return event author or group admin
+  //if user is not author or admin, resolver should return event author or group admin
   const eventBossId = await getEventBossId(event);
   if (eventBossId !== userId) {
     const eventBoss = await dataSources.sql.users.getById(eventBossId);
@@ -138,3 +140,4 @@ export const unreviewedEventParticipantsResolver = async (
   const reviewedUserIds = eventReviews.map((eventReview) => eventReview.user_id);
   return eventParticipants.filter((participant) => !reviewedUserIds.includes(participant.id));
 };
+

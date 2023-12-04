@@ -5,14 +5,16 @@ import { route } from '../../../route';
 import { DEFAULT_IMAGE_PATH } from '../../../shared/constants';
 import { Link, StarRating } from '../../../shared/design-system';
 import { ReactRouterLink } from '../../../shared/navigation';
+import { WithEvent } from '../../../shared/types';
 
-type ProfileReviewProps = Pick<Review, 'rating' | 'text'> & {
-  reviewer: Pick<User, 'email' | 'first_name' | 'id' | 'last_name'>;
-} & {
-  avatarImage?: string;
-};
+type ProfileReviewProps = WithEvent &
+  Pick<Review, 'rating' | 'text'> & {
+    reviewer: Pick<User, 'email' | 'first_name' | 'id' | 'last_name'>;
+  } & {
+    avatarImage?: string;
+  };
 
-export const ProfileReview = ({ avatarImage, rating, reviewer, text }: ProfileReviewProps) => (
+export const ProfileReview = ({ event, avatarImage, rating, reviewer, text }: ProfileReviewProps) => (
   <Card variant="elevated" size="xs" p="6">
     <CardHeader>
       <Flex>
@@ -26,6 +28,14 @@ export const ProfileReview = ({ avatarImage, rating, reviewer, text }: ProfileRe
                 to={route.profile(reviewer.id)}
               >
                 {reviewer.first_name} {reviewer.last_name}
+              </Link>{' '}
+              at{' '}
+              <Link
+                as={ReactRouterLink}
+                // @ts-expect-error
+                to={route.eventDetails(event.id)}
+              >
+                {event.name}
               </Link>
             </Heading>
             <StarRating rating={rating} size="24px" />

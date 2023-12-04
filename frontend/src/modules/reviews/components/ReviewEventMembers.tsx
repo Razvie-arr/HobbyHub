@@ -1,4 +1,4 @@
-import { Box, Heading, Stack, Text } from '@chakra-ui/react';
+import { Flex, Heading, Stack, Text } from '@chakra-ui/react';
 import { match } from 'ts-pattern';
 
 import { User } from '../../../gql/graphql';
@@ -33,11 +33,11 @@ export const ReviewEventMembers = ({ event, user, participants }: ReviewEventMem
           Let the {isUserOrganizer ? 'participants' : 'organizer'} know! Share your feedback and help them make future
           events even more incredible!
         </Text>
-        <Box display="flex">
+        <Flex flexWrap="wrap" columnGap="4">
           {participants.map((member) => (
             <ReviewEventMember key={member.id} eventId={event.id} user={user} member={member} />
           ))}
-        </Box>
+        </Flex>
       </Stack>
     </ContentContainer>
   );

@@ -67,8 +67,8 @@ export const AddReviewModalForm = ({ eventId, user, member }: AddReviewModalForm
             variant: 'left-accent',
             status: 'success',
             position: 'top-right',
-            title: 'Message sent!',
-            description: 'Your message was sent successfully.',
+            title: 'Feedback sent!',
+            description: 'Your feedback was sent successfully.',
             isClosable: true,
           });
         },

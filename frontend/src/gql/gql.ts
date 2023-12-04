@@ -82,7 +82,7 @@ const documents = {
     types.UserCreatedEventsDocument,
   '\n  query UserAdminGroups($userId: Int!, $offset: Int, $limit: Int) {\n    userAdminGroups(userId: $userId, offset: $offset, limit: $limit) {\n        ...GroupFragment\n      }\n    }\n':
     types.UserAdminGroupsDocument,
-  '\n  query ReviewsByUserId($userId: Int!, $offset: Int, $limit: Int) {\n    reviewsByUserId(userId: $userId, offset: $offset, limit: $limit) {\n      id\n      text\n      rating\n      reviewer {\n        first_name\n        email\n        id\n        last_name\n      }\n    }\n  }\n':
+  '\n  query ReviewsByUserId($userId: Int!, $offset: Int, $limit: Int) {\n    reviewsByUserId(userId: $userId, offset: $offset, limit: $limit) {\n      id\n      text\n      rating\n      reviewer {\n        first_name\n        email\n        id\n        last_name\n      }\n      event {\n        ...EventFragment\n      }\n    }\n  }\n':
     types.ReviewsByUserIdDocument,
   '\n  mutation CreateReview($userId: Int!, $reviewerId: Int!, $eventId: Int!, $text: String!, $rating: Float!) {\n    createReview(userId: $userId, reviewerId: $reviewerId, eventId: $eventId, text: $text, rating: $rating) {\n      id\n    }\n  }\n':
     types.CreateReviewDocument,
@@ -332,8 +332,8 @@ export function gql(
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function gql(
-  source: '\n  query ReviewsByUserId($userId: Int!, $offset: Int, $limit: Int) {\n    reviewsByUserId(userId: $userId, offset: $offset, limit: $limit) {\n      id\n      text\n      rating\n      reviewer {\n        first_name\n        email\n        id\n        last_name\n      }\n    }\n  }\n',
-): (typeof documents)['\n  query ReviewsByUserId($userId: Int!, $offset: Int, $limit: Int) {\n    reviewsByUserId(userId: $userId, offset: $offset, limit: $limit) {\n      id\n      text\n      rating\n      reviewer {\n        first_name\n        email\n        id\n        last_name\n      }\n    }\n  }\n'];
+  source: '\n  query ReviewsByUserId($userId: Int!, $offset: Int, $limit: Int) {\n    reviewsByUserId(userId: $userId, offset: $offset, limit: $limit) {\n      id\n      text\n      rating\n      reviewer {\n        first_name\n        email\n        id\n        last_name\n      }\n      event {\n        ...EventFragment\n      }\n    }\n  }\n',
+): (typeof documents)['\n  query ReviewsByUserId($userId: Int!, $offset: Int, $limit: Int) {\n    reviewsByUserId(userId: $userId, offset: $offset, limit: $limit) {\n      id\n      text\n      rating\n      reviewer {\n        first_name\n        email\n        id\n        last_name\n      }\n      event {\n        ...EventFragment\n      }\n    }\n  }\n'];
 /**
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */

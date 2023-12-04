@@ -1,4 +1,4 @@
 export { ProfileDetailsInfo } from './ProfileDetailsInfo';
-export { ProfileReview as ProfileDetailsRatings } from './ProfileDetailsRatings';
-export { ProfileDetailsTabs } from './ProfileDetailsTabs/ProfileDetailsTabs';
+export { ProfileDetailsTabs } from './ProfileDetailsTabs';
+export { ProfileReview as ProfileDetailsRatings } from './ProfileReview';
 
