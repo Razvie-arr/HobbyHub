@@ -144,14 +144,17 @@ export const EventsPage = ({ location }: EventsPageProps) => {
           render={renderEventList((events) => ({
             user,
             noMoreResults,
-            handleShowMore: createShowMoreHandler({
-              queryResult,
-              queryName: 'filterEvents',
-              offset: events.length,
-              onNoMoreResults: () => {
-                setNoMoreResults(true);
-              },
-            }),
+            handleShowMore:
+              events.length >= DEFAULT_LIMIT
+                ? createShowMoreHandler({
+                    queryResult,
+                    queryName: 'filterEvents',
+                    offset: events.length,
+                    onNoMoreResults: () => {
+                      setNoMoreResults(true);
+                    },
+                  })
+                : undefined,
             withMap: true,
           }))}
           renderOnNoData={<NoData description="Try changing your filter options to find more events." />}

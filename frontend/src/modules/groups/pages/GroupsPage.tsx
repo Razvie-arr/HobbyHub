@@ -121,14 +121,17 @@ export const GroupsPage = ({ location }: EventsPageProps) => {
           queryName="filterGroups"
           render={renderGroupList((groups) => ({
             noMoreResults,
-            handleShowMore: createShowMoreHandler({
-              queryResult,
-              queryName: 'filterGroups',
-              offset: groups.length,
-              onNoMoreResults: () => {
-                setNoMoreResults(true);
-              },
-            }),
+            handleShowMore:
+              groups.length >= DEFAULT_LIMIT
+                ? createShowMoreHandler({
+                    queryResult,
+                    queryName: 'filterGroups',
+                    offset: groups.length,
+                    onNoMoreResults: () => {
+                      setNoMoreResults(true);
+                    },
+                  })
+                : undefined,
             withMap: true,
           }))}
           renderOnNoData={<NoData description="Try changing your filter options to find more events." />}
