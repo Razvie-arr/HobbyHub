@@ -23,7 +23,7 @@ export const ReviewsTabPanel = ({ userProfile }: WithUserProfile) => {
 
   return (
     <TabPanel px="0">
-      <Heading fontSize="lg" p="2" mb="4">
+      <Heading fontSize="lg" p="2">
         Reviews by users
       </Heading>
       <QueryResult

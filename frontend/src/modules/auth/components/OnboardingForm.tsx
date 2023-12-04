@@ -1,26 +1,13 @@
 import { useMutation } from '@apollo/client';
-import {
-  Button,
-  Checkbox,
-  CheckboxGroup,
-  Container,
-  Flex,
-  Heading,
-  Stack,
-  Text,
-  useToast,
-  VStack,
-} from '@chakra-ui/react';
-import { Controller } from 'react-hook-form';
+import { Button, Container, Flex, Heading, Stack, Text, useToast } from '@chakra-ui/react';
 import { useNavigate } from 'react-router-dom';
 
 import { gql } from 'src/gql';
 import { route } from 'src/route';
-import { eventTypes } from 'src/shared/constants';
 import {
   AddressFormFields,
   addressFormFieldsSchema,
-  eventTypeToSelectOption,
+  EventTypesSelectField,
   Form,
   FormSection,
   TextareaField,
@@ -29,14 +16,6 @@ import {
 } from 'src/shared/forms';
 
 import { useAuth } from '..';
-
-const { sports, games, other } = eventTypes;
-
-const options = [
-  { value: 'sports', label: 'Sports', options: sports.map(eventTypeToSelectOption) },
-  { value: 'games', label: 'Games', options: games.map(eventTypeToSelectOption) },
-  { value: 'other', label: 'Other', options: other.map(eventTypeToSelectOption) },
-];
 
 const onboardingFormSchema = zod.object({
   eventTypes: zod.array(zod.number()).min(3, 'Specify at least three interests'),
@@ -141,43 +120,9 @@ export const OnboardingForm = () => {
           noValidate
         >
           <Stack spacing={8}>
-            <Controller
-              name="eventTypes"
-              render={({ field, fieldState }) => (
-                <FormSection title="Select your interests">
-                  {fieldState.error?.message ? <Text color="red.500">{fieldState.error?.message}</Text> : null}
-                  <CheckboxGroup colorScheme="purple">
-                    <VStack spacing={6} overflowY="scroll" h="400px">
-                      {options.map((section) => (
-                        <VStack key={section.label} align="start" w="90%">
-                          <Text fontWeight="bold">{section.label}</Text>
-                          {section.options.map((option) => (
-                            <Checkbox
-                              key={option.value}
-                              w="100%"
-                              bg="purple.50"
-                              boxShadow="xs"
-                              p={2}
-                              borderColor="purple.500"
-                              isChecked={field.value.some((id: number) => id === option.value)}
-                              onChange={(event) => {
-                                field.onChange(
-                                  event.target.checked
-                                    ? [option.value, ...field.value]
-                                    : field.value.filter((id: number) => id !== option.value),
-                                );
-                              }}
-                            >
-                              {option.label}
-                            </Checkbox>
-                          ))}
-                        </VStack>
-                      ))}
-                    </VStack>
-                  </CheckboxGroup>
-                </FormSection>
-              )}
-            />
+            <FormSection title="Select your interests">
+              <EventTypesSelectField name="eventTypes" />
+            </FormSection>
 
             <FormSection title="Select your location">
               <AddressFormFields />
