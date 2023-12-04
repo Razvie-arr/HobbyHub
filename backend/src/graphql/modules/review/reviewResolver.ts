@@ -91,6 +91,20 @@ export const askForFeedbackResolver = async (
   const sentEvents: string[] = [];
 
   for (const event of events) {
+    if (event.author_id) {
+      const author = await dataSources.sql.users.getById(event.author_id);
+      if (author) {
+        await askForFeedback(author, event, requestSenderUrl);
+      }
+    }
+
+    if (event.group_id) {
+      const group = await dataSources.sql.groups.getById(event.group_id);
+      if (group) {
+        await askForFeedback(group.admin, event, requestSenderUrl);
+      }
+    }
+
     const users = await dataSources.sql.events.getAcceptedEventParticipants(event.id);
 
     for (const user of users) {
