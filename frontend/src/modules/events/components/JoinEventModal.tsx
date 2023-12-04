@@ -165,7 +165,7 @@ export const JoinEventModal = ({ user, event, buttonSize = 'md' }: JoinEventModa
           isLoading: requestEventRegistrationRequestState.loading,
           text: "I'm in!",
         }}
-        modalButtonProps={{ size: buttonSize, rounded: 'full', isDisabled }}
+        modalButtonProps={{ size: buttonSize, rounded: 'full', w: '100%', isDisabled }}
       >
         <TextareaField
           autoFocus
