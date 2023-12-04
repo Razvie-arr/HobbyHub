@@ -20,6 +20,7 @@ import { getEventBossId } from '../event/getEventBossId';
 
 import { askForFeedback } from './askForFeedback';
 import { createUserReview } from './createUserReview';
+import { reviewAlreadySent } from './reviewAlreadySent';
 
 export const reviewByIdResolver: ContextualNullableResolver<Review, QueryReviewByIdArgs> = async (
   _,
@@ -144,6 +145,9 @@ export const unreviewedEventParticipantsResolver = async (
     if (!eventBoss) {
       throw new GraphQLError('Event admin or author does not exist');
     }
+    if (await reviewAlreadySent(eventBossId, userId, eventId)) {
+      return [];
+    }
     return [eventBoss];
   }
 
@@ -155,4 +159,3 @@ export const unreviewedEventParticipantsResolver = async (
   const reviewedUserIds = eventReviews.map((eventReview) => eventReview.user_id);
   return eventParticipants.filter((participant) => !reviewedUserIds.includes(participant.id));
 };
-
