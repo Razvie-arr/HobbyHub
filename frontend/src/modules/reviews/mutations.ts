@@ -8,3 +8,9 @@ export const ADD_REVIEW = gql(`
   }
 `);
 
+export const MAX_RATING_ALL_PARTICIPANTS = gql(`
+  mutation MaxRatingAllParticipants($adminId: Int!, $eventId: Int!) {
+    maxRatingAllParticipants(adminId: $adminId, eventId: $eventId)
+  }
+`);
+

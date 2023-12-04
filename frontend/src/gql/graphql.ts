@@ -1136,6 +1136,13 @@ export type CreateReviewMutationVariables = Exact<{
 
 export type CreateReviewMutation = { __typename?: 'Mutation'; createReview: { __typename?: 'Review'; id: number } };
 
+export type MaxRatingAllParticipantsMutationVariables = Exact<{
+  adminId: Scalars['Int']['input'];
+  eventId: Scalars['Int']['input'];
+}>;
+
+export type MaxRatingAllParticipantsMutation = { __typename?: 'Mutation'; maxRatingAllParticipants: boolean };
+
 export type UnreviewedEventParticipantsQueryVariables = Exact<{
   userId: Scalars['Int']['input'];
   eventId: Scalars['Int']['input'];
@@ -6549,6 +6556,49 @@ export const CreateReviewDocument = {
     },
   ],
 } as unknown as DocumentNode<CreateReviewMutation, CreateReviewMutationVariables>;
+export const MaxRatingAllParticipantsDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'mutation',
+      name: { kind: 'Name', value: 'MaxRatingAllParticipants' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'adminId' } },
+          type: { kind: 'NonNullType', type: { kind: 'NamedType', name: { kind: 'Name', value: 'Int' } } },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'eventId' } },
+          type: { kind: 'NonNullType', type: { kind: 'NamedType', name: { kind: 'Name', value: 'Int' } } },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'maxRatingAllParticipants' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'adminId' },
+                value: { kind: 'Variable', name: { kind: 'Name', value: 'adminId' } },
+              },
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'eventId' },
+                value: { kind: 'Variable', name: { kind: 'Name', value: 'eventId' } },
+              },
+            ],
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<MaxRatingAllParticipantsMutation, MaxRatingAllParticipantsMutationVariables>;
 export const UnreviewedEventParticipantsDocument = {
   kind: 'Document',
   definitions: [

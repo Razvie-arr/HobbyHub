@@ -42,6 +42,14 @@ export const AddReviewModalForm = ({ eventId, user, member }: AddReviewModalForm
     },
     onCompleted: () => {
       disclosure.onClose();
+      toast({
+        variant: 'left-accent',
+        status: 'success',
+        position: 'top-right',
+        title: 'Feedback sent!',
+        description: 'Your feedback was sent successfully.',
+        isClosable: true,
+      });
     },
     onError: () => {},
   });
@@ -62,14 +70,6 @@ export const AddReviewModalForm = ({ eventId, user, member }: AddReviewModalForm
               text: formValues.comment,
               userId: member.id,
             },
-          });
-          toast({
-            variant: 'left-accent',
-            status: 'success',
-            position: 'top-right',
-            title: 'Feedback sent!',
-            description: 'Your feedback was sent successfully.',
-            isClosable: true,
           });
         },
         resolver: zodResolver(schema),

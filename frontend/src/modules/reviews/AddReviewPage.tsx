@@ -2,7 +2,7 @@ import { useQuery } from '@apollo/client';
 import { useSearchParams } from 'react-router-dom';
 import { match } from 'ts-pattern';
 
-import { NoData } from '../../shared/design-system';
+import { NoData, NotAuthorized } from '../../shared/design-system';
 import { QueryResult } from '../../shared/layout';
 import { getEventFragmentData, WithAuthUser } from '../../shared/types';
 import { getCurrentDateTime } from '../../utils/form';
@@ -18,7 +18,11 @@ export const AddReviewPageContainer = () => {
   const [param] = useSearchParams();
   const eventId = param.get('eventId');
 
-  return user && eventId ? <AddReviewPage user={user} eventId={parseInt(eventId)} /> : null;
+  if (!user) {
+    return <NotAuthorized requireSignIn wrapInContentContainer />;
+  }
+
+  return eventId ? <AddReviewPage user={user} eventId={parseInt(eventId)} /> : <NoData wrapInContentContainer />;
 };
 
 interface AddReviewPageProps extends WithAuthUser {
