@@ -34,12 +34,18 @@ interface AddReviewModalFormProps extends WithAuthUser {
 export const AddReviewModalForm = ({ eventId, user, member }: AddReviewModalFormProps) => {
   const disclosure = useDisclosure();
   const toast = useToast();
+
   const [addReviewRequest, addReviewRequestState] = useMutation(ADD_REVIEW, {
+    refetchQueries: ['UnreviewedEventParticipants'],
+    onQueryUpdated: async (observableQuery) => {
+      await observableQuery.refetch();
+    },
     onCompleted: () => {
       disclosure.onClose();
     },
     onError: () => {},
   });
+
   return (
     <ModalForm
       disclosure={disclosure}
