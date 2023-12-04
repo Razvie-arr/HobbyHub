@@ -56,22 +56,24 @@ export const ReviewEventMembers = ({ event, user, participants }: ReviewEventMem
           events even more incredible!
         </Text>
         <HStack>
-          <Text as="b">Were you amazed by all the participants? Give them all the highest rating!</Text>
           {isUserOrganizer ? (
-            <Button
-              colorScheme="purple"
-              size="sm"
-              onClick={async () => {
-                await maxRatingAllParticipantsRequest({
-                  variables: {
-                    adminId: user.id,
-                    eventId: event.id,
-                  },
-                });
-              }}
-            >
-              WOW!
-            </Button>
+            <>
+              <Text as="b">Were you amazed by all the participants? Give them all the highest rating!</Text>
+              <Button
+                colorScheme="purple"
+                size="sm"
+                onClick={async () => {
+                  await maxRatingAllParticipantsRequest({
+                    variables: {
+                      adminId: user.id,
+                      eventId: event.id,
+                    },
+                  });
+                }}
+              >
+                WOW!
+              </Button>
+            </>
           ) : null}
         </HStack>
         <Flex flexWrap="wrap" columnGap="4">
