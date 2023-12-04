@@ -53,7 +53,16 @@ export function TopNavigation() {
         <HStack py={{ base: 1 }} align="center" justifyContent="space-between">
           <HStack>
             {breakpoint === 'base' ? null : (
-              <Image boxSize={{ base: '40px', md: '50px' }} src={LOGO_PATH} alt="logo" borderRadius="base" />
+              <Image
+                boxSize={{ base: '40px', md: '50px' }}
+                src={LOGO_PATH}
+                alt="logo"
+                borderRadius="base"
+                onClick={() => {
+                  navigate(route.events());
+                }}
+                cursor="pointer"
+              />
             )}
             <IconButton
               color="purple.600"

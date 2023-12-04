@@ -101,6 +101,7 @@ export const askForFeedbackResolver = async (
     if (event.group_id) {
       const group = await dataSources.sql.groups.getById(event.group_id);
       if (group) {
+        // @ts-ignore
         await askForFeedback(group.admin, event, requestSenderUrl);
       }
     }
