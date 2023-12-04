@@ -51,9 +51,9 @@ export function EnhancedApolloProvider({ children }: Props) {
               events: offsetLimitPagination(),
               groups: offsetLimitPagination(),
 
-              userCreatedEvents: offsetLimitPagination(),
-              userAdminGroups: offsetLimitPagination(),
-              reviewsByUserId: offsetLimitPagination(),
+              userCreatedEvents: { ...offsetLimitPagination(), keyArgs: ['userId'] },
+              userAdminGroups: { ...offsetLimitPagination(), keyArgs: ['userId'] },
+              reviewsByUserId: { ...offsetLimitPagination(), keyArgs: ['userId'] },
 
               filterEvents: {
                 ...offsetLimitPagination(),
