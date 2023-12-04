@@ -26,7 +26,7 @@ export const DataList = ({ title, noMoreResults, handleShowMore, children }: Pro
       {handleShowMore ? (
         <Center mb="16">
           <Button colorScheme="purple" isDisabled={noMoreResults} onClick={handleShowMore}>
-            {noMoreResults ? 'No more results: Try different filter values' : 'Show more'}
+            {noMoreResults ? 'No more results' : 'Show more'}
           </Button>
         </Center>
       ) : null}

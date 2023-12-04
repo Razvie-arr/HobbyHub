@@ -10,7 +10,7 @@ interface GroupListProps extends DataListProps {
   withMap?: boolean;
 }
 
-export const renderGroupList = (props: GroupListProps | ((events: Array<GroupData>) => GroupListProps)) =>
+export const renderGroupList = (props: GroupListProps | ((events: Array<GroupData>) => GroupListProps) = {}) =>
   flow(ReadonlyArray.map(getGroupFragmentData), (groups) => {
     const { maxColumnCount = 4, withMap, ...dataListProps } = typeof props === 'function' ? props(groups) : props;
     return (
@@ -30,4 +30,3 @@ export const renderGroupList = (props: GroupListProps | ((events: Array<GroupDat
       </>
     );
   });
-

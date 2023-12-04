@@ -388,7 +388,7 @@ export type Query = {
   unreviewedEventParticipants: Array<User>;
   userAdminGroups: Array<Group>;
   userById?: Maybe<User>;
-  userCreatedEvents: Array<Maybe<Event>>;
+  userCreatedEvents: Array<Event>;
   users: Array<User>;
   usersByIds: Array<User>;
 };
@@ -1271,7 +1271,7 @@ export type QueryResolvers<
   >;
   userById?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType, RequireFields<QueryUserByIdArgs, 'id'>>;
   userCreatedEvents?: Resolver<
-    Array<Maybe<ResolversTypes['Event']>>,
+    Array<ResolversTypes['Event']>,
     ParentType,
     ContextType,
     RequireFields<QueryUserCreatedEventsArgs, 'userId'>

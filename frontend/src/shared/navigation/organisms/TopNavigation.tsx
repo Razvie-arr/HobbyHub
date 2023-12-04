@@ -123,7 +123,9 @@ export function TopNavigation() {
                     </Flex>
                   </MenuButton>
                   <MenuList>
-                    <MenuItem>Profile</MenuItem>
+                    <MenuItem as={NavLink} to={route.profile()}>
+                      Profile
+                    </MenuItem>
                     <MenuItem>Settings</MenuItem>
                     <Divider />
                     <MenuItem
@@ -165,4 +167,3 @@ export function TopNavigation() {
     </Box>
   );
 }
-

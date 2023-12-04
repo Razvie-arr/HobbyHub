@@ -3,7 +3,7 @@ import { Tab, TabList, TabPanel, TabPanels, Tabs, Text } from '@chakra-ui/react'
 import { WithTabsProps } from './types';
 
 export const DataDetailsTabs = ({ tabsProps }: WithTabsProps) => (
-  <Tabs w="100%" colorScheme="purple">
+  <Tabs isFitted w="100%" colorScheme="purple">
     <TabList>
       {tabsProps.map(({ title }, index) => (
         <Tab key={index}>
@@ -20,4 +20,3 @@ export const DataDetailsTabs = ({ tabsProps }: WithTabsProps) => (
     </TabPanels>
   </Tabs>
 );
-

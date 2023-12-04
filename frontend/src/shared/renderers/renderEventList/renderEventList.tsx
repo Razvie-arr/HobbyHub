@@ -10,7 +10,9 @@ interface EventListProps extends WithNullableAuthUser, DataListProps {
   withMap?: boolean;
 }
 
-export const renderEventList = (props: EventListProps | ((events: Array<EventData>) => EventListProps)) =>
+export const renderEventList = (
+  props: EventListProps | ((events: Array<EventData>) => EventListProps) = { user: null },
+) =>
   flow(ReadonlyArray.map(getEventFragmentData), (events) => {
     const { user, maxColumnCount = 4, withMap, ...dataListProps } = typeof props === 'function' ? props(events) : props;
     return (
@@ -30,4 +32,3 @@ export const renderEventList = (props: EventListProps | ((events: Array<EventDat
       </>
     );
   });
-

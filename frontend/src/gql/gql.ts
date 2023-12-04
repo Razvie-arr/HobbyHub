@@ -74,6 +74,14 @@ const documents = {
     types.ThreadsDocument,
   '\n  query MessagesByThreadId($threadId: Int!) {\n    messagesByThreadId(threadId: $threadId) {\n      ...MessageFragment\n    }\n  }\n':
     types.MessagesByThreadIdDocument,
+  '\n  query UserProfile($userId: Int!) {\n    userById(id: $userId) {\n      id\n      email\n      first_name\n      last_name\n      description\n      average_rating\n      event_types {\n        id\n        name\n        category\n      }\n      location {\n        ...LocationFragment\n      }\n    }\n  }\n':
+    types.UserProfileDocument,
+  '\n  query UserCreatedEvents($userId: Int!, $offset: Int, $limit: Int) {\n    userCreatedEvents(userId: $userId, offset: $offset, limit: $limit) {\n        ...EventFragment\n      }\n    }\n':
+    types.UserCreatedEventsDocument,
+  '\n  query UserAdminGroups($userId: Int!, $offset: Int, $limit: Int) {\n    userAdminGroups(userId: $userId, offset: $offset, limit: $limit) {\n        ...GroupFragment\n      }\n    }\n':
+    types.UserAdminGroupsDocument,
+  '\n  query ReviewsByUserId($userId: Int!, $offset: Int, $limit: Int) {\n    reviewsByUserId(userId: $userId, offset: $offset, limit: $limit) {\n      id\n      text\n      rating\n      reviewer {\n        first_name\n        email\n        id\n        last_name\n      }\n    }\n  }\n':
+    types.ReviewsByUserIdDocument,
   '\n  mutation CreateReview($userId: Int!, $reviewerId: Int!, $eventId: Int!, $text: String!, $rating: Float!) {\n    createReview(userId: $userId, reviewerId: $reviewerId, eventId: $eventId, text: $text, rating: $rating) {\n      id\n    }\n  }\n':
     types.CreateReviewDocument,
   '\n  query UnreviewedEventParticipants($userId: Int!, $eventId: Int!) {\n    unreviewedEventParticipants(userId: $userId, eventId: $eventId) {\n      id\n      first_name\n      last_name\n      email\n    }\n  }\n':
@@ -294,6 +302,30 @@ export function gql(
 export function gql(
   source: '\n  query MessagesByThreadId($threadId: Int!) {\n    messagesByThreadId(threadId: $threadId) {\n      ...MessageFragment\n    }\n  }\n',
 ): (typeof documents)['\n  query MessagesByThreadId($threadId: Int!) {\n    messagesByThreadId(threadId: $threadId) {\n      ...MessageFragment\n    }\n  }\n'];
+/**
+ * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function gql(
+  source: '\n  query UserProfile($userId: Int!) {\n    userById(id: $userId) {\n      id\n      email\n      first_name\n      last_name\n      description\n      average_rating\n      event_types {\n        id\n        name\n        category\n      }\n      location {\n        ...LocationFragment\n      }\n    }\n  }\n',
+): (typeof documents)['\n  query UserProfile($userId: Int!) {\n    userById(id: $userId) {\n      id\n      email\n      first_name\n      last_name\n      description\n      average_rating\n      event_types {\n        id\n        name\n        category\n      }\n      location {\n        ...LocationFragment\n      }\n    }\n  }\n'];
+/**
+ * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function gql(
+  source: '\n  query UserCreatedEvents($userId: Int!, $offset: Int, $limit: Int) {\n    userCreatedEvents(userId: $userId, offset: $offset, limit: $limit) {\n        ...EventFragment\n      }\n    }\n',
+): (typeof documents)['\n  query UserCreatedEvents($userId: Int!, $offset: Int, $limit: Int) {\n    userCreatedEvents(userId: $userId, offset: $offset, limit: $limit) {\n        ...EventFragment\n      }\n    }\n'];
+/**
+ * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function gql(
+  source: '\n  query UserAdminGroups($userId: Int!, $offset: Int, $limit: Int) {\n    userAdminGroups(userId: $userId, offset: $offset, limit: $limit) {\n        ...GroupFragment\n      }\n    }\n',
+): (typeof documents)['\n  query UserAdminGroups($userId: Int!, $offset: Int, $limit: Int) {\n    userAdminGroups(userId: $userId, offset: $offset, limit: $limit) {\n        ...GroupFragment\n      }\n    }\n'];
+/**
+ * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function gql(
+  source: '\n  query ReviewsByUserId($userId: Int!, $offset: Int, $limit: Int) {\n    reviewsByUserId(userId: $userId, offset: $offset, limit: $limit) {\n      id\n      text\n      rating\n      reviewer {\n        first_name\n        email\n        id\n        last_name\n      }\n    }\n  }\n',
+): (typeof documents)['\n  query ReviewsByUserId($userId: Int!, $offset: Int, $limit: Int) {\n    reviewsByUserId(userId: $userId, offset: $offset, limit: $limit) {\n      id\n      text\n      rating\n      reviewer {\n        first_name\n        email\n        id\n        last_name\n      }\n    }\n  }\n'];
 /**
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */

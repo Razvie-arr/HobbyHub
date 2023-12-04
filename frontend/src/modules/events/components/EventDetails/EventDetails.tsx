@@ -4,6 +4,7 @@ import { MdAccountCircle, MdCalendarToday, MdGroups, MdInfo, MdLocationOn } from
 import { match } from 'ts-pattern';
 
 import { ParticipantState } from '../../../../gql/graphql';
+import { route } from '../../../../route';
 import {
   AddressInfo,
   DataDetailsContainer,
@@ -13,8 +14,10 @@ import {
   EventParticipants,
   EventStatusTag,
   EventTypeTag,
+  Link,
   NoData,
 } from '../../../../shared/design-system';
+import { ReactRouterLink } from '../../../../shared/navigation';
 import { getLocationFragmentData, WithEvent } from '../../../../shared/types';
 import { getCurrentDateTime } from '../../../../utils/form';
 import { useAuth } from '../../../auth';
@@ -74,7 +77,29 @@ export const EventDetails = ({ event }: WithEvent) => {
               icon: MdAccountCircle,
               content: (
                 <Text>
-                  Hosted by: <Text as="b">{`${organizer.first_name} ${organizer.last_name}`}</Text>
+                  Hosted by:{' '}
+                  {match(event.author)
+                    .with({ __typename: 'User' }, (author) => (
+                      <Link
+                        as={ReactRouterLink}
+                        // @ts-expect-error
+                        to={route.profile(author.id)}
+                      >
+                        <Text as="b">
+                          {author.first_name} {author.last_name}
+                        </Text>
+                      </Link>
+                    ))
+                    .with({ __typename: 'Group' }, (group) => (
+                      <Link
+                        as={ReactRouterLink}
+                        // @ts-expect-error
+                        to={route.groupDetails(group.id)}
+                      >
+                        <Text as="b">{group.name}</Text>
+                      </Link>
+                    ))
+                    .exhaustive()}
                 </Text>
               ),
             },

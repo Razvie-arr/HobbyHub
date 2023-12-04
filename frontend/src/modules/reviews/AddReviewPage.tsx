@@ -15,7 +15,7 @@ import { UNREVIEWED_EVENT_PARTICIPANTS } from './queries';
 export const AddReviewPageContainer = () => {
   const { user } = useAuth();
 
-  let [param] = useSearchParams();
+  const [param] = useSearchParams();
   const eventId = param.get('eventId');
 
   return user && eventId ? <AddReviewPage user={user} eventId={parseInt(eventId)} /> : null;

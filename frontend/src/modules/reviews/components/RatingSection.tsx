@@ -1,9 +1,8 @@
 import { Flex, SliderMark, Stack } from '@chakra-ui/react';
 import { useFormContext } from 'react-hook-form';
 
+import { StarRating } from '../../../shared/design-system';
 import { SliderField } from '../../../shared/forms';
-
-import { StarRating } from './StarRating';
 
 const labelStyles = {
   mt: '-10',

@@ -18,7 +18,7 @@ extend type Query {
     sort: SortType
   ): [Event!]
 
-  userCreatedEvents(userId: Int!, offset: Int, limit: Int): [Event]!
+  userCreatedEvents(userId: Int!, offset: Int, limit: Int): [Event!]!
 }
 
 extend type Mutation {

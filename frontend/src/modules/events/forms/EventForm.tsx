@@ -121,6 +121,7 @@ export const EventForm = ({
               options={options}
               placeholder="Select your event type"
               isMulti
+              isRequired
             />
             <InputField name="summary" label="Summary" placeholder="Tell people what is the event about" isRequired />
             <InputField
@@ -185,4 +186,3 @@ export const EventForm = ({
     </Container>
   );
 };
-
