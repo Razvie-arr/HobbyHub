@@ -3,7 +3,9 @@ import { MdInfo, MdLocationOn } from 'react-icons/md';
 
 import { DataRowItem, StarRating } from 'src/shared/design-system/';
 
+import { route } from '../../../route';
 import { DEFAULT_IMAGE_PATH } from '../../../shared/constants';
+import { ReactRouterLink } from '../../../shared/navigation';
 import { useAuth } from '../../auth';
 import { WithUserProfile } from '../types';
 
@@ -31,7 +33,7 @@ export const ProfileDetailsInfo = ({ userProfile }: WithUserProfile) => {
             {userProfile.first_name} {userProfile.last_name}
           </Heading>
           {isCurrentUser ? (
-            <Button colorScheme="purple" size="sm">
+            <Button as={ReactRouterLink} to={route.editProfile()} colorScheme="purple" size="sm">
               Edit
             </Button>
           ) : null}

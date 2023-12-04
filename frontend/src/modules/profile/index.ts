@@ -1,1 +1,2 @@
-export { ProfileDetailsPage } from './pages';
+export { EditProfilePage, ProfileDetailsPage } from './pages';
+

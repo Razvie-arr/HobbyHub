@@ -39,7 +39,6 @@ export const GroupsTabPanel = ({ userProfile }: WithUserProfile) => {
               setNoMoreResults(true);
             },
           }),
-          withMap: true,
         }))}
         renderOnNoData={<NoData description="This user has no created groups." />}
       />

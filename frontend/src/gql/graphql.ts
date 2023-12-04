@@ -1047,6 +1047,20 @@ export type MessagesByThreadIdQuery = {
   >;
 };
 
+export type EditUserMutationVariables = Exact<{
+  user: UserInput;
+  location: LocationInputWithoutCoords;
+}>;
+
+export type EditUserMutation = {
+  __typename?: 'Mutation';
+  editUser: {
+    __typename?: 'User';
+    id: number;
+    event_types: Array<{ __typename?: 'EventType'; id: number; category: string; name: string }>;
+  };
+};
+
 export type UserProfileQueryVariables = Exact<{
   userId: Scalars['Int']['input'];
 }>;
@@ -5661,6 +5675,70 @@ export const MessagesByThreadIdDocument = {
     },
   ],
 } as unknown as DocumentNode<MessagesByThreadIdQuery, MessagesByThreadIdQueryVariables>;
+export const EditUserDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'mutation',
+      name: { kind: 'Name', value: 'EditUser' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'user' } },
+          type: { kind: 'NonNullType', type: { kind: 'NamedType', name: { kind: 'Name', value: 'UserInput' } } },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'location' } },
+          type: {
+            kind: 'NonNullType',
+            type: { kind: 'NamedType', name: { kind: 'Name', value: 'LocationInputWithoutCoords' } },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'editUser' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'user' },
+                value: { kind: 'Variable', name: { kind: 'Name', value: 'user' } },
+              },
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'location' },
+                value: { kind: 'Variable', name: { kind: 'Name', value: 'location' } },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'event_types' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'category' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'name' } },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<EditUserMutation, EditUserMutationVariables>;
 export const UserProfileDocument = {
   kind: 'Document',
   definitions: [

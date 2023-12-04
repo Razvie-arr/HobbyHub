@@ -21,5 +21,7 @@ export const route = {
   profile: (userId?: number) => `/profile/${userId ?? ':userId'}` as const,
 
   addReview: (eventId?: number) => `/addReview${eventId ? `?eventId=${eventId}` : ''}` as const,
+  
+  editProfile: () => `/editProfile` as const,
 };
 
