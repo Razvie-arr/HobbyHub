@@ -3,6 +3,8 @@ import { useMutation } from '@apollo/client';
 import {
   Button,
   ButtonGroup,
+  Icon,
+  IconButton,
   Modal,
   ModalBody,
   ModalCloseButton,
@@ -14,6 +16,7 @@ import {
   useDisclosure,
   useToast,
 } from '@chakra-ui/react';
+import { ImCheckmark, ImCross } from 'react-icons/im';
 
 import { WithEvent } from '../../../../shared/types';
 import { RESOLVE_EVENT_REGISTRATION } from '../../mutations';
@@ -95,23 +98,23 @@ export const ResolveRequestModal = ({ event, participant }: WithEvent & WithPart
               justifyContent="space-between"
               w="100%"
             >
-              <Button
+              <IconButton
+                aria-label="accept"
+                icon={<Icon as={ImCheckmark} />}
                 colorScheme="green"
                 mr={4}
                 onClick={createSubmitHandler({ accept: true })}
                 flexBasis="50%"
                 isLoading={accept === true && resolveEventRegistrationRequestState.loading}
-              >
-                Accept
-              </Button>
-              <Button
+              />
+              <IconButton
+                aria-label="decline"
+                icon={<Icon as={ImCross} />}
                 colorScheme="red"
                 flexBasis="50%"
                 onClick={createSubmitHandler({ accept: false })}
                 isLoading={accept === false && resolveEventRegistrationRequestState.loading}
-              >
-                Decline
-              </Button>
+              />
             </ButtonGroup>
           </ModalFooter>
         </ModalContent>
