@@ -3,6 +3,7 @@ import { GraphQLError } from 'graphql/error';
 import { SQLDataSource } from '../../../datasource';
 
 import { editAverageUserRating } from './editAverageUserRating';
+import { reviewAlreadySent } from './reviewAlreadySent';
 import { sendReviewNotification } from './sendReviewNotification';
 
 export const createUserReview = async (
@@ -14,6 +15,17 @@ export const createUserReview = async (
   dataSources: { sql: SQLDataSource },
   serverUrl: string,
 ) => {
+  const event = await dataSources.sql.events.getById(eventId);
+  if (!event) {
+    throw new GraphQLError('Event does not exist');
+  }
+
+  const isReviewAlreadySent = await reviewAlreadySent(userId, reviewerId, eventId);
+
+  if (isReviewAlreadySent) {
+    throw new GraphQLError('Review already exists');
+  }
+
   const createUserResponse = await dataSources.sql.reviews.insertReview(userId, reviewerId, text, rating, eventId);
   if (!createUserResponse) {
     throw new GraphQLError('Error while creating Review');

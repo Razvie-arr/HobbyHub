@@ -12,6 +12,8 @@ export const reviewDataSource = (db: { query: DataSourceKnex; write: DataSourceK
 
   getAllByEventId: (eventId: number) => db.query('Review').where('event_id', eventId),
   getUserReviewsCount: (userId: number) => db.query('Review').count('*').where('user_id', userId),
+  getByUserAndReviewerAndEventIds: (userId: number, reviewerId: number, eventId: number) =>
+    db.query('Review').where('user_id', userId).andWhere('reviewer_id', reviewerId).andWhere('event_id', eventId),
 
   insertReview: (userId: number, reviewerId: number, text: string, rating: number, eventId: number) =>
     db
