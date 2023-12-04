@@ -160,6 +160,7 @@ export const EventDetails = ({ event }: WithEvent) => {
                         : Option.none(),
                     ),
                   ),
+                  Option.filter(ReadonlyArray.isNonEmptyArray),
                   Option.getOrElse(() => <NoData description={`There are no participants for ${event.name} yet`} />),
                 )}
               </Flex>
