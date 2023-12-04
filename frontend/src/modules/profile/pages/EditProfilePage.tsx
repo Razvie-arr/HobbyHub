@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import { useMutation } from '@apollo/client';
 import { Box, Button, Container, Divider, Flex, Spacer, Stack, Text, useToast, VStack } from '@chakra-ui/react';
 import { useNavigate } from 'react-router-dom';
@@ -34,13 +35,18 @@ export const EditProfilePage = () => {
   const navigate = useNavigate();
   const toast = useToast();
 
+  useEffect(() => {
+    if (user && (!user.location || user.event_types.length === 0)) {
+      // TODO: This needs be resolved declaratively
+      navigate(route.onboarding());
+    }
+  });
+
   if (!user) {
     return <NotAuthorized requireSignIn wrapInContentContainer />;
   }
 
   if (!user.location || user.event_types.length === 0) {
-    // TODO: This needs be resolved declaratively
-    navigate(route.onboarding());
     return null;
   }
 
@@ -53,10 +59,10 @@ export const EditProfilePage = () => {
           email: user.email,
           description: user.description ?? '',
           eventTypes: user.event_types.map(({ id }) => id),
-          streetName: user.location?.street_name,
-          streetNumber: user.location?.street_number,
-          city: user.location?.city,
-          country: user.location?.country,
+          streetName: user.location.street_name,
+          streetNumber: user.location.street_number,
+          city: user.location.city,
+          country: user.location.country,
         }}
         resolver={zodResolver(schema)}
         onSubmit={async (values) => {

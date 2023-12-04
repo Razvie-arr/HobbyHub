@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import { useMutation } from '@apollo/client';
 import { Button, Container, Flex, Heading, Stack, Text, useToast } from '@chakra-ui/react';
 import { useNavigate } from 'react-router-dom';
@@ -15,6 +16,7 @@ import {
   zodResolver,
 } from 'src/shared/forms';
 
+import { NotAuthorized } from '../../../shared/design-system';
 import { useAuth } from '..';
 
 const onboardingFormSchema = zod.object({
@@ -60,8 +62,15 @@ export const OnboardingForm = () => {
   const navigate = useNavigate();
   const toast = useToast();
 
+  useEffect(() => {
+    if (user && (user.location || user.event_types.length > 0)) {
+      // TODO: This needs be resolved declaratively
+      navigate(route.editProfile());
+    }
+  });
+
   if (!user) {
-    return null;
+    return <NotAuthorized requireSignIn wrapInContentContainer />;
   }
 
   return (

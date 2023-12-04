@@ -6,3 +6,4 @@ export const addressFormFieldsSchema = {
   city: zod.string().min(1, 'You must specify the city'),
   country: zod.string().min(1, 'You must specify the country'),
 };
+
