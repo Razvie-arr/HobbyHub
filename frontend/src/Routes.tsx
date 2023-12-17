@@ -24,8 +24,8 @@ export const Routes = () => {
 
       <Route path={route.search()} element={<SearchPage />} />
 
-      <Route path={route.signin()} element={<SignInPage />} />
-      <Route path={route.signup()} element={<SignUpPage />} />
+      <Route path={route.signIn()} element={<SignInPage />} />
+      <Route path={route.signUp()} element={<SignUpPage />} />
       <Route path={route.verifyUser()} element={<VerifyUserPage />} />
 
       <Route path={route.profile()} element={<ProfileDetailsPage />} />
@@ -39,8 +39,8 @@ export const Routes = () => {
       <Route path={route.editGroup()} element={<EditGroupForm />} />
       <Route path={route.onboarding()} element={<OnboardingForm />} />
       <Route path={route.verifyUser()} element={<VerifyUserPage />} />
-      <Route path={route.signin()} element={<SignInPage />} />
-      <Route path={route.signup()} element={<SignUpPage />} />
+      <Route path={route.signIn()} element={<SignInPage />} />
+      <Route path={route.signUp()} element={<SignUpPage />} />
 
       <Route path={route.editProfile()} element={<EditProfilePage />} />
 

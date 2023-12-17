@@ -35,7 +35,6 @@ export type AuthUser = {
   last_name: Scalars['String']['output'];
   location?: Maybe<Location>;
   location_id?: Maybe<Scalars['Int']['output']>;
-  password: Scalars['String']['output'];
   verified: Scalars['Boolean']['output'];
 };
 
@@ -691,7 +690,6 @@ export type OnboardUserMutation = {
     verified: boolean;
     location_id?: number | null;
     description?: string | null;
-    password: string;
     location?: {
       __typename?: 'Location';
       id: number;
@@ -723,20 +721,12 @@ export type SignInMutation = {
       first_name: string;
       last_name: string;
       verified: boolean;
-      location_id?: number | null;
       description?: string | null;
-      location?: {
-        __typename?: 'Location';
-        id: number;
-        country: string;
-        city: string;
-        street_name: string;
-        street_number: string;
-        latitude: number;
-        longitude: number;
-      } | null;
+      location?:
+        | ({ __typename?: 'Location' } & { ' $fragmentRefs'?: { LocationFragmentFragment: LocationFragmentFragment } })
+        | null;
       event_types: Array<{ __typename?: 'EventType'; id: number; name: string; category: string }>;
-      groups: Array<{ __typename?: 'Group'; id: number; name: string }>;
+      groups: Array<{ __typename?: 'Group' } & { ' $fragmentRefs'?: { GroupFragmentFragment: GroupFragmentFragment } }>;
     };
   };
 };
@@ -1779,7 +1769,6 @@ export const OnboardUserDocument = {
                 { kind: 'Field', name: { kind: 'Name', value: 'verified' } },
                 { kind: 'Field', name: { kind: 'Name', value: 'location_id' } },
                 { kind: 'Field', name: { kind: 'Name', value: 'description' } },
-                { kind: 'Field', name: { kind: 'Name', value: 'password' } },
                 {
                   kind: 'Field',
                   name: { kind: 'Name', value: 'location' },
@@ -1867,22 +1856,13 @@ export const SignInDocument = {
                       { kind: 'Field', name: { kind: 'Name', value: 'first_name' } },
                       { kind: 'Field', name: { kind: 'Name', value: 'last_name' } },
                       { kind: 'Field', name: { kind: 'Name', value: 'verified' } },
-                      { kind: 'Field', name: { kind: 'Name', value: 'location_id' } },
                       { kind: 'Field', name: { kind: 'Name', value: 'description' } },
                       {
                         kind: 'Field',
                         name: { kind: 'Name', value: 'location' },
                         selectionSet: {
                           kind: 'SelectionSet',
-                          selections: [
-                            { kind: 'Field', name: { kind: 'Name', value: 'id' } },
-                            { kind: 'Field', name: { kind: 'Name', value: 'country' } },
-                            { kind: 'Field', name: { kind: 'Name', value: 'city' } },
-                            { kind: 'Field', name: { kind: 'Name', value: 'street_name' } },
-                            { kind: 'Field', name: { kind: 'Name', value: 'street_number' } },
-                            { kind: 'Field', name: { kind: 'Name', value: 'latitude' } },
-                            { kind: 'Field', name: { kind: 'Name', value: 'longitude' } },
-                          ],
+                          selections: [{ kind: 'FragmentSpread', name: { kind: 'Name', value: 'LocationFragment' } }],
                         },
                       },
                       {
@@ -1902,10 +1882,7 @@ export const SignInDocument = {
                         name: { kind: 'Name', value: 'groups' },
                         selectionSet: {
                           kind: 'SelectionSet',
-                          selections: [
-                            { kind: 'Field', name: { kind: 'Name', value: 'id' } },
-                            { kind: 'Field', name: { kind: 'Name', value: 'name' } },
-                          ],
+                          selections: [{ kind: 'FragmentSpread', name: { kind: 'Name', value: 'GroupFragment' } }],
                         },
                       },
                     ],
@@ -1915,6 +1892,203 @@ export const SignInDocument = {
               ],
             },
           },
+        ],
+      },
+    },
+    {
+      kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'LocationFragment' },
+      typeCondition: { kind: 'NamedType', name: { kind: 'Name', value: 'Location' } },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'country' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'city' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'street_name' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'street_number' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'longitude' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'latitude' } },
+        ],
+      },
+    },
+    {
+      kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'EventFragment' },
+      typeCondition: { kind: 'NamedType', name: { kind: 'Name', value: 'Event' } },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'name' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'start_datetime' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'end_datetime' } },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'event_types' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'name' } },
+              ],
+            },
+          },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'author' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'InlineFragment',
+                  typeCondition: { kind: 'NamedType', name: { kind: 'Name', value: 'User' } },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: '__typename' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'first_name' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'last_name' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'email' } },
+                    ],
+                  },
+                },
+                {
+                  kind: 'InlineFragment',
+                  typeCondition: { kind: 'NamedType', name: { kind: 'Name', value: 'Group' } },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: '__typename' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'name' } },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'admin' },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                            { kind: 'Field', name: { kind: 'Name', value: 'first_name' } },
+                            { kind: 'Field', name: { kind: 'Name', value: 'last_name' } },
+                            { kind: 'Field', name: { kind: 'Name', value: 'email' } },
+                          ],
+                        },
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'location' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [{ kind: 'FragmentSpread', name: { kind: 'Name', value: 'LocationFragment' } }],
+            },
+          },
+          { kind: 'Field', name: { kind: 'Name', value: 'author_id' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'group_id' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'summary' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'description' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'image_filepath' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'capacity' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'allow_waitlist' } },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'participants' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'user' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'first_name' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'last_name' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'email' } },
+                    ],
+                  },
+                },
+                { kind: 'Field', name: { kind: 'Name', value: 'state' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'text' } },
+              ],
+            },
+          },
+        ],
+      },
+    },
+    {
+      kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'GroupFragment' },
+      typeCondition: { kind: 'NamedType', name: { kind: 'Name', value: 'Group' } },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'name' } },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'admin' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'first_name' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'last_name' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'email' } },
+              ],
+            },
+          },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'event_types' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'name' } },
+              ],
+            },
+          },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'location' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [{ kind: 'FragmentSpread', name: { kind: 'Name', value: 'LocationFragment' } }],
+            },
+          },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'events' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [{ kind: 'FragmentSpread', name: { kind: 'Name', value: 'EventFragment' } }],
+            },
+          },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'members' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'first_name' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'last_name' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'email' } },
+              ],
+            },
+          },
+          { kind: 'Field', name: { kind: 'Name', value: 'summary' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'description' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'image_filepath' } },
         ],
       },
     },

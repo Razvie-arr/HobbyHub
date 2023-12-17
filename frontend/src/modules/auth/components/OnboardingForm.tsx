@@ -37,7 +37,6 @@ const ONBOARD_USER = gql(`
       verified
       location_id
       description
-      password
       location {
         id
         country
@@ -98,7 +97,7 @@ export const OnboardingForm = () => {
             streetNumber,
             ...values
           }: FormValues) => {
-            const { event_types, groups, location, password, __typename, ...rest } = user;
+            const { event_types, groups, location, __typename, ...rest } = user;
             const updatedUser = await onboardUserRequest({
               variables: {
                 user: {

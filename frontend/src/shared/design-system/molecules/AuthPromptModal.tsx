@@ -15,8 +15,7 @@ import {
 } from '@chakra-ui/react';
 
 import { route } from '../../../route';
-import { ReactRouterLink } from '../../navigation';
-import { Link } from '../atoms';
+import { ReactRouterLink, RouterLink } from '../../navigation';
 
 interface AuthPromptModalProps {
   modalButtonLabel: ReactNode;
@@ -46,18 +45,11 @@ export const AuthPromptModal = ({ modalButtonLabel, modalButtonProps = {} }: Aut
               <Text as="b">To unlock full access to HobbyHub features, please create an account.</Text>
               <Center>
                 <Stack spacing={4}>
-                  <Button as={ReactRouterLink} to={route.signup()} borderRadius="full" colorScheme="purple">
+                  <Button as={ReactRouterLink} to={route.signUp()} borderRadius="full" colorScheme="purple">
                     Sign up
                   </Button>
                   <Text>
-                    Already have an account?{' '}
-                    <Link
-                      as={ReactRouterLink}
-                      // @ts-expect-error
-                      to={route.signin()}
-                    >
-                      Sign in
-                    </Link>
+                    Already have an account? <RouterLink to={route.signIn()}>Sign in</RouterLink>
                   </Text>
                 </Stack>
               </Center>

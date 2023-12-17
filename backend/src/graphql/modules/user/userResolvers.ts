@@ -143,7 +143,6 @@ export const onboardUserResolver = async (
     throw new GraphQLError(`Error while fetching User!`);
   }
 
-  // eslint-disable-next-line @typescript-eslint/prefer-ts-expect-error
-  // @ts-ignore
   return dbUserResponse;
 };
+
