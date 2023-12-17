@@ -3,7 +3,7 @@ import { Flex, Spinner } from '@chakra-ui/react';
 import { useGeocoding } from '../../../shared/hooks/useGeocoding';
 import { useGeocodingWithGeolocation } from '../../../shared/hooks/useGeocodingWithGeolocation';
 import { useUrlState } from '../../../shared/hooks/useUrlState';
-import { WithOnboardedUser } from '../../../shared/types';
+import { getLocationFragmentData, WithOnboardedUser } from '../../../shared/types';
 import { useAuth } from '../../auth';
 import { groupFilterUrlSchema } from '../schemas';
 
@@ -27,12 +27,14 @@ export const GroupsPageContainer = () => {
 export const PersonalizedGroupsPageContainer = ({ user }: WithOnboardedUser) => {
   const [params] = useUrlState(groupFilterUrlSchema);
 
-  const { isLoading, location } = useGeocoding({
-    lng: params?.lng ?? user.location.longitude,
-    lat: params?.lat ?? user.location.latitude,
+  const location = getLocationFragmentData(user.location);
+
+  const geocoding = useGeocoding({
+    lng: params?.lng ?? location.longitude,
+    lat: params?.lat ?? location.latitude,
   });
 
-  return isLoading ? <PageSpinner /> : <GroupsPage location={location} />;
+  return geocoding.isLoading ? <PageSpinner /> : <GroupsPage location={geocoding.location} />;
 };
 
 export const PublicGroupsPageContainer = () => {

@@ -37,7 +37,6 @@ export type AuthUser = {
   last_name: Scalars['String']['output'];
   location?: Maybe<Location>;
   location_id?: Maybe<Scalars['Int']['output']>;
-  password: Scalars['String']['output'];
   verified: Scalars['Boolean']['output'];
 };
 
@@ -853,7 +852,6 @@ export type AuthUserResolvers<
   last_name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   location?: Resolver<Maybe<ResolversTypes['Location']>, ParentType, ContextType>;
   location_id?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
-  password?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   verified?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };

@@ -29,7 +29,6 @@ export const SignInPage = () => {
   const navigate = useNavigate();
   const [signInRequest, signInRequestState] = useMutation(SIGN_IN_MUTATION, {
     onCompleted: ({ signIn: { user, token } }) => {
-      // @ts-expect-error
       auth.signIn({ token, user });
       if (user.event_types.length === 0 || !user.location) {
         navigate(route.onboarding());
@@ -53,16 +52,16 @@ export const SignInPage = () => {
             void signInRequest({ variables: formValues });
           }}
         >
-            <VStack gap={3} align="left">
-                <EmailField />
-                <PasswordField />
-                <Link color="purple.500">Forgot password?</Link>
-            </VStack>
+          <VStack gap={3} align="left">
+            <EmailField />
+            <PasswordField />
+            <Link color="purple.500">Forgot password?</Link>
+          </VStack>
           <SubmitButton isLoading={signInRequestState.loading} text="Sign in"></SubmitButton>
         </Form>
         <OrSignUpButton
           handleClick={() => {
-            navigate(route.signup());
+            navigate(route.signUp());
           }}
         ></OrSignUpButton>
       </CardBody>

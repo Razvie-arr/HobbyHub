@@ -58,7 +58,7 @@ export const SendMessageModal = ({ user, recipient }: WithAuthUser & WithRecipie
         isLoading: sendMessageRequestState.loading,
         text: 'Message',
       }}
-      modalButtonProps={{ rounded: 'full' }}
+      modalButtonProps={{ rounded: 'full', w: '100%' }}
     >
       <TextareaField
         autoFocus

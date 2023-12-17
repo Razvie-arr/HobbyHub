@@ -1,7 +1,6 @@
 import { Box, Text } from '@chakra-ui/react';
 import { Option, pipe, ReadonlyArray } from 'effect';
 import { MdAccountCircle, MdInfo, MdLocationOn } from 'react-icons/md';
-import { Link } from 'react-router-dom';
 
 import { route } from '../../../../route';
 import {
@@ -13,6 +12,7 @@ import {
   EventTypeTag,
   NoData,
 } from '../../../../shared/design-system';
+import { ReactRouterLink, RouterLink } from '../../../../shared/navigation';
 import { renderEventList } from '../../../../shared/renderers';
 import { getLocationFragmentData, WithGroup } from '../../../../shared/types';
 import { useAuth } from '../../../auth';
@@ -34,7 +34,7 @@ export const GroupDetails = ({ group }: WithGroup) => {
         actionButtons={
           isUserOwner ? (
             <>
-              <Button as={Link} to={route.editGroup(group.id)} colorScheme="purple" rounded="full">
+              <Button as={ReactRouterLink} to={route.editGroup(group.id)} colorScheme="purple" rounded="full">
                 Edit
               </Button>
               {/* <DeleteEventButton event={event} borderRadius="full" colorScheme="purple" variant="outline" /> */}
@@ -55,7 +55,12 @@ export const GroupDetails = ({ group }: WithGroup) => {
               icon: MdAccountCircle,
               content: (
                 <Text>
-                  Admin: <Text as="b">{`${owner.first_name} ${owner.last_name}`}</Text>
+                  Admin:{' '}
+                  <RouterLink to={route.profile(owner.id)}>
+                    <Text as="b">
+                      {owner.first_name} {owner.last_name}
+                    </Text>
+                  </RouterLink>
                 </Text>
               ),
             },

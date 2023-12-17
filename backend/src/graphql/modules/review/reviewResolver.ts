@@ -106,7 +106,6 @@ export const askForFeedbackResolver = async (
     if (event.group_id) {
       const group = await dataSources.sql.groups.getById(event.group_id);
       if (group) {
-        // @ts-ignore
         await askForFeedback(group.admin, event, requestSenderUrl);
       }
     }
@@ -137,7 +136,6 @@ export const unreviewedEventParticipantsResolver = async (
   const eventParticipants: User[] = await dataSources.sql.events.getAcceptedEventParticipants(eventId);
   const userIsParticipant = eventParticipants.find((participant) => participant.id === userId) !== undefined;
 
-  // @ts-ignore
   if (!(userIsParticipant || userId === event.author_id)) {
     throw new GraphQLError('User is not participant of this event.');
   }
@@ -163,3 +161,4 @@ export const unreviewedEventParticipantsResolver = async (
   const reviewedUserIds = eventReviews.map((eventReview) => eventReview.user_id);
   return eventParticipants.filter((participant) => !reviewedUserIds.includes(participant.id));
 };
+

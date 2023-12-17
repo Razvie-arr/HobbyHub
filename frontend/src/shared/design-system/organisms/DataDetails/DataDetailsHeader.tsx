@@ -17,8 +17,8 @@ export const DataDetailsHeader = ({ title, actionButtons }: DataDetailsHeaderPro
             {title}
           </Heading>
         </HStack>
-        <ButtonGroup spacing="6">
-          <Stack direction="row" alignItems="center">
+        <ButtonGroup>
+          <Stack direction="row" alignItems="center" spacing="4">
             {actionButtons}
           </Stack>
         </ButtonGroup>

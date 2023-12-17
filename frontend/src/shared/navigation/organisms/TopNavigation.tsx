@@ -135,7 +135,6 @@ export function TopNavigation() {
                     <MenuItem as={NavLink} to={route.currentProfile()}>
                       Profile
                     </MenuItem>
-                    <MenuItem>Settings</MenuItem>
                     <Divider />
                     <MenuItem
                       onClick={() => {

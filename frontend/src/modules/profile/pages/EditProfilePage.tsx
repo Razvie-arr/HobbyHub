@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import { useMutation } from '@apollo/client';
 import { Box, Button, Container, Divider, Flex, Spacer, Stack, Text, useToast, VStack } from '@chakra-ui/react';
 import { useNavigate } from 'react-router-dom';
@@ -17,6 +18,7 @@ import {
 } from 'src/shared/forms';
 
 import { route } from '../../../route';
+import { getLocationFragmentData } from '../../../shared/types';
 import { EDIT_PROFILE } from '../mutations';
 
 const schema = zod.object({
@@ -34,15 +36,22 @@ export const EditProfilePage = () => {
   const navigate = useNavigate();
   const toast = useToast();
 
+  useEffect(() => {
+    if (user && (!user.location || user.event_types.length === 0)) {
+      // TODO: This needs be resolved declaratively
+      navigate(route.onboarding());
+    }
+  });
+
   if (!user) {
     return <NotAuthorized requireSignIn wrapInContentContainer />;
   }
 
   if (!user.location || user.event_types.length === 0) {
-    // TODO: This needs be resolved declaratively
-    navigate(route.onboarding());
     return null;
   }
+
+  const location = getLocationFragmentData(user.location);
 
   return (
     <Container maxW="3xl">
@@ -53,10 +62,10 @@ export const EditProfilePage = () => {
           email: user.email,
           description: user.description ?? '',
           eventTypes: user.event_types.map(({ id }) => id),
-          streetName: user.location?.street_name,
-          streetNumber: user.location?.street_number,
-          city: user.location?.city,
-          country: user.location?.country,
+          streetName: location.street_name,
+          streetNumber: location.street_number,
+          city: location.city,
+          country: location.country,
         }}
         resolver={zodResolver(schema)}
         onSubmit={async (values) => {
@@ -70,7 +79,7 @@ export const EditProfilePage = () => {
                 event_type_ids: values.eventTypes,
                 id: user.id,
                 verified: user.verified,
-                location_id: user.location_id,
+                location_id: location.id,
               },
               location: {
                 city: values.city,

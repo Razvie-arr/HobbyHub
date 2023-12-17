@@ -9,16 +9,9 @@ export const SIGN_IN_MUTATION = gql(/* GraphQL */ `
         first_name
         last_name
         verified
-        location_id
         description
         location {
-          id
-          country
-          city
-          street_name
-          street_number
-          latitude
-          longitude
+          ...LocationFragment
         }
         event_types {
           id
@@ -26,8 +19,7 @@ export const SIGN_IN_MUTATION = gql(/* GraphQL */ `
           category
         }
         groups {
-          id
-          name
+          ...GroupFragment
         }
       }
       token

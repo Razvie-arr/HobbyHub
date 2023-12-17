@@ -1,5 +1,5 @@
 import { useMutation } from '@apollo/client';
-import { Box, Tag, useDisclosure } from '@chakra-ui/react';
+import { Box, Tag, Text, useDisclosure, useToast } from '@chakra-ui/react';
 import { Option, pipe, ReadonlyArray } from 'effect';
 import { match } from 'ts-pattern';
 
@@ -39,11 +39,35 @@ const commonTagProps = {
 export const JoinEventModal = ({ user, event, buttonSize = 'md' }: JoinEventModalProps) => {
   const joinEventModalDisclosure = useDisclosure();
   const joinEventSubmissionModalDisclosure = useDisclosure();
+  const toast = useToast();
 
   const [requestEventRegistration, requestEventRegistrationRequestState] = useMutation(REQUEST_EVENT_REGISTRATION, {
+    refetchQueries: ['Event'],
+    onQueryUpdated: async (observableQuery) => {
+      await observableQuery.refetch();
+    },
     onCompleted: () => {
+      toast({
+        variant: 'left-accent',
+        status: 'success',
+        position: 'top-right',
+        title: 'Join request sent!',
+        description: (
+          <>
+            <Text align="center" as="b">
+              Thank you for your interest!
+            </Text>
+            <Text>
+              Admin of the event received information about your application. You will receive an email notification
+              right after their approval.
+            </Text>
+          </>
+        ),
+        isClosable: true,
+        duration: 15000,
+      });
       joinEventModalDisclosure.onClose();
-      joinEventSubmissionModalDisclosure.onOpen();
+      // joinEventSubmissionModalDisclosure.onOpen();
     },
   });
 
@@ -141,7 +165,7 @@ export const JoinEventModal = ({ user, event, buttonSize = 'md' }: JoinEventModa
           isLoading: requestEventRegistrationRequestState.loading,
           text: "I'm in!",
         }}
-        modalButtonProps={{ size: buttonSize, rounded: 'full', isDisabled }}
+        modalButtonProps={{ size: buttonSize, rounded: 'full', w: '100%', isDisabled }}
       >
         <TextareaField
           autoFocus

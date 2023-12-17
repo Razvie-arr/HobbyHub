@@ -1,9 +1,9 @@
-/* eslint-disable @typescript-eslint/prefer-ts-expect-error */
-import {BatchedSQLDataSource} from '@nic-jennings/sql-datasource';
-import {Tables} from 'knex/types/tables';
+import { BatchedSQLDataSource } from '@nic-jennings/sql-datasource';
 
-import {eventTypeDataSource} from './entitydatasource/eventTypeDataSource';
-import {locationsDataSource} from './entitydatasource/locationsDataSource';
+import { Tables } from '../types';
+
+import { eventTypeDataSource } from './entitydatasource/eventTypeDataSource';
+import { locationsDataSource } from './entitydatasource/locationsDataSource';
 import {
   eventsDataSource,
   groupsDataSource,
@@ -71,37 +71,31 @@ export class SQLDataSource extends BatchedSQLDataSource {
   };
 
   events = {
-    // @ts-ignore, no actual type error but ts-node is erroneously detecting errors
     ...this.createBaseQueries('Event'),
     ...eventsDataSource(this.db),
   };
 
   eventTypes = {
-    // @ts-ignore, no actual type error but ts-node is erroneously detecting errors
     ...this.createBaseQueries('EventType'),
     ...eventTypeDataSource(this.db),
   };
 
   locations = {
-    // @ts-ignore, no actual type error but ts-node is erroneously detecting errors
     ...this.createBaseQueries('Location'),
     ...locationsDataSource(this.db),
   };
 
   users = {
-    // @ts-ignore, no actual type error but ts-node is erroneously detecting errors
     ...this.createBaseQueries('User'),
     ...usersDataSource(this.db),
   };
 
   groups = {
-    // @ts-ignore, no actual type error but ts-node is erroneously detecting errors
     ...this.createBaseQueries('UserGroup'),
     ...groupsDataSource(this.db),
   };
 
   threads = {
-    // @ts-ignore, no actual type error but ts-node is erroneously detecting errors
     ...this.createBaseQueries('Thread'),
     ...threadsDataSource(this.db),
   };
@@ -111,8 +105,8 @@ export class SQLDataSource extends BatchedSQLDataSource {
   };
 
   reviews = {
-    // @ts-ignore, no actual type error but ts-node is erroneously detecting errors
     ...this.createBaseQueries('Review'),
     ...reviewDataSource(this.db),
   };
 }
+

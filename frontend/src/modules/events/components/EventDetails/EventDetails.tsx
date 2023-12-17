@@ -14,10 +14,9 @@ import {
   EventParticipants,
   EventStatusTag,
   EventTypeTag,
-  Link,
   NoData,
 } from '../../../../shared/design-system';
-import { ReactRouterLink } from '../../../../shared/navigation';
+import { RouterLink } from '../../../../shared/navigation';
 import { getLocationFragmentData, WithEvent } from '../../../../shared/types';
 import { getCurrentDateTime } from '../../../../utils/form';
 import { useAuth } from '../../../auth';
@@ -80,24 +79,16 @@ export const EventDetails = ({ event }: WithEvent) => {
                   Hosted by:{' '}
                   {match(event.author)
                     .with({ __typename: 'User' }, (author) => (
-                      <Link
-                        as={ReactRouterLink}
-                        // @ts-expect-error
-                        to={route.profile(author.id)}
-                      >
+                      <RouterLink to={route.profile(author.id)}>
                         <Text as="b">
                           {author.first_name} {author.last_name}
                         </Text>
-                      </Link>
+                      </RouterLink>
                     ))
                     .with({ __typename: 'Group' }, (group) => (
-                      <Link
-                        as={ReactRouterLink}
-                        // @ts-expect-error
-                        to={route.groupDetails(group.id)}
-                      >
+                      <RouterLink to={route.groupDetails(group.id)}>
                         <Text as="b">{group.name}</Text>
-                      </Link>
+                      </RouterLink>
                     ))
                     .exhaustive()}
                 </Text>
@@ -160,6 +151,7 @@ export const EventDetails = ({ event }: WithEvent) => {
                         : Option.none(),
                     ),
                   ),
+                  Option.filter(ReadonlyArray.isNonEmptyArray),
                   Option.getOrElse(() => <NoData description={`There are no participants for ${event.name} yet`} />),
                 )}
               </Flex>
