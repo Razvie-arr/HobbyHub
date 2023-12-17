@@ -13,3 +13,6 @@ export const HAVERSINE_FORMULA = ` (
         )
       )
     )`;
+
+export const DEFAULT_DISTANCE = 20;
+export const DEFAULT_LIMIT = 4;

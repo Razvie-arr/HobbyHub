@@ -34,6 +34,7 @@ import {
   todaysNearbyEventsResolver,
   uploadEventImageResolver,
   userCreatedEventsResolver,
+  weeklyNearbyEventsResolver,
 } from './modules/event/eventResolvers';
 import {
   eventTypeByIdResolver,
@@ -113,6 +114,7 @@ export const rootResolver: Resolvers = {
 
     newlyCreatedNearbyEvents: newlyCreatedNearbyEventsResolver,
     todaysNearbyEvents: todaysNearbyEventsResolver,
+    weeklyNearbyEvents: weeklyNearbyEventsResolver,
     interestingNearbyEvents: interestingNearbyEventsResolver,
     similarEvents: similarEventsResolver,
 
@@ -241,4 +243,3 @@ export const rootResolver: Resolvers = {
     sender: messageSenderResolver,
   },
 };
-

@@ -390,6 +390,7 @@ export type Query = {
   userCreatedEvents: Array<Event>;
   users: Array<User>;
   usersByIds: Array<User>;
+  weeklyNearbyEvents: Array<Event>;
 };
 
 export type Query_EmptyArgs = {
@@ -589,6 +590,13 @@ export type QueryUsersArgs = {
 
 export type QueryUsersByIdsArgs = {
   ids: Array<Scalars['Int']['input']>;
+};
+
+export type QueryWeeklyNearbyEventsArgs = {
+  latitude: Scalars['Float']['input'];
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  longitude: Scalars['Float']['input'];
+  offset?: InputMaybe<Scalars['Int']['input']>;
 };
 
 export type RecipientInput = {
@@ -1281,6 +1289,12 @@ export type QueryResolvers<
     ParentType,
     ContextType,
     RequireFields<QueryUsersByIdsArgs, 'ids'>
+  >;
+  weeklyNearbyEvents?: Resolver<
+    Array<ResolversTypes['Event']>,
+    ParentType,
+    ContextType,
+    RequireFields<QueryWeeklyNearbyEventsArgs, 'latitude' | 'longitude'>
   >;
 };
 

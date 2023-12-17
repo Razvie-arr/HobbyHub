@@ -3,7 +3,7 @@ import * as fsPromises from 'fs/promises';
 import { GraphQLError } from 'graphql/error';
 
 import { sendEmail } from '../../../libs/nodeMailer';
-import { HAVERSINE_FORMULA } from '../../../sharedConstants';
+import { DEFAULT_LIMIT, HAVERSINE_FORMULA } from '../../../sharedConstants';
 import {
   ContextualNullableResolver,
   ContextualResolver,
@@ -34,8 +34,6 @@ import {
 } from '../../../types';
 import { createEventInput, getPublicStorageFilePath } from '../../../utils/helpers';
 
-const DEFAULT_DISTANCE = 20;
-const DEFAULT_LIMIT = 4;
 const MINIMUM_COUNT_SIMILAR_EVENTS = 3;
 
 const FRONTEND_PROFILE_IMAGE_RELATIVE_PATH = 'uploads/event_image';
@@ -106,42 +104,13 @@ export const eventsByIdsResolver: ContextualResolver<Array<Event>, QueryEventsBy
   { dataSources },
 ) => await dataSources.sql.events.getByIds(ids);
 
-const locationAwareEventAttributes = [
-  'Event.id as id',
-  'name',
-  'summary',
-  'description',
-  'author_id',
-  'group_id',
-  'capacity',
-  'allow_waitlist',
-  'image_filepath',
-  'start_datetime',
-  'end_datetime',
-  'location_id',
-  'created_at',
-  'country',
-  'city',
-  'street_name',
-  'street_number',
-  'latitude',
-  'longitude',
-];
-
 export const newlyCreatedNearbyEventsResolver = async (
   _: unknown,
   { longitude, latitude, offset, limit }: QueryNewlyCreatedNearbyEventsArgs,
   { dataSources }: CustomContext,
 ): Promise<Array<Event>> => {
   const distance = dataSources.sql.db.query.raw(HAVERSINE_FORMULA, [latitude, longitude, latitude]);
-  const result = dataSources.sql.db.query
-    .select(...locationAwareEventAttributes)
-    .from('Event')
-    .join('Location', 'Event.location_id', '=', 'Location.id')
-    .having(distance, '<', DEFAULT_DISTANCE)
-    .orderBy('created_at', 'desc')
-    .offset(offset ?? 0);
-  return limit ? result.limit(limit) : result;
+  return dataSources.sql.events.getNewlyCreatedNearbyEvents(distance, offset, limit);
 };
 
 export const todaysNearbyEventsResolver = async (
@@ -150,16 +119,25 @@ export const todaysNearbyEventsResolver = async (
   { dataSources }: CustomContext,
 ): Promise<Array<Event>> => {
   const distance = dataSources.sql.db.query.raw(HAVERSINE_FORMULA, [latitude, longitude, latitude]);
-  const todaysDate = new Date().toISOString().split('T')[0];
-  const result = dataSources.sql.db.query
-    .select(...locationAwareEventAttributes)
-    .from('Event')
-    .join('Location', 'Event.location_id', '=', 'Location.id')
-    .having(distance, '<', DEFAULT_DISTANCE)
-    .whereRaw('DATE(start_datetime) = ?', [todaysDate])
-    .orderByRaw(distance)
-    .offset(offset ?? 0);
-  return limit ? result.limit(limit) : result.limit(DEFAULT_LIMIT);
+  const todaysDateString = new Date().toISOString().split('T')[0];
+  return dataSources.sql.events.getTodaysNearbyEvents(distance, todaysDateString, offset, limit);
+};
+
+export const weeklyNearbyEventsResolver = async (
+  _: unknown,
+  { longitude, latitude, offset, limit }: QueryTodaysNearbyEventsArgs,
+  { dataSources }: CustomContext,
+): Promise<Array<Event>> => {
+  const distance = dataSources.sql.db.query.raw(HAVERSINE_FORMULA, [latitude, longitude, latitude]);
+
+  const todaysDate = new Date();
+  const nextWeekDate = new Date();
+  nextWeekDate.setDate(nextWeekDate.getDate() + 7);
+
+  const todaysDateString = todaysDate.toISOString().split('T')[0];
+  const nextWeekDateString = nextWeekDate.toISOString().split('T')[0];
+
+  return dataSources.sql.events.getWeeklyNearbyEvents(distance, todaysDateString, nextWeekDateString, offset, limit);
 };
 
 export const interestingNearbyEventsResolver = async (
@@ -168,16 +146,7 @@ export const interestingNearbyEventsResolver = async (
   { dataSources }: CustomContext,
 ): Promise<Array<Event>> => {
   const distance = dataSources.sql.db.query.raw(HAVERSINE_FORMULA, [latitude, longitude, latitude]);
-  const result = dataSources.sql.db.query
-    .distinct(...locationAwareEventAttributes)
-    .from('Event')
-    .join('Event_EventType', 'Event.id', 'Event_EventType.event_id')
-    .join('User_EventType', 'Event_EventType.event_type_id', 'User_EventType.event_type_id')
-    .join('Location', 'Event.location_id', '=', 'Location.id')
-    .where('User_EventType.user_id', '=', userId)
-    .having(distance, '<', DEFAULT_DISTANCE)
-    .offset(offset ?? 0);
-  return limit ? result.limit(limit) : result.limit(DEFAULT_LIMIT);
+  return dataSources.sql.events.getInterestingNearbyEvents(distance, userId, offset, limit);
 };
 
 export const similarEventsResolver = async (
