@@ -321,6 +321,12 @@ export const deleteEventResolver = async (
     throw new GraphQLError(`Error while deleting event from Event_EventType table!`);
   }
 
+  const dbSetNullReviewsEventIdResult = await dataSources.sql.events.setNullReviewsEventId(event_id);
+
+  if (!dbSetNullReviewsEventIdResult) {
+    throw new GraphQLError(`Error while setting reviews event ids to null`);
+  }
+
   const dbEventResult = await dataSources.sql.db.write('Event').where('id', event_id).delete();
 
   if (!dbEventResult) {
@@ -332,6 +338,7 @@ export const deleteEventResolver = async (
   if (!dbLocationResult) {
     throw new GraphQLError(`Error while deleting location!`);
   }
+
   return 'Event and location deleted!';
 };
 

@@ -29,14 +29,19 @@ export const ProfileReview = ({ event, avatarImage, rating, reviewer, text }: Pr
               >
                 {reviewer.first_name} {reviewer.last_name}
               </Link>{' '}
-              at{' '}
-              <Link
-                as={ReactRouterLink}
-                // @ts-expect-error
-                to={route.eventDetails(event.id)}
-              >
-                {event.name}
-              </Link>
+              at
+              {/*TODO: make it more beautiful*/}
+              {event ? (
+                <Link
+                  as={ReactRouterLink}
+                  // @ts-expect-error
+                  to={route.eventDetails(event.id)}
+                >
+                  {event.name}
+                </Link>
+              ) : (
+                ' event was deleted'
+              )}
             </Heading>
             <StarRating rating={rating} size="24px" />
           </Box>
@@ -48,4 +53,3 @@ export const ProfileReview = ({ event, avatarImage, rating, reviewer, text }: Pr
     </CardBody>
   </Card>
 );
-
