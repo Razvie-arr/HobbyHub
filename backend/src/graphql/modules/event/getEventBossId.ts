@@ -3,7 +3,7 @@
 import { getSQLDataSource } from '../../../datasource';
 import { Event } from '../../../types';
 
-export const getEventBossId = async (event: Event) => {
+export const getEventBossId = async (event: Event): Promise<number> => {
   if (event.author_id) {
     return event.author_id;
   } else if (event.group_id) {
@@ -11,9 +11,9 @@ export const getEventBossId = async (event: Event) => {
     if (!group) {
       throw new Error('Group does not exist');
     }
-    // @ts-ignore
     return group.admin_id;
   }
 
   throw new Error('Event does not have admin or author');
 };
+

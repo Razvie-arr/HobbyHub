@@ -1,6 +1,7 @@
 import nodemailer from 'nodemailer';
 
 const EMAIL_USER = '4sa540team1throwaway@gmail.com';
+// TODO: move to .env.local
 const EMAIL_PASSWD = 'xsmtpsib-48bae8923a44385ca7ed04180e4530644ebb9ac7f47f27b29877be4cf1d6da37-3JO75kHGwtNMqhE1';
 
 export const sendEmail = async (
@@ -28,3 +29,4 @@ export const sendEmail = async (
 
   return transporter.sendMail(mailOptions);
 };
+

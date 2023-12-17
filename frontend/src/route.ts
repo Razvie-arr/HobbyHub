@@ -15,13 +15,13 @@ export const route = {
   onboarding: () => `/onboarding` as const,
   verifyUser: () => `/auth/verifyUser` as const,
   messages: () => `/messages` as const,
-  signin: () => `/signin` as const,
-  signup: () => `/signup` as const,
+  signIn: () => `/signIn` as const,
+  signUp: () => `/signUp` as const,
   currentProfile: () => '/profile' as const,
   profile: (userId?: number) => `/profile/${userId ?? ':userId'}` as const,
 
   addReview: (eventId?: number) => `/addReview${eventId ? `?eventId=${eventId}` : ''}` as const,
-  
+
   editProfile: () => `/editProfile` as const,
 };
 

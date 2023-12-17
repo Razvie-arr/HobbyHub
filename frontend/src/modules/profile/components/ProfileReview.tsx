@@ -3,8 +3,8 @@ import { Avatar, Box, Card, CardBody, CardHeader, Flex, Heading, Text } from '@c
 import { Review, User } from '../../../gql/graphql';
 import { route } from '../../../route';
 import { DEFAULT_IMAGE_PATH } from '../../../shared/constants';
-import { Link, StarRating } from '../../../shared/design-system';
-import { ReactRouterLink } from '../../../shared/navigation';
+import { StarRating } from '../../../shared/design-system';
+import { RouterLink } from '../../../shared/navigation';
 import { WithEvent } from '../../../shared/types';
 
 type ProfileReviewProps = WithEvent &
@@ -22,21 +22,10 @@ export const ProfileReview = ({ event, avatarImage, rating, reviewer, text }: Pr
           <Avatar name={`${reviewer.first_name} ${reviewer.last_name}`} src={avatarImage ?? DEFAULT_IMAGE_PATH} />
           <Box ml="5px">
             <Heading size="sm">
-              <Link
-                as={ReactRouterLink}
-                // @ts-expect-error
-                to={route.profile(reviewer.id)}
-              >
+              <RouterLink to={route.profile(reviewer.id)}>
                 {reviewer.first_name} {reviewer.last_name}
-              </Link>{' '}
-              at{' '}
-              <Link
-                as={ReactRouterLink}
-                // @ts-expect-error
-                to={route.eventDetails(event.id)}
-              >
-                {event.name}
-              </Link>
+              </RouterLink>{' '}
+              at <RouterLink to={route.eventDetails(event.id)}>{event.name}</RouterLink>
             </Heading>
             <StarRating rating={rating} size="24px" />
           </Box>

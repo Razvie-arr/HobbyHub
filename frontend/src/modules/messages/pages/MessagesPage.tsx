@@ -26,7 +26,8 @@ export const MessagesPageContainer = ({ user }: WithAuthUser) => {
       noDataTitle="You have no messages"
       render={(threadFragments) => {
         const threads = threadFragments.map(getThreadFragmentData);
-        //@ts-expect-error
+
+        // @ts-expect-error
         return <MessagesPage user={user} threads={threads} />;
       }}
     />

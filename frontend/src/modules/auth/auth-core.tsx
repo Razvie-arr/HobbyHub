@@ -1,11 +1,6 @@
 import { createContext, type ReactNode, useCallback, useContext, useMemo, useState } from 'react';
 
-import { AuthUser } from '../../gql/graphql';
-
-interface AuthState {
-  token: string | null;
-  user: AuthUser | null;
-}
+import { AuthState } from '../../shared/types';
 
 const LOCAL_STORAGE_AUTH_KEY = 'project-auth';
 
@@ -97,3 +92,4 @@ function setStorageState(newState: AuthState) {
 
   window.localStorage.setItem(LOCAL_STORAGE_AUTH_KEY, JSON.stringify(newState));
 }
+

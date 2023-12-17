@@ -3,6 +3,7 @@ import { createSearchParams, useNavigate } from 'react-router-dom';
 
 import { route } from 'src/route';
 
+import { getLocationFragmentData } from '../../../shared/types';
 import { useAuth } from '../../auth';
 
 export const DefaultEventsPage = () => {
@@ -14,12 +15,14 @@ export const DefaultEventsPage = () => {
       const endDate = new Date();
       endDate.setDate(endDate.getDate() + 1);
 
+      const location = getLocationFragmentData(user.location);
+
       navigate({
         pathname: route.events(),
         search: createSearchParams({
           filterPreset: 'today',
-          lat: user.location.latitude.toString(),
-          lng: user.location.longitude.toString(),
+          lat: location.latitude.toString(),
+          lng: location.longitude.toString(),
           startDate: startDate.toISOString(),
           endDate: endDate.toISOString(),
         }).toString(),
@@ -34,3 +37,4 @@ export const DefaultEventsPage = () => {
 
   return null;
 };
+

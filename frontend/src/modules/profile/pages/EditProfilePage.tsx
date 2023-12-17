@@ -18,6 +18,7 @@ import {
 } from 'src/shared/forms';
 
 import { route } from '../../../route';
+import { getLocationFragmentData } from '../../../shared/types';
 import { EDIT_PROFILE } from '../mutations';
 
 const schema = zod.object({
@@ -50,6 +51,8 @@ export const EditProfilePage = () => {
     return null;
   }
 
+  const location = getLocationFragmentData(user.location);
+
   return (
     <Container maxW="3xl">
       <Form
@@ -59,10 +62,10 @@ export const EditProfilePage = () => {
           email: user.email,
           description: user.description ?? '',
           eventTypes: user.event_types.map(({ id }) => id),
-          streetName: user.location.street_name,
-          streetNumber: user.location.street_number,
-          city: user.location.city,
-          country: user.location.country,
+          streetName: location.street_name,
+          streetNumber: location.street_number,
+          city: location.city,
+          country: location.country,
         }}
         resolver={zodResolver(schema)}
         onSubmit={async (values) => {
@@ -76,7 +79,7 @@ export const EditProfilePage = () => {
                 event_type_ids: values.eventTypes,
                 id: user.id,
                 verified: user.verified,
-                location_id: user.location_id,
+                location_id: location.id,
               },
               location: {
                 city: values.city,

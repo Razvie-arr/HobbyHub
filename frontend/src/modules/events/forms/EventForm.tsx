@@ -15,7 +15,7 @@ import {
   Stack,
   Text,
 } from '@chakra-ui/react';
-import { ReadonlyArray } from 'effect';
+import { flow, ReadonlyArray } from 'effect';
 import { Controller } from 'react-hook-form';
 
 import {
@@ -34,7 +34,7 @@ import { DEFAULT_IMAGE_PATH, eventTypes } from '../../../shared/constants';
 import { Field } from '../../../shared/design-system';
 import { FormSection } from '../../../shared/forms/molecules/FormSection';
 import { eventTypeToSelectOption } from '../../../shared/forms/utils';
-import { WithAuthUser } from '../../../shared/types';
+import { getGroupFragmentData, WithAuthUser } from '../../../shared/types';
 import { UPLOAD_EVENT_IMAGE } from '../mutations';
 import { eventFormSchema } from '../schemas';
 
@@ -108,11 +108,13 @@ export const EventForm = ({
               isRequired
             >
               <option value={user.id}>{`${user.first_name} ${user.last_name}`}</option>
-              {user.groups.map(({ id, name }) => (
-                <option key={id} value={id}>
-                  {name}
-                </option>
-              ))}
+              {user.groups.map(
+                flow(getGroupFragmentData, ({ id, name }) => (
+                  <option key={id} value={id}>
+                    {name}
+                  </option>
+                )),
+              )}
             </SelectField>
             <InputField name="name" label="Event name" placeholder="Enter a short and clear name" isRequired />
             <MultiSelectField
@@ -186,3 +188,4 @@ export const EventForm = ({
     </Container>
   );
 };
+

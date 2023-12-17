@@ -10,10 +10,9 @@ import {
   DataDetailsContent,
   DataDetailsHeader,
   EventTypeTag,
-  Link,
   NoData,
 } from '../../../../shared/design-system';
-import { ReactRouterLink } from '../../../../shared/navigation';
+import { ReactRouterLink, RouterLink } from '../../../../shared/navigation';
 import { renderEventList } from '../../../../shared/renderers';
 import { getLocationFragmentData, WithGroup } from '../../../../shared/types';
 import { useAuth } from '../../../auth';
@@ -57,15 +56,11 @@ export const GroupDetails = ({ group }: WithGroup) => {
               content: (
                 <Text>
                   Admin:{' '}
-                  <Link
-                    as={ReactRouterLink}
-                    // @ts-expect-error
-                    to={route.profile(owner.id)}
-                  >
+                  <RouterLink to={route.profile(owner.id)}>
                     <Text as="b">
                       {owner.first_name} {owner.last_name}
                     </Text>
-                  </Link>
+                  </RouterLink>
                 </Text>
               ),
             },
