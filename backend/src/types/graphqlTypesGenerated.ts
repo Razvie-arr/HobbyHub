@@ -395,6 +395,7 @@ export type Query = {
   userCreatedEvents: Array<Event>;
   users: Array<User>;
   usersByIds: Array<User>;
+  weeklyNearbyEvents: Array<Event>;
 };
 
 export type Query_EmptyArgs = {
@@ -596,6 +597,13 @@ export type QueryUsersByIdsArgs = {
   ids: Array<Scalars['Int']['input']>;
 };
 
+export type QueryWeeklyNearbyEventsArgs = {
+  latitude: Scalars['Float']['input'];
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  longitude: Scalars['Float']['input'];
+  offset?: InputMaybe<Scalars['Int']['input']>;
+};
+
 export type RecipientInput = {
   email: Scalars['String']['input'];
   first_name: Scalars['String']['input'];
@@ -623,8 +631,8 @@ export type ResolveEventRegistrationInput = {
 
 export type Review = {
   __typename?: 'Review';
-  event: Event;
-  event_id: Scalars['Int']['output'];
+  event?: Maybe<Event>;
+  event_id?: Maybe<Scalars['Int']['output']>;
   id: Scalars['Int']['output'];
   rating: Scalars['Float']['output'];
   reviewer: User;
@@ -1293,14 +1301,20 @@ export type QueryResolvers<
     ContextType,
     RequireFields<QueryUsersByIdsArgs, 'ids'>
   >;
+  weeklyNearbyEvents?: Resolver<
+    Array<ResolversTypes['Event']>,
+    ParentType,
+    ContextType,
+    RequireFields<QueryWeeklyNearbyEventsArgs, 'latitude' | 'longitude'>
+  >;
 };
 
 export type ReviewResolvers<
   ContextType = CustomContext,
   ParentType extends ResolversParentTypes['Review'] = ResolversParentTypes['Review'],
 > = {
-  event?: Resolver<ResolversTypes['Event'], ParentType, ContextType>;
-  event_id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  event?: Resolver<Maybe<ResolversTypes['Event']>, ParentType, ContextType>;
+  event_id?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
   id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   rating?: Resolver<ResolversTypes['Float'], ParentType, ContextType>;
   reviewer?: Resolver<ResolversTypes['User'], ParentType, ContextType>;

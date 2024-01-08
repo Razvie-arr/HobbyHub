@@ -17,9 +17,9 @@ type Review {
   reviewer_id: Int!
   text: String!
   rating: Float!
-  event_id: Int!
+  event_id: Int
 
   user: User!
   reviewer: User!
-  event: Event!
+  event: Event
 }
