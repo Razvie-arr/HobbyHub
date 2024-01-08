@@ -13,6 +13,7 @@ import {
   EventType,
   Group,
   Location,
+  MutationCancelEventArgs,
   MutationCreateEventArgs,
   MutationDeleteEventArgs,
   MutationEditEventArgs,
@@ -33,6 +34,8 @@ import {
   User,
 } from '../../../types';
 import { createEventInput, getPublicStorageFilePath } from '../../../utils/helpers';
+
+import { sendMassiveEventCancelledEmail } from './sendMassiveEventCancelledEmail';
 
 const DEFAULT_DISTANCE = 20;
 const DEFAULT_LIMIT = 4;
@@ -463,4 +466,30 @@ export const resolveEventRegistrationResolver = async (
   }
 
   return 'Event registration resolved.';
+};
+
+export const cancelEventResolver = async (
+  _: unknown,
+  { eventId }: MutationCancelEventArgs,
+  { dataSources, serverUrl }: CustomContext,
+) => {
+  const event = await dataSources.sql.events.getById(eventId);
+  if (!event) {
+    throw new GraphQLError('Event not found');
+  }
+  if (event.cancelled) {
+    throw new GraphQLError('Event has already been cancelled');
+  }
+
+  const dbResponse = await dataSources.sql.events.setCancelled(eventId, true);
+  if (!dbResponse) {
+    throw new GraphQLError("Event can't be cancelled");
+  }
+
+  const eventAcceptedParticipants = await dataSources.sql.events.getAcceptedEventParticipants(eventId);
+  const eventPendingParticipants = await dataSources.sql.events.getPendingEventParticipants(eventId);
+  const eventParticipants: Set<User> = new Set([...eventAcceptedParticipants, ...eventPendingParticipants]);
+
+  await sendMassiveEventCancelledEmail(event, eventParticipants, dataSources, serverUrl);
+  return 'Event successfully cancelled';
 };

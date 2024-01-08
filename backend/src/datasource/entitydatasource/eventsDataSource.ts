@@ -122,4 +122,7 @@ export const eventsDataSource = (db: { query: DataSourceKnex; write: DataSourceK
 
   setFeedbackSentStatus: (eventId: number, sent: boolean) =>
     db.write('Event').where('id', eventId).update({ feedback_request_sent: sent }),
+
+  setCancelled: (eventId: number, cancelled: boolean) =>
+    db.write('Event').where('id', eventId).update({ cancelled: cancelled }),
 });
