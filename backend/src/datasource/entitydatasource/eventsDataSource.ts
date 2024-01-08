@@ -81,6 +81,9 @@ export const eventsDataSource = (db: { query: DataSourceKnex; write: DataSourceK
       stringQuery += ` ${distanceQuery} <= ${filterLocation.distance}`;
     }
 
+    stringQuery += stringQuery.includes('WHERE') ? ' AND' : ' WHERE';
+    stringQuery += ' Event.cancelled = false';
+
     if (sort) {
       if (sort === SortType.Distance && filterLocation) {
         stringQuery += ' ORDER BY distance';
@@ -111,6 +114,7 @@ export const eventsDataSource = (db: { query: DataSourceKnex; write: DataSourceK
       .whereNot('Location.city', city)
       .whereNot('Event.id', eventId)
       .whereIn('EventType.id', eventTypeIds)
+      .whereNot('Event.cancelled', true)
       .offset(offset)
       .limit(limit),
 
@@ -130,6 +134,7 @@ export const eventsDataSource = (db: { query: DataSourceKnex; write: DataSourceK
       .where('Location.city', city)
       .whereNot('Event.id', eventId)
       .whereIn('EventType.id', eventTypeIds)
+      .whereNot('Event.cancelled', true)
       .offset(offset)
       .limit(limit),
 
@@ -138,6 +143,7 @@ export const eventsDataSource = (db: { query: DataSourceKnex; write: DataSourceK
       .select(...locationAwareEventAttributes)
       .from('Event')
       .join('Location', 'Event.location_id', '=', 'Location.id')
+      .whereNot('Event.cancelled', true)
       .having(distance, '<', DEFAULT_DISTANCE)
       .orderBy('created_at', 'desc')
       .offset(offset ?? 0);
@@ -156,6 +162,7 @@ export const eventsDataSource = (db: { query: DataSourceKnex; write: DataSourceK
       .join('Location', 'Event.location_id', '=', 'Location.id')
       .having(distance, '<', DEFAULT_DISTANCE)
       .whereRaw('DATE(start_datetime) = ?', [todaysDate])
+      .whereNot('Event.cancelled', true)
       .orderByRaw(distance)
       .offset(offset ?? 0);
     return limit ? result.limit(limit) : result.limit(DEFAULT_LIMIT);
@@ -174,6 +181,7 @@ export const eventsDataSource = (db: { query: DataSourceKnex; write: DataSourceK
       .join('Location', 'Event.location_id', '=', 'Location.id')
       .having(distance, '<', DEFAULT_DISTANCE)
       .whereRaw('DATE(start_datetime) BETWEEN ? AND ?', [todaysDate, nextWeekDate])
+      .whereNot('Event.cancelled', true)
       .orderByRaw(distance)
       .offset(offset ?? 0);
     return limit ? result.limit(limit) : result.limit(DEFAULT_LIMIT);
@@ -187,6 +195,7 @@ export const eventsDataSource = (db: { query: DataSourceKnex; write: DataSourceK
       .join('User_EventType', 'Event_EventType.event_type_id', 'User_EventType.event_type_id')
       .join('Location', 'Event.location_id', '=', 'Location.id')
       .where('User_EventType.user_id', '=', userId)
+      .whereNot('Event.cancelled', true)
       .having(distance, '<', DEFAULT_DISTANCE)
       .offset(offset ?? 0);
     return limit ? result.limit(limit) : result.limit(DEFAULT_LIMIT);
