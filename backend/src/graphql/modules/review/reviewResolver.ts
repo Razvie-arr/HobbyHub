@@ -3,6 +3,7 @@ import { GraphQLError } from 'graphql/error';
 
 import {
   ContextualNullableResolver,
+  ContextualNullableResolverWithParent,
   ContextualResolver,
   ContextualResolverWithParent,
   CustomContext,
@@ -54,8 +55,11 @@ export const reviewUserResolver: ContextualResolverWithParent<User, Review> = as
 export const reviewReviewerResolver: ContextualResolverWithParent<User, Review> = async (parent, _, { dataSources }) =>
   (await dataSources.sql.users.getById(parent.reviewer_id)) as unknown as User;
 
-export const reviewEventResolver: ContextualResolverWithParent<Event, Review> = async (parent, _, { dataSources }) =>
-  (await dataSources.sql.events.getById(parent.event_id)) as unknown as Event;
+export const reviewEventResolver: ContextualNullableResolverWithParent<Event, Review> = async (
+  parent,
+  _,
+  { dataSources },
+) => (parent.event_id ? ((await dataSources.sql.events.getById(parent.event_id)) as unknown as Event) : null);
 
 export const createReviewResolver = async (
   _: unknown,
