@@ -1,6 +1,30 @@
 import { DataSourceKnex } from '@nic-jennings/sql-datasource';
+import { Knex } from 'knex';
 
+import { DEFAULT_DISTANCE, DEFAULT_LIMIT } from '../../sharedConstants';
 import { FilterLocationInput, SortType } from '../../types';
+
+const locationAwareEventAttributes = [
+  'Event.id as id',
+  'name',
+  'summary',
+  'description',
+  'author_id',
+  'group_id',
+  'capacity',
+  'allow_waitlist',
+  'image_filepath',
+  'start_datetime',
+  'end_datetime',
+  'location_id',
+  'created_at',
+  'country',
+  'city',
+  'street_name',
+  'street_number',
+  'latitude',
+  'longitude',
+];
 
 export const eventsDataSource = (db: { query: DataSourceKnex; write: DataSourceKnex }) => ({
   getEventEventTypes: (eventId: number) =>
@@ -109,6 +133,65 @@ export const eventsDataSource = (db: { query: DataSourceKnex; write: DataSourceK
       .offset(offset)
       .limit(limit),
 
+  getNewlyCreatedNearbyEvents: (distance: Knex.Raw, offset?: number | null, limit?: number | null) => {
+    const result = db.query
+      .select(...locationAwareEventAttributes)
+      .from('Event')
+      .join('Location', 'Event.location_id', '=', 'Location.id')
+      .having(distance, '<', DEFAULT_DISTANCE)
+      .orderBy('created_at', 'desc')
+      .offset(offset ?? 0);
+    return limit ? result.limit(limit) : result;
+  },
+
+  getTodaysNearbyEvents: (
+    distance: Knex.Raw,
+    todaysDate: string | undefined,
+    offset?: number | null,
+    limit?: number | null,
+  ) => {
+    const result = db.query
+      .select(...locationAwareEventAttributes)
+      .from('Event')
+      .join('Location', 'Event.location_id', '=', 'Location.id')
+      .having(distance, '<', DEFAULT_DISTANCE)
+      .whereRaw('DATE(start_datetime) = ?', [todaysDate])
+      .orderByRaw(distance)
+      .offset(offset ?? 0);
+    return limit ? result.limit(limit) : result.limit(DEFAULT_LIMIT);
+  },
+
+  getWeeklyNearbyEvents: (
+    distance: Knex.Raw,
+    todaysDate: string | undefined,
+    nextWeekDate: string | undefined,
+    offset?: number | null,
+    limit?: number | null,
+  ) => {
+    const result = db.query
+      .select(...locationAwareEventAttributes)
+      .from('Event')
+      .join('Location', 'Event.location_id', '=', 'Location.id')
+      .having(distance, '<', DEFAULT_DISTANCE)
+      .whereRaw('DATE(start_datetime) BETWEEN ? AND ?', [todaysDate, nextWeekDate])
+      .orderByRaw(distance)
+      .offset(offset ?? 0);
+    return limit ? result.limit(limit) : result.limit(DEFAULT_LIMIT);
+  },
+
+  getInterestingNearbyEvents: (distance: Knex.Raw, userId: number, offset?: number | null, limit?: number | null) => {
+    const result = db.query
+      .distinct(...locationAwareEventAttributes)
+      .from('Event')
+      .join('Event_EventType', 'Event.id', 'Event_EventType.event_id')
+      .join('User_EventType', 'Event_EventType.event_type_id', 'User_EventType.event_type_id')
+      .join('Location', 'Event.location_id', '=', 'Location.id')
+      .where('User_EventType.user_id', '=', userId)
+      .having(distance, '<', DEFAULT_DISTANCE)
+      .offset(offset ?? 0);
+    return limit ? result.limit(limit) : result.limit(DEFAULT_LIMIT);
+  },
+
   getUserCreatedEvents: (userId: number, offset?: number | null, limit?: number | null) => {
     const query = db
       .query('Event')
@@ -122,4 +205,6 @@ export const eventsDataSource = (db: { query: DataSourceKnex; write: DataSourceK
 
   setFeedbackSentStatus: (eventId: number, sent: boolean) =>
     db.write('Event').where('id', eventId).update({ feedback_request_sent: sent }),
+
+  setNullReviewsEventId: (eventId: number) => db.write('Review').where('event_id', eventId).update({ event_id: null }),
 });

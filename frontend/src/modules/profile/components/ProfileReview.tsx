@@ -25,7 +25,8 @@ export const ProfileReview = ({ event, avatarImage, rating, reviewer, text }: Pr
               <RouterLink to={route.profile(reviewer.id)}>
                 {reviewer.first_name} {reviewer.last_name}
               </RouterLink>{' '}
-              at <RouterLink to={route.eventDetails(event.id)}>{event.name}</RouterLink>
+              {/*TODO: make it more beautiful*/}
+              at {event ? <RouterLink to={route.eventDetails(event.id)}>{event.name}</RouterLink> : `event was deleted`}
             </Heading>
             <StarRating rating={rating} size="24px" />
           </Box>
@@ -37,4 +38,3 @@ export const ProfileReview = ({ event, avatarImage, rating, reviewer, text }: Pr
     </CardBody>
   </Card>
 );
-
