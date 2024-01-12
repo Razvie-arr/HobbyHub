@@ -26,11 +26,11 @@ export const messagesByThreadIdResolver: ContextualResolver<Array<Message>, Quer
 export const sendMessageResolver = async (
   _: unknown,
   { sender, recipient, text }: MutationSendMessageArgs,
-  { requestSenderUrl }: CustomContext,
+  { serverUrl }: CustomContext,
 ): Promise<string> => {
   const response: string = await sendMessage(sender.id, recipient.id, text);
 
-  await sendEmailNotification(sender.first_name, recipient.first_name, recipient.email, requestSenderUrl);
+  await sendEmailNotification(sender.first_name, recipient.first_name, recipient.email, serverUrl);
   return response;
 };
 

@@ -39,7 +39,7 @@ const init = async () => {
       },
       googleMapsClient: getGoogleMapsClient(),
       auth,
-      requestSenderUrl: requestSenderUrl,
+      serverUrl: requestSenderUrl,
     };
   };
 

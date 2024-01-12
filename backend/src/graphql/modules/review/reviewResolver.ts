@@ -64,13 +64,13 @@ export const reviewEventResolver: ContextualNullableResolverWithParent<Event, Re
 export const createReviewResolver = async (
   _: unknown,
   { userId, reviewerId, eventId, text, rating }: MutationCreateReviewArgs,
-  { dataSources, requestSenderUrl }: CustomContext,
-) => createUserReview(userId, reviewerId, text, rating, eventId, dataSources, requestSenderUrl);
+  { dataSources, serverUrl }: CustomContext,
+) => createUserReview(userId, reviewerId, text, rating, eventId, dataSources, serverUrl);
 
 export const maxRatingAllParticipantsResolver = async (
   _: unknown,
   { adminId, eventId }: MutationMaxRatingAllParticipantsArgs,
-  { dataSources, requestSenderUrl }: CustomContext,
+  { dataSources, serverUrl }: CustomContext,
 ) => {
   const maxRating = 5;
   const text = 'Great!';
@@ -81,17 +81,13 @@ export const maxRatingAllParticipantsResolver = async (
   }
 
   eventParticipants.forEach(async (participant) => {
-    await createUserReview(participant.id, adminId, text, maxRating, eventId, dataSources, requestSenderUrl);
+    await createUserReview(participant.id, adminId, text, maxRating, eventId, dataSources, serverUrl);
   });
 
   return true;
 };
 
-export const askForFeedbackResolver = async (
-  _: unknown,
-  __: unknown,
-  { dataSources, requestSenderUrl }: CustomContext,
-) => {
+export const askForFeedbackResolver = async (_: unknown, __: unknown, { dataSources, serverUrl }: CustomContext) => {
   const events = await dataSources.sql.events.getEventsForFeedback();
   const sentEvents: string[] = [];
 
@@ -99,21 +95,21 @@ export const askForFeedbackResolver = async (
     if (event.author_id) {
       const author = await dataSources.sql.users.getById(event.author_id);
       if (author) {
-        await askForFeedback(author, event, requestSenderUrl);
+        await askForFeedback(author, event, serverUrl);
       }
     }
 
     if (event.group_id) {
       const group = await dataSources.sql.groups.getById(event.group_id);
       if (group) {
-        await askForFeedback(group.admin, event, requestSenderUrl);
+        await askForFeedback(group.admin, event, serverUrl);
       }
     }
 
     const users = await dataSources.sql.events.getAcceptedEventParticipants(event.id);
 
     for (const user of users) {
-      await askForFeedback(user, event, requestSenderUrl);
+      await askForFeedback(user, event, serverUrl);
     }
 
     sentEvents.push(event.name);
@@ -161,4 +157,3 @@ export const unreviewedEventParticipantsResolver = async (
   const reviewedUserIds = eventReviews.map((eventReview) => eventReview.user_id);
   return eventParticipants.filter((participant) => !reviewedUserIds.includes(participant.id));
 };
-

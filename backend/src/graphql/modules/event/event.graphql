@@ -30,6 +30,8 @@ extend type Mutation {
 
   requestEventRegistration( eventRegistration: RequestEventRegistrationInput!): String!
   resolveEventRegistration(resolve: ResolveEventRegistrationInput!): String!
+
+  cancelEvent(eventId: Int!): String!
 }
 
 union Author = User | Group
@@ -46,6 +48,7 @@ type Event {
   allow_waitlist: Boolean!
   created_at: String!
   feedback_request_sent: Boolean!
+  cancelled: Boolean!
 
   author_id: Int
   group_id: Int

@@ -59,6 +59,7 @@ export type Event = {
   allow_waitlist: Scalars['Boolean']['output'];
   author: Author;
   author_id?: Maybe<Scalars['Int']['output']>;
+  cancelled: Scalars['Boolean']['output'];
   capacity: Scalars['Int']['output'];
   created_at: Scalars['String']['output'];
   description?: Maybe<Scalars['String']['output']>;
@@ -180,6 +181,7 @@ export type Mutation = {
   __typename?: 'Mutation';
   _empty?: Maybe<Scalars['String']['output']>;
   askForFeedback: Array<Scalars['String']['output']>;
+  cancelEvent: Scalars['String']['output'];
   createEvent: Event;
   createGroup: Group;
   createLocation?: Maybe<Location>;
@@ -210,6 +212,10 @@ export type Mutation = {
 
 export type Mutation_EmptyArgs = {
   nothing?: InputMaybe<Scalars['String']['input']>;
+};
+
+export type MutationCancelEventArgs = {
+  eventId: Scalars['Int']['input'];
 };
 
 export type MutationCreateEventArgs = {
@@ -870,6 +876,7 @@ export type EventResolvers<
   allow_waitlist?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
   author?: Resolver<ResolversTypes['Author'], ParentType, ContextType>;
   author_id?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
+  cancelled?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
   capacity?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   created_at?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   description?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
@@ -950,6 +957,12 @@ export type MutationResolvers<
 > = {
   _empty?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType, Partial<Mutation_EmptyArgs>>;
   askForFeedback?: Resolver<Array<ResolversTypes['String']>, ParentType, ContextType>;
+  cancelEvent?: Resolver<
+    ResolversTypes['String'],
+    ParentType,
+    ContextType,
+    RequireFields<MutationCancelEventArgs, 'eventId'>
+  >;
   createEvent?: Resolver<
     ResolversTypes['Event'],
     ParentType,

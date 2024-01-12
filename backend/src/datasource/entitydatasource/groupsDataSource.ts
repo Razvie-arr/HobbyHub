@@ -12,7 +12,7 @@ export const groupsDataSource = (db: { query: DataSourceKnex; write: DataSourceK
   getGroupMembers: (groupId: number) =>
     db.query('User_UserGroup').innerJoin('User', 'User_UserGroup.user_id', 'User.id').where('group_id', groupId),
 
-  getGroupEvents: (groupId: number) => db.query('Event').where('group_id', groupId),
+  getGroupEvents: (groupId: number) => db.query('Event').where('group_id', groupId).whereNot('Event.cancelled', true),
 
   getGroupsByAdminId: (adminId: number) => db.query('UserGroup').where('admin_id', adminId),
 

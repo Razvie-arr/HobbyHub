@@ -10,7 +10,7 @@ export interface CustomContext {
   };
   googleMapsClient: Client;
   auth: string | string[];
-  requestSenderUrl: string;
+  serverUrl: string;
 }
 
 export type ContextualResolverWithParent<R, P = unknown, A = unknown> = (

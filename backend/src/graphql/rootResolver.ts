@@ -15,6 +15,7 @@ import {
   threadUsersResolver,
 } from './modules/chat/threadResolvers';
 import {
+  cancelEventResolver,
   createEventResolver,
   deleteEventResolver,
   editEventResolver,
@@ -175,6 +176,7 @@ export const rootResolver: Resolvers = {
     editEvent: editEventResolver,
     deleteEvent: deleteEventResolver,
     uploadEventImage: uploadEventImageResolver,
+    cancelEvent: cancelEventResolver,
 
     requestEventRegistration: requestEventRegistrationResolver,
     resolveEventRegistration: resolveEventRegistrationResolver,
