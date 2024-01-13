@@ -57,6 +57,7 @@ export type Event = {
   allow_waitlist: Scalars['Boolean']['output'];
   author: Author;
   author_id?: Maybe<Scalars['Int']['output']>;
+  cancelled: Scalars['Boolean']['output'];
   capacity: Scalars['Int']['output'];
   created_at: Scalars['String']['output'];
   description?: Maybe<Scalars['String']['output']>;
@@ -178,6 +179,7 @@ export type Mutation = {
   __typename?: 'Mutation';
   _empty?: Maybe<Scalars['String']['output']>;
   askForFeedback: Array<Scalars['String']['output']>;
+  cancelEvent: Scalars['String']['output'];
   createEvent: Event;
   createGroup: Group;
   createLocation?: Maybe<Location>;
@@ -208,6 +210,10 @@ export type Mutation = {
 
 export type Mutation_EmptyArgs = {
   nothing?: InputMaybe<Scalars['String']['input']>;
+};
+
+export type MutationCancelEventArgs = {
+  eventId: Scalars['Int']['input'];
 };
 
 export type MutationCreateEventArgs = {
@@ -387,6 +393,7 @@ export type Query = {
   userCreatedEvents: Array<Event>;
   users: Array<User>;
   usersByIds: Array<User>;
+  weeklyNearbyEvents: Array<Event>;
 };
 
 export type Query_EmptyArgs = {
@@ -588,6 +595,13 @@ export type QueryUsersByIdsArgs = {
   ids: Array<Scalars['Int']['input']>;
 };
 
+export type QueryWeeklyNearbyEventsArgs = {
+  latitude: Scalars['Float']['input'];
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  longitude: Scalars['Float']['input'];
+  offset?: InputMaybe<Scalars['Int']['input']>;
+};
+
 export type RecipientInput = {
   email: Scalars['String']['input'];
   first_name: Scalars['String']['input'];
@@ -615,8 +629,8 @@ export type ResolveEventRegistrationInput = {
 
 export type Review = {
   __typename?: 'Review';
-  event: Event;
-  event_id: Scalars['Int']['output'];
+  event?: Maybe<Event>;
+  event_id?: Maybe<Scalars['Int']['output']>;
   id: Scalars['Int']['output'];
   rating: Scalars['Float']['output'];
   reviewer: User;
@@ -1112,7 +1126,7 @@ export type ReviewsByUserIdQuery = {
     text: string;
     rating: number;
     reviewer: { __typename?: 'User'; first_name: string; email: string; id: number; last_name: string };
-    event: { __typename?: 'Event' } & { ' $fragmentRefs'?: { EventFragmentFragment: EventFragmentFragment } };
+    event?: ({ __typename?: 'Event' } & { ' $fragmentRefs'?: { EventFragmentFragment: EventFragmentFragment } }) | null;
   }>;
 };
 

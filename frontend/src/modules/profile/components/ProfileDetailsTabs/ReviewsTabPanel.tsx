@@ -33,7 +33,7 @@ export const ReviewsTabPanel = ({ userProfile }: WithUserProfile) => {
         render={(reviews) => (
           <Stack spacing="4">
             {reviews.map(({ event, ...review }) => (
-              <ProfileReview key={review.id} event={getEventFragmentData(event)} {...review} />
+              <ProfileReview key={review.id} event={event ? getEventFragmentData(event) : undefined} {...review} />
             ))}
             <Center mb="16">
               <Button

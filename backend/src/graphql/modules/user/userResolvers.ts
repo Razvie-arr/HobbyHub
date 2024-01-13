@@ -137,7 +137,7 @@ export const onboardUserResolver = async (
     throw new GraphQLError(`Error while inserting into User_EventType table!`);
   }
 
-  const dbUserResponse = await dataSources.sql.users.getById(user.id);
+  const dbUserResponse = (await dataSources.sql.users.getById(user.id)) as AuthUser;
 
   if (!dbUserResponse) {
     throw new GraphQLError(`Error while fetching User!`);

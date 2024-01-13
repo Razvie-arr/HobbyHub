@@ -13,7 +13,6 @@ type AuthUser {
   last_name: String!
   location: Location
   location_id: Int
-  password: String!
   verified: Boolean!
 }
 
@@ -35,6 +34,7 @@ type Event {
   allow_waitlist: Boolean!
   author: Author!
   author_id: Int
+  cancelled: Boolean!
   capacity: Int!
   created_at: String!
   description: String
@@ -151,6 +151,7 @@ type Message {
 type Mutation {
   _empty(nothing: String): String
   askForFeedback: [String!]!
+  cancelEvent(eventId: Int!): String!
   createEvent(event: EventInput!, location: LocationInputWithoutCoords!): Event!
   createGroup(group: GroupInput!, location: LocationInputWithoutCoords!): Group!
   createLocation(location: LocationInputWithoutCoords!): Location
@@ -238,9 +239,10 @@ type Query {
   unreviewedEventParticipants(eventId: Int!, userId: Int!): [User!]!
   userAdminGroups(limit: Int, offset: Int, userId: Int!): [Group!]!
   userById(id: Int!): User
-  userCreatedEvents(limit: Int, offset: Int, userId: Int!): [Event]!
+  userCreatedEvents(limit: Int, offset: Int, userId: Int!): [Event!]!
   users(limit: Int, offset: Int): [User!]!
   usersByIds(ids: [Int!]!): [User!]!
+  weeklyNearbyEvents(latitude: Float!, limit: Int, longitude: Float!, offset: Int): [Event!]!
 }
 
 input RecipientInput {
@@ -269,8 +271,8 @@ input ResolveEventRegistrationInput {
 }
 
 type Review {
-  event: Event!
-  event_id: Int!
+  event: Event
+  event_id: Int
   id: Int!
   rating: Float!
   reviewer: User!

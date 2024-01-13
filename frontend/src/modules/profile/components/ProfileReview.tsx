@@ -7,7 +7,7 @@ import { StarRating } from '../../../shared/design-system';
 import { RouterLink } from '../../../shared/navigation';
 import { WithEvent } from '../../../shared/types';
 
-type ProfileReviewProps = WithEvent &
+type ProfileReviewProps = Partial<WithEvent> &
   Pick<Review, 'rating' | 'text'> & {
     reviewer: Pick<User, 'email' | 'first_name' | 'id' | 'last_name'>;
   } & {
@@ -38,3 +38,4 @@ export const ProfileReview = ({ event, avatarImage, rating, reviewer, text }: Pr
     </CardBody>
   </Card>
 );
+
