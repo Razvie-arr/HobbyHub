@@ -39,7 +39,7 @@ const sendMessage = async (senderId: number, recipientId: number, text: string):
     .db.write.transaction(async (trx) => {
       const currentDateTime = new Date().toISOString().slice(0, 19).replace('T', ' ');
 
-      let threadId;
+      let threadId: number;
       let newThreadCreated = false;
 
       const foundThreadBetweenUsersId = (
@@ -53,13 +53,13 @@ const sendMessage = async (senderId: number, recipientId: number, text: string):
         threadId = foundThreadBetweenUsersId.thread_id;
         await trx('Thread').update({ last_message_at: currentDateTime }).where('id', threadId);
       } else {
-        threadId = (await trx('Thread').insert({ last_message_at: currentDateTime }, 'id'))[0];
+        threadId = (await trx('Thread').insert({ last_message_at: currentDateTime }, 'id'))[0] as unknown as number;
         newThreadCreated = true;
       }
 
       if (newThreadCreated) {
-        await trx('User_Thread').insert({ user_id: senderId, thread_id: threadId as number });
-        await trx('User_Thread').insert({ user_id: recipientId, thread_id: threadId as number });
+        await trx('User_Thread').insert({ user_id: senderId, thread_id: threadId });
+        await trx('User_Thread').insert({ user_id: recipientId, thread_id: threadId });
       }
 
       await trx('User_Thread').where('user_id', senderId).andWhere('thread_id', threadId).update('thread_read', true);
@@ -78,7 +78,7 @@ const sendMessage = async (senderId: number, recipientId: number, text: string):
           },
           ['id'],
         )
-      )[0];
+      )[0] as unknown as number;
 
       return `Message with id ${messageId} sent`;
     })
@@ -104,3 +104,4 @@ const sendEmailNotification = async (
     throw error;
   }
 };
+
