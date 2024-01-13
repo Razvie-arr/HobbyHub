@@ -55,7 +55,7 @@ export const CreateEventForm = () => {
       formTitle="Create event"
       formDescription="Create your own event today!"
       handleCancel={() => {
-        navigate(route.home());
+        navigate(route.events());
       }}
       handleSubmit={async (values) => {
         const result = await createEventRequest({

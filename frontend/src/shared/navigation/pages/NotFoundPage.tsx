@@ -32,10 +32,11 @@ export function NotFoundPage({ wrapInContentContainer, noResultsImagePath }: Not
         <Box>
           <AlertTitle>Page not found</AlertTitle>
           <Box>
-            Please return to <RouterLink to={route.home()}>Home</RouterLink>.
+            Please return to <RouterLink to={route.events()}>Home</RouterLink>.
           </Box>
         </Box>
       </Alert>
     </Wrapper>
   );
 }
+

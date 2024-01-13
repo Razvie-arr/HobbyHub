@@ -1,6 +1,7 @@
+import { ReactNode } from 'react';
 import { useMutation } from '@apollo/client';
 
-import { useDisclosure, WithDisclosure } from 'src/shared/design-system';
+import { ButtonProps, useDisclosure, WithDisclosure } from 'src/shared/design-system';
 import { ModalForm, zod, zodResolver } from 'src/shared/forms';
 
 import { SIGN_UP_MUTATION } from '../../queries';
@@ -31,7 +32,12 @@ const initialValues: FormValues = {
   passwordConfirmation: '',
 };
 
-export const SignUpForm = ({ disclosure }: WithDisclosure) => {
+interface SignUpFormProps extends WithDisclosure {
+  modalButtonText?: ReactNode;
+  modalButtonProps?: ButtonProps;
+}
+
+export const SignUpForm = ({ disclosure, modalButtonText = 'Sign up', modalButtonProps }: SignUpFormProps) => {
   const emailVerificationModalDisclosure = useDisclosure();
 
   const [signUpRequest, signUpRequestState] = useMutation(SIGN_UP_MUTATION, {
@@ -55,7 +61,8 @@ export const SignUpForm = ({ disclosure }: WithDisclosure) => {
           },
           resolver: zodResolver(schema),
         }}
-        modalButtonText="Sign up"
+        modalButtonText={modalButtonText}
+        modalButtonProps={modalButtonProps}
         modalTitle="Create your account"
         submitButtonProps={{
           isLoading: signUpRequestState.loading,

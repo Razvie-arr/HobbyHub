@@ -39,7 +39,7 @@ export const SignUpPage = () => {
   const [signUpRequest, signUpRequestState] = useMutation(SIGN_UP_MUTATION, {
     onCompleted: () => {
       emailVerificationModalDisclosure.onOpen();
-      navigate(route.home());
+      navigate(route.events());
     },
     onError: () => {},
   });

@@ -42,7 +42,7 @@ export const DeleteEventButton = ({ event, ...buttonProps }: WithEvent & ButtonP
       description: 'Your event was deleted successfully.',
       isClosable: true,
     });
-    navigate(route.home());
+    navigate(route.events());
   };
 
   return (

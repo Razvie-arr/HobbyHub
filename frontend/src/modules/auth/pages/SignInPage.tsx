@@ -33,7 +33,7 @@ export const SignInPage = () => {
       if (user.event_types.length === 0 || !user.location) {
         navigate(route.onboarding());
       } else {
-        navigate(route.home());
+        navigate(route.events());
       }
     },
     onError: () => {},

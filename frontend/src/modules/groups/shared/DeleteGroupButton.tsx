@@ -42,7 +42,7 @@ export const DeleteGroupButton = ({ group, ...buttonProps }: WithGroup & ButtonP
       description: 'Your group was deleted successfully.',
       isClosable: true,
     });
-    navigate(route.home());
+    navigate(route.groups());
   };
 
   return (

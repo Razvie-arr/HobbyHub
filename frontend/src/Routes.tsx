@@ -6,6 +6,7 @@ import { NotFoundPage } from 'src/shared/navigation';
 
 import { SignInPage, SignUpPage } from './modules/auth/pages';
 import { CreateGroupForm, EditGroupForm, GroupDetailsPage, GroupsPage } from './modules/groups';
+import { LandingPage } from './modules/landing';
 import { MessagesPage } from './modules/messages';
 import { EditProfilePage, ProfileDetailsPage } from './modules/profile';
 import { AddReviewPage } from './modules/reviews';
@@ -16,6 +17,8 @@ export const Routes = () => {
   const { user } = useAuth();
   return (
     <RouterRoutes>
+      <Route path={route.landing()} element={<LandingPage />} />
+
       <Route path={route.events()} element={<EventsPage />} />
       <Route path={route.eventDetails()} element={<EventDetailsPage />} />
 

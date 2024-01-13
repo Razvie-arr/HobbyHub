@@ -59,7 +59,7 @@ export function TopNavigation() {
                 alt="logo"
                 borderRadius="base"
                 onClick={() => {
-                  navigate(route.events());
+                  navigate(user ? route.events() : route.landing());
                 }}
                 cursor="pointer"
               />
@@ -139,7 +139,7 @@ export function TopNavigation() {
                     <MenuItem
                       onClick={() => {
                         signOut();
-                        navigate(route.home());
+                        navigate(route.landing());
                       }}
                     >
                       Sign out

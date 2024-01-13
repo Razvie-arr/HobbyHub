@@ -122,7 +122,7 @@ export const OnboardingForm = () => {
                 isClosable: true,
               });
               signIn({ token, user: { ...updatedUser.data.onboardUser, groups: [] } });
-              navigate(route.home());
+              navigate(route.events());
             }
           }}
           noValidate

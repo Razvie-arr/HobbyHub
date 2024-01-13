@@ -44,7 +44,7 @@ export const CreateGroupForm = () => {
       formTitle="Create group"
       formDescription="Create your own group today!"
       handleCancel={() => {
-        navigate(route.home());
+        navigate(route.groups());
       }}
       handleSubmit={async (values) => {
         const result = await createGroupRequest({
