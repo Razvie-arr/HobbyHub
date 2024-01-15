@@ -35,7 +35,7 @@ import {
 } from '../../../types';
 import { createEventInput, getPublicStorageFilePath } from '../../../utils/helpers';
 
-import { sendMassiveEventCancelledEmail } from './sendMassiveEventCancelledEmail';
+import { sendMassEventCancelledEmail } from './sendMassEventCancelledEmail';
 
 const MINIMUM_COUNT_SIMILAR_EVENTS = 3;
 
@@ -466,6 +466,6 @@ export const cancelEventResolver = async (
   const eventPendingParticipants = await dataSources.sql.events.getPendingEventParticipants(eventId);
   const eventParticipants: Set<User> = new Set([...eventAcceptedParticipants, ...eventPendingParticipants]);
 
-  await sendMassiveEventCancelledEmail(event, eventParticipants, dataSources, serverUrl);
+  await sendMassEventCancelledEmail(event, eventParticipants, dataSources, serverUrl);
   return 'Event successfully cancelled';
 };

@@ -2,7 +2,7 @@ import { SQLDataSource } from '../../../datasource';
 import { sendEmail } from '../../../libs/nodeMailer';
 import { Event, User } from '../../../types';
 
-export const sendMassiveEventCancelledEmail = async (
+export const sendMassEventCancelledEmail = async (
   event: Event,
   eventParticipants: Set<User>,
   dataSources: { sql: SQLDataSource },
