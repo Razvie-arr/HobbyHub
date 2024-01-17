@@ -10,6 +10,8 @@ export const { DB_USER } = process.env;
 export const { DB_PASSWORD } = process.env;
 export const { DB_NAME } = process.env;
 export const { GOOGLE_API_KEY } = process.env;
+export const { EMAIL_USER } = process.env;
+export const { EMAIL_PASSWORD } = process.env;
 
 export const PROJECT_ROOT = path.resolve(process.cwd());
 export const FRONTEND_ROOT = path.resolve(PROJECT_ROOT, `../frontend/`);
