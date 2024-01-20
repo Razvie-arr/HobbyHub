@@ -6,6 +6,7 @@ import { EventData, getEventFragmentData, WithNullableAuthUser } from '../../typ
 import { EventCard } from './EventCard';
 
 interface EventListProps extends WithNullableAuthUser, DataListProps {
+  additionalCards?: JSX.Element | null;
   maxColumnCount?: 4 | 3;
   withMap?: boolean;
 }
@@ -14,7 +15,13 @@ export const renderEventList = (
   props: EventListProps | ((events: Array<EventData>) => EventListProps) = { user: null },
 ) =>
   flow(ReadonlyArray.map(getEventFragmentData), (events) => {
-    const { user, maxColumnCount = 4, withMap, ...dataListProps } = typeof props === 'function' ? props(events) : props;
+    const {
+      user,
+      maxColumnCount = 4,
+      withMap,
+      additionalCards,
+      ...dataListProps
+    } = typeof props === 'function' ? props(events) : props;
     return (
       <>
         {withMap && ReadonlyArray.isNonEmptyArray(events) ? (
@@ -26,9 +33,11 @@ export const renderEventList = (
         ) : null}
         <DataList {...dataListProps}>
           {events.map((event) => (
-            <EventCard key={event.id} user={user} event={event} maxFlexBasis={maxColumnCount === 4 ? '24%' : ' 32%'} />
+            <EventCard key={event.id} user={user} event={event} maxFlexBasis={maxColumnCount === 4 ? '24%' : '32%'} />
           ))}
+          {additionalCards}
         </DataList>
       </>
     );
   });
+

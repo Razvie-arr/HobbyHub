@@ -1,4 +1,5 @@
 import { MdAccountCircle, MdCalendarToday, MdGroups, MdInfo, MdLocationOn } from 'react-icons/md';
+import { match } from 'ts-pattern';
 
 import {
   AddressInfo,
@@ -14,8 +15,13 @@ import { CancelEventButton } from './CancelEventButton';
 import { EventAuthor } from './EventAuthor';
 
 export const EventDetailsSideCard = ({ event, user }: WithEvent & WithNullableAuthUser) => {
+  const authorId = match(event.author)
+    .with({ __typename: 'User' }, ({ id }) => id)
+    .with({ __typename: 'Group' }, ({ admin }) => admin.id)
+    .exhaustive();
+
   const showCancelButton =
-    user && user.id === event.author.id && !event.cancelled && event.start_datetime.slice(0, 23) > getCurrentDateTime();
+    user && user.id === authorId && !event.cancelled && event.start_datetime.slice(0, 23) > getCurrentDateTime();
   return (
     <DataDetailsCard
       title="Summary"
