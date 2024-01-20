@@ -11,7 +11,7 @@ interface DataDetailsContentProps {
 
 export const DataDetailsContent = ({ imageFilepath, tabs, sideCard }: DataDetailsContentProps) => (
   <ContentContainer>
-    <Stack spacing={4} justifyContent="space-between" direction={{ base: 'column-reverse', md: 'row' }}>
+    <Stack spacing={4} justifyContent="space-between" direction={{ base: 'column-reverse', lg: 'row' }}>
       <VStack flexBasis="65%">
         <Image
           w="100%"

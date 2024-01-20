@@ -59,9 +59,9 @@ export const ModalForm = <TFieldValues extends FieldValues = FieldValues>({
     >
       {modalButtonText}
     </Button>
-    <Modal isOpen={disclosure.isOpen} onClose={disclosure.onClose} >
+    <Modal isOpen={disclosure.isOpen} onClose={disclosure.onClose}>
       <ModalOverlay />
-      <ModalContent p={6}>
+      <ModalContent>
         <ModalHeader>{modalTitle}</ModalHeader>
         <ModalCloseButton />
         <ModalBody px={6} pb={6}>

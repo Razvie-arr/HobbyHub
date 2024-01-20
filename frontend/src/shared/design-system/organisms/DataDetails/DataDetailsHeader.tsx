@@ -11,7 +11,7 @@ interface DataDetailsHeaderProps {
 export const DataDetailsHeader = ({ title, actionButtons }: DataDetailsHeaderProps) => (
   <Flex width="100%" bgColor="white" shadow="sm" position="sticky" top={{ base: '49px', md: '59px' }} zIndex={2} py={4}>
     <ContentContainer>
-      <Stack justifyContent="space-between" bgColor="white" flexBasis="100%" direction={{ base: 'column', md: 'row' }}>
+      <Stack justifyContent="space-between" bgColor="white" flexBasis="100%" direction={{ base: 'column', lg: 'row' }}>
         <HStack>
           <Heading as="h1" size="lg">
             {title}

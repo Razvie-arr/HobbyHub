@@ -17,9 +17,9 @@ export const DataDetailsCard = ({
     p={4}
     boxShadow="lg"
     flexBasis="35%"
-    top={{ md: '171px', base: 'auto' }}
-    alignSelf={{ md: 'flex-start', base: 'auto' }}
-    position={{ md: 'sticky', base: 'static' }}
+    top={{ lg: '171px', base: 'auto' }}
+    alignSelf={{ lg: 'flex-start', base: 'auto' }}
+    position={{ lg: 'sticky', base: 'static' }}
   >
     <VStack alignItems="start" spacing={4} justifyContent="center">
       <Stack>

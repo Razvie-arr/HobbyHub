@@ -23,7 +23,7 @@ export const SendMessageModal = ({
   recipient,
   messageButtonText = 'Message',
   modalButtonIcon,
-}: WithAuthUser & WithRecipient & { messageButtonText: string; modalButtonIcon?: ReactNode }) => {
+}: WithAuthUser & WithRecipient & { messageButtonText?: string; modalButtonIcon?: ReactNode }) => {
   const disclosure = useDisclosure();
   const toast = useToast();
 
