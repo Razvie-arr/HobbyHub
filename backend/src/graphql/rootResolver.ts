@@ -28,6 +28,7 @@ import {
   eventsResolver,
   filterEventResolver,
   interestingNearbyEventsResolver,
+  massEmailToEventParticipantsResolver,
   newlyCreatedNearbyEventsResolver,
   requestEventRegistrationResolver,
   resolveEventRegistrationResolver,
@@ -177,6 +178,7 @@ export const rootResolver: Resolvers = {
     deleteEvent: deleteEventResolver,
     uploadEventImage: uploadEventImageResolver,
     cancelEvent: cancelEventResolver,
+    massEmailToEventParticipants: massEmailToEventParticipantsResolver,
 
     requestEventRegistration: requestEventRegistrationResolver,
     resolveEventRegistration: resolveEventRegistrationResolver,

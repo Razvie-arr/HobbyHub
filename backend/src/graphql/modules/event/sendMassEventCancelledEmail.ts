@@ -1,13 +1,9 @@
-import { SQLDataSource } from '../../../datasource';
 import { sendEmail } from '../../../libs/nodeMailer';
 import { Event, User } from '../../../types';
 
-export const sendMassEventCancelledEmail = async (
-  event: Event,
-  eventParticipants: Set<User>,
-  dataSources: { sql: SQLDataSource },
-  serverUrl: string,
-) => {
+import { getEventLink } from './getEventLink';
+
+export const sendMassEventCancelledEmail = async (event: Event, eventParticipants: Set<User>, serverUrl: string) => {
   const eventName = event.name;
   const subject = `📢 ${event.name} was cancelled`;
   const eventLink = getEventLink(serverUrl, event.id);
@@ -43,11 +39,3 @@ const createHtml = (userName: string, eventName: string, eventLink: string): str
 
     <p>Cheers,<br>
     HobbyHub</p>`;
-
-const getEventLink = (serverUrl: string, eventId: number): string => {
-  const protocol = 'https://';
-  const frontendUrl = serverUrl.includes('dev')
-    ? 'dev-frontend-team01-vse.handson.pro'
-    : 'frontend-team01-vse.handson.pro';
-  return protocol + frontendUrl + `/event/${eventId}`;
-};
