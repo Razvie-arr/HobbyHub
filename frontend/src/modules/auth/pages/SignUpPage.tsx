@@ -1,11 +1,12 @@
 import { useMutation } from '@apollo/client';
-import { Card, CardBody, CardHeader, Heading, useDisclosure, VStack } from '@chakra-ui/react';
+import { Card, CardBody, CardHeader, Center, Heading, useDisclosure, VStack } from '@chakra-ui/react';
 import { useNavigate } from 'react-router-dom';
 
 import { route } from 'src/route';
 import { Form, zod, zodResolver } from 'src/shared/forms';
 import { SubmitButton } from 'src/shared/forms/molecules/SubmitButton';
 
+import { ContentContainer } from '../../../shared/layout';
 import { EmailField, NameField, PasswordField } from '../components/fields';
 import { EmailVerificationModal } from '../components/SignUpForm/EmailVerificationModal';
 import { SIGN_UP_MUTATION } from '../queries';
@@ -45,31 +46,36 @@ export const SignUpPage = () => {
   });
 
   return (
-    <>
-      <Card p={6} alignSelf="center" minW="sm" w="50%" justifySelf="center" m={14}>
-        <CardHeader>
-          <Heading size="md">Create your account</Heading>
-        </CardHeader>
-        <CardBody>
-          <Form
-            defaultValues={initialValues}
-            resolver={zodResolver(schema)}
-            onSubmit={(formValues: FormValues) => {
-              void signUpRequest({ variables: formValues });
-            }}
-          >
-            <VStack gap={3}>
-              <NameField name="first_name" label="First name" autoFocus />
-              <NameField name="last_name" label="Last name" />
-              <EmailField />
-              <PasswordField confirmPassword />
-            </VStack>
-            <SubmitButton isLoading={signUpRequestState.loading} text="Sign up"></SubmitButton>
-          </Form>
-        </CardBody>
-      </Card>
-      <EmailVerificationModal disclosure={emailVerificationModalDisclosure} text="To complete the account verification process, please check your email inbox."/>
-    </>
+    <ContentContainer>
+      <Center>
+        <Card p={6} alignSelf="center" minW="sm" w="50%" justifySelf="center" m={14}>
+          <CardHeader>
+            <Heading size="md">Create your account</Heading>
+          </CardHeader>
+          <CardBody>
+            <Form
+              defaultValues={initialValues}
+              resolver={zodResolver(schema)}
+              onSubmit={(formValues: FormValues) => {
+                void signUpRequest({ variables: formValues });
+              }}
+            >
+              <VStack gap={3}>
+                <NameField name="first_name" label="First name" autoFocus />
+                <NameField name="last_name" label="Last name" />
+                <EmailField />
+                <PasswordField confirmPassword />
+              </VStack>
+              <SubmitButton isLoading={signUpRequestState.loading} text="Sign up"></SubmitButton>
+            </Form>
+          </CardBody>
+        </Card>
+        <EmailVerificationModal
+          disclosure={emailVerificationModalDisclosure}
+          text="To complete the account verification process, please check your email inbox."
+        />
+      </Center>
+    </ContentContainer>
   );
 };
 

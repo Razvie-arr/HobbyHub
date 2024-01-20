@@ -1,3 +1,4 @@
+import { ReactNode } from 'react';
 import {
   Heading,
   Icon,
@@ -13,7 +14,11 @@ import { MdOutlineMailOutline } from 'react-icons/md';
 
 import { WithDisclosure } from 'src/shared/design-system';
 
-export const EmailVerificationModal = ({ disclosure, text }: WithDisclosure & { text: string }) => (
+interface EmailVerificationModalProps extends WithDisclosure {
+  text?: ReactNode;
+}
+
+export const EmailVerificationModal = ({ disclosure, text }: EmailVerificationModalProps) => (
   <Modal isOpen={disclosure.isOpen} onClose={disclosure.onClose}>
     <ModalOverlay />
     <ModalContent>
@@ -22,9 +27,10 @@ export const EmailVerificationModal = ({ disclosure, text }: WithDisclosure & { 
         <VStack justifyContent="center">
           <Heading size="lg">Check your email</Heading>
           <Icon as={MdOutlineMailOutline} color="purple.500" boxSize="20" />
-          <Text align="center">{text}</Text>
+          {text ? <Text align="center">{text}</Text> : null}
         </VStack>
       </ModalBody>
     </ModalContent>
   </Modal>
 );
+

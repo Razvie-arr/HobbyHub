@@ -1,13 +1,13 @@
 import { useMutation } from '@apollo/client';
-import { Card, CardBody, CardHeader, Heading, VStack } from '@chakra-ui/react';
+import { Card, CardBody, CardHeader, Center, Heading, Link, VStack } from '@chakra-ui/react';
 import { useNavigate } from 'react-router-dom';
 
 import { route } from 'src/route';
-import { Link } from 'src/shared/design-system';
 import { Form, zod, zodResolver } from 'src/shared/forms';
 import { SubmitButton } from 'src/shared/forms/molecules/SubmitButton';
 import { ReactRouterLink } from 'src/shared/navigation';
 
+import { ContentContainer } from '../../../shared/layout';
 import { useAuth } from '../auth-core';
 import { EmailField, PasswordField } from '../components/fields';
 import { OrSignUpButton } from '../components/SignInForm/OrSignUpButton';
@@ -41,34 +41,38 @@ export const SignInPage = () => {
   });
 
   return (
-    <Card p={6} alignSelf="center" minW="sm" w="50%" justifySelf="center" m={14}>
-      <CardHeader>
-        <Heading size="md">Sign into your account</Heading>
-      </CardHeader>
-      <CardBody>
-        <Form
-          defaultValues={initialValues}
-          resolver={zodResolver(schema)}
-          onSubmit={(formValues: FormValues) => {
-            void signInRequest({ variables: formValues });
-          }}
-        >
-          <VStack gap={3} align="left">
-            <EmailField />
-            <PasswordField />
-            <Link as={ReactRouterLink} to={route.forgotPassword()} color="purple.500">
-              Forgot password?
-            </Link>
-          </VStack>
-          <SubmitButton isLoading={signInRequestState.loading} text="Sign in"></SubmitButton>
-        </Form>
-        <OrSignUpButton
-          handleClick={() => {
-            navigate(route.signUp());
-          }}
-        ></OrSignUpButton>
-      </CardBody>
-    </Card>
+    <ContentContainer>
+      <Center>
+        <Card p={6} alignSelf="center" minW="sm" w="50%" justifySelf="center" m={14}>
+          <CardHeader>
+            <Heading size="md">Sign into your account</Heading>
+          </CardHeader>
+          <CardBody>
+            <Form
+              defaultValues={initialValues}
+              resolver={zodResolver(schema)}
+              onSubmit={(formValues: FormValues) => {
+                void signInRequest({ variables: formValues });
+              }}
+            >
+              <VStack gap={3} align="left">
+                <EmailField />
+                <PasswordField />
+                <Link as={ReactRouterLink} to={route.forgotPassword()} color="purple.500">
+                  Forgot password?
+                </Link>
+              </VStack>
+              <SubmitButton isLoading={signInRequestState.loading} text="Sign in"></SubmitButton>
+            </Form>
+            <OrSignUpButton
+              handleClick={() => {
+                navigate(route.signUp());
+              }}
+            ></OrSignUpButton>
+          </CardBody>
+        </Card>
+      </Center>
+    </ContentContainer>
   );
 };
 
