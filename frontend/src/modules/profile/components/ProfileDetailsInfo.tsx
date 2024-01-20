@@ -1,43 +1,18 @@
-import { Box, Button, Heading, HStack, Image, Stack, Text, VStack } from '@chakra-ui/react';
+import { Avatar, Box, Heading, HStack, Stack, Text, VStack } from '@chakra-ui/react';
 import { MdInfo, MdLocationOn } from 'react-icons/md';
 
 import { DataRowItem, StarRating } from 'src/shared/design-system/';
 
-import { route } from '../../../route';
-import { DEFAULT_IMAGE_PATH } from '../../../shared/constants';
-import { ReactRouterLink } from '../../../shared/navigation';
-import { useAuth } from '../../auth';
 import { WithUserProfile } from '../types';
 
-export const ProfileDetailsInfo = ({ userProfile }: WithUserProfile) => {
-  const { user } = useAuth();
-  const isCurrentUser = user && user.id === userProfile.id;
-  return (
-    <Stack
-      spacing={8}
-      flexDirection={{ base: 'column', md: 'row' }}
-      alignItems="center"
-      justifyContent="center"
-      mt={16}
-    >
-      <Image
-        borderRadius="full"
-        boxSize="200px"
-        src={DEFAULT_IMAGE_PATH}
-        alt="User profile image"
-        fallbackSrc="https://via.placeholder.com/150"
-      ></Image>
+export const ProfileDetailsInfo = ({ userProfile }: WithUserProfile) => (
+  <Stack>
+    <HStack w="100%" spacing={8}>
+      <Avatar name={userProfile?.first_name.concat(' ', userProfile?.last_name)} size="2xl" bg="purple.300" />
       <VStack align="start">
-        <HStack spacing={4} alignItems="center">
-          <Heading fontSize="2xl">
-            {userProfile.first_name} {userProfile.last_name}
-          </Heading>
-          {isCurrentUser ? (
-            <Button as={ReactRouterLink} to={route.editProfile()} colorScheme="purple" size="sm">
-              Edit
-            </Button>
-          ) : null}
-        </HStack>
+        <Heading fontSize="2xl">
+          {userProfile.first_name} {userProfile.last_name}
+        </Heading>
         <HStack>
           <Text fontSize="lg" as="b">
             {userProfile.average_rating}
@@ -57,7 +32,7 @@ export const ProfileDetailsInfo = ({ userProfile }: WithUserProfile) => {
           ) : null}
         </DataRowItem>
       </VStack>
-    </Stack>
-  );
-};
+    </HStack>
+  </Stack>
+);
 
