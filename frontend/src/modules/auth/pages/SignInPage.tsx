@@ -6,6 +6,7 @@ import { route } from 'src/route';
 import { Link } from 'src/shared/design-system';
 import { Form, zod, zodResolver } from 'src/shared/forms';
 import { SubmitButton } from 'src/shared/forms/molecules/SubmitButton';
+import { ReactRouterLink } from 'src/shared/navigation';
 
 import { useAuth } from '../auth-core';
 import { EmailField, PasswordField } from '../components/fields';
@@ -55,7 +56,9 @@ export const SignInPage = () => {
           <VStack gap={3} align="left">
             <EmailField />
             <PasswordField />
-            <Link color="purple.500">Forgot password?</Link>
+            <Link as={ReactRouterLink} to={route.forgotPassword()} color="purple.500">
+              Forgot password?
+            </Link>
           </VStack>
           <SubmitButton isLoading={signInRequestState.loading} text="Sign in"></SubmitButton>
         </Form>

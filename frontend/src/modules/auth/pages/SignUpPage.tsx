@@ -68,7 +68,7 @@ export const SignUpPage = () => {
           </Form>
         </CardBody>
       </Card>
-      <EmailVerificationModal disclosure={emailVerificationModalDisclosure} />
+      <EmailVerificationModal disclosure={emailVerificationModalDisclosure} text="To complete the account verification process, please check your email inbox."/>
     </>
   );
 };

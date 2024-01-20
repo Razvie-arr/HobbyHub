@@ -13,7 +13,7 @@ import { MdOutlineMailOutline } from 'react-icons/md';
 
 import { WithDisclosure } from 'src/shared/design-system';
 
-export const EmailVerificationModal = ({ disclosure }: WithDisclosure) => (
+export const EmailVerificationModal = ({ disclosure, text }: WithDisclosure & { text: string }) => (
   <Modal isOpen={disclosure.isOpen} onClose={disclosure.onClose}>
     <ModalOverlay />
     <ModalContent>
@@ -22,7 +22,7 @@ export const EmailVerificationModal = ({ disclosure }: WithDisclosure) => (
         <VStack justifyContent="center">
           <Heading size="lg">Check your email</Heading>
           <Icon as={MdOutlineMailOutline} color="purple.500" boxSize="20" />
-          <Text align="center">To complete the account verification process, please check your email inbox.</Text>
+          <Text align="center">{text}</Text>
         </VStack>
       </ModalBody>
     </ModalContent>
