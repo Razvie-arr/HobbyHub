@@ -788,6 +788,12 @@ export type DeleteEventMutationVariables = Exact<{
 
 export type DeleteEventMutation = { __typename?: 'Mutation'; deleteEvent: string };
 
+export type CancelEventMutationVariables = Exact<{
+  eventId: Scalars['Int']['input'];
+}>;
+
+export type CancelEventMutation = { __typename?: 'Mutation'; cancelEvent: string };
+
 export type UploadEventImageMutationVariables = Exact<{
   eventImage?: InputMaybe<Scalars['Upload']['input']>;
 }>;
@@ -1202,6 +1208,7 @@ export type EventFragmentFragment = {
   image_filepath?: string | null;
   capacity: number;
   allow_waitlist: boolean;
+  cancelled: boolean;
   event_types: Array<{ __typename?: 'EventType'; id: number; name: string }>;
   author:
     | {
@@ -1401,6 +1408,7 @@ export const EventFragmentFragmentDoc = {
               ],
             },
           },
+          { kind: 'Field', name: { kind: 'Name', value: 'cancelled' } },
         ],
       },
     },
@@ -1620,6 +1628,7 @@ export const GroupFragmentFragmentDoc = {
               ],
             },
           },
+          { kind: 'Field', name: { kind: 'Name', value: 'cancelled' } },
         ],
       },
     },
@@ -2035,6 +2044,7 @@ export const SignInDocument = {
               ],
             },
           },
+          { kind: 'Field', name: { kind: 'Name', value: 'cancelled' } },
         ],
       },
     },
@@ -2366,6 +2376,39 @@ export const DeleteEventDocument = {
     },
   ],
 } as unknown as DocumentNode<DeleteEventMutation, DeleteEventMutationVariables>;
+export const CancelEventDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'mutation',
+      name: { kind: 'Name', value: 'CancelEvent' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'eventId' } },
+          type: { kind: 'NonNullType', type: { kind: 'NamedType', name: { kind: 'Name', value: 'Int' } } },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'cancelEvent' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'eventId' },
+                value: { kind: 'Variable', name: { kind: 'Name', value: 'eventId' } },
+              },
+            ],
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<CancelEventMutation, CancelEventMutationVariables>;
 export const UploadEventImageDocument = {
   kind: 'Document',
   definitions: [
@@ -2732,6 +2775,7 @@ export const GetLocationAwareEventsDocument = {
               ],
             },
           },
+          { kind: 'Field', name: { kind: 'Name', value: 'cancelled' } },
         ],
       },
     },
@@ -2908,6 +2952,7 @@ export const EventsDocument = {
               ],
             },
           },
+          { kind: 'Field', name: { kind: 'Name', value: 'cancelled' } },
         ],
       },
     },
@@ -3104,6 +3149,7 @@ export const TodaysNearbyEventsDocument = {
               ],
             },
           },
+          { kind: 'Field', name: { kind: 'Name', value: 'cancelled' } },
         ],
       },
     },
@@ -3310,6 +3356,7 @@ export const InterestingNearbyEventsDocument = {
               ],
             },
           },
+          { kind: 'Field', name: { kind: 'Name', value: 'cancelled' } },
         ],
       },
     },
@@ -3506,6 +3553,7 @@ export const NewlyCreatedNearbyEventsDocument = {
               ],
             },
           },
+          { kind: 'Field', name: { kind: 'Name', value: 'cancelled' } },
         ],
       },
     },
@@ -3672,6 +3720,7 @@ export const EventDocument = {
               ],
             },
           },
+          { kind: 'Field', name: { kind: 'Name', value: 'cancelled' } },
         ],
       },
     },
@@ -3901,6 +3950,7 @@ export const FilterEventsDocument = {
               ],
             },
           },
+          { kind: 'Field', name: { kind: 'Name', value: 'cancelled' } },
         ],
       },
     },
@@ -4093,6 +4143,7 @@ export const SimilarEventsDocument = {
               ],
             },
           },
+          { kind: 'Field', name: { kind: 'Name', value: 'cancelled' } },
         ],
       },
     },
@@ -4445,6 +4496,7 @@ export const GroupsDocument = {
               ],
             },
           },
+          { kind: 'Field', name: { kind: 'Name', value: 'cancelled' } },
         ],
       },
     },
@@ -4679,6 +4731,7 @@ export const GroupByIdDocument = {
               ],
             },
           },
+          { kind: 'Field', name: { kind: 'Name', value: 'cancelled' } },
         ],
       },
     },
@@ -4956,6 +5009,7 @@ export const FilterGroupsDocument = {
               ],
             },
           },
+          { kind: 'Field', name: { kind: 'Name', value: 'cancelled' } },
         ],
       },
     },
@@ -5260,6 +5314,7 @@ export const GetLocationAwareGroupsDocument = {
               ],
             },
           },
+          { kind: 'Field', name: { kind: 'Name', value: 'cancelled' } },
         ],
       },
     },
@@ -5520,6 +5575,7 @@ export const SimilarGroupsDocument = {
               ],
             },
           },
+          { kind: 'Field', name: { kind: 'Name', value: 'cancelled' } },
         ],
       },
     },
@@ -6197,6 +6253,7 @@ export const UserCreatedEventsDocument = {
               ],
             },
           },
+          { kind: 'Field', name: { kind: 'Name', value: 'cancelled' } },
         ],
       },
     },
@@ -6383,6 +6440,7 @@ export const UserAdminGroupsDocument = {
               ],
             },
           },
+          { kind: 'Field', name: { kind: 'Name', value: 'cancelled' } },
         ],
       },
     },
@@ -6662,6 +6720,7 @@ export const ReviewsByUserIdDocument = {
               ],
             },
           },
+          { kind: 'Field', name: { kind: 'Name', value: 'cancelled' } },
         ],
       },
     },
@@ -7020,6 +7079,7 @@ export const SearchEventsDocument = {
               ],
             },
           },
+          { kind: 'Field', name: { kind: 'Name', value: 'cancelled' } },
         ],
       },
     },
@@ -7206,6 +7266,7 @@ export const SearchGroupsDocument = {
               ],
             },
           },
+          { kind: 'Field', name: { kind: 'Name', value: 'cancelled' } },
         ],
       },
     },

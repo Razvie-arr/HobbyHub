@@ -25,7 +25,6 @@ export const EventDetails = ({ event }: WithEvent) => {
     .exhaustive();
 
   const isUserOrganizer = user && user.id === organizer.id;
-  const hasEventExpired = event.start_datetime.slice(0, 23) < getCurrentDateTime();
 
   return (
     <DataDetailsContainer>
@@ -34,8 +33,9 @@ export const EventDetails = ({ event }: WithEvent) => {
           <>
             {event.name}{' '}
             <EventStatusTag
-              hasExpired={hasEventExpired}
+              hasExpired={event.start_datetime.slice(0, 23) < getCurrentDateTime()}
               hasWaitlist={event.allow_waitlist}
+              isCancelled={event.cancelled}
               isFullCapacity={event.participants.length === event.capacity}
             />
           </>

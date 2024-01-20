@@ -19,13 +19,14 @@ import { getLocationFragmentData, WithEvent } from '../../../../shared/types';
 import { DELETE_EVENT } from '../../mutations';
 
 export const DeleteEventButton = ({ event, ...buttonProps }: WithEvent & ButtonProps) => {
+  const cancelButtonRef = useRef(null);
+
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const cancelRef = useRef(null);
+  const toast = useToast();
 
   const [deleteEventRequest, deleteEventRequestState] = useMutation(DELETE_EVENT);
 
   const navigate = useNavigate();
-  const toast = useToast();
 
   const handleDelete = async () => {
     await deleteEventRequest({
@@ -51,7 +52,7 @@ export const DeleteEventButton = ({ event, ...buttonProps }: WithEvent & ButtonP
         Delete
       </Button>
 
-      <AlertDialog isOpen={isOpen} leastDestructiveRef={cancelRef} onClose={onClose}>
+      <AlertDialog isOpen={isOpen} leastDestructiveRef={cancelButtonRef} onClose={onClose}>
         <AlertDialogOverlay>
           <AlertDialogContent>
             <AlertDialogHeader fontSize="lg" fontWeight="bold">
@@ -61,7 +62,7 @@ export const DeleteEventButton = ({ event, ...buttonProps }: WithEvent & ButtonP
             <AlertDialogBody>Are you sure? You can't undo this action afterwards.</AlertDialogBody>
 
             <AlertDialogFooter>
-              <Button colorScheme="purple" variant="outline" ref={cancelRef} onClick={onClose}>
+              <Button colorScheme="purple" variant="outline" ref={cancelButtonRef} onClick={onClose}>
                 Cancel
               </Button>
               <Button colorScheme="purple" onClick={handleDelete} ml={3}>

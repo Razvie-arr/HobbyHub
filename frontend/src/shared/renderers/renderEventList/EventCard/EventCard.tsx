@@ -27,6 +27,7 @@ export const EventCard = ({ user, event, ...other }: EventCardProps) => (
       <EventStatusTag
         hasExpired={event.start_datetime.slice(0, 23) < getCurrentDateTime()}
         hasWaitlist={event.allow_waitlist}
+        isCancelled={event.cancelled}
         isFullCapacity={event.participants.length === event.capacity}
         shadow="base"
         position="absolute"

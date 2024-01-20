@@ -9,6 +9,7 @@ import {
 } from '../../../../../shared/design-system';
 import { getLocationFragmentData, WithEvent } from '../../../../../shared/types';
 
+import { CancelEventButton } from './CancelEventButton';
 import { EventAuthor } from './EventAuthor';
 
 export const EventDetailsSideCard = ({ event }: WithEvent) => (
@@ -40,6 +41,8 @@ export const EventDetailsSideCard = ({ event }: WithEvent) => (
         content: <AddressInfo noIcon fontSize="md" location={getLocationFragmentData(event.location)} />,
       },
     ]}
-  />
+  >
+    {event.cancelled ? null : <CancelEventButton event={event} />}
+  </DataDetailsCard>
 );
 

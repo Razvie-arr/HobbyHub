@@ -50,6 +50,7 @@ export const EventFragment = gql(/* GraphQL */ `
       state
       text
     }
+    cancelled
   }
 `);
 

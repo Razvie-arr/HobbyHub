@@ -26,6 +26,7 @@ const documents = {
     types.EditEventDocument,
   '\n  mutation DeleteEvent($eventId: Int!, $locationId: Int!) {\n    deleteEvent(event_id: $eventId, location_id: $locationId) \n  }\n':
     types.DeleteEventDocument,
+  '\n  mutation CancelEvent($eventId: Int!) {\n    cancelEvent(eventId: $eventId)\n  }\n': types.CancelEventDocument,
   '\n  mutation UploadEventImage($eventImage: Upload) {\n    uploadEventImage(event_image: $eventImage)\n}\n':
     types.UploadEventImageDocument,
   '\n  mutation RequestEventRegistration($eventRegistration: RequestEventRegistrationInput!) {\n    requestEventRegistration(eventRegistration: $eventRegistration)\n  }\n':
@@ -94,7 +95,7 @@ const documents = {
     types.SearchEventsDocument,
   '\n  query SearchGroups($text: String!, $offset: Int, $limit: Int) {\n    searchGroups(text: $text, offset: $offset, limit: $limit) {\n      ...GroupFragment\n    }\n  }\n':
     types.SearchGroupsDocument,
-  '\n  fragment EventFragment on Event {\n    id\n    name\n    start_datetime\n    end_datetime\n    event_types {\n      id\n      name\n    }\n    author {\n      ... on User {\n        __typename\n        id\n        first_name\n        last_name\n        email\n      }\n      ... on Group {\n        __typename\n        id\n        name\n        admin {\n          id\n          first_name\n          last_name\n          email\n        }\n      }\n    }\n    location {\n      ...LocationFragment\n    }\n    author_id\n    group_id\n    summary\n    description\n    image_filepath\n    capacity\n    allow_waitlist\n    participants {\n      user {\n        id\n        first_name\n        last_name\n        email\n      }\n      state\n      text\n    }\n  }\n':
+  '\n  fragment EventFragment on Event {\n    id\n    name\n    start_datetime\n    end_datetime\n    event_types {\n      id\n      name\n    }\n    author {\n      ... on User {\n        __typename\n        id\n        first_name\n        last_name\n        email\n      }\n      ... on Group {\n        __typename\n        id\n        name\n        admin {\n          id\n          first_name\n          last_name\n          email\n        }\n      }\n    }\n    location {\n      ...LocationFragment\n    }\n    author_id\n    group_id\n    summary\n    description\n    image_filepath\n    capacity\n    allow_waitlist\n    participants {\n      user {\n        id\n        first_name\n        last_name\n        email\n      }\n      state\n      text\n    }\n    cancelled\n  }\n':
     types.EventFragmentFragmentDoc,
   '\n  fragment GroupFragment on Group {\n    id\n    name\n    admin {\n      id\n      first_name\n      last_name\n      email\n    }\n    event_types {\n      id\n      name\n    }\n    location {\n      ...LocationFragment\n    }\n    events {\n      ...EventFragment\n    }\n    members {\n      id\n      first_name\n      last_name\n      email\n    }\n    summary\n    description\n    image_filepath\n  }\n':
     types.GroupFragmentFragmentDoc,
@@ -162,6 +163,12 @@ export function gql(
 export function gql(
   source: '\n  mutation DeleteEvent($eventId: Int!, $locationId: Int!) {\n    deleteEvent(event_id: $eventId, location_id: $locationId) \n  }\n',
 ): (typeof documents)['\n  mutation DeleteEvent($eventId: Int!, $locationId: Int!) {\n    deleteEvent(event_id: $eventId, location_id: $locationId) \n  }\n'];
+/**
+ * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function gql(
+  source: '\n  mutation CancelEvent($eventId: Int!) {\n    cancelEvent(eventId: $eventId)\n  }\n',
+): (typeof documents)['\n  mutation CancelEvent($eventId: Int!) {\n    cancelEvent(eventId: $eventId)\n  }\n'];
 /**
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
@@ -370,8 +377,8 @@ export function gql(
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function gql(
-  source: '\n  fragment EventFragment on Event {\n    id\n    name\n    start_datetime\n    end_datetime\n    event_types {\n      id\n      name\n    }\n    author {\n      ... on User {\n        __typename\n        id\n        first_name\n        last_name\n        email\n      }\n      ... on Group {\n        __typename\n        id\n        name\n        admin {\n          id\n          first_name\n          last_name\n          email\n        }\n      }\n    }\n    location {\n      ...LocationFragment\n    }\n    author_id\n    group_id\n    summary\n    description\n    image_filepath\n    capacity\n    allow_waitlist\n    participants {\n      user {\n        id\n        first_name\n        last_name\n        email\n      }\n      state\n      text\n    }\n  }\n',
-): (typeof documents)['\n  fragment EventFragment on Event {\n    id\n    name\n    start_datetime\n    end_datetime\n    event_types {\n      id\n      name\n    }\n    author {\n      ... on User {\n        __typename\n        id\n        first_name\n        last_name\n        email\n      }\n      ... on Group {\n        __typename\n        id\n        name\n        admin {\n          id\n          first_name\n          last_name\n          email\n        }\n      }\n    }\n    location {\n      ...LocationFragment\n    }\n    author_id\n    group_id\n    summary\n    description\n    image_filepath\n    capacity\n    allow_waitlist\n    participants {\n      user {\n        id\n        first_name\n        last_name\n        email\n      }\n      state\n      text\n    }\n  }\n'];
+  source: '\n  fragment EventFragment on Event {\n    id\n    name\n    start_datetime\n    end_datetime\n    event_types {\n      id\n      name\n    }\n    author {\n      ... on User {\n        __typename\n        id\n        first_name\n        last_name\n        email\n      }\n      ... on Group {\n        __typename\n        id\n        name\n        admin {\n          id\n          first_name\n          last_name\n          email\n        }\n      }\n    }\n    location {\n      ...LocationFragment\n    }\n    author_id\n    group_id\n    summary\n    description\n    image_filepath\n    capacity\n    allow_waitlist\n    participants {\n      user {\n        id\n        first_name\n        last_name\n        email\n      }\n      state\n      text\n    }\n    cancelled\n  }\n',
+): (typeof documents)['\n  fragment EventFragment on Event {\n    id\n    name\n    start_datetime\n    end_datetime\n    event_types {\n      id\n      name\n    }\n    author {\n      ... on User {\n        __typename\n        id\n        first_name\n        last_name\n        email\n      }\n      ... on Group {\n        __typename\n        id\n        name\n        admin {\n          id\n          first_name\n          last_name\n          email\n        }\n      }\n    }\n    location {\n      ...LocationFragment\n    }\n    author_id\n    group_id\n    summary\n    description\n    image_filepath\n    capacity\n    allow_waitlist\n    participants {\n      user {\n        id\n        first_name\n        last_name\n        email\n      }\n      state\n      text\n    }\n    cancelled\n  }\n'];
 /**
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
