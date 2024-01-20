@@ -7,12 +7,12 @@ import {
   EventDateTime,
   EventTypeTag,
 } from '../../../../../shared/design-system';
-import { getLocationFragmentData, WithEvent } from '../../../../../shared/types';
+import { getLocationFragmentData, WithEvent, WithNullableAuthUser } from '../../../../../shared/types';
 
 import { CancelEventButton } from './CancelEventButton';
 import { EventAuthor } from './EventAuthor';
 
-export const EventDetailsSideCard = ({ event }: WithEvent) => (
+export const EventDetailsSideCard = ({ event, user }: WithEvent & WithNullableAuthUser) => (
   <DataDetailsCard
     title="Summary"
     description={event.summary}
@@ -42,7 +42,7 @@ export const EventDetailsSideCard = ({ event }: WithEvent) => (
       },
     ]}
   >
-    {event.cancelled ? null : <CancelEventButton event={event} />}
+    {user && user.id === event.author.id && !event.cancelled ? <CancelEventButton event={event} /> : null}
   </DataDetailsCard>
 );
 

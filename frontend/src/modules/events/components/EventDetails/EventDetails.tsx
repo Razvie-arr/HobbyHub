@@ -56,7 +56,7 @@ export const EventDetails = ({ event }: WithEvent) => {
       />
       <DataDetailsContent
         imageFilepath={event.image_filepath}
-        sideCard={<EventDetailsSideCard event={event} />}
+        sideCard={<EventDetailsSideCard event={event} user={user} />}
         tabs={<EventDetailsTabs event={event} user={user} />}
       />
     </DataDetailsContainer>
