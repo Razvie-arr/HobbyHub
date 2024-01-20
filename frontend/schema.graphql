@@ -151,7 +151,7 @@ type Message {
 type Mutation {
   _empty(nothing: String): String
   askForFeedback: [String!]!
-  blockUser(blocked_id: Int!, blocker_id: Int!): String!
+  blockUser(blocked_id: Int!, blocker_id: Int!): String
   cancelEvent(eventId: Int!): String!
   createEvent(event: EventInput!, location: LocationInputWithoutCoords!): Event!
   createGroup(group: GroupInput!, location: LocationInputWithoutCoords!): Group!
@@ -167,6 +167,7 @@ type Mutation {
   editLocation(location: LocationInputWithoutCoords!): Location
   editReadThread(read: Boolean!, threadId: Int!, userId: Int!): String!
   editUser(location: LocationInputWithoutCoords!, user: UserInput!): User!
+  massEmailToEventParticipants(emailBody: String!, emailSubject: String!, eventId: Int!): String!
   maxRatingAllParticipants(adminId: Int!, eventId: Int!): Boolean!
   onboardUser(location: LocationInputWithoutCoords!, user: UserInput!): AuthUser!
   requestEventRegistration(eventRegistration: RequestEventRegistrationInput!): String!
@@ -176,7 +177,7 @@ type Mutation {
   sendMessage(recipient: RecipientInput!, sender: SenderInput!, text: String!): String!
   signIn(email: String!, password: String!): AuthInfo!
   signUp(email: String!, first_name: String!, last_name: String!, password: String!): AuthInfo!
-  unblockUser(blocked_id: Int!, blocker_id: Int!): String!
+  unblockUser(blocked_id: Int!, blocker_id: Int!): String
   uploadEventImage(event_image: Upload): String
   uploadGroupImage(group_image: Upload): String
   verify(token: String!): String!
@@ -312,8 +313,8 @@ scalar Upload
 
 type User {
   average_rating: Float!
-  blockedBy: [User!]!
-  blocking: [User!]!
+  blockedBy: [User!]
+  blocking: [User!]
   description: String
   email: String!
   event_types: [EventType!]!

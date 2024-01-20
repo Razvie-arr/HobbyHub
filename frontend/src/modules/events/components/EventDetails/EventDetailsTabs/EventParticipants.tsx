@@ -19,10 +19,9 @@ export const EventParticipants = ({ event, user }: WithEvent & WithNullableAuthU
 
   return (
     <>
-      {/** TODO: adjust for new endpoint */}
-      {user && event.participants[0] ? (
+      {isUserOrganizer && ReadonlyArray.isNonEmptyArray(event.participants) ? (
         <Flex pb={4} width={{ base: '100%', xl: '30%' }}>
-          <SendMassMessageModal user={user} />
+          <SendMassMessageModal event={event} />
         </Flex>
       ) : null}
       <Flex justifyContent="space-between" flexWrap="wrap">

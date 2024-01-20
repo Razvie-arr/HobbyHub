@@ -1,8 +1,11 @@
+import { useMutation } from '@apollo/client';
 import { useDisclosure, useToast } from '@chakra-ui/react';
 import { FaMessage } from 'react-icons/fa6';
 
 import { ModalForm, TextareaField, zod, zodResolver } from 'src/shared/forms';
-import { WithAuthUser } from 'src/shared/types';
+import { WithEvent } from 'src/shared/types';
+
+import { SEND_MASS_MESSAGE } from '../mutations';
 
 const schema = zod.object({
   message: zod.string().min(1, { message: 'Message cannot be empty' }),
@@ -14,16 +17,13 @@ const initialValues: FormValues = {
   message: '',
 };
 
-export const SendMassMessageModal = ({ user }: WithAuthUser) => {
+export const SendMassMessageModal = ({ event }: WithEvent) => {
   const disclosure = useDisclosure();
   const toast = useToast();
 
-  const sendMessage = async () => Promise.resolve();
-
-  const sendMessageRequestState = {
-    loading: false,
-    error: null as { message: string } | null,
-  };
+  const [sendMassMessage, sendMassMessageRequestState] = useMutation(SEND_MASS_MESSAGE, {
+    onCompleted: disclosure.onClose,
+  });
 
   const modalButtonProps = {
     rounded: 'full',
@@ -34,13 +34,15 @@ export const SendMassMessageModal = ({ user }: WithAuthUser) => {
   return (
     <ModalForm
       disclosure={disclosure}
-      error={sendMessageRequestState.error?.message}
+      error={sendMassMessageRequestState.error?.message}
       modalButtonVariant="outline"
       formProps={{
         defaultValues: initialValues,
         noValidate: true,
-        onSubmit: async () => {
-          await sendMessage();
+        onSubmit: async (formValues) => {
+          await sendMassMessage({
+            variables: { eventId: event.id, emailBody: formValues.message, emailSubject: 'Message from HobbyHub' },
+          });
           toast({
             variant: 'left-accent',
             status: 'success',
@@ -55,7 +57,7 @@ export const SendMassMessageModal = ({ user }: WithAuthUser) => {
       modalButtonText="Message all participants"
       modalTitle="Send a message to all participants"
       submitButtonProps={{
-        isLoading: sendMessageRequestState.loading,
+        isLoading: sendMassMessageRequestState.loading,
         text: 'Message',
       }}
       modalButtonProps={modalButtonProps}
@@ -64,7 +66,7 @@ export const SendMassMessageModal = ({ user }: WithAuthUser) => {
         autoFocus
         name="message"
         placeholder="Write a message..."
-        isDisabled={sendMessageRequestState.loading}
+        isDisabled={sendMassMessageRequestState.loading}
       />
     </ModalForm>
   );

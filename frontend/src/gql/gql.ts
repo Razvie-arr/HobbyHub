@@ -75,6 +75,8 @@ const documents = {
     types.EditReadThreadDocument,
   '\n  mutation SendMessage($sender: SenderInput!, $recipient: RecipientInput!, $text: String!) {\n    sendMessage(sender: $sender, recipient: $recipient, text: $text)\n  }\n':
     types.SendMessageDocument,
+  '\n  mutation MassEmailToEventParticipants($eventId: Int!, $emailSubject: String!, $emailBody: String!) {\n    massEmailToEventParticipants(eventId: $eventId, emailSubject: $emailSubject, emailBody: $emailBody)\n  }\n':
+    types.MassEmailToEventParticipantsDocument,
   '\n  query Threads($userId: Int!) {\n    threads(userId: $userId) {\n      ...ThreadFragment\n    }\n  }\n':
     types.ThreadsDocument,
   '\n  query MessagesByThreadId($threadId: Int!) {\n    messagesByThreadId(threadId: $threadId) {\n      ...MessageFragment\n    }\n  }\n':
@@ -319,6 +321,12 @@ export function gql(
 export function gql(
   source: '\n  mutation SendMessage($sender: SenderInput!, $recipient: RecipientInput!, $text: String!) {\n    sendMessage(sender: $sender, recipient: $recipient, text: $text)\n  }\n',
 ): (typeof documents)['\n  mutation SendMessage($sender: SenderInput!, $recipient: RecipientInput!, $text: String!) {\n    sendMessage(sender: $sender, recipient: $recipient, text: $text)\n  }\n'];
+/**
+ * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function gql(
+  source: '\n  mutation MassEmailToEventParticipants($eventId: Int!, $emailSubject: String!, $emailBody: String!) {\n    massEmailToEventParticipants(eventId: $eventId, emailSubject: $emailSubject, emailBody: $emailBody)\n  }\n',
+): (typeof documents)['\n  mutation MassEmailToEventParticipants($eventId: Int!, $emailSubject: String!, $emailBody: String!) {\n    massEmailToEventParticipants(eventId: $eventId, emailSubject: $emailSubject, emailBody: $emailBody)\n  }\n'];
 /**
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
