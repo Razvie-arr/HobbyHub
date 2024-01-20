@@ -1,6 +1,6 @@
 import { Box, Tab, TabList, TabPanels, Tabs, Text } from '@chakra-ui/react';
 
-import { WithUserProfile } from '../../types';
+import { WithUserProfile } from '../../../../shared/types';
 
 import { EventsTabPanel } from './EventsTabPanel';
 import { GroupsTabPanel } from './GroupsTabPanel';

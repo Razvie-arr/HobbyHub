@@ -5,10 +5,9 @@ import { Button, Center, Heading, Stack, TabPanel } from '@chakra-ui/react';
 import { NoData } from 'src/shared/design-system';
 import { QueryResult } from 'src/shared/layout';
 
-import { getEventFragmentData } from '../../../../shared/types';
+import { getEventFragmentData, WithUserProfile } from '../../../../shared/types';
 import { createShowMoreHandler } from '../../../../utils/dataFetch';
 import { USER_RECEIVED_REVIEWS } from '../../queries';
-import { WithUserProfile } from '../../types';
 import { ProfileReview } from '../ProfileReview';
 
 export const ReviewsTabPanel = ({ userProfile }: WithUserProfile) => {

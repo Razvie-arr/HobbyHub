@@ -6,9 +6,9 @@ import { NoData } from 'src/shared/design-system';
 import { QueryResult } from 'src/shared/layout';
 import { renderGroupList } from 'src/shared/renderers';
 
+import { WithUserProfile } from '../../../../shared/types';
 import { createShowMoreHandler } from '../../../../utils/dataFetch';
 import { USER_CREATED_GROUPS } from '../../queries';
-import { WithUserProfile } from '../../types';
 
 export const GroupsTabPanel = ({ userProfile }: WithUserProfile) => {
   const [noMoreResults, setNoMoreResults] = useState(false);

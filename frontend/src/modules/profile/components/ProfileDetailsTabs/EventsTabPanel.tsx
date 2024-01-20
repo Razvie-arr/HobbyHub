@@ -6,10 +6,10 @@ import { NoData } from 'src/shared/design-system';
 import { QueryResult } from 'src/shared/layout';
 import { renderEventList } from 'src/shared/renderers';
 
+import { WithUserProfile } from '../../../../shared/types';
 import { createShowMoreHandler } from '../../../../utils/dataFetch';
 import { useAuth } from '../../../auth';
 import { USER_CREATED_EVENTS } from '../../queries';
-import { WithUserProfile } from '../../types';
 
 export const EventsTabPanel = ({ userProfile }: WithUserProfile) => {
   const [noMoreResults, setNoMoreResults] = useState(false);
