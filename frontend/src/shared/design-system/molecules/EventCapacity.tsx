@@ -11,15 +11,13 @@ interface EventParticipantsProps {
   participants: EventData['participants'];
 }
 
-export const EventParticipants = ({ noIcon, fontSize = 'sm', capacity, participants }: EventParticipantsProps) => {
+export const EventCapacity = ({ noIcon, fontSize = 'sm', capacity, participants }: EventParticipantsProps) => {
   const acceptedParticipants = participants.filter(({ state }) => state === ParticipantState.Accepted);
   return (
     <Stack direction="row">
       {noIcon ? null : <Icon as={FaPeopleGroup} color="purple.500" />}
       <Text fontWeight="medium" fontSize={fontSize}>
-        {`${acceptedParticipants.length} participant${acceptedParticipants.length === 1 ? '' : 's'} / ${
-          capacity as number
-        }`}
+        {`${acceptedParticipants.length} participant${acceptedParticipants.length === 1 ? '' : 's'} / ${capacity}`}
       </Text>
     </Stack>
   );

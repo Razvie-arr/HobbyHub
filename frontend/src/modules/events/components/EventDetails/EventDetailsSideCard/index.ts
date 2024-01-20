@@ -1,0 +1,2 @@
+export { EventDetailsSideCard } from './EventDetailsSideCard';
+

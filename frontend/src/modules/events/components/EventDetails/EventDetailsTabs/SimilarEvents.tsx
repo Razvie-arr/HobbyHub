@@ -1,9 +1,9 @@
 import { useQuery } from '@apollo/client';
 
-import { QueryResult } from '../../../../shared/layout';
-import { renderEventList } from '../../../../shared/renderers/renderEventList';
-import { getLocationFragmentData, WithEvent, WithNullableAuthUser } from '../../../../shared/types';
-import { SIMILAR_EVENTS } from '../../queries';
+import { QueryResult } from '../../../../../shared/layout';
+import { renderEventList } from '../../../../../shared/renderers/renderEventList';
+import { getLocationFragmentData, WithEvent, WithNullableAuthUser } from '../../../../../shared/types';
+import { SIMILAR_EVENTS } from '../../../queries';
 
 export const SimilarEvents = ({ user, event }: WithNullableAuthUser & WithEvent) => (
   <QueryResult

@@ -26,17 +26,19 @@ export interface WithAdditionalTabs {
   additionalTabs?: Array<{ title: ReactNode; content: ReactNode }>;
 }
 
-export interface WithTabsProps {
-  tabsProps: Array<{ title: ReactNode; content: ReactNode }>;
+export interface WithTabs {
+  tabs: Array<{ title: ReactNode; content: ReactNode }>;
+}
+
+export interface DateDetailsCardProps {
+  title: string;
+  description: string;
+  items: Array<{ icon: IconType; content: ReactNode }>;
+  mapData: MapData;
 }
 
 export interface WithSideCardProps {
-  sideCardProps: {
-    title: string;
-    description: string;
-    items: Array<{ icon: IconType; content: ReactNode }>;
-    mapData: MapData;
-  };
+  sideCardProps: DateDetailsCardProps;
 }
 
 export interface WithDeleteButton {

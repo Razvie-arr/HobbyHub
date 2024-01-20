@@ -4,8 +4,8 @@ import { match } from 'ts-pattern';
 import {
   AddressInfo,
   DataCard,
+  EventCapacity,
   EventDateTime,
-  EventParticipants,
   EventStatusTag,
   EventTypeTag,
 } from 'src/shared/design-system';
@@ -54,7 +54,7 @@ export const EventCard = ({ user, event, ...other }: EventCardProps) => (
     <Stack spacing="2">
       <EventDateTime startDateTime={event.start_datetime} endDateTime={event.end_datetime} />
       <AddressInfo location={getLocationFragmentData(event.location)} />
-      <EventParticipants capacity={event.capacity} participants={event.participants} />
+      <EventCapacity capacity={event.capacity} participants={event.participants} />
     </Stack>
   </DataCard>
 );

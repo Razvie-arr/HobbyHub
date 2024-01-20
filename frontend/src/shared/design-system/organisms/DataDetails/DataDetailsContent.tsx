@@ -3,15 +3,13 @@ import { Image, Stack, VStack } from '@chakra-ui/react';
 import { DEFAULT_IMAGE_PATH } from '../../../constants';
 import { ContentContainer } from '../../../layout';
 
-import { DataDetailsCard } from './DataDetailsCard';
-import { DataDetailsTabs } from './DataDetailsTabs';
-import { WithSideCardProps, WithTabsProps } from './types';
-
-interface DataDetailsContentProps extends WithTabsProps, WithSideCardProps {
+interface DataDetailsContentProps {
   imageFilepath?: string | null;
+  tabs: JSX.Element;
+  sideCard: JSX.Element;
 }
 
-export const DataDetailsContent = ({ imageFilepath, tabsProps, sideCardProps }: DataDetailsContentProps) => (
+export const DataDetailsContent = ({ imageFilepath, tabs, sideCard }: DataDetailsContentProps) => (
   <ContentContainer>
     <Stack spacing={4} justifyContent="space-between" direction={{ base: 'column-reverse', md: 'row' }}>
       <VStack flexBasis="65%">
@@ -22,9 +20,9 @@ export const DataDetailsContent = ({ imageFilepath, tabsProps, sideCardProps }: 
           alt="Event Image"
           src={imageFilepath ?? DEFAULT_IMAGE_PATH}
         />
-        <DataDetailsTabs tabsProps={tabsProps} />
+        {tabs}
       </VStack>
-      <DataDetailsCard sideCardProps={sideCardProps} />
+      {sideCard}
     </Stack>
   </ContentContainer>
 );

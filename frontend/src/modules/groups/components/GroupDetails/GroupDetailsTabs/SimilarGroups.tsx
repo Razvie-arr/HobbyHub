@@ -1,9 +1,9 @@
 import { useQuery } from '@apollo/client';
 
-import { QueryResult } from '../../../../shared/layout';
-import { renderGroupList } from '../../../../shared/renderers/renderGroupList';
-import { getLocationFragmentData, WithGroup } from '../../../../shared/types';
-import { SIMILAR_GROUPS } from '../../queries';
+import { QueryResult } from '../../../../../shared/layout';
+import { renderGroupList } from '../../../../../shared/renderers/renderGroupList';
+import { getLocationFragmentData, WithGroup } from '../../../../../shared/types';
+import { SIMILAR_GROUPS } from '../../../queries';
 
 export const SimilarGroups = ({ group }: WithGroup) => (
   <QueryResult

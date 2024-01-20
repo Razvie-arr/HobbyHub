@@ -1,0 +1,2 @@
+export { EventDetailsTabs } from './EventDetailsTabs';
+

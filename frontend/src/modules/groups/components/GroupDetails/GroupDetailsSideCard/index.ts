@@ -1,0 +1,2 @@
+export { GroupDetailsSideCard } from './GroupDetailsSideCard';
+

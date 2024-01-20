@@ -1,0 +1,2 @@
+export { GroupDetailsTabs } from './GroupDetailsTabs';
+

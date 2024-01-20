@@ -1,11 +1,18 @@
+import { PropsWithChildren } from 'react';
 import { Card, Divider, Heading, Stack, Text, VStack } from '@chakra-ui/react';
 
 import { DataRowItem } from '../../molecules';
 import { DataMap } from '../DataMap';
 
-import { WithSideCardProps } from './types';
+import { DateDetailsCardProps } from './types';
 
-export const DataDetailsCard = ({ sideCardProps }: WithSideCardProps) => (
+export const DataDetailsCard = ({
+  children,
+  description,
+  items,
+  mapData,
+  title,
+}: PropsWithChildren<DateDetailsCardProps>) => (
   <Card
     p={4}
     boxShadow="lg"
@@ -16,16 +23,17 @@ export const DataDetailsCard = ({ sideCardProps }: WithSideCardProps) => (
   >
     <VStack alignItems="start" spacing={4} justifyContent="center">
       <Stack>
-        <Heading fontSize="lg">{sideCardProps.title}</Heading>
-        <Text>{sideCardProps.description}</Text>
+        <Heading fontSize="lg">{title}</Heading>
+        <Text>{description}</Text>
       </Stack>
       <Divider />
-      {sideCardProps.items.map(({ icon, content }, index) => (
+      {items.map(({ icon, content }, index) => (
         <DataRowItem key={index} icon={icon}>
           {content}
         </DataRowItem>
       ))}
-      <DataMap type="single" data={sideCardProps.mapData} height="22.7vh" />
+      <DataMap type="single" data={mapData} height="22.7vh" />
+      {children}
     </VStack>
   </Card>
 );

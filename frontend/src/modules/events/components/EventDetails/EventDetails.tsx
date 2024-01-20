@@ -1,31 +1,20 @@
-import { Box, Flex, Text } from '@chakra-ui/react';
-import { Option, pipe, ReadonlyArray } from 'effect';
-import { MdAccountCircle, MdCalendarToday, MdGroups, MdInfo, MdLocationOn } from 'react-icons/md';
 import { match } from 'ts-pattern';
 
-import { ParticipantState } from '../../../../gql/graphql';
-import { route } from '../../../../route';
 import {
-  AddressInfo,
   DataDetailsContainer,
   DataDetailsContent,
   DataDetailsHeader,
-  EventDateTime,
-  EventParticipants,
   EventStatusTag,
-  EventTypeTag,
-  NoData,
 } from '../../../../shared/design-system';
-import { RouterLink } from '../../../../shared/navigation';
-import { getLocationFragmentData, WithEvent } from '../../../../shared/types';
+import { WithEvent } from '../../../../shared/types';
 import { getCurrentDateTime } from '../../../../utils/form';
 import { useAuth } from '../../../auth';
 import { SendMessageModal } from '../../../messages';
 import { JoinEventModal } from '../JoinEventModal';
 import { DeleteEventButton, EditEventButton } from '../shared';
 
-import { EventParticipantItem } from './EventParticipantItem';
-import { SimilarEvents } from './SimilarEvents';
+import { EventDetailsSideCard } from './EventDetailsSideCard';
+import { EventDetailsTabs } from './EventDetailsTabs';
 
 export const EventDetails = ({ event }: WithEvent) => {
   const { user } = useAuth();
@@ -67,101 +56,8 @@ export const EventDetails = ({ event }: WithEvent) => {
       />
       <DataDetailsContent
         imageFilepath={event.image_filepath}
-        sideCardProps={{
-          title: 'Summary',
-          description: event.summary,
-          mapData: event,
-          items: [
-            {
-              icon: MdAccountCircle,
-              content: (
-                <Text>
-                  Hosted by:{' '}
-                  {match(event.author)
-                    .with({ __typename: 'User' }, (author) => (
-                      <RouterLink to={route.profile(author.id)}>
-                        <Text as="b">
-                          {author.first_name} {author.last_name}
-                        </Text>
-                      </RouterLink>
-                    ))
-                    .with({ __typename: 'Group' }, (group) => (
-                      <RouterLink to={route.groupDetails(group.id)}>
-                        <Text as="b">{group.name}</Text>
-                      </RouterLink>
-                    ))
-                    .exhaustive()}
-                </Text>
-              ),
-            },
-            {
-              icon: MdInfo,
-              content: event.event_types.map((eventType) => <EventTypeTag key={eventType.id} eventType={eventType} />),
-            },
-            {
-              icon: MdGroups,
-              content: (
-                <EventParticipants noIcon fontSize="md" capacity={event.capacity} participants={event.participants} />
-              ),
-            },
-            {
-              icon: MdCalendarToday,
-              content: (
-                <EventDateTime
-                  noIcon
-                  fontSize="md"
-                  startDateTime={event.start_datetime}
-                  endDateTime={event.end_datetime}
-                />
-              ),
-            },
-            {
-              icon: MdLocationOn,
-              content: <AddressInfo noIcon fontSize="md" location={getLocationFragmentData(event.location)} />,
-            },
-          ],
-        }}
-        tabsProps={[
-          {
-            title: 'Description',
-            content: (
-              <Box p={4} boxShadow="sm" bgColor="white">
-                <Text whiteSpace="pre-line">{event.description}</Text>
-              </Box>
-            ),
-          },
-          {
-            title: 'Participants',
-            content: (
-              <Flex justifyContent="space-between" flexWrap="wrap">
-                {pipe(
-                  Option.fromNullable(event.participants),
-                  Option.filter(ReadonlyArray.isNonEmptyArray),
-                  Option.map(
-                    ReadonlyArray.filterMap((participant) =>
-                      isUserOrganizer || participant.state === ParticipantState.Accepted
-                        ? Option.some(
-                            <EventParticipantItem
-                              key={participant.user.id}
-                              user={user}
-                              event={event}
-                              participant={participant}
-                            />,
-                          )
-                        : Option.none(),
-                    ),
-                  ),
-                  Option.filter(ReadonlyArray.isNonEmptyArray),
-                  Option.getOrElse(() => <NoData description={`There are no participants for ${event.name} yet`} />),
-                )}
-              </Flex>
-            ),
-          },
-          {
-            title: 'Similar events',
-            content: <SimilarEvents event={event} user={user} />,
-          },
-        ]}
+        sideCard={<EventDetailsSideCard event={event} />}
+        tabs={<EventDetailsTabs event={event} user={user} />}
       />
     </DataDetailsContainer>
   );
