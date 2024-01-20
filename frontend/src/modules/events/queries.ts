@@ -1,25 +1,5 @@
 import { gql } from '../../gql';
 
-export const LOCATION_AWARE_EVENTS = gql(/* GraphQL */ `
-  query GetLocationAwareEvents($userId: Int!, $longitude: Float!, $latitude: Float!, $offset: Int, $limit: Int) {
-    todaysNearbyEvents(longitude: $longitude, latitude: $latitude, offset: $offset, limit: $limit) {
-      ...EventFragment
-    }
-    interestingNearbyEvents(
-      longitude: $longitude
-      latitude: $latitude
-      userId: $userId
-      offset: $offset
-      limit: $limit
-    ) {
-      ...EventFragment
-    }
-    newlyCreatedNearbyEvents(longitude: $longitude, latitude: $latitude, offset: $offset, limit: $limit) {
-      ...EventFragment
-    }
-  }
-`);
-
 export const EVENTS = gql(`
   query Events($offset: Int, $limit: Int) {
     events(offset: $offset, limit: $limit) {
@@ -61,16 +41,16 @@ export const EVENT = gql(`
 `);
 
 export const FILTERED_EVENTS = gql(`
-  query FilterEvents($offset: Int, $limit: Int, $eventTypeIds: [Int!], $startDatetime: String, $endDatetime: String, $filterLocation: FilterLocationInput, $sort: SortType) {
-    filterEvents(offset: $offset, limit: $limit, eventTypeIds: $eventTypeIds, start_datetime: $startDatetime, end_datetime: $endDatetime, filterLocation: $filterLocation, sort: $sort) {
+  query FilterEvents($userId: Int, $offset: Int, $limit: Int, $eventTypeIds: [Int!], $startDatetime: String, $endDatetime: String, $filterLocation: FilterLocationInput, $sort: SortType) {
+    filterEvents(user_id: $userId, offset: $offset, limit: $limit, eventTypeIds: $eventTypeIds, start_datetime: $startDatetime, end_datetime: $endDatetime, filterLocation: $filterLocation, sort: $sort) {
       ...EventFragment
     }
   }
 `);
 
 export const SIMILAR_EVENTS = gql(`
-  query SimilarEvents($eventId: Int!, $city: String!, $eventTypeIds: [Int!]!) {
-    similarEvents(eventId: $eventId, city: $city, eventTypeIds: $eventTypeIds) {
+  query SimilarEvents($userId: Int, $eventId: Int!, $city: String!, $eventTypeIds: [Int!]!) {
+    similarEvents(user_id: $userId, eventId: $eventId, city: $city, eventTypeIds: $eventTypeIds) {
       ...EventFragment
     }
   }

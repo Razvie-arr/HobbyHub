@@ -109,29 +109,32 @@ export const eventsByIdsResolver: ContextualResolver<Array<Event>, QueryEventsBy
 
 export const newlyCreatedNearbyEventsResolver = async (
   _: unknown,
-  { longitude, latitude, offset, limit }: QueryNewlyCreatedNearbyEventsArgs,
+  { longitude, latitude, offset, limit, user_id }: QueryNewlyCreatedNearbyEventsArgs,
   { dataSources }: CustomContext,
 ): Promise<Array<Event>> => {
   const distance = dataSources.sql.db.query.raw(HAVERSINE_FORMULA, [latitude, longitude, latitude]);
-  return dataSources.sql.events.getNewlyCreatedNearbyEvents(distance, offset, limit);
+  const blockerIds = user_id ? await dataSources.sql.users.getBlockersIds(user_id) : null;
+  return dataSources.sql.events.getNewlyCreatedNearbyEvents(distance, offset, limit, blockerIds);
 };
 
 export const todaysNearbyEventsResolver = async (
   _: unknown,
-  { longitude, latitude, offset, limit }: QueryTodaysNearbyEventsArgs,
+  { longitude, latitude, offset, limit, user_id }: QueryTodaysNearbyEventsArgs,
   { dataSources }: CustomContext,
 ): Promise<Array<Event>> => {
   const distance = dataSources.sql.db.query.raw(HAVERSINE_FORMULA, [latitude, longitude, latitude]);
   const todaysDateString = new Date().toISOString().split('T')[0];
-  return dataSources.sql.events.getTodaysNearbyEvents(distance, todaysDateString, offset, limit);
+  const blockerIds = user_id ? await dataSources.sql.users.getBlockersIds(user_id) : null;
+  return dataSources.sql.events.getTodaysNearbyEvents(distance, todaysDateString, offset, limit, blockerIds);
 };
 
 export const weeklyNearbyEventsResolver = async (
   _: unknown,
-  { longitude, latitude, offset, limit }: QueryTodaysNearbyEventsArgs,
+  { longitude, latitude, offset, limit, user_id }: QueryTodaysNearbyEventsArgs,
   { dataSources }: CustomContext,
 ): Promise<Array<Event>> => {
   const distance = dataSources.sql.db.query.raw(HAVERSINE_FORMULA, [latitude, longitude, latitude]);
+  const blockerIds = user_id ? await dataSources.sql.users.getBlockersIds(user_id) : null;
 
   const todaysDate = new Date();
   const nextWeekDate = new Date();
@@ -140,7 +143,14 @@ export const weeklyNearbyEventsResolver = async (
   const todaysDateString = todaysDate.toISOString().split('T')[0];
   const nextWeekDateString = nextWeekDate.toISOString().split('T')[0];
 
-  return dataSources.sql.events.getWeeklyNearbyEvents(distance, todaysDateString, nextWeekDateString, offset, limit);
+  return dataSources.sql.events.getWeeklyNearbyEvents(
+    distance,
+    todaysDateString,
+    nextWeekDateString,
+    offset,
+    limit,
+    blockerIds,
+  );
 };
 
 export const interestingNearbyEventsResolver = async (
@@ -149,16 +159,18 @@ export const interestingNearbyEventsResolver = async (
   { dataSources }: CustomContext,
 ): Promise<Array<Event>> => {
   const distance = dataSources.sql.db.query.raw(HAVERSINE_FORMULA, [latitude, longitude, latitude]);
-  return dataSources.sql.events.getInterestingNearbyEvents(distance, userId, offset, limit);
+  const blockerIds = await dataSources.sql.users.getBlockersIds(userId);
+  return dataSources.sql.events.getInterestingNearbyEvents(distance, userId, blockerIds, offset, limit);
 };
 
 export const similarEventsResolver = async (
   _: unknown,
-  { eventId, city, eventTypeIds, offset, limit }: QuerySimilarEventsArgs,
+  { eventId, city, eventTypeIds, offset, limit, user_id }: QuerySimilarEventsArgs,
   { dataSources }: CustomContext,
 ): Promise<Array<Event>> => {
   offset = offset ?? 0;
   limit = limit ?? DEFAULT_LIMIT;
+  const blockerIds = user_id ? await dataSources.sql.users.getBlockersIds(user_id) : null;
 
   const similarEventsWithinSameCity: Array<Event> = await dataSources.sql.events.getEventsWithSameTypeInCity(
     eventId,
@@ -166,6 +178,7 @@ export const similarEventsResolver = async (
     city,
     offset,
     limit,
+    blockerIds,
   );
 
   const similarEventsCount = similarEventsWithinSameCity.length;
@@ -177,6 +190,7 @@ export const similarEventsResolver = async (
       city,
       0,
       limit - similarEventsCount,
+      blockerIds,
     );
     return [...similarEventsWithinSameCity, ...similarEventsOutsideCity];
   }
@@ -316,11 +330,12 @@ export const deleteEventResolver = async (
 
 export const filterEventResolver = async (
   _: unknown,
-  { eventTypeIds, start_datetime, end_datetime, filterLocation, offset, limit, sort }: QueryFilterEventsArgs,
+  { eventTypeIds, start_datetime, end_datetime, filterLocation, offset, limit, sort, user_id }: QueryFilterEventsArgs,
   { dataSources }: CustomContext,
 ): Promise<Array<Event>> => {
   offset = offset ?? 0;
   limit = limit ?? DEFAULT_LIMIT;
+  const blockerIds = user_id ? await dataSources.sql.users.getBlockersIds(user_id) : null;
   const events = await dataSources.sql.events.getFilteredEvents(
     offset,
     limit,
@@ -329,7 +344,9 @@ export const filterEventResolver = async (
     end_datetime,
     filterLocation,
     sort ? sort.toString() : null,
+    blockerIds,
   );
+
   return events[0];
 };
 
@@ -413,7 +430,7 @@ export const resolveEventRegistrationResolver = async (
       .then(async () => {
         try {
           await sendEmail(resolve.user_email, 'Event registration confirmed', {
-            text: `Your registration for event ${resolve.event_id} has been confirmed!`,
+            text: `Your registration for event ${resolve.event_name} has been confirmed!`,
             html: `Your registration for event <a href="https://frontend-team01-vse.handson.pro/event/${resolve.event_id}">${resolve.event_name}</a> has been confirmed!`,
           });
         } catch (error) {
@@ -432,7 +449,7 @@ export const resolveEventRegistrationResolver = async (
       .then(async () => {
         try {
           await sendEmail(resolve.user_email, 'Event registration declined', {
-            text: `Unfortunately, your registration for event ${resolve.event_id} has been declined.`,
+            text: `Unfortunately, your registration for event ${resolve.event_name} has been declined.`,
             html: `Unfortunately, your registration for event <a href="https://frontend-team01-vse.handson.pro/event/${resolve.event_id}">${resolve.event_name}</a> has been declined.`,
           });
         } catch (error) {

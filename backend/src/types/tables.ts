@@ -10,6 +10,7 @@ export interface Tables {
   UserGroup: Group;
   Review: Review;
 
+  Blocked_User: { blocker_id: number; blocked_id: number };
   Event_EventType: { event_id: number; event_type_id: number };
   Event_User: { event_id: number; user_id: number };
   Event_UserGroup: { event_id: number; group_id: number };
@@ -19,4 +20,3 @@ export interface Tables {
   User_Thread: { user_id: number; thread_id: number; thread_read: boolean };
   User_UserGroup: { user_id: number; group_id: number };
 }
-

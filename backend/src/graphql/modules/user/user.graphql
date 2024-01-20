@@ -17,6 +17,9 @@ extend type Mutation {
   onboardUser(user: UserInput!, location: LocationInputWithoutCoords!): AuthUser!
 
   editAuthUser(user: AuthUserInput!, location: LocationInputWithoutCoords!): AuthUser!
+
+  blockUser(blocker_id: Int!, blocked_id: Int!): String!
+  unblockUser(blocker_id: Int!, blocked_id: Int!): String!
 }
 
 type User { # Public info about user
@@ -33,6 +36,8 @@ type User { # Public info about user
   location: Location
   events: [Event!]!
   groups: [Group!]!
+  blocking: [User!]!
+  blockedBy: [User!]!
 }
 
 type AuthUser { # Private info about user (e.g. with email address, ...)

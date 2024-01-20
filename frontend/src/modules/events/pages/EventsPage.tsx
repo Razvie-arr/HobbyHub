@@ -64,6 +64,7 @@ export const EventsPage = ({ location }: EventsPageProps) => {
 
     await getFilteredEvents({
       variables: {
+        userId: user?.id,
         filterLocation: getFilterLocationInput(values.address, values.distance),
         startDatetime: startDate?.toISOString(),
         endDatetime: endDate?.toISOString(),

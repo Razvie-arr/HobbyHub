@@ -1,5 +1,6 @@
 import { GraphQLError } from 'graphql/error';
 
+import { sendEmail } from '../../../libs/nodeMailer';
 import {
   AuthUser,
   ContextualNullableResolver,
@@ -10,8 +11,10 @@ import {
   EventType,
   Group,
   Location,
+  MutationBlockUserArgs,
   MutationEditUserArgs,
   MutationOnboardUserArgs,
+  MutationUnblockUserArgs,
   QueryUserByIdArgs,
   QueryUsersArgs,
   QueryUsersByIdsArgs,
@@ -59,6 +62,18 @@ export const userGroupsResolver: ContextualResolverWithParent<Array<Group>, User
   _,
   { dataSources },
 ) => await dataSources.sql.users.getUserGroups(parent.id);
+
+export const userBlockingResolver: ContextualResolverWithParent<Array<User>, User> = async (
+  parent,
+  _,
+  { dataSources },
+) => await dataSources.sql.users.getUserBlocking(parent.id);
+
+export const userBlockedByResolver: ContextualResolverWithParent<Array<User>, User> = async (
+  parent,
+  _,
+  { dataSources },
+) => await dataSources.sql.users.getUserBlockedBy(parent.id);
 
 export const editUserResolver = async (
   _: unknown,
@@ -146,3 +161,88 @@ export const onboardUserResolver = async (
   return dbUserResponse;
 };
 
+export const blockUserResolver = async (
+  _: unknown,
+  { blocker_id, blocked_id }: MutationBlockUserArgs,
+  { dataSources }: CustomContext,
+): Promise<string> => {
+  const user = await dataSources.sql.users.getById(blocked_id);
+
+  if (!user) {
+    throw new GraphQLError("User you're trying to block does not exist in DB!");
+  }
+
+  const participatedEventIdsWithBlockerAdmin = await dataSources.sql.events.getJointEvents(blocker_id, blocked_id);
+
+  const dbRemoveFromEventsResponse = await dataSources.sql.events.removeFromEvents(
+    participatedEventIdsWithBlockerAdmin.map((event) => event.id),
+    blocked_id,
+  );
+
+  if (!dbRemoveFromEventsResponse) {
+    throw new GraphQLError(`Error while attempting to remove user with id: ${blocked_id} from joined events.`);
+  }
+
+  for (const event of participatedEventIdsWithBlockerAdmin) {
+    try {
+      await sendEmail(user.email, 'Event participation declined', {
+        text: `Unfortunately, you've been removed from event ${event.name}`,
+        html: `Unfortunately, you've been removed from event <a href="https://frontend-team01-vse.handson.pro/event/${event.id}">${event.name}</a>.`,
+      });
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  const pendingEventsIdsWithBlockerAdmin = await dataSources.sql.events.getPendingEvents(blocker_id, blocked_id);
+
+  await dataSources.sql.events.removeFromPending(
+    pendingEventsIdsWithBlockerAdmin.map((event) => event.id),
+    blocked_id,
+  );
+
+  for (const event of pendingEventsIdsWithBlockerAdmin) {
+    try {
+      await sendEmail(user.email, 'Event registration declined', {
+        text: `Unfortunately, your registration for event ${event.name} has been declined.`,
+        html: `Unfortunately, your registration for event <a href="https://frontend-team01-vse.handson.pro/event/${event.id}">${event.name}</a> has been declined.`,
+      });
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  const adminGroups = await dataSources.sql.groups.getUserAdminGroups(blocker_id);
+
+  await dataSources.sql.groups.removeFromGroups(
+    adminGroups.map((group) => group.id),
+    blocked_id,
+  );
+
+  const dbBlockResponse = await dataSources.sql.db
+    .write('Blocked_User')
+    .insert({ blocker_id: blocker_id, blocked_id: blocked_id });
+
+  if (!dbBlockResponse) {
+    throw new GraphQLError(`Error while attempting to block user with id: ${blocked_id}`);
+  }
+
+  return `User with id ${blocked_id} successfully blocked!`;
+};
+
+export const unblockUserResolver = async (
+  _: unknown,
+  { blocker_id, blocked_id }: MutationUnblockUserArgs,
+  { dataSources }: CustomContext,
+): Promise<string> => {
+  const dbBlockResponse = await dataSources.sql.db
+    .write('Blocked_User')
+    .delete()
+    .where({ blocked_id: blocked_id, blocker_id: blocker_id });
+
+  if (!dbBlockResponse) {
+    throw new GraphQLError(`Error while attempting to unblock user with id: ${blocked_id}`);
+  }
+
+  return `User with id ${blocked_id} successfully unblocked!`;
+};

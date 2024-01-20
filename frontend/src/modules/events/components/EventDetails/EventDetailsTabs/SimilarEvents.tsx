@@ -9,6 +9,7 @@ export const SimilarEvents = ({ user, event }: WithNullableAuthUser & WithEvent)
   <QueryResult
     queryResult={useQuery(SIMILAR_EVENTS, {
       variables: {
+        userId: user?.id,
         eventId: event.id,
         eventTypeIds: event.event_types.map(({ id }) => id),
         city: getLocationFragmentData(event.location).city,
