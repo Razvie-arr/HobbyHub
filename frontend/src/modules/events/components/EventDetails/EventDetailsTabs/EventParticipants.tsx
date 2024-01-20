@@ -1,12 +1,11 @@
 import { Flex } from '@chakra-ui/react';
 import { Option, pipe, ReadonlyArray } from 'effect';
-import { FaMessage } from 'react-icons/fa6';
 import { match } from 'ts-pattern';
 
 import { ParticipantState } from '../../../../../gql/graphql';
 import { NoData } from '../../../../../shared/design-system';
 import { WithEvent, WithNullableAuthUser } from '../../../../../shared/types';
-import { SendMessageModal } from '../../../../messages';
+import { SendMassMessageModal } from '../../../../messages';
 
 import { EventParticipantItem } from './EventParticipantItem';
 
@@ -23,12 +22,7 @@ export const EventParticipants = ({ event, user }: WithEvent & WithNullableAuthU
       {/** TODO: adjust for new endpoint */}
       {user && event.participants[0] ? (
         <Flex pb={4} width={{ base: '100%', xl: '30%' }}>
-          <SendMessageModal
-            recipient={event.participants[0].user}
-            user={user}
-            messageButtonText="Message all participants"
-            modalButtonIcon={<FaMessage />}
-          />
+          <SendMassMessageModal user={user} />
         </Flex>
       ) : null}
       <Flex justifyContent="space-between" flexWrap="wrap">

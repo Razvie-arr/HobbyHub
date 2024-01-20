@@ -1,3 +1,3 @@
-export { MessageNavButton, SendMessageModal } from './components';
+export { MessageNavButton, SendMassMessageModal, SendMessageModal } from './components';
 export { MessagesPage } from './pages';
 

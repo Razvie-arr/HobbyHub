@@ -1,11 +1,8 @@
-import { useMutation } from '@apollo/client';
 import { useDisclosure, useToast } from '@chakra-ui/react';
+import { FaMessage } from 'react-icons/fa6';
 
-import { SEND_MESSAGE } from 'src/modules/messages/mutations';
 import { ModalForm, TextareaField, zod, zodResolver } from 'src/shared/forms';
 import { WithAuthUser } from 'src/shared/types';
-
-import { WithRecipient } from '../types';
 
 const schema = zod.object({
   message: zod.string().min(1, { message: 'Message cannot be empty' }),
@@ -17,17 +14,21 @@ const initialValues: FormValues = {
   message: '',
 };
 
-export const SendMessageModal = ({ user, recipient }: WithAuthUser & WithRecipient) => {
+export const SendMassMessageModal = ({ user }: WithAuthUser) => {
   const disclosure = useDisclosure();
   const toast = useToast();
 
-  const [sendMessage, sendMessageRequestState] = useMutation(SEND_MESSAGE, {
-    onCompleted: disclosure.onClose,
-  });
+  const sendMessage = async () => Promise.resolve();
+
+  const sendMessageRequestState = {
+    loading: false,
+    error: null as { message: string } | null,
+  };
 
   const modalButtonProps = {
     rounded: 'full',
     w: '100%',
+    leftIcon: <FaMessage />,
   };
 
   return (
@@ -38,14 +39,8 @@ export const SendMessageModal = ({ user, recipient }: WithAuthUser & WithRecipie
       formProps={{
         defaultValues: initialValues,
         noValidate: true,
-        onSubmit: async (formValues) => {
-          await sendMessage({
-            variables: {
-              recipient: { email: recipient.email, first_name: recipient.first_name, id: recipient.id },
-              sender: { first_name: user.first_name, id: user.id },
-              text: formValues.message,
-            },
-          });
+        onSubmit: async () => {
+          await sendMessage();
           toast({
             variant: 'left-accent',
             status: 'success',
@@ -57,8 +52,8 @@ export const SendMessageModal = ({ user, recipient }: WithAuthUser & WithRecipie
         },
         resolver: zodResolver(schema),
       }}
-      modalButtonText="Message"
-      modalTitle={`Send a message to ${recipient.first_name} ${recipient.last_name}`}
+      modalButtonText="Message all participants"
+      modalTitle="Send a message to all participants"
       submitButtonProps={{
         isLoading: sendMessageRequestState.loading,
         text: 'Message',
