@@ -195,6 +195,7 @@ export type Mutation = {
   editLocation?: Maybe<Location>;
   editReadThread: Scalars['String']['output'];
   editUser: User;
+  massEmailToEventParticipants: Scalars['String']['output'];
   maxRatingAllParticipants: Scalars['Boolean']['output'];
   onboardUser: AuthUser;
   requestEventRegistration: Scalars['String']['output'];
@@ -291,6 +292,12 @@ export type MutationEditReadThreadArgs = {
 export type MutationEditUserArgs = {
   location: LocationInputWithoutCoords;
   user: UserInput;
+};
+
+export type MutationMassEmailToEventParticipantsArgs = {
+  emailBody: Scalars['String']['input'];
+  emailSubject: Scalars['String']['input'];
+  eventId: Scalars['Int']['input'];
 };
 
 export type MutationMaxRatingAllParticipantsArgs = {
