@@ -1,3 +1,4 @@
+import { ReactNode } from 'react';
 import { useMutation } from '@apollo/client';
 import { useDisclosure, useToast } from '@chakra-ui/react';
 
@@ -17,13 +18,24 @@ const initialValues: FormValues = {
   message: '',
 };
 
-export const SendMessageModal = ({ user, recipient }: WithAuthUser & WithRecipient) => {
+export const SendMessageModal = ({
+  user,
+  recipient,
+  messageButtonText = 'Message',
+  modalButtonIcon,
+}: WithAuthUser & WithRecipient & { messageButtonText: string; modalButtonIcon?: ReactNode }) => {
   const disclosure = useDisclosure();
   const toast = useToast();
 
   const [sendMessage, sendMessageRequestState] = useMutation(SEND_MESSAGE, {
     onCompleted: disclosure.onClose,
   });
+
+  const modalButtonProps = {
+    rounded: 'full',
+    w: '100%',
+    leftIcon: modalButtonIcon as React.ReactElement,
+  };
 
   return (
     <ModalForm
@@ -52,13 +64,13 @@ export const SendMessageModal = ({ user, recipient }: WithAuthUser & WithRecipie
         },
         resolver: zodResolver(schema),
       }}
-      modalButtonText="Message"
+      modalButtonText={messageButtonText}
       modalTitle={`Send a message to ${recipient.first_name} ${recipient.last_name}`}
       submitButtonProps={{
         isLoading: sendMessageRequestState.loading,
         text: 'Message',
       }}
-      modalButtonProps={{ rounded: 'full', w: '100%' }}
+      modalButtonProps={modalButtonProps}
     >
       <TextareaField
         autoFocus
