@@ -3,20 +3,7 @@ import { gql } from '../../gql';
 export const USER_PROFILE = gql(`
   query UserProfile($userId: Int!) {
     userById(id: $userId) {
-      id
-      email
-      first_name
-      last_name
-      description
-      average_rating
-      event_types {
-        id
-        name
-        category
-      }
-      location {
-        ...LocationFragment
-      }
+      ...UserProfileFragment
     }
   }
 `);

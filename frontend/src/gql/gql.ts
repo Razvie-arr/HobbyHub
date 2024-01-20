@@ -77,7 +77,7 @@ const documents = {
     types.MessagesByThreadIdDocument,
   '\n  mutation EditUser($user: UserInput!, $location: LocationInputWithoutCoords!) {\n    editUser(user: $user, location: $location) {\n      id\n      event_types {\n        id\n        category\n        name\n      }\n    }\n  }\n':
     types.EditUserDocument,
-  '\n  query UserProfile($userId: Int!) {\n    userById(id: $userId) {\n      id\n      email\n      first_name\n      last_name\n      description\n      average_rating\n      event_types {\n        id\n        name\n        category\n      }\n      location {\n        ...LocationFragment\n      }\n    }\n  }\n':
+  '\n  query UserProfile($userId: Int!) {\n    userById(id: $userId) {\n      ...UserProfileFragment\n    }\n  }\n':
     types.UserProfileDocument,
   '\n  query UserCreatedEvents($userId: Int!, $offset: Int, $limit: Int) {\n    userCreatedEvents(userId: $userId, offset: $offset, limit: $limit) {\n        ...EventFragment\n      }\n    }\n':
     types.UserCreatedEventsDocument,
@@ -105,6 +105,8 @@ const documents = {
     types.MessageFragmentFragmentDoc,
   '\n  fragment ThreadFragment on Thread {\n    id\n    last_message_at\n    thread_read\n    users {\n      id\n      first_name\n      last_name\n      email\n    }\n    lastMessage {\n      ...MessageFragment\n    }\n    messages {\n      ...MessageFragment\n    }\n  }\n':
     types.ThreadFragmentFragmentDoc,
+  '\n  fragment UserProfileFragment on User {\n    id\n    email\n    first_name\n    last_name\n    description\n    average_rating\n    event_types {\n      id\n      name\n      category\n    }\n    location {\n      ...LocationFragment\n    }\n    blockedBy {\n      id\n    }\n    blocking {\n      id\n    }\n  }\n':
+    types.UserProfileFragmentFragmentDoc,
 };
 
 /**
@@ -323,8 +325,8 @@ export function gql(
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function gql(
-  source: '\n  query UserProfile($userId: Int!) {\n    userById(id: $userId) {\n      id\n      email\n      first_name\n      last_name\n      description\n      average_rating\n      event_types {\n        id\n        name\n        category\n      }\n      location {\n        ...LocationFragment\n      }\n    }\n  }\n',
-): (typeof documents)['\n  query UserProfile($userId: Int!) {\n    userById(id: $userId) {\n      id\n      email\n      first_name\n      last_name\n      description\n      average_rating\n      event_types {\n        id\n        name\n        category\n      }\n      location {\n        ...LocationFragment\n      }\n    }\n  }\n'];
+  source: '\n  query UserProfile($userId: Int!) {\n    userById(id: $userId) {\n      ...UserProfileFragment\n    }\n  }\n',
+): (typeof documents)['\n  query UserProfile($userId: Int!) {\n    userById(id: $userId) {\n      ...UserProfileFragment\n    }\n  }\n'];
 /**
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
@@ -403,6 +405,12 @@ export function gql(
 export function gql(
   source: '\n  fragment ThreadFragment on Thread {\n    id\n    last_message_at\n    thread_read\n    users {\n      id\n      first_name\n      last_name\n      email\n    }\n    lastMessage {\n      ...MessageFragment\n    }\n    messages {\n      ...MessageFragment\n    }\n  }\n',
 ): (typeof documents)['\n  fragment ThreadFragment on Thread {\n    id\n    last_message_at\n    thread_read\n    users {\n      id\n      first_name\n      last_name\n      email\n    }\n    lastMessage {\n      ...MessageFragment\n    }\n    messages {\n      ...MessageFragment\n    }\n  }\n'];
+/**
+ * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function gql(
+  source: '\n  fragment UserProfileFragment on User {\n    id\n    email\n    first_name\n    last_name\n    description\n    average_rating\n    event_types {\n      id\n      name\n      category\n    }\n    location {\n      ...LocationFragment\n    }\n    blockedBy {\n      id\n    }\n    blocking {\n      id\n    }\n  }\n',
+): (typeof documents)['\n  fragment UserProfileFragment on User {\n    id\n    email\n    first_name\n    last_name\n    description\n    average_rating\n    event_types {\n      id\n      name\n      category\n    }\n    location {\n      ...LocationFragment\n    }\n    blockedBy {\n      id\n    }\n    blocking {\n      id\n    }\n  }\n'];
 
 export function gql(source: string) {
   return (documents as any)[source] ?? {};

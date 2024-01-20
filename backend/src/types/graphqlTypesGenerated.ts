@@ -181,7 +181,7 @@ export type Mutation = {
   __typename?: 'Mutation';
   _empty?: Maybe<Scalars['String']['output']>;
   askForFeedback: Array<Scalars['String']['output']>;
-  blockUser: Scalars['String']['output'];
+  blockUser?: Maybe<Scalars['String']['output']>;
   cancelEvent: Scalars['String']['output'];
   createEvent: Event;
   createGroup: Group;
@@ -206,7 +206,7 @@ export type Mutation = {
   sendMessage: Scalars['String']['output'];
   signIn: AuthInfo;
   signUp: AuthInfo;
-  unblockUser: Scalars['String']['output'];
+  unblockUser?: Maybe<Scalars['String']['output']>;
   uploadEventImage?: Maybe<Scalars['String']['output']>;
   uploadGroupImage?: Maybe<Scalars['String']['output']>;
   verify: Scalars['String']['output'];
@@ -683,8 +683,8 @@ export type Thread = {
 export type User = {
   __typename?: 'User';
   average_rating: Scalars['Float']['output'];
-  blockedBy: Array<User>;
-  blocking: Array<User>;
+  blockedBy?: Maybe<Array<User>>;
+  blocking?: Maybe<Array<User>>;
   description?: Maybe<Scalars['String']['output']>;
   email: Scalars['String']['output'];
   event_types: Array<EventType>;
@@ -977,7 +977,7 @@ export type MutationResolvers<
   _empty?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType, Partial<Mutation_EmptyArgs>>;
   askForFeedback?: Resolver<Array<ResolversTypes['String']>, ParentType, ContextType>;
   blockUser?: Resolver<
-    ResolversTypes['String'],
+    Maybe<ResolversTypes['String']>,
     ParentType,
     ContextType,
     RequireFields<MutationBlockUserArgs, 'blocked_id' | 'blocker_id'>
@@ -1122,7 +1122,7 @@ export type MutationResolvers<
     RequireFields<MutationSignUpArgs, 'email' | 'first_name' | 'last_name' | 'password'>
   >;
   unblockUser?: Resolver<
-    ResolversTypes['String'],
+    Maybe<ResolversTypes['String']>,
     ParentType,
     ContextType,
     RequireFields<MutationUnblockUserArgs, 'blocked_id' | 'blocker_id'>
@@ -1378,8 +1378,8 @@ export type UserResolvers<
   ParentType extends ResolversParentTypes['User'] = ResolversParentTypes['User'],
 > = {
   average_rating?: Resolver<ResolversTypes['Float'], ParentType, ContextType>;
-  blockedBy?: Resolver<Array<ResolversTypes['User']>, ParentType, ContextType>;
-  blocking?: Resolver<Array<ResolversTypes['User']>, ParentType, ContextType>;
+  blockedBy?: Resolver<Maybe<Array<ResolversTypes['User']>>, ParentType, ContextType>;
+  blocking?: Resolver<Maybe<Array<ResolversTypes['User']>>, ParentType, ContextType>;
   description?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   email?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   event_types?: Resolver<Array<ResolversTypes['EventType']>, ParentType, ContextType>;

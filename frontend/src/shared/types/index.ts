@@ -5,4 +5,5 @@ export * from './group';
 export * from './location';
 export * from './message';
 export * from './thread';
+export * from './userProfile';
 

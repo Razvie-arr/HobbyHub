@@ -10,6 +10,7 @@ import {
   AlertDialogOverlay,
   Button,
   ButtonGroup,
+  ButtonProps,
   Text,
   useDisclosure,
   useToast,
@@ -17,14 +18,20 @@ import {
 
 import { BLOCK_USER } from './mutations';
 
-interface BlockUserButtonProps {
+interface BlockUserButtonProps extends ButtonProps {
   blockerId: number;
   blockedId: number;
   blockedName: string;
   refetchQueries?: string[];
 }
 
-export const BlockUserButton = ({ blockerId, blockedId, blockedName, refetchQueries }: BlockUserButtonProps) => {
+export const BlockUserButton = ({
+  blockerId,
+  blockedId,
+  blockedName,
+  refetchQueries,
+  ...buttonProps
+}: BlockUserButtonProps) => {
   const noButtonRef = useRef(null);
 
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -44,6 +51,7 @@ export const BlockUserButton = ({ blockerId, blockedId, blockedName, refetchQuer
         blockedId,
       },
     });
+    onClose();
     toast({
       variant: 'left-accent',
       status: 'success',
@@ -56,7 +64,7 @@ export const BlockUserButton = ({ blockerId, blockedId, blockedName, refetchQuer
 
   return (
     <>
-      <Button onClick={onOpen} colorScheme="red" isLoading={blockUserRequestState.loading}>
+      <Button onClick={onOpen} colorScheme="red" isLoading={blockUserRequestState.loading} {...buttonProps}>
         Block
       </Button>
 
