@@ -112,4 +112,7 @@ export const groupsDataSource = (db: { query: DataSourceKnex; write: DataSourceK
       .join('UserGroup', 'User.id', 'UserGroup.admin_id')
       .where('UserGroup.id', group_id)
       .first('*')) ?? null,
+
+  removeFromGroups: (groupIds: number[], removeUserId: number) =>
+    db.write('User_UserGroup').whereIn('group_id', groupIds).andWhere('user_id', removeUserId).delete(),
 });

@@ -3,11 +3,11 @@ extend type Query {
   eventById(id: Int!): Event
   eventsByIds(ids: [Int!]!): [Event!]!
 
-  newlyCreatedNearbyEvents(longitude: Float!, latitude: Float!, offset: Int, limit: Int): [Event!]!
-  todaysNearbyEvents(longitude: Float!, latitude: Float!, offset: Int, limit: Int): [Event!]!
-  weeklyNearbyEvents(longitude: Float!, latitude: Float!, offset: Int, limit: Int): [Event!]!
+  newlyCreatedNearbyEvents(longitude: Float!, latitude: Float!, offset: Int, limit: Int, user_id: Int): [Event!]!
+  todaysNearbyEvents(longitude: Float!, latitude: Float!, offset: Int, limit: Int, user_id: Int): [Event!]!
+  weeklyNearbyEvents(longitude: Float!, latitude: Float!, offset: Int, limit: Int, user_id: Int): [Event!]!
   interestingNearbyEvents(longitude: Float!, latitude: Float!, userId: Int!, offset: Int, limit: Int): [Event!]!
-  similarEvents(eventId: Int!, city: String!, eventTypeIds: [Int!]!, offset: Int, limit: Int): [Event!]!
+  similarEvents(eventId: Int!, city: String!, eventTypeIds: [Int!]!, offset: Int, limit: Int, user_id: Int): [Event!]!
 
   filterEvents(
     offset: Int
@@ -17,6 +17,7 @@ extend type Query {
     end_datetime: String
     filterLocation: FilterLocationInput
     sort: SortType
+    user_id: Int
   ): [Event!]
 
   userCreatedEvents(userId: Int!, offset: Int, limit: Int): [Event!]!
@@ -28,7 +29,7 @@ extend type Mutation {
   deleteEvent(event_id: Int!, location_id: Int!): String!
   uploadEventImage(event_image: Upload): String
 
-  requestEventRegistration( eventRegistration: RequestEventRegistrationInput!): String!
+  requestEventRegistration(eventRegistration: RequestEventRegistrationInput!): String!
   resolveEventRegistration(resolve: ResolveEventRegistrationInput!): String!
 
   cancelEvent(eventId: Int!): String!
@@ -91,7 +92,7 @@ enum SortType {
   DATE_START
 }
 
-input RequestEventRegistrationInput{
+input RequestEventRegistrationInput {
   user_id: Int!
   user_name: String!
   user_email: String!
@@ -105,23 +106,24 @@ input RequestEventRegistrationInput{
   group_id: Int
 }
 
-input ResolveEventRegistrationInput{
+input ResolveEventRegistrationInput {
   event_id: Int!
   event_name: String!
 
   user_id: Int!
-  user_email:String!
+  user_email: String!
 
   resolution: Boolean!
 }
 
-type ParticipantType{
+type ParticipantType {
   user: User!
   state: ParticipantState!
   text: String
 }
 
-enum ParticipantState{
+enum ParticipantState {
   PENDING
   ACCEPTED
 }
+

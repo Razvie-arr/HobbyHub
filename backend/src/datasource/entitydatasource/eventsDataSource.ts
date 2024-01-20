@@ -50,6 +50,7 @@ export const eventsDataSource = (db: { query: DataSourceKnex; write: DataSourceK
     end_datetime?: String | null,
     filterLocation?: FilterLocationInput | null,
     sort?: String | null,
+    admin_ids?: number[] | null,
   ) => {
     let stringQuery = 'SELECT DISTINCT Event.*';
 
@@ -81,6 +82,12 @@ export const eventsDataSource = (db: { query: DataSourceKnex; write: DataSourceK
       stringQuery += ` ${distanceQuery} <= ${filterLocation.distance}`;
     }
 
+    if (admin_ids && admin_ids.length > 0) {
+      //Blocked Events filtering
+      stringQuery += stringQuery.includes('WHERE') ? ' AND' : ' WHERE';
+      stringQuery += ` Event.author_id NOT IN (${admin_ids.join(', ')})`;
+    }
+
     stringQuery += stringQuery.includes('WHERE') ? ' AND' : ' WHERE';
     stringQuery += ' Event.cancelled = false';
 
@@ -98,55 +105,113 @@ export const eventsDataSource = (db: { query: DataSourceKnex; write: DataSourceK
     return db.query.raw(stringQuery);
   },
 
-  getEventsWithSameTypeExceptCity: (
+  getEventsWithSameTypeExceptCity: async (
     eventId: number,
     eventTypeIds: Array<number>,
     city: string,
     offset: number,
     limit: number,
-  ) =>
-    db.query
-      .distinct('Event.*')
-      .from('Event')
-      .join('Event_EventType', 'Event.id', 'Event_EventType.event_id')
-      .join('EventType', 'Event_EventType.event_type_id', 'EventType.id')
-      .join('Location', 'Event.location_id', 'Location.id')
-      .whereNot('Location.city', city)
-      .whereNot('Event.id', eventId)
-      .whereIn('EventType.id', eventTypeIds)
-      .whereNot('Event.cancelled', true)
-      .offset(offset)
-      .limit(limit),
+    author_ids?: number[] | null,
+  ) => {
+    let result;
+    if (author_ids && author_ids.length > 0) {
+      result = await db.query
+        .distinct('Event.*')
+        .from('Event')
+        .join('Event_EventType', 'Event.id', 'Event_EventType.event_id')
+        .join('EventType', 'Event_EventType.event_type_id', 'EventType.id')
+        .join('Location', 'Event.location_id', 'Location.id')
+        .whereNot('Location.city', city)
+        .whereNot('Event.id', eventId)
+        .whereIn('EventType.id', eventTypeIds)
+        .whereNot('Event.cancelled', true)
+        .whereNotIn('Event.author_id', author_ids)
+        .offset(offset)
+        .limit(limit);
+    } else {
+      result = await db.query
+        .distinct('Event.*')
+        .from('Event')
+        .join('Event_EventType', 'Event.id', 'Event_EventType.event_id')
+        .join('EventType', 'Event_EventType.event_type_id', 'EventType.id')
+        .join('Location', 'Event.location_id', 'Location.id')
+        .whereNot('Location.city', city)
+        .whereNot('Event.id', eventId)
+        .whereIn('EventType.id', eventTypeIds)
+        .whereNot('Event.cancelled', true)
+        .offset(offset)
+        .limit(limit);
+    }
+    return result;
+  },
 
-  getEventsWithSameTypeInCity: (
+  getEventsWithSameTypeInCity: async (
     eventId: number,
     eventTypeIds: Array<number>,
     city: string,
     offset: number,
     limit: number,
-  ) =>
-    db.query
-      .distinct('Event.*')
-      .from('Event')
-      .join('Event_EventType', 'Event.id', 'Event_EventType.event_id')
-      .join('EventType', 'Event_EventType.event_type_id', 'EventType.id')
-      .join('Location', 'Event.location_id', 'Location.id')
-      .where('Location.city', city)
-      .whereNot('Event.id', eventId)
-      .whereIn('EventType.id', eventTypeIds)
-      .whereNot('Event.cancelled', true)
-      .offset(offset)
-      .limit(limit),
+    author_ids?: number[] | null,
+  ) => {
+    let result;
+    if (author_ids && author_ids.length > 0) {
+      result = await db.query
+        .distinct('Event.*')
+        .from('Event')
+        .join('Event_EventType', 'Event.id', 'Event_EventType.event_id')
+        .join('EventType', 'Event_EventType.event_type_id', 'EventType.id')
+        .join('Location', 'Event.location_id', 'Location.id')
+        .where('Location.city', city)
+        .whereNot('Event.id', eventId)
+        .whereNotIn('Event.author_id', author_ids)
+        .whereIn('EventType.id', eventTypeIds)
+        .whereNot('Event.cancelled', true)
+        .offset(offset)
+        .limit(limit);
+    } else {
+      result = await db.query
+        .distinct('Event.*')
+        .from('Event')
+        .join('Event_EventType', 'Event.id', 'Event_EventType.event_id')
+        .join('EventType', 'Event_EventType.event_type_id', 'EventType.id')
+        .join('Location', 'Event.location_id', 'Location.id')
+        .where('Location.city', city)
+        .whereNot('Event.id', eventId)
+        .whereIn('EventType.id', eventTypeIds)
+        .whereNot('Event.cancelled', true)
+        .offset(offset)
+        .limit(limit);
+    }
+    return result;
+  },
 
-  getNewlyCreatedNearbyEvents: (distance: Knex.Raw, offset?: number | null, limit?: number | null) => {
-    const result = db.query
-      .select(...locationAwareEventAttributes)
-      .from('Event')
-      .join('Location', 'Event.location_id', '=', 'Location.id')
-      .whereNot('Event.cancelled', true)
-      .having(distance, '<', DEFAULT_DISTANCE)
-      .orderBy('created_at', 'desc')
-      .offset(offset ?? 0);
+  getNewlyCreatedNearbyEvents: (
+    distance: Knex.Raw,
+    offset?: number | null,
+    limit?: number | null,
+    blockerIds?: number[] | null,
+  ) => {
+    let result;
+    if (blockerIds && blockerIds.length > 0) {
+      result = db.query
+        .select(...locationAwareEventAttributes)
+        .from('Event')
+        .join('Location', 'Event.location_id', '=', 'Location.id')
+        .whereNot('Event.cancelled', true)
+        .whereNotIn('Event.author_id', blockerIds)
+        .having(distance, '<', DEFAULT_DISTANCE)
+        .orderBy('created_at', 'desc')
+        .offset(offset ?? 0);
+    } else {
+      result = db.query
+        .select(...locationAwareEventAttributes)
+        .from('Event')
+        .join('Location', 'Event.location_id', '=', 'Location.id')
+        .whereNot('Event.cancelled', true)
+        .having(distance, '<', DEFAULT_DISTANCE)
+        .orderBy('created_at', 'desc')
+        .offset(offset ?? 0);
+    }
     return limit ? result.limit(limit) : result;
   },
 
@@ -155,16 +220,31 @@ export const eventsDataSource = (db: { query: DataSourceKnex; write: DataSourceK
     todaysDate: string | undefined,
     offset?: number | null,
     limit?: number | null,
+    blockerIds?: number[] | null,
   ) => {
-    const result = db.query
-      .select(...locationAwareEventAttributes)
-      .from('Event')
-      .join('Location', 'Event.location_id', '=', 'Location.id')
-      .having(distance, '<', DEFAULT_DISTANCE)
-      .whereRaw('DATE(start_datetime) = ?', [todaysDate])
-      .whereNot('Event.cancelled', true)
-      .orderByRaw(distance)
-      .offset(offset ?? 0);
+    let result;
+    if (blockerIds && blockerIds.length > 0) {
+      result = db.query
+        .select(...locationAwareEventAttributes)
+        .from('Event')
+        .join('Location', 'Event.location_id', '=', 'Location.id')
+        .having(distance, '<', DEFAULT_DISTANCE)
+        .whereRaw('DATE(start_datetime) = ?', [todaysDate])
+        .whereNot('Event.cancelled', true)
+        .whereNotIn('Event.author_id', blockerIds)
+        .orderByRaw(distance)
+        .offset(offset ?? 0);
+    } else {
+      result = db.query
+        .select(...locationAwareEventAttributes)
+        .from('Event')
+        .join('Location', 'Event.location_id', '=', 'Location.id')
+        .having(distance, '<', DEFAULT_DISTANCE)
+        .whereRaw('DATE(start_datetime) = ?', [todaysDate])
+        .whereNot('Event.cancelled', true)
+        .orderByRaw(distance)
+        .offset(offset ?? 0);
+    }
     return limit ? result.limit(limit) : result.limit(DEFAULT_LIMIT);
   },
 
@@ -174,20 +254,41 @@ export const eventsDataSource = (db: { query: DataSourceKnex; write: DataSourceK
     nextWeekDate: string | undefined,
     offset?: number | null,
     limit?: number | null,
+    blockerIds?: number[] | null,
   ) => {
-    const result = db.query
-      .select(...locationAwareEventAttributes)
-      .from('Event')
-      .join('Location', 'Event.location_id', '=', 'Location.id')
-      .having(distance, '<', DEFAULT_DISTANCE)
-      .whereRaw('DATE(start_datetime) BETWEEN ? AND ?', [todaysDate, nextWeekDate])
-      .whereNot('Event.cancelled', true)
-      .orderByRaw(distance)
-      .offset(offset ?? 0);
+    let result;
+    if (blockerIds && blockerIds.length > 0) {
+      result = db.query
+        .select(...locationAwareEventAttributes)
+        .from('Event')
+        .join('Location', 'Event.location_id', '=', 'Location.id')
+        .having(distance, '<', DEFAULT_DISTANCE)
+        .whereRaw('DATE(start_datetime) BETWEEN ? AND ?', [todaysDate, nextWeekDate])
+        .whereNot('Event.cancelled', true)
+        .whereNotIn('Event.author_id', blockerIds)
+        .orderByRaw(distance)
+        .offset(offset ?? 0);
+    } else {
+      result = db.query
+        .select(...locationAwareEventAttributes)
+        .from('Event')
+        .join('Location', 'Event.location_id', '=', 'Location.id')
+        .having(distance, '<', DEFAULT_DISTANCE)
+        .whereRaw('DATE(start_datetime) BETWEEN ? AND ?', [todaysDate, nextWeekDate])
+        .whereNot('Event.cancelled', true)
+        .orderByRaw(distance)
+        .offset(offset ?? 0);
+    }
     return limit ? result.limit(limit) : result.limit(DEFAULT_LIMIT);
   },
 
-  getInterestingNearbyEvents: (distance: Knex.Raw, userId: number, offset?: number | null, limit?: number | null) => {
+  getInterestingNearbyEvents: (
+    distance: Knex.Raw,
+    userId: number,
+    blocker_ids: number[],
+    offset?: number | null,
+    limit?: number | null,
+  ) => {
     const result = db.query
       .distinct(...locationAwareEventAttributes)
       .from('Event')
@@ -196,6 +297,7 @@ export const eventsDataSource = (db: { query: DataSourceKnex; write: DataSourceK
       .join('Location', 'Event.location_id', '=', 'Location.id')
       .where('User_EventType.user_id', '=', userId)
       .whereNot('Event.cancelled', true)
+      .whereNotIn('Event.author_id', blocker_ids)
       .having(distance, '<', DEFAULT_DISTANCE)
       .offset(offset ?? 0);
     return limit ? result.limit(limit) : result.limit(DEFAULT_LIMIT);
@@ -219,4 +321,36 @@ export const eventsDataSource = (db: { query: DataSourceKnex; write: DataSourceK
 
   setCancelled: (eventId: number, cancelled: boolean) =>
     db.write('Event').where('id', eventId).update({ cancelled: cancelled }),
+
+  //Get events user is participating in and filter them based on their admin
+  getJointEvents: async (adminId: number, participantId: number) => {
+    const eventIds = await db
+      .query('Event_User')
+      .select('event_id')
+      .where('user_id', participantId)
+      .then((rowDataPacket) => rowDataPacket.map((packet) => packet.event_id));
+
+    const events = await db.query('Event').whereIn('id', eventIds);
+
+    return events.filter((event) => event.author_id === adminId);
+  },
+
+  //Get events user is pending in and filter them based on their admin
+  getPendingEvents: async (adminId: number, participantId: number) => {
+    const eventIds = await db
+      .query('Event_UserRequest')
+      .select('event_id')
+      .where('user_id', participantId)
+      .then((rowDataPacket) => rowDataPacket.map((packet) => packet.event_id));
+
+    const events = await db.query('Event').whereIn('id', eventIds);
+
+    return events.filter((event) => event.author_id === adminId);
+  },
+
+  removeFromEvents: (eventIds: number[], participant_id: number) =>
+    db.write('Event_User').whereIn('event_id', eventIds).andWhere('user_id', participant_id).delete(),
+
+  removeFromPending: (eventIds: number[], participant_id: number) =>
+    db.write('Event_UserRequest').whereIn('event_id', eventIds).andWhere('user_id', participant_id).delete(),
 });

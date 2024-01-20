@@ -151,6 +151,7 @@ type Message {
 type Mutation {
   _empty(nothing: String): String
   askForFeedback: [String!]!
+  blockUser(blocked_id: Int!, blocker_id: Int!): String!
   cancelEvent(eventId: Int!): String!
   createEvent(event: EventInput!, location: LocationInputWithoutCoords!): Event!
   createGroup(group: GroupInput!, location: LocationInputWithoutCoords!): Group!
@@ -175,6 +176,7 @@ type Mutation {
   sendMessage(recipient: RecipientInput!, sender: SenderInput!, text: String!): String!
   signIn(email: String!, password: String!): AuthInfo!
   signUp(email: String!, first_name: String!, last_name: String!, password: String!): AuthInfo!
+  unblockUser(blocked_id: Int!, blocker_id: Int!): String!
   uploadEventImage(event_image: Upload): String
   uploadGroupImage(group_image: Upload): String
   verify(token: String!): String!
@@ -208,6 +210,7 @@ type Query {
     offset: Int
     sort: SortType
     start_datetime: String
+    user_id: Int
   ): [Event!]
   filterGroups(
     eventTypeIds: [Int!]
@@ -226,23 +229,23 @@ type Query {
   locationsByIds(ids: [Int!]!): [Location!]!
   messagesByThreadId(limit: Int, offset: Int, threadId: Int!): [Message!]!
   nearbyGroups(latitude: Float!, limit: Int, longitude: Float!, offset: Int): [Group!]!
-  newlyCreatedNearbyEvents(latitude: Float!, limit: Int, longitude: Float!, offset: Int): [Event!]!
+  newlyCreatedNearbyEvents(latitude: Float!, limit: Int, longitude: Float!, offset: Int, user_id: Int): [Event!]!
   reviewById(reviewId: Int!): Review
   reviewsByUserId(limit: Int, offset: Int, userId: Int!): [Review!]!
   reviewsCount(userId: Int!): Int!
   searchEvents(limit: Int, offset: Int, text: String!): [Event!]!
   searchGroups(limit: Int, offset: Int, text: String!): [Group!]!
-  similarEvents(city: String!, eventId: Int!, eventTypeIds: [Int!]!, limit: Int, offset: Int): [Event!]!
+  similarEvents(city: String!, eventId: Int!, eventTypeIds: [Int!]!, limit: Int, offset: Int, user_id: Int): [Event!]!
   similarGroups(city: String!, eventTypeIds: [Int!]!, groupId: Int!, limit: Int, offset: Int): [Group!]!
   threads(limit: Int, offset: Int, userId: Int!): [Thread!]!
-  todaysNearbyEvents(latitude: Float!, limit: Int, longitude: Float!, offset: Int): [Event!]!
+  todaysNearbyEvents(latitude: Float!, limit: Int, longitude: Float!, offset: Int, user_id: Int): [Event!]!
   unreviewedEventParticipants(eventId: Int!, userId: Int!): [User!]!
   userAdminGroups(limit: Int, offset: Int, userId: Int!): [Group!]!
   userById(id: Int!): User
   userCreatedEvents(limit: Int, offset: Int, userId: Int!): [Event!]!
   users(limit: Int, offset: Int): [User!]!
   usersByIds(ids: [Int!]!): [User!]!
-  weeklyNearbyEvents(latitude: Float!, limit: Int, longitude: Float!, offset: Int): [Event!]!
+  weeklyNearbyEvents(latitude: Float!, limit: Int, longitude: Float!, offset: Int, user_id: Int): [Event!]!
 }
 
 input RecipientInput {
@@ -309,6 +312,8 @@ scalar Upload
 
 type User {
   average_rating: Float!
+  blockedBy: [User!]!
+  blocking: [User!]!
   description: String
   email: String!
   event_types: [EventType!]!

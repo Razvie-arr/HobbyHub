@@ -38,4 +38,3 @@ export const ProfileReview = ({ event, avatarImage, rating, reviewer, text }: Pr
     </CardBody>
   </Card>
 );
-

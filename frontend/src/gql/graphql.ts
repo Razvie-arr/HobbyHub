@@ -179,6 +179,7 @@ export type Mutation = {
   __typename?: 'Mutation';
   _empty?: Maybe<Scalars['String']['output']>;
   askForFeedback: Array<Scalars['String']['output']>;
+  blockUser: Scalars['String']['output'];
   cancelEvent: Scalars['String']['output'];
   createEvent: Event;
   createGroup: Group;
@@ -203,6 +204,7 @@ export type Mutation = {
   sendMessage: Scalars['String']['output'];
   signIn: AuthInfo;
   signUp: AuthInfo;
+  unblockUser: Scalars['String']['output'];
   uploadEventImage?: Maybe<Scalars['String']['output']>;
   uploadGroupImage?: Maybe<Scalars['String']['output']>;
   verify: Scalars['String']['output'];
@@ -210,6 +212,11 @@ export type Mutation = {
 
 export type Mutation_EmptyArgs = {
   nothing?: InputMaybe<Scalars['String']['input']>;
+};
+
+export type MutationBlockUserArgs = {
+  blocked_id: Scalars['Int']['input'];
+  blocker_id: Scalars['Int']['input'];
 };
 
 export type MutationCancelEventArgs = {
@@ -331,6 +338,11 @@ export type MutationSignUpArgs = {
   password: Scalars['String']['input'];
 };
 
+export type MutationUnblockUserArgs = {
+  blocked_id: Scalars['Int']['input'];
+  blocker_id: Scalars['Int']['input'];
+};
+
 export type MutationUploadEventImageArgs = {
   event_image?: InputMaybe<Scalars['Upload']['input']>;
 };
@@ -438,6 +450,7 @@ export type QueryFilterEventsArgs = {
   offset?: InputMaybe<Scalars['Int']['input']>;
   sort?: InputMaybe<SortType>;
   start_datetime?: InputMaybe<Scalars['String']['input']>;
+  user_id?: InputMaybe<Scalars['Int']['input']>;
 };
 
 export type QueryFilterGroupsArgs = {
@@ -508,6 +521,7 @@ export type QueryNewlyCreatedNearbyEventsArgs = {
   limit?: InputMaybe<Scalars['Int']['input']>;
   longitude: Scalars['Float']['input'];
   offset?: InputMaybe<Scalars['Int']['input']>;
+  user_id?: InputMaybe<Scalars['Int']['input']>;
 };
 
 export type QueryReviewByIdArgs = {
@@ -542,6 +556,7 @@ export type QuerySimilarEventsArgs = {
   eventTypeIds: Array<Scalars['Int']['input']>;
   limit?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
+  user_id?: InputMaybe<Scalars['Int']['input']>;
 };
 
 export type QuerySimilarGroupsArgs = {
@@ -563,6 +578,7 @@ export type QueryTodaysNearbyEventsArgs = {
   limit?: InputMaybe<Scalars['Int']['input']>;
   longitude: Scalars['Float']['input'];
   offset?: InputMaybe<Scalars['Int']['input']>;
+  user_id?: InputMaybe<Scalars['Int']['input']>;
 };
 
 export type QueryUnreviewedEventParticipantsArgs = {
@@ -600,6 +616,7 @@ export type QueryWeeklyNearbyEventsArgs = {
   limit?: InputMaybe<Scalars['Int']['input']>;
   longitude: Scalars['Float']['input'];
   offset?: InputMaybe<Scalars['Int']['input']>;
+  user_id?: InputMaybe<Scalars['Int']['input']>;
 };
 
 export type RecipientInput = {
@@ -664,6 +681,8 @@ export type Thread = {
 export type User = {
   __typename?: 'User';
   average_rating: Scalars['Float']['output'];
+  blockedBy: Array<User>;
+  blocking: Array<User>;
   description?: Maybe<Scalars['String']['output']>;
   email: Scalars['String']['output'];
   event_types: Array<EventType>;
@@ -812,27 +831,6 @@ export type ResolveEventRegistrationMutationVariables = Exact<{
 
 export type ResolveEventRegistrationMutation = { __typename?: 'Mutation'; resolveEventRegistration: string };
 
-export type GetLocationAwareEventsQueryVariables = Exact<{
-  userId: Scalars['Int']['input'];
-  longitude: Scalars['Float']['input'];
-  latitude: Scalars['Float']['input'];
-  offset?: InputMaybe<Scalars['Int']['input']>;
-  limit?: InputMaybe<Scalars['Int']['input']>;
-}>;
-
-export type GetLocationAwareEventsQuery = {
-  __typename?: 'Query';
-  todaysNearbyEvents: Array<
-    { __typename?: 'Event' } & { ' $fragmentRefs'?: { EventFragmentFragment: EventFragmentFragment } }
-  >;
-  interestingNearbyEvents: Array<
-    { __typename?: 'Event' } & { ' $fragmentRefs'?: { EventFragmentFragment: EventFragmentFragment } }
-  >;
-  newlyCreatedNearbyEvents: Array<
-    { __typename?: 'Event' } & { ' $fragmentRefs'?: { EventFragmentFragment: EventFragmentFragment } }
-  >;
-};
-
 export type EventsQueryVariables = Exact<{
   offset?: InputMaybe<Scalars['Int']['input']>;
   limit?: InputMaybe<Scalars['Int']['input']>;
@@ -898,6 +896,7 @@ export type EventQuery = {
 };
 
 export type FilterEventsQueryVariables = Exact<{
+  userId?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
   limit?: InputMaybe<Scalars['Int']['input']>;
   eventTypeIds?: InputMaybe<Array<Scalars['Int']['input']> | Scalars['Int']['input']>;
@@ -915,6 +914,7 @@ export type FilterEventsQuery = {
 };
 
 export type SimilarEventsQueryVariables = Exact<{
+  userId?: InputMaybe<Scalars['Int']['input']>;
   eventId: Scalars['Int']['input'];
   city: Scalars['String']['input'];
   eventTypeIds: Array<Scalars['Int']['input']> | Scalars['Int']['input'];
@@ -2514,273 +2514,6 @@ export const ResolveEventRegistrationDocument = {
     },
   ],
 } as unknown as DocumentNode<ResolveEventRegistrationMutation, ResolveEventRegistrationMutationVariables>;
-export const GetLocationAwareEventsDocument = {
-  kind: 'Document',
-  definitions: [
-    {
-      kind: 'OperationDefinition',
-      operation: 'query',
-      name: { kind: 'Name', value: 'GetLocationAwareEvents' },
-      variableDefinitions: [
-        {
-          kind: 'VariableDefinition',
-          variable: { kind: 'Variable', name: { kind: 'Name', value: 'userId' } },
-          type: { kind: 'NonNullType', type: { kind: 'NamedType', name: { kind: 'Name', value: 'Int' } } },
-        },
-        {
-          kind: 'VariableDefinition',
-          variable: { kind: 'Variable', name: { kind: 'Name', value: 'longitude' } },
-          type: { kind: 'NonNullType', type: { kind: 'NamedType', name: { kind: 'Name', value: 'Float' } } },
-        },
-        {
-          kind: 'VariableDefinition',
-          variable: { kind: 'Variable', name: { kind: 'Name', value: 'latitude' } },
-          type: { kind: 'NonNullType', type: { kind: 'NamedType', name: { kind: 'Name', value: 'Float' } } },
-        },
-        {
-          kind: 'VariableDefinition',
-          variable: { kind: 'Variable', name: { kind: 'Name', value: 'offset' } },
-          type: { kind: 'NamedType', name: { kind: 'Name', value: 'Int' } },
-        },
-        {
-          kind: 'VariableDefinition',
-          variable: { kind: 'Variable', name: { kind: 'Name', value: 'limit' } },
-          type: { kind: 'NamedType', name: { kind: 'Name', value: 'Int' } },
-        },
-      ],
-      selectionSet: {
-        kind: 'SelectionSet',
-        selections: [
-          {
-            kind: 'Field',
-            name: { kind: 'Name', value: 'todaysNearbyEvents' },
-            arguments: [
-              {
-                kind: 'Argument',
-                name: { kind: 'Name', value: 'longitude' },
-                value: { kind: 'Variable', name: { kind: 'Name', value: 'longitude' } },
-              },
-              {
-                kind: 'Argument',
-                name: { kind: 'Name', value: 'latitude' },
-                value: { kind: 'Variable', name: { kind: 'Name', value: 'latitude' } },
-              },
-              {
-                kind: 'Argument',
-                name: { kind: 'Name', value: 'offset' },
-                value: { kind: 'Variable', name: { kind: 'Name', value: 'offset' } },
-              },
-              {
-                kind: 'Argument',
-                name: { kind: 'Name', value: 'limit' },
-                value: { kind: 'Variable', name: { kind: 'Name', value: 'limit' } },
-              },
-            ],
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [{ kind: 'FragmentSpread', name: { kind: 'Name', value: 'EventFragment' } }],
-            },
-          },
-          {
-            kind: 'Field',
-            name: { kind: 'Name', value: 'interestingNearbyEvents' },
-            arguments: [
-              {
-                kind: 'Argument',
-                name: { kind: 'Name', value: 'longitude' },
-                value: { kind: 'Variable', name: { kind: 'Name', value: 'longitude' } },
-              },
-              {
-                kind: 'Argument',
-                name: { kind: 'Name', value: 'latitude' },
-                value: { kind: 'Variable', name: { kind: 'Name', value: 'latitude' } },
-              },
-              {
-                kind: 'Argument',
-                name: { kind: 'Name', value: 'userId' },
-                value: { kind: 'Variable', name: { kind: 'Name', value: 'userId' } },
-              },
-              {
-                kind: 'Argument',
-                name: { kind: 'Name', value: 'offset' },
-                value: { kind: 'Variable', name: { kind: 'Name', value: 'offset' } },
-              },
-              {
-                kind: 'Argument',
-                name: { kind: 'Name', value: 'limit' },
-                value: { kind: 'Variable', name: { kind: 'Name', value: 'limit' } },
-              },
-            ],
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [{ kind: 'FragmentSpread', name: { kind: 'Name', value: 'EventFragment' } }],
-            },
-          },
-          {
-            kind: 'Field',
-            name: { kind: 'Name', value: 'newlyCreatedNearbyEvents' },
-            arguments: [
-              {
-                kind: 'Argument',
-                name: { kind: 'Name', value: 'longitude' },
-                value: { kind: 'Variable', name: { kind: 'Name', value: 'longitude' } },
-              },
-              {
-                kind: 'Argument',
-                name: { kind: 'Name', value: 'latitude' },
-                value: { kind: 'Variable', name: { kind: 'Name', value: 'latitude' } },
-              },
-              {
-                kind: 'Argument',
-                name: { kind: 'Name', value: 'offset' },
-                value: { kind: 'Variable', name: { kind: 'Name', value: 'offset' } },
-              },
-              {
-                kind: 'Argument',
-                name: { kind: 'Name', value: 'limit' },
-                value: { kind: 'Variable', name: { kind: 'Name', value: 'limit' } },
-              },
-            ],
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [{ kind: 'FragmentSpread', name: { kind: 'Name', value: 'EventFragment' } }],
-            },
-          },
-        ],
-      },
-    },
-    {
-      kind: 'FragmentDefinition',
-      name: { kind: 'Name', value: 'LocationFragment' },
-      typeCondition: { kind: 'NamedType', name: { kind: 'Name', value: 'Location' } },
-      selectionSet: {
-        kind: 'SelectionSet',
-        selections: [
-          { kind: 'Field', name: { kind: 'Name', value: 'id' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'country' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'city' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'street_name' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'street_number' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'longitude' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'latitude' } },
-        ],
-      },
-    },
-    {
-      kind: 'FragmentDefinition',
-      name: { kind: 'Name', value: 'EventFragment' },
-      typeCondition: { kind: 'NamedType', name: { kind: 'Name', value: 'Event' } },
-      selectionSet: {
-        kind: 'SelectionSet',
-        selections: [
-          { kind: 'Field', name: { kind: 'Name', value: 'id' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'name' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'start_datetime' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'end_datetime' } },
-          {
-            kind: 'Field',
-            name: { kind: 'Name', value: 'event_types' },
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [
-                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
-                { kind: 'Field', name: { kind: 'Name', value: 'name' } },
-              ],
-            },
-          },
-          {
-            kind: 'Field',
-            name: { kind: 'Name', value: 'author' },
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [
-                {
-                  kind: 'InlineFragment',
-                  typeCondition: { kind: 'NamedType', name: { kind: 'Name', value: 'User' } },
-                  selectionSet: {
-                    kind: 'SelectionSet',
-                    selections: [
-                      { kind: 'Field', name: { kind: 'Name', value: '__typename' } },
-                      { kind: 'Field', name: { kind: 'Name', value: 'id' } },
-                      { kind: 'Field', name: { kind: 'Name', value: 'first_name' } },
-                      { kind: 'Field', name: { kind: 'Name', value: 'last_name' } },
-                      { kind: 'Field', name: { kind: 'Name', value: 'email' } },
-                    ],
-                  },
-                },
-                {
-                  kind: 'InlineFragment',
-                  typeCondition: { kind: 'NamedType', name: { kind: 'Name', value: 'Group' } },
-                  selectionSet: {
-                    kind: 'SelectionSet',
-                    selections: [
-                      { kind: 'Field', name: { kind: 'Name', value: '__typename' } },
-                      { kind: 'Field', name: { kind: 'Name', value: 'id' } },
-                      { kind: 'Field', name: { kind: 'Name', value: 'name' } },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'admin' },
-                        selectionSet: {
-                          kind: 'SelectionSet',
-                          selections: [
-                            { kind: 'Field', name: { kind: 'Name', value: 'id' } },
-                            { kind: 'Field', name: { kind: 'Name', value: 'first_name' } },
-                            { kind: 'Field', name: { kind: 'Name', value: 'last_name' } },
-                            { kind: 'Field', name: { kind: 'Name', value: 'email' } },
-                          ],
-                        },
-                      },
-                    ],
-                  },
-                },
-              ],
-            },
-          },
-          {
-            kind: 'Field',
-            name: { kind: 'Name', value: 'location' },
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [{ kind: 'FragmentSpread', name: { kind: 'Name', value: 'LocationFragment' } }],
-            },
-          },
-          { kind: 'Field', name: { kind: 'Name', value: 'author_id' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'group_id' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'summary' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'description' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'image_filepath' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'capacity' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'allow_waitlist' } },
-          {
-            kind: 'Field',
-            name: { kind: 'Name', value: 'participants' },
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [
-                {
-                  kind: 'Field',
-                  name: { kind: 'Name', value: 'user' },
-                  selectionSet: {
-                    kind: 'SelectionSet',
-                    selections: [
-                      { kind: 'Field', name: { kind: 'Name', value: 'id' } },
-                      { kind: 'Field', name: { kind: 'Name', value: 'first_name' } },
-                      { kind: 'Field', name: { kind: 'Name', value: 'last_name' } },
-                      { kind: 'Field', name: { kind: 'Name', value: 'email' } },
-                    ],
-                  },
-                },
-                { kind: 'Field', name: { kind: 'Name', value: 'state' } },
-                { kind: 'Field', name: { kind: 'Name', value: 'text' } },
-              ],
-            },
-          },
-          { kind: 'Field', name: { kind: 'Name', value: 'cancelled' } },
-        ],
-      },
-    },
-  ],
-} as unknown as DocumentNode<GetLocationAwareEventsQuery, GetLocationAwareEventsQueryVariables>;
 export const EventsDocument = {
   kind: 'Document',
   definitions: [
@@ -3736,6 +3469,11 @@ export const FilterEventsDocument = {
       variableDefinitions: [
         {
           kind: 'VariableDefinition',
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'userId' } },
+          type: { kind: 'NamedType', name: { kind: 'Name', value: 'Int' } },
+        },
+        {
+          kind: 'VariableDefinition',
           variable: { kind: 'Variable', name: { kind: 'Name', value: 'offset' } },
           type: { kind: 'NamedType', name: { kind: 'Name', value: 'Int' } },
         },
@@ -3780,6 +3518,11 @@ export const FilterEventsDocument = {
             kind: 'Field',
             name: { kind: 'Name', value: 'filterEvents' },
             arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'user_id' },
+                value: { kind: 'Variable', name: { kind: 'Name', value: 'userId' } },
+              },
               {
                 kind: 'Argument',
                 name: { kind: 'Name', value: 'offset' },
@@ -3966,6 +3709,11 @@ export const SimilarEventsDocument = {
       variableDefinitions: [
         {
           kind: 'VariableDefinition',
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'userId' } },
+          type: { kind: 'NamedType', name: { kind: 'Name', value: 'Int' } },
+        },
+        {
+          kind: 'VariableDefinition',
           variable: { kind: 'Variable', name: { kind: 'Name', value: 'eventId' } },
           type: { kind: 'NonNullType', type: { kind: 'NamedType', name: { kind: 'Name', value: 'Int' } } },
         },
@@ -3993,6 +3741,11 @@ export const SimilarEventsDocument = {
             kind: 'Field',
             name: { kind: 'Name', value: 'similarEvents' },
             arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'user_id' },
+                value: { kind: 'Variable', name: { kind: 'Name', value: 'userId' } },
+              },
               {
                 kind: 'Argument',
                 name: { kind: 'Name', value: 'eventId' },
