@@ -33,6 +33,7 @@ extend type Mutation {
   resolveEventRegistration(resolve: ResolveEventRegistrationInput!): String!
 
   cancelEvent(eventId: Int!): String!
+  massEmailToEventParticipants(eventId: Int!, emailSubject: String!, emailBody: String!): String!
 }
 
 union Author = User | Group

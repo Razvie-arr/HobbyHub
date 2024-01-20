@@ -17,6 +17,7 @@ import {
   MutationCreateEventArgs,
   MutationDeleteEventArgs,
   MutationEditEventArgs,
+  MutationMassEmailToEventParticipantsArgs,
   MutationRequestEventRegistrationArgs,
   MutationResolveEventRegistrationArgs,
   MutationUploadEventImageArgs,
@@ -35,6 +36,7 @@ import {
 } from '../../../types';
 import { createEventInput, getPublicStorageFilePath } from '../../../utils/helpers';
 
+import { sendMassEmailToEventParticipants } from './sendMassEmailToEventParticipants';
 import { sendMassEventCancelledEmail } from './sendMassEventCancelledEmail';
 
 const MINIMUM_COUNT_SIMILAR_EVENTS = 3;
@@ -483,6 +485,23 @@ export const cancelEventResolver = async (
   const eventPendingParticipants = await dataSources.sql.events.getPendingEventParticipants(eventId);
   const eventParticipants: Set<User> = new Set([...eventAcceptedParticipants, ...eventPendingParticipants]);
 
-  await sendMassEventCancelledEmail(event, eventParticipants, dataSources, serverUrl);
+  await sendMassEventCancelledEmail(event, eventParticipants, serverUrl);
   return 'Event successfully cancelled';
+};
+
+export const massEmailToEventParticipantsResolver = async (
+  _: unknown,
+  { eventId, emailSubject, emailBody }: MutationMassEmailToEventParticipantsArgs,
+  { dataSources, serverUrl }: CustomContext,
+) => {
+  const event = await dataSources.sql.events.getById(eventId);
+  if (!event) {
+    throw new GraphQLError('Event not found');
+  }
+
+  // send email only to accepted participants
+  const eventAcceptedParticipants = await dataSources.sql.events.getAcceptedEventParticipants(eventId);
+
+  await sendMassEmailToEventParticipants(event, eventAcceptedParticipants, emailSubject, emailBody, serverUrl);
+  return 'Emails successfully sent';
 };
