@@ -157,3 +157,4 @@ export const unreviewedEventParticipantsResolver = async (
   const reviewedUserIds = eventReviews.map((eventReview) => eventReview.user_id);
   return eventParticipants.filter((participant) => !reviewedUserIds.includes(participant.id));
 };
+

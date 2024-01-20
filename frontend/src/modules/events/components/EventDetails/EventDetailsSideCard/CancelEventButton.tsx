@@ -23,7 +23,12 @@ export const CancelEventButton = ({ event }: WithEvent) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const toast = useToast();
 
-  const [cancelEventRequest, cancelEventRequestState] = useMutation(CANCEL_EVENT, { refetchQueries: ['Event'] });
+  const [cancelEventRequest, cancelEventRequestState] = useMutation(CANCEL_EVENT, {
+    refetchQueries: ['Event'],
+    onQueryUpdated: async (observableQuery) => {
+      await observableQuery.refetch();
+    },
+  });
 
   const handleCancel = async () => {
     await cancelEventRequest({

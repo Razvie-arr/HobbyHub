@@ -20,6 +20,8 @@ const documents = {
   '\n  mutation SignUp($email: String!, $first_name: String!, $last_name: String!, $password: String!) {\n    signUp(email: $email, first_name: $first_name, last_name: $last_name, password: $password) {\n      user {\n        id\n        first_name\n        last_name\n        email\n      }\n      token\n    }\n  }\n':
     types.SignUpDocument,
   '\n  mutation Mutation($token: String!) {\n    verify(token: $token)\n  }\n': types.MutationDocument,
+  '\n  mutation BlockUser($blockerId: Int!, $blockedId: Int!) {\n    blockUser(blocker_id: $blockerId, blocked_id: $blockedId)\n  }\n':
+    types.BlockUserDocument,
   '\n  mutation CreateEvent($event: EventInput!, $location: LocationInputWithoutCoords!) {\n    createEvent(event: $event, location: $location) {\n      id\n    }\n  }\n':
     types.CreateEventDocument,
   '\n  mutation EditEvent($event: EventInput!, $location: LocationInputWithoutCoords!) {\n    editEvent(event: $event, location: $location) {\n      id\n    }\n}\n':
@@ -73,7 +75,7 @@ const documents = {
     types.ThreadsDocument,
   '\n  query MessagesByThreadId($threadId: Int!) {\n    messagesByThreadId(threadId: $threadId) {\n      ...MessageFragment\n    }\n  }\n':
     types.MessagesByThreadIdDocument,
-  '\nmutation EditUser($user: UserInput!, $location: LocationInputWithoutCoords!) {\n    editUser(user: $user, location: $location) {\n      id\n      event_types {\n        id\n        category\n        name\n      }\n    }\n  }\n':
+  '\n  mutation EditUser($user: UserInput!, $location: LocationInputWithoutCoords!) {\n    editUser(user: $user, location: $location) {\n      id\n      event_types {\n        id\n        category\n        name\n      }\n    }\n  }\n':
     types.EditUserDocument,
   '\n  query UserProfile($userId: Int!) {\n    userById(id: $userId) {\n      id\n      email\n      first_name\n      last_name\n      description\n      average_rating\n      event_types {\n        id\n        name\n        category\n      }\n      location {\n        ...LocationFragment\n      }\n    }\n  }\n':
     types.UserProfileDocument,
@@ -143,6 +145,12 @@ export function gql(
 export function gql(
   source: '\n  mutation Mutation($token: String!) {\n    verify(token: $token)\n  }\n',
 ): (typeof documents)['\n  mutation Mutation($token: String!) {\n    verify(token: $token)\n  }\n'];
+/**
+ * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function gql(
+  source: '\n  mutation BlockUser($blockerId: Int!, $blockedId: Int!) {\n    blockUser(blocker_id: $blockerId, blocked_id: $blockedId)\n  }\n',
+): (typeof documents)['\n  mutation BlockUser($blockerId: Int!, $blockedId: Int!) {\n    blockUser(blocker_id: $blockerId, blocked_id: $blockedId)\n  }\n'];
 /**
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
@@ -309,8 +317,8 @@ export function gql(
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function gql(
-  source: '\nmutation EditUser($user: UserInput!, $location: LocationInputWithoutCoords!) {\n    editUser(user: $user, location: $location) {\n      id\n      event_types {\n        id\n        category\n        name\n      }\n    }\n  }\n',
-): (typeof documents)['\nmutation EditUser($user: UserInput!, $location: LocationInputWithoutCoords!) {\n    editUser(user: $user, location: $location) {\n      id\n      event_types {\n        id\n        category\n        name\n      }\n    }\n  }\n'];
+  source: '\n  mutation EditUser($user: UserInput!, $location: LocationInputWithoutCoords!) {\n    editUser(user: $user, location: $location) {\n      id\n      event_types {\n        id\n        category\n        name\n      }\n    }\n  }\n',
+): (typeof documents)['\n  mutation EditUser($user: UserInput!, $location: LocationInputWithoutCoords!) {\n    editUser(user: $user, location: $location) {\n      id\n      event_types {\n        id\n        category\n        name\n      }\n    }\n  }\n'];
 /**
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */

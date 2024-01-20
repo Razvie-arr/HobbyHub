@@ -23,7 +23,7 @@ const initialValues: FormValues = {
 
 interface AddReviewModalFormProps extends WithAuthUser {
   eventId: number;
-  member: {
+  participant: {
     id: number;
     first_name: string;
     last_name: string;
@@ -31,7 +31,7 @@ interface AddReviewModalFormProps extends WithAuthUser {
   };
 }
 
-export const AddReviewModalForm = ({ eventId, user, member }: AddReviewModalFormProps) => {
+export const AddReviewModalForm = ({ eventId, user, participant }: AddReviewModalFormProps) => {
   const disclosure = useDisclosure();
   const toast = useToast();
 
@@ -68,7 +68,7 @@ export const AddReviewModalForm = ({ eventId, user, member }: AddReviewModalForm
               rating: formValues.rating,
               reviewerId: user.id,
               text: formValues.comment,
-              userId: member.id,
+              userId: participant.id,
             },
           });
         },
@@ -78,7 +78,7 @@ export const AddReviewModalForm = ({ eventId, user, member }: AddReviewModalForm
       modalTitle="Feedback"
       modalDescription={
         <>
-          Share your feedback for <Text as="b">{`${member.first_name} ${member.last_name}`}</Text>
+          Share your feedback for <Text as="b">{`${participant.first_name} ${participant.last_name}`}</Text>
         </>
       }
       submitButtonProps={{

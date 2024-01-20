@@ -1,2 +1,2 @@
-export { AddReviewPageContainer as AddReviewPage } from './AddReviewPage';
+export { AddReviewPage } from './pages';
 

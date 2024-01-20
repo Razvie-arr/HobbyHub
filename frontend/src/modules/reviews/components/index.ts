@@ -1,2 +1,3 @@
-export { ReviewEventMembers } from './ReviewEventMembers';
+export { MaxRatingAllParticipants } from './MaxRatingAllParticipants';
+export { ReviewEventParticipantListItem } from './ReviewEventParticipantListItem';
 

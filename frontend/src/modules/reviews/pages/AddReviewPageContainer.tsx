@@ -2,15 +2,15 @@ import { useQuery } from '@apollo/client';
 import { useSearchParams } from 'react-router-dom';
 import { match } from 'ts-pattern';
 
-import { NoData, NotAuthorized } from '../../shared/design-system';
-import { QueryResult } from '../../shared/layout';
-import { getEventFragmentData, WithAuthUser } from '../../shared/types';
-import { getCurrentDateTime } from '../../utils/form';
-import { useAuth } from '../auth';
-import { EVENT } from '../events/queries';
+import { NoData, NotAuthorized } from '../../../shared/design-system';
+import { QueryResult } from '../../../shared/layout';
+import { getEventFragmentData, WithAuthUser } from '../../../shared/types';
+import { getCurrentDateTime } from '../../../utils/form';
+import { useAuth } from '../../auth';
+import { EVENT } from '../../events/queries';
+import { UNREVIEWED_EVENT_PARTICIPANTS } from '../queries';
 
-import { ReviewEventMembers } from './components';
-import { UNREVIEWED_EVENT_PARTICIPANTS } from './queries';
+import { AddReviewPageContent } from './AddReviewPageContent';
 
 export const AddReviewPageContainer = () => {
   const { user } = useAuth();
@@ -63,7 +63,7 @@ const AddReviewPage = ({ user, eventId }: AddReviewPageProps) => {
             queryResult={unreviewedEventParticipantsQueryResult}
             queryName="unreviewedEventParticipants"
             render={(unreviewedEventParticipants) => (
-              <ReviewEventMembers user={user} event={event} participants={unreviewedEventParticipants} />
+              <AddReviewPageContent user={user} event={event} participants={unreviewedEventParticipants} />
             )}
             noDataDescription={`You have already left feedback for ${
               isUserOrganizer ? 'all the participants' : 'the organizer'

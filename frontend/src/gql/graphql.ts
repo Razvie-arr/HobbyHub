@@ -786,6 +786,13 @@ export type MutationMutationVariables = Exact<{
 
 export type MutationMutation = { __typename?: 'Mutation'; verify: string };
 
+export type BlockUserMutationVariables = Exact<{
+  blockerId: Scalars['Int']['input'];
+  blockedId: Scalars['Int']['input'];
+}>;
+
+export type BlockUserMutation = { __typename?: 'Mutation'; blockUser: string };
+
 export type CreateEventMutationVariables = Exact<{
   event: EventInput;
   location: LocationInputWithoutCoords;
@@ -2233,6 +2240,49 @@ export const MutationDocument = {
     },
   ],
 } as unknown as DocumentNode<MutationMutation, MutationMutationVariables>;
+export const BlockUserDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'mutation',
+      name: { kind: 'Name', value: 'BlockUser' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'blockerId' } },
+          type: { kind: 'NonNullType', type: { kind: 'NamedType', name: { kind: 'Name', value: 'Int' } } },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'blockedId' } },
+          type: { kind: 'NonNullType', type: { kind: 'NamedType', name: { kind: 'Name', value: 'Int' } } },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'blockUser' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'blocker_id' },
+                value: { kind: 'Variable', name: { kind: 'Name', value: 'blockerId' } },
+              },
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'blocked_id' },
+                value: { kind: 'Variable', name: { kind: 'Name', value: 'blockedId' } },
+              },
+            ],
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<BlockUserMutation, BlockUserMutationVariables>;
 export const CreateEventDocument = {
   kind: 'Document',
   definitions: [
