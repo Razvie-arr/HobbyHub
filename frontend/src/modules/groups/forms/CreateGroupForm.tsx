@@ -1,5 +1,6 @@
 import { useMutation } from '@apollo/client';
 import { useToast } from '@chakra-ui/react';
+import { NonEmptyArray } from 'effect/ReadonlyArray';
 import { useNavigate } from 'react-router-dom';
 
 import { route } from '../../../route';
@@ -17,7 +18,7 @@ interface SelectOption {
 const defaultValues = {
   groupImage: null,
   name: '',
-  eventTypes: [] as unknown as [SelectOption, ...SelectOption[]],
+  eventTypes: [] as unknown as NonEmptyArray<SelectOption>,
   summary: '',
   streetName: '',
   streetNumber: '',

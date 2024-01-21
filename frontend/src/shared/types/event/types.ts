@@ -1,3 +1,5 @@
+import { NonEmptyArray } from 'effect/ReadonlyArray';
+
 import { DocumentType } from '../../../gql';
 
 import { EventFragment } from './fragments';
@@ -13,7 +15,7 @@ export interface WithEvents {
 }
 
 export interface WithNonEmptyEvents {
-  events: [EventData, ...EventData[]];
+  events: NonEmptyArray<EventData>;
 }
 
 export type EventTypeName =

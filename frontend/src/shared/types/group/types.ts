@@ -1,3 +1,5 @@
+import { NonEmptyArray } from 'effect/ReadonlyArray';
+
 import { DocumentType } from '../../../gql';
 
 import { GroupFragment } from './fragments';
@@ -13,6 +15,6 @@ export interface WithGroups {
 }
 
 export interface WithNonEmptyGroups {
-  groups: [GroupData, ...GroupData[]];
+  groups: NonEmptyArray<GroupData>;
 }
 
