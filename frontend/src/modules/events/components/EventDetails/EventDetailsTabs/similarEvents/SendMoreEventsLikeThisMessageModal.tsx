@@ -61,7 +61,10 @@ export const SendMoreEventsLikeThisMessageModal = ({
                 id: recipient.id,
               },
               sender: { email: user.email, first_name: user.first_name, last_name: user.last_name, id: user.id },
-              event,
+              event: {
+                id: event.id,
+                name: event.name,
+              },
               emailBody: formValues.message,
             },
           });
