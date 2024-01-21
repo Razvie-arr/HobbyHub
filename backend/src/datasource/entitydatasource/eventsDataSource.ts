@@ -317,7 +317,8 @@ export const eventsDataSource = (db: { query: DataSourceKnex; write: DataSourceK
   setFeedbackSentStatus: (eventId: number, sent: boolean) =>
     db.write('Event').where('id', eventId).update({ feedback_request_sent: sent }),
 
-  setNullReviewsEventId: (eventId: number) => db.write('Review').where('event_id', eventId).update({ event_id: null }),
+  setNullReviewsEventId: (trx: Knex.Transaction, eventId: number) =>
+    trx('Review').where('event_id', eventId).update({ event_id: null }),
 
   setCancelled: (eventId: number, cancelled: boolean) =>
     db.write('Event').where('id', eventId).update({ cancelled: cancelled }),

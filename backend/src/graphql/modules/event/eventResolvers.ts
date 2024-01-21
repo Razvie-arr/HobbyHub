@@ -37,6 +37,7 @@ import {
 } from '../../../types';
 import { createEventInput, getPublicStorageFilePath } from '../../../utils/helpers';
 
+import { deleteEventInTransaction } from './deleteEventInTransaction';
 import { sendMassEmailToEventParticipants } from './sendMassEmailToEventParticipants';
 import { sendMassEventCancelledEmail } from './sendMassEventCancelledEmail';
 
@@ -303,33 +304,7 @@ export const deleteEventResolver = async (
   _: unknown,
   { event_id, location_id }: MutationDeleteEventArgs,
   { dataSources }: CustomContext,
-) => {
-  const dbEventEventTypeResult = await dataSources.sql.db.write('Event_EventType').where('event_id', event_id).delete();
-
-  if (!dbEventEventTypeResult) {
-    throw new GraphQLError(`Error while deleting event from Event_EventType table!`);
-  }
-
-  const dbSetNullReviewsEventIdResult = await dataSources.sql.events.setNullReviewsEventId(event_id);
-
-  if (!dbSetNullReviewsEventIdResult) {
-    throw new GraphQLError(`Error while setting reviews event ids to null`);
-  }
-
-  const dbEventResult = await dataSources.sql.db.write('Event').where('id', event_id).delete();
-
-  if (!dbEventResult) {
-    throw new GraphQLError(`Error while deleting event!`);
-  }
-
-  const dbLocationResult = await dataSources.sql.db.write('Location').where('id', location_id).delete();
-
-  if (!dbLocationResult) {
-    throw new GraphQLError(`Error while deleting location!`);
-  }
-
-  return 'Event and location deleted!';
-};
+): Promise<string> => deleteEventInTransaction(event_id, location_id, dataSources.sql);
 
 export const filterEventResolver = async (
   _: unknown,
@@ -527,4 +502,3 @@ export const moreEventsLikeThisResolver = async (
 
   return 'Email sent successfully!';
 };
-
