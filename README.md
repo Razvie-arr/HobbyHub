@@ -40,9 +40,43 @@ New JavaScript features (ES2015+) are "enabled" for all modern browsers with [Ba
 
 ## SSH
 
-- `ssh username@vse.handson.pro`
+- `ssh team01@vse.handson.pro`
 - frontend code: `cd ~/code/cviceni/frontend`
 
 ### Domains
 
-- [dev-frontend-**username**-vse.handson.pro](http://dev-frontend-username-vse.handson.pro)
+- [frontend-**team01**-vse.handson.pro](http://frontend-team01-vse.handson.pro)
+
+## System Requirements
+
+Before setting up the project, ensure you have the following installed:
+
+### For BE:
+
+- **Node.js**: [Node.js](https://nodejs.org/) version `20.11.0` or above.
+- **Package Manager**: [npm](https://www.npmjs.com/) or [yarn](https://yarnpkg.com/) (recommended version `3.6.4`).
+- **Database**: [MySQL](https://www.mysql.com/) compatible with MariaDB driver version `3.2.0`.
+- **Knex**: [Knex](https://knexjs.org/) version `3.0.1`.
+- **Nodemailer**: [NodeMailer](https://nodemailer.com/) (version `6.4.13` recommended).
+- **Google Maps API**: //TODO
+- **Other Dependencies**: The project may require additional system dependencies depending on your operating system.
+
+## Knex setup
+
+- Knex is a SQL query builder compatible with MySQL and MariaDB.
+- For step-by-step setup guide, please refer to this [manual](https://knexjs.org/guide/)
+
+## Nodemailer setup
+
+- The app uses Nodemailer with [Brevo relay](https://developers.brevo.com/) for email functionality. Ensure the correct
+  settings are configured in the .env or .env.local file as seen in our .env dummy file.
+- Add nodemailer via `npm install nodemailer` or `yarn add nodemailer`
+- Create your account at [Brevo](https://onboarding.brevo.com/account/register) and generate an SMTP key
+- Fill your credentials and SMTP key as
+  shown [here](https://developers.brevo.com/docs/node-smtp-relay-example#declare-your-stmp-credentials)
+- To send emails, just simply build your content as a simple String or HTML and trigger it in code as
+  shown [here](https://developers.brevo.com/docs/node-smtp-relay-example#compose-your-email-object)
+
+## Google Maps API
+
+//TODO
