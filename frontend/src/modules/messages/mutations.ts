@@ -12,9 +12,3 @@ export const SEND_MESSAGE = gql(`
   }
 `);
 
-export const SEND_MASS_MESSAGE = gql(`
-  mutation MassEmailToEventParticipants($eventId: Int!, $emailSubject: String!, $emailBody: String!) {
-    massEmailToEventParticipants(eventId: $eventId, emailSubject: $emailSubject, emailBody: $emailBody)
-  }
-`);
-

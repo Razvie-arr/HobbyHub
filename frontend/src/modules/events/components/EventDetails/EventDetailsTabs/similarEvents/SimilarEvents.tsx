@@ -1,21 +1,21 @@
 import { useQuery } from '@apollo/client';
 import { Flex } from '@chakra-ui/react';
+import { identity } from 'effect';
 import { match } from 'ts-pattern';
 
-import { QueryResult } from '../../../../../shared/layout';
-import { renderEventList } from '../../../../../shared/renderers/renderEventList';
-import { getLocationFragmentData, WithEvent, WithNullableAuthUser } from '../../../../../shared/types';
-import { SIMILAR_EVENTS } from '../../../queries';
+import { QueryResult } from 'src/shared/layout';
+import { renderEventList } from 'src/shared/renderers/renderEventList';
+import { getLocationFragmentData, WithEvent, WithNullableAuthUser } from 'src/shared/types';
+
+import { SIMILAR_EVENTS } from '../../../../queries';
 
 import { MoreEventsLikeThisCard } from './MoreEventsLikeThisCard';
 
 export const SimilarEvents = ({ user, event }: WithNullableAuthUser & WithEvent) => {
-  const authorId = match(event.author)
-    .with({ __typename: 'User' }, ({ id }) => id)
-    .with({ __typename: 'Group' }, ({ admin }) => admin.id)
+  const author = match(event.author)
+    .with({ __typename: 'User' }, identity)
+    .with({ __typename: 'Group' }, ({ admin }) => admin)
     .exhaustive();
-
-  const isCurrentUserOrganizer = user && user.id === authorId;
 
   return (
     <QueryResult
@@ -31,14 +31,17 @@ export const SimilarEvents = ({ user, event }: WithNullableAuthUser & WithEvent)
       render={renderEventList({
         user,
         maxColumnCount: 3,
-        additionalCards: isCurrentUserOrganizer ? null : <MoreEventsLikeThisCard />,
+        additionalCards:
+          !user || (user && user.id === author.id) ? null : (
+            <MoreEventsLikeThisCard user={user} recipient={author} event={event} />
+          ),
       })}
       renderOnNoData={
-        isCurrentUserOrganizer ? (
+        !user || (user && user.id === author.id) ? (
           `We found no events similar to ${event.name}`
         ) : (
           <Flex flexWrap="wrap" columnGap="4" justifyContent={{ base: 'center', md: 'start' }}>
-            <MoreEventsLikeThisCard />
+            <MoreEventsLikeThisCard user={user} recipient={author} event={event} />
           </Flex>
         )
       }

@@ -1,11 +1,12 @@
 import { useMutation } from '@apollo/client';
 import { useDisclosure, useToast } from '@chakra-ui/react';
+import { FaMessage } from 'react-icons/fa6';
 
 import { ModalForm, TextareaField, zod, zodResolver } from 'src/shared/forms';
-import { WithAuthUser } from 'src/shared/types';
+import { WithAuthUser, WithEvent } from 'src/shared/types';
 
-import { SEND_MESSAGE } from '../mutations';
-import { WithRecipient } from '../types';
+import { WithRecipient } from '../../../../../messages';
+import { SEND_MORE_EVENTS_LIKE_THIS_MESSAGE } from '../../../../mutations';
 
 const schema = zod.object({
   message: zod.string().min(1, { message: 'Message cannot be empty' }),
@@ -14,36 +15,50 @@ const schema = zod.object({
 type FormValues = zod.infer<typeof schema>;
 
 const initialValues: FormValues = {
-  message: '',
+  message: 'I want to join more events that are just as great as this one!',
 };
 
-export const SendMessageModal = ({ user, recipient }: WithAuthUser & WithRecipient) => {
+const modalButtonProps = {
+  rounded: 'full',
+  w: '100%',
+  size: 'sm',
+  background: 'blue.800',
+  _hover: { background: 'blue.700' },
+  color: 'white',
+  leftIcon: <FaMessage />,
+};
+
+export const SendMoreEventsLikeThisMessageModal = ({
+  user,
+  recipient,
+  event,
+}: WithAuthUser & WithRecipient & WithEvent) => {
   const disclosure = useDisclosure();
   const toast = useToast();
 
-  const [sendMessage, sendMessageRequestState] = useMutation(SEND_MESSAGE, {
-    onCompleted: disclosure.onClose,
-  });
-
-  const modalButtonProps = {
-    rounded: 'full',
-    w: '100%',
-  };
+  const [sendMoreEventsLikeThisMessage, sendMoreEventsLikeThisMessageRequestState] = useMutation(
+    SEND_MORE_EVENTS_LIKE_THIS_MESSAGE,
+    {
+      onCompleted: disclosure.onClose,
+    },
+  );
 
   return (
     <ModalForm
       disclosure={disclosure}
-      error={sendMessageRequestState.error?.message}
+      error={sendMoreEventsLikeThisMessageRequestState.error?.message}
       modalButtonVariant="outline"
       formProps={{
         defaultValues: initialValues,
         noValidate: true,
         onSubmit: async (formValues) => {
-          await sendMessage({
+          await sendMoreEventsLikeThisMessage({
             variables: {
               recipient: { email: recipient.email, first_name: recipient.first_name, id: recipient.id },
               sender: { first_name: user.first_name, id: user.id },
-              text: formValues.message,
+              eventId: event.id,
+              eventName: event.name,
+              emailBody: formValues.message,
             },
           });
           toast({
@@ -57,10 +72,10 @@ export const SendMessageModal = ({ user, recipient }: WithAuthUser & WithRecipie
         },
         resolver: zodResolver(schema),
       }}
-      modalButtonText="Message"
-      modalTitle={`Send a message to ${recipient.first_name} ${recipient.last_name}`}
+      modalButtonText="More events like this"
+      modalTitle={`Let ${recipient.first_name} ${recipient.last_name} know that you want more events like this!`}
       submitButtonProps={{
-        isLoading: sendMessageRequestState.loading,
+        isLoading: sendMoreEventsLikeThisMessageRequestState.loading,
         text: 'Message',
       }}
       modalButtonProps={modalButtonProps}
@@ -69,7 +84,7 @@ export const SendMessageModal = ({ user, recipient }: WithAuthUser & WithRecipie
         autoFocus
         name="message"
         placeholder="Write a message..."
-        isDisabled={sendMessageRequestState.loading}
+        isDisabled={sendMoreEventsLikeThisMessageRequestState.loading}
       />
     </ModalForm>
   );

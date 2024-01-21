@@ -3,13 +3,14 @@ import { FaCheck } from 'react-icons/fa6';
 import { MdAccountCircle } from 'react-icons/md';
 import { match } from 'ts-pattern';
 
-import { ParticipantState } from '../../../../../gql/graphql';
-import { route } from '../../../../../route';
-import { RouterLink } from '../../../../../shared/navigation';
-import { WithEvent, WithNullableAuthUser } from '../../../../../shared/types';
-import { SendMessageModal } from '../../../../messages';
-import { WithParticipant } from '../../../types';
-import { ResolveRequestModal } from '../ResolveRequestModal';
+import { ParticipantState } from 'src/gql/graphql';
+import { route } from 'src/route';
+import { RouterLink } from 'src/shared/navigation';
+import { WithEvent, WithNullableAuthUser } from 'src/shared/types';
+
+import { SendMessageModal } from '../../../../../messages';
+import { WithParticipant } from '../../../../types';
+import { ResolveRequestModal } from '../../ResolveRequestModal';
 
 export const EventParticipantItem = ({
   user,

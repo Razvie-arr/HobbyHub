@@ -46,3 +46,15 @@ export const RESOLVE_EVENT_REGISTRATION = gql(`
   }
 `);
 
+export const SEND_MASS_MESSAGE = gql(`
+  mutation MassEmailToEventParticipants($eventId: Int!, $emailSubject: String!, $emailBody: String!) {
+    massEmailToEventParticipants(eventId: $eventId, emailSubject: $emailSubject, emailBody: $emailBody)
+  }
+`);
+
+export const SEND_MORE_EVENTS_LIKE_THIS_MESSAGE = gql(`
+  mutation MoreEventsLikeThis($sender: SenderInput!, $recipient: RecipientInput!, $eventId: Int!, $eventName: String!, $emailBody: String!) {
+    moreEventsLikeThis(sender: $sender, recipient: $recipient, eventId: $eventId, eventName: $eventName, emailBody: $emailBody)
+  }
+`);
+

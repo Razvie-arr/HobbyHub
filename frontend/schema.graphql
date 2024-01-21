@@ -169,6 +169,13 @@ type Mutation {
   editUser(location: LocationInputWithoutCoords!, user: UserInput!): User!
   massEmailToEventParticipants(emailBody: String!, emailSubject: String!, eventId: Int!): String!
   maxRatingAllParticipants(adminId: Int!, eventId: Int!): Boolean!
+  moreEventsLikeThis(
+    emailBody: String!
+    eventId: Int!
+    eventName: String!
+    recipient: RecipientInput!
+    sender: SenderInput!
+  ): String!
   onboardUser(location: LocationInputWithoutCoords!, user: UserInput!): AuthUser!
   requestEventRegistration(eventRegistration: RequestEventRegistrationInput!): String!
   requestResetPassword(email: String!): Boolean!

@@ -1,7 +1,6 @@
 import { GraphQLResolveInfo, GraphQLScalarType, GraphQLScalarTypeConfig } from 'graphql';
 import { CustomContext } from './types';
 import type { FileUpload } from 'graphql-upload/Upload';
-
 export type Maybe<T> = T | null;
 export type InputMaybe<T> = Maybe<T>;
 export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
@@ -311,9 +310,10 @@ export type MutationMaxRatingAllParticipantsArgs = {
 
 export type MutationMoreEventsLikeThisArgs = {
   emailBody: Scalars['String']['input'];
-  event: EventInput;
-  recipient: UserInput;
-  sender: UserInput;
+  eventId: Scalars['Int']['input'];
+  eventName: Scalars['String']['input'];
+  recipient: RecipientInput;
+  sender: SenderInput;
 };
 
 export type MutationOnboardUserArgs = {
@@ -1099,7 +1099,7 @@ export type MutationResolvers<
     ResolversTypes['String'],
     ParentType,
     ContextType,
-    RequireFields<MutationMoreEventsLikeThisArgs, 'emailBody' | 'event' | 'recipient' | 'sender'>
+    RequireFields<MutationMoreEventsLikeThisArgs, 'emailBody' | 'eventId' | 'eventName' | 'recipient' | 'sender'>
   >;
   onboardUser?: Resolver<
     ResolversTypes['AuthUser'],

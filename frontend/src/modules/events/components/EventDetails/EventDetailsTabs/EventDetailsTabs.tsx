@@ -1,10 +1,10 @@
 import { Box, Text } from '@chakra-ui/react';
 
-import { DataDetailsTabs } from '../../../../../shared/design-system';
-import { WithEvent, WithNullableAuthUser } from '../../../../../shared/types';
+import { DataDetailsTabs } from 'src/shared/design-system';
+import { WithEvent, WithNullableAuthUser } from 'src/shared/types';
 
-import { EventParticipants } from './EventParticipants';
-import { SimilarEvents } from './SimilarEvents';
+import { EventParticipants } from './participants';
+import { SimilarEvents } from './similarEvents';
 
 export const EventDetailsTabs = ({ event, user }: WithEvent & WithNullableAuthUser) => {
   const tabs = [

@@ -2,10 +2,11 @@ import { Flex } from '@chakra-ui/react';
 import { Option, pipe, ReadonlyArray } from 'effect';
 import { match } from 'ts-pattern';
 
-import { ParticipantState } from '../../../../../gql/graphql';
-import { NoData } from '../../../../../shared/design-system';
-import { WithEvent, WithNullableAuthUser } from '../../../../../shared/types';
-import { SendMassMessageModal } from '../../../../messages';
+import { ParticipantState } from 'src/gql/graphql';
+import { NoData } from 'src/shared/design-system';
+import { WithEvent, WithNullableAuthUser } from 'src/shared/types';
+
+import { SendMassMessageModal } from '../../../../../messages';
 
 import { EventParticipantItem } from './EventParticipantItem';
 

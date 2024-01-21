@@ -5,7 +5,7 @@ import { FaMessage } from 'react-icons/fa6';
 import { ModalForm, TextareaField, zod, zodResolver } from 'src/shared/forms';
 import { WithEvent } from 'src/shared/types';
 
-import { SEND_MASS_MESSAGE } from '../mutations';
+import { SEND_MASS_MESSAGE } from '../../../../mutations';
 
 const schema = zod.object({
   message: zod.string().min(1, { message: 'Message cannot be empty' }),

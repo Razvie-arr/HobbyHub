@@ -197,6 +197,7 @@ export type Mutation = {
   editUser: User;
   massEmailToEventParticipants: Scalars['String']['output'];
   maxRatingAllParticipants: Scalars['Boolean']['output'];
+  moreEventsLikeThis: Scalars['String']['output'];
   onboardUser: AuthUser;
   requestEventRegistration: Scalars['String']['output'];
   requestResetPassword: Scalars['Boolean']['output'];
@@ -303,6 +304,14 @@ export type MutationMassEmailToEventParticipantsArgs = {
 export type MutationMaxRatingAllParticipantsArgs = {
   adminId: Scalars['Int']['input'];
   eventId: Scalars['Int']['input'];
+};
+
+export type MutationMoreEventsLikeThisArgs = {
+  emailBody: Scalars['String']['input'];
+  eventId: Scalars['Int']['input'];
+  eventName: Scalars['String']['input'];
+  recipient: RecipientInput;
+  sender: SenderInput;
 };
 
 export type MutationOnboardUserArgs = {
@@ -859,6 +868,24 @@ export type ResolveEventRegistrationMutationVariables = Exact<{
 
 export type ResolveEventRegistrationMutation = { __typename?: 'Mutation'; resolveEventRegistration: string };
 
+export type MassEmailToEventParticipantsMutationVariables = Exact<{
+  eventId: Scalars['Int']['input'];
+  emailSubject: Scalars['String']['input'];
+  emailBody: Scalars['String']['input'];
+}>;
+
+export type MassEmailToEventParticipantsMutation = { __typename?: 'Mutation'; massEmailToEventParticipants: string };
+
+export type MoreEventsLikeThisMutationVariables = Exact<{
+  sender: SenderInput;
+  recipient: RecipientInput;
+  eventId: Scalars['Int']['input'];
+  eventName: Scalars['String']['input'];
+  emailBody: Scalars['String']['input'];
+}>;
+
+export type MoreEventsLikeThisMutation = { __typename?: 'Mutation'; moreEventsLikeThis: string };
+
 export type EventsQueryVariables = Exact<{
   offset?: InputMaybe<Scalars['Int']['input']>;
   limit?: InputMaybe<Scalars['Int']['input']>;
@@ -1064,14 +1091,6 @@ export type SendMessageMutationVariables = Exact<{
 }>;
 
 export type SendMessageMutation = { __typename?: 'Mutation'; sendMessage: string };
-
-export type MassEmailToEventParticipantsMutationVariables = Exact<{
-  eventId: Scalars['Int']['input'];
-  emailSubject: Scalars['String']['input'];
-  emailBody: Scalars['String']['input'];
-}>;
-
-export type MassEmailToEventParticipantsMutation = { __typename?: 'Mutation'; massEmailToEventParticipants: string };
 
 export type ThreadsQueryVariables = Exact<{
   userId: Scalars['Int']['input'];
@@ -2765,6 +2784,132 @@ export const ResolveEventRegistrationDocument = {
     },
   ],
 } as unknown as DocumentNode<ResolveEventRegistrationMutation, ResolveEventRegistrationMutationVariables>;
+export const MassEmailToEventParticipantsDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'mutation',
+      name: { kind: 'Name', value: 'MassEmailToEventParticipants' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'eventId' } },
+          type: { kind: 'NonNullType', type: { kind: 'NamedType', name: { kind: 'Name', value: 'Int' } } },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'emailSubject' } },
+          type: { kind: 'NonNullType', type: { kind: 'NamedType', name: { kind: 'Name', value: 'String' } } },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'emailBody' } },
+          type: { kind: 'NonNullType', type: { kind: 'NamedType', name: { kind: 'Name', value: 'String' } } },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'massEmailToEventParticipants' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'eventId' },
+                value: { kind: 'Variable', name: { kind: 'Name', value: 'eventId' } },
+              },
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'emailSubject' },
+                value: { kind: 'Variable', name: { kind: 'Name', value: 'emailSubject' } },
+              },
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'emailBody' },
+                value: { kind: 'Variable', name: { kind: 'Name', value: 'emailBody' } },
+              },
+            ],
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<MassEmailToEventParticipantsMutation, MassEmailToEventParticipantsMutationVariables>;
+export const MoreEventsLikeThisDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'mutation',
+      name: { kind: 'Name', value: 'MoreEventsLikeThis' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'sender' } },
+          type: { kind: 'NonNullType', type: { kind: 'NamedType', name: { kind: 'Name', value: 'SenderInput' } } },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'recipient' } },
+          type: { kind: 'NonNullType', type: { kind: 'NamedType', name: { kind: 'Name', value: 'RecipientInput' } } },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'eventId' } },
+          type: { kind: 'NonNullType', type: { kind: 'NamedType', name: { kind: 'Name', value: 'Int' } } },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'eventName' } },
+          type: { kind: 'NonNullType', type: { kind: 'NamedType', name: { kind: 'Name', value: 'String' } } },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'emailBody' } },
+          type: { kind: 'NonNullType', type: { kind: 'NamedType', name: { kind: 'Name', value: 'String' } } },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'moreEventsLikeThis' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'sender' },
+                value: { kind: 'Variable', name: { kind: 'Name', value: 'sender' } },
+              },
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'recipient' },
+                value: { kind: 'Variable', name: { kind: 'Name', value: 'recipient' } },
+              },
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'eventId' },
+                value: { kind: 'Variable', name: { kind: 'Name', value: 'eventId' } },
+              },
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'eventName' },
+                value: { kind: 'Variable', name: { kind: 'Name', value: 'eventName' } },
+              },
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'emailBody' },
+                value: { kind: 'Variable', name: { kind: 'Name', value: 'emailBody' } },
+              },
+            ],
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<MoreEventsLikeThisMutation, MoreEventsLikeThisMutationVariables>;
 export const EventsDocument = {
   kind: 'Document',
   definitions: [
@@ -5759,59 +5904,6 @@ export const SendMessageDocument = {
     },
   ],
 } as unknown as DocumentNode<SendMessageMutation, SendMessageMutationVariables>;
-export const MassEmailToEventParticipantsDocument = {
-  kind: 'Document',
-  definitions: [
-    {
-      kind: 'OperationDefinition',
-      operation: 'mutation',
-      name: { kind: 'Name', value: 'MassEmailToEventParticipants' },
-      variableDefinitions: [
-        {
-          kind: 'VariableDefinition',
-          variable: { kind: 'Variable', name: { kind: 'Name', value: 'eventId' } },
-          type: { kind: 'NonNullType', type: { kind: 'NamedType', name: { kind: 'Name', value: 'Int' } } },
-        },
-        {
-          kind: 'VariableDefinition',
-          variable: { kind: 'Variable', name: { kind: 'Name', value: 'emailSubject' } },
-          type: { kind: 'NonNullType', type: { kind: 'NamedType', name: { kind: 'Name', value: 'String' } } },
-        },
-        {
-          kind: 'VariableDefinition',
-          variable: { kind: 'Variable', name: { kind: 'Name', value: 'emailBody' } },
-          type: { kind: 'NonNullType', type: { kind: 'NamedType', name: { kind: 'Name', value: 'String' } } },
-        },
-      ],
-      selectionSet: {
-        kind: 'SelectionSet',
-        selections: [
-          {
-            kind: 'Field',
-            name: { kind: 'Name', value: 'massEmailToEventParticipants' },
-            arguments: [
-              {
-                kind: 'Argument',
-                name: { kind: 'Name', value: 'eventId' },
-                value: { kind: 'Variable', name: { kind: 'Name', value: 'eventId' } },
-              },
-              {
-                kind: 'Argument',
-                name: { kind: 'Name', value: 'emailSubject' },
-                value: { kind: 'Variable', name: { kind: 'Name', value: 'emailSubject' } },
-              },
-              {
-                kind: 'Argument',
-                name: { kind: 'Name', value: 'emailBody' },
-                value: { kind: 'Variable', name: { kind: 'Name', value: 'emailBody' } },
-              },
-            ],
-          },
-        ],
-      },
-    },
-  ],
-} as unknown as DocumentNode<MassEmailToEventParticipantsMutation, MassEmailToEventParticipantsMutationVariables>;
 export const ThreadsDocument = {
   kind: 'Document',
   definitions: [
