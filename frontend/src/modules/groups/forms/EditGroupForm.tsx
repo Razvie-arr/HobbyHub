@@ -65,7 +65,7 @@ const EditGroupForm = ({ groupId }: EditGroupFormProps) => {
               streetName: location.street_name,
               streetNumber: location.street_number,
               summary: group.summary,
-              // @ts-expect-error
+              // @ts-expect-error NonEmptyArray check
               eventTypes: group.event_types.map(({ id, name }) => ({ value: id, label: name })),
               image_filepath: '',
               description: group.description ?? '',

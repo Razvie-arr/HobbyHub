@@ -27,7 +27,7 @@ export const MessagesPageContainer = ({ user }: WithAuthUser) => {
       render={(threadFragments) => {
         const threads = threadFragments.map(getThreadFragmentData);
 
-        // @ts-expect-error
+        // @ts-expect-error NonEmptyArray check
         return <MessagesPage user={user} threads={threads} />;
       }}
     />

@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/prefer-ts-expect-error */
-
 import { getSQLDataSource } from '../../../datasource';
 import { Event } from '../../../types';
 
