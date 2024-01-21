@@ -167,17 +167,18 @@ export const requestResetPasswordResolver = async (
 ): Promise<boolean> => {
   const email = rawEmail.toLocaleLowerCase();
 
-  const user = (await dataSources.sql.db.query.raw(`SELECT * FROM User WHERE email = ?`, [email]))[0];
-  if (!user) {
+  const user = await dataSources.sql.db.query('User').where('email', email);
+  if (!user || user.length === 0 || !user[0]) {
     throw new GraphQLError('User not found');
   }
 
-  const resetToken = createTokenWithExpirationTime({ id: user.id }, tokenExpirationTime);
+  if (user.length > 1) {
+    throw new GraphQLError('Multiple users found!');
+  }
 
-  const dbUpdateResponse = await dataSources.sql.db.write.raw('UPDATE User SET token = ? WHERE email = ?', [
-    resetToken,
-    email,
-  ]);
+  const resetToken = createTokenWithExpirationTime({ id: user[0].id }, tokenExpirationTime);
+
+  const dbUpdateResponse = await dataSources.sql.users.updateUserToken(email, resetToken);
 
   if (!dbUpdateResponse) {
     throw new GraphQLError("Reset token wasn't updated");
@@ -203,7 +204,7 @@ export const resetPasswordResolver = async (
   { password, token }: MutationResetPasswordArgs,
   { dataSources }: CustomContext,
 ): Promise<boolean> => {
-  const user = (await dataSources.sql.db.query.raw(`SELECT * FROM User WHERE token = ?`, [token]))[0];
+  const user = await dataSources.sql.users.getUserByToken(token);
   if (!user) {
     throw new GraphQLError('Token is incorrect');
   }
@@ -216,10 +217,7 @@ export const resetPasswordResolver = async (
 
   const passwordHash = await argon2.hash(password);
 
-  const dbUpdateResponse = await dataSources.sql.db.write.raw('UPDATE User SET password = ? WHERE id = ?', [
-    passwordHash,
-    user.id,
-  ]);
+  const dbUpdateResponse = await dataSources.sql.users.updatePassword(passwordHash, user);
 
   if (!dbUpdateResponse) {
     throw new GraphQLError('Password not changed');

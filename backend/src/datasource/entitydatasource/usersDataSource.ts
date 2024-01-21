@@ -46,4 +46,13 @@ export const usersDataSource = (db: { query: DataSourceKnex; write: DataSourceKn
 
     return [...blockedBy.map((user) => user.id), ...blocking.map((user) => user.id)];
   },
+
+  updateUserToken: (email: String, resetToken: String) =>
+    db.write.raw('UPDATE User SET token = ? WHERE email = ?', [resetToken, email]),
+
+  getUserByToken: async (token: String) =>
+    (await db.query.raw(`SELECT * FROM User WHERE token = ?`, [token]))[0][0] as unknown as User,
+
+  updatePassword: (passwordHash: String, user: User) =>
+    db.write.raw('UPDATE User SET password = ? WHERE id = ?', [passwordHash, user.id]),
 });
