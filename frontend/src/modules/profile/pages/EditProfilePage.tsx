@@ -5,7 +5,6 @@ import { useNavigate } from 'react-router-dom';
 
 import { useAuth } from 'src/modules/auth';
 import { EmailField, NameField } from 'src/modules/auth/components/fields';
-import { NotAuthorized } from 'src/shared/design-system';
 import {
   AddressFormFields,
   addressFormFieldsSchema,
@@ -18,7 +17,7 @@ import {
 } from 'src/shared/forms';
 
 import { route } from '../../../route';
-import { getLocationFragmentData } from '../../../shared/types';
+import { getLocationFragmentData, WithAuthUser } from '../../../shared/types';
 import { EDIT_PROFILE } from '../mutations';
 
 const schema = zod.object({
@@ -30,11 +29,28 @@ const schema = zod.object({
   ...addressFormFieldsSchema,
 });
 
-export const EditProfilePage = () => {
-  const { signIn, token, user } = useAuth();
-  const [editProfilePageRequest, editProfilePageRequestState] = useMutation(EDIT_PROFILE);
+export const EditProfilePage = ({ user }: WithAuthUser) => {
   const navigate = useNavigate();
   const toast = useToast();
+
+  const { signIn, token } = useAuth();
+
+  const [editProfilePageRequest, editProfilePageRequestState] = useMutation(EDIT_PROFILE, {
+    onCompleted: (data) => {
+      toast({
+        variant: 'left-accent',
+        status: 'success',
+        position: 'top-right',
+        title: 'Profile updated successfully!',
+        isClosable: true,
+      });
+
+      const { __typename, ...updatedValues } = data.editUser;
+      signIn({ token, user: { ...user, ...updatedValues } });
+
+      navigate(route.currentProfile());
+    },
+  });
 
   useEffect(() => {
     if (user && (!user.location || user.event_types.length === 0)) {
@@ -42,10 +58,6 @@ export const EditProfilePage = () => {
       navigate(route.onboarding());
     }
   });
-
-  if (!user) {
-    return <NotAuthorized requireSignIn wrapInContentContainer />;
-  }
 
   if (!user.location || user.event_types.length === 0) {
     return null;
@@ -68,8 +80,8 @@ export const EditProfilePage = () => {
           country: location.country,
         }}
         resolver={zodResolver(schema)}
-        onSubmit={async (values) => {
-          const result = await editProfilePageRequest({
+        onSubmit={async (values) =>
+          editProfilePageRequest({
             variables: {
               user: {
                 first_name: values.first_name,
@@ -88,19 +100,8 @@ export const EditProfilePage = () => {
                 street_number: values.streetNumber,
               },
             },
-          });
-          if (result.data?.editUser) {
-            toast({
-              variant: 'left-accent',
-              status: 'success',
-              position: 'top-right',
-              title: 'Profile updated successfully!',
-              isClosable: true,
-            });
-            signIn({ token, user: { ...user, ...values, event_types: result.data.editUser.event_types } });
-            navigate(route.currentProfile());
-          }
-        }}
+          })
+        }
         noValidate
       >
         <Box position="sticky" top={{ base: '49px', md: '59px' }} width="100%" zIndex={2} bg="gray.100" pt="6">

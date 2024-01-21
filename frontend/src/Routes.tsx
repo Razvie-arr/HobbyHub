@@ -11,10 +11,16 @@ import { MessagesPage } from './modules/messages';
 import { EditProfilePage, ProfileDetailsPage } from './modules/profile';
 import { AddReviewPage } from './modules/reviews';
 import { SearchPage } from './modules/search';
+import { NotAuthorized } from './shared/design-system';
+import { WithAuthUser } from './shared/types';
 import { route } from './route';
 
 export const Routes = () => {
   const { user } = useAuth();
+
+  const createProtectedRoute = (Component: ({ user }: WithAuthUser) => JSX.Element | null) =>
+    user ? <Component user={user} /> : <NotAuthorized requireSignIn wrapInContentContainer />;
+
   return (
     <RouterRoutes>
       <Route path={route.landing()} element={<LandingPage />} />
@@ -31,25 +37,28 @@ export const Routes = () => {
       <Route path={route.signUp()} element={<SignUpPage />} />
       <Route path={route.verifyUser()} element={<VerifyUserPage />} />
 
-      <Route path={route.profile()} element={<ProfileDetailsPage />} />
       <Route path={route.currentProfile()} element={<ProfileDetailsPage />} />
+      <Route path={route.profile()} element={<ProfileDetailsPage />} />
 
-      <Route path={route.addReview()} element={<AddReviewPage />} />
-
-      <Route path={route.createEvent()} element={<CreateEventForm />} />
-      <Route path={route.editEvent()} element={<EditEventForm />} />
-      <Route path={route.createGroup()} element={<CreateGroupForm />} />
-      <Route path={route.editGroup()} element={<EditGroupForm />} />
-      <Route path={route.onboarding()} element={<OnboardingForm />} />
       <Route path={route.verifyUser()} element={<VerifyUserPage />} />
       <Route path={route.signIn()} element={<SignInPage />} />
       <Route path={route.signUp()} element={<SignUpPage />} />
       <Route path={route.forgotPassword()} element={<ForgotPasswordPage />} />
       <Route path={route.resetPassword()} element={<ResetPasswordPage />} />
 
-      <Route path={route.editProfile()} element={<EditProfilePage />} />
+      <Route path={route.onboarding()} element={createProtectedRoute(OnboardingForm)} />
 
-      {user ? <Route path={route.messages()} element={<MessagesPage user={user} />} /> : null}
+      <Route path={route.messages()} element={createProtectedRoute(MessagesPage)} />
+
+      <Route path={route.createEvent()} element={createProtectedRoute(CreateEventForm)} />
+      <Route path={route.editEvent()} element={createProtectedRoute(EditEventForm)} />
+
+      <Route path={route.createGroup()} element={createProtectedRoute(CreateGroupForm)} />
+      <Route path={route.editGroup()} element={createProtectedRoute(EditGroupForm)} />
+
+      <Route path={route.editProfile()} element={createProtectedRoute(EditProfilePage)} />
+
+      <Route path={route.addReview()} element={createProtectedRoute(AddReviewPage)} />
 
       <Route path="*" element={<NotFoundPage />} />
     </RouterRoutes>

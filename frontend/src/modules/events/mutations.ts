@@ -3,7 +3,7 @@ import { gql } from '../../gql';
 export const CREATE_EVENT = gql(`
   mutation CreateEvent($event: EventInput!, $location: LocationInputWithoutCoords!) {
     createEvent(event: $event, location: $location) {
-      id
+      ...EventFragment
     }
   }
 `);
@@ -11,7 +11,7 @@ export const CREATE_EVENT = gql(`
 export const EDIT_EVENT = gql(`
   mutation EditEvent($event: EventInput!, $location: LocationInputWithoutCoords!) {
     editEvent(event: $event, location: $location) {
-      id
+      ...EventFragment
     }
 }
 `);
