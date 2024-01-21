@@ -1,6 +1,7 @@
 import { GraphQLResolveInfo, GraphQLScalarType, GraphQLScalarTypeConfig } from 'graphql';
 import { CustomContext } from './types';
 import type { FileUpload } from 'graphql-upload/Upload';
+
 export type Maybe<T> = T | null;
 export type InputMaybe<T> = Maybe<T>;
 export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
@@ -199,6 +200,7 @@ export type Mutation = {
   editUser: User;
   massEmailToEventParticipants: Scalars['String']['output'];
   maxRatingAllParticipants: Scalars['Boolean']['output'];
+  moreEventsLikeThis: Scalars['String']['output'];
   onboardUser: AuthUser;
   requestEventRegistration: Scalars['String']['output'];
   requestResetPassword: Scalars['Boolean']['output'];
@@ -305,6 +307,13 @@ export type MutationMassEmailToEventParticipantsArgs = {
 export type MutationMaxRatingAllParticipantsArgs = {
   adminId: Scalars['Int']['input'];
   eventId: Scalars['Int']['input'];
+};
+
+export type MutationMoreEventsLikeThisArgs = {
+  emailBody: Scalars['String']['input'];
+  event: EventInput;
+  recipient: UserInput;
+  sender: UserInput;
 };
 
 export type MutationOnboardUserArgs = {
@@ -1085,6 +1094,12 @@ export type MutationResolvers<
     ParentType,
     ContextType,
     RequireFields<MutationMaxRatingAllParticipantsArgs, 'adminId' | 'eventId'>
+  >;
+  moreEventsLikeThis?: Resolver<
+    ResolversTypes['String'],
+    ParentType,
+    ContextType,
+    RequireFields<MutationMoreEventsLikeThisArgs, 'emailBody' | 'event' | 'recipient' | 'sender'>
   >;
   onboardUser?: Resolver<
     ResolversTypes['AuthUser'],
