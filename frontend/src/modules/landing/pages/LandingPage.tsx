@@ -25,13 +25,25 @@ export const LandingPage = () => {
     <ContentContainer my="16">
       <VStack spacing={16} alignItems="start">
         <Jumbotron
-          signUpFormModalButton={<SignUpForm disclosure={signUpModalDisclosure} modalButtonText="Join HobbyHub" />}
+          signUpFormModalButton={
+            <SignUpForm
+              disclosure={signUpModalDisclosure}
+              modalButtonText="Join HobbyHub"
+              modalButtonProps={{ size: 'lg' }}
+            />
+          }
         />
 
         <EventCategories />
 
         <JoinHobbyHubPrompt
-          signUpFormModalButton={<SignUpForm disclosure={signUpModalDisclosure} modalButtonText="Sign Up" />}
+          signUpFormModalButton={
+            <SignUpForm
+              disclosure={signUpModalDisclosure}
+              modalButtonText="Sign Up"
+              modalButtonProps={{ size: 'lg' }}
+            />
+          }
         />
 
         <MeetNewPeoplePrompt
