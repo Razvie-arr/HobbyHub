@@ -94,6 +94,8 @@ import {
   editUserResolver,
   onboardUserResolver,
   unblockUserResolver,
+  userBlockedByResolver,
+  userBlockingResolver,
   userByIdResolver,
   userEventsResolver,
   userEventTypesResolver,
@@ -214,6 +216,8 @@ export const rootResolver: Resolvers = {
     location: userLocationResolver,
     events: userEventsResolver,
     groups: userGroupsResolver,
+    blockedBy: userBlockedByResolver,
+    blocking: userBlockingResolver,
   },
 
   Group: {

@@ -26,6 +26,8 @@ const documents = {
   '\n  mutation Mutation($token: String!) {\n    verify(token: $token)\n  }\n': types.MutationDocument,
   '\n  mutation BlockUser($blockerId: Int!, $blockedId: Int!) {\n    blockUser(blocker_id: $blockerId, blocked_id: $blockedId)\n  }\n':
     types.BlockUserDocument,
+  '\n  mutation UnblockUser($blockerId: Int!, $blockedId: Int!) {\n    unblockUser(blocker_id: $blockerId, blocked_id: $blockedId)\n  }\n':
+    types.UnblockUserDocument,
   '\n  mutation CreateEvent($event: EventInput!, $location: LocationInputWithoutCoords!) {\n    createEvent(event: $event, location: $location) {\n      id\n    }\n  }\n':
     types.CreateEventDocument,
   '\n  mutation EditEvent($event: EventInput!, $location: LocationInputWithoutCoords!) {\n    editEvent(event: $event, location: $location) {\n      id\n    }\n}\n':
@@ -41,7 +43,7 @@ const documents = {
     types.ResolveEventRegistrationDocument,
   '\n  mutation MassEmailToEventParticipants($eventId: Int!, $emailSubject: String!, $emailBody: String!) {\n    massEmailToEventParticipants(eventId: $eventId, emailSubject: $emailSubject, emailBody: $emailBody)\n  }\n':
     types.MassEmailToEventParticipantsDocument,
-  '\n  mutation MoreEventsLikeThis($sender: SenderInput!, $recipient: RecipientInput!, $eventId: Int!, $eventName: String!, $emailBody: String!) {\n    moreEventsLikeThis(sender: $sender, recipient: $recipient, eventId: $eventId, eventName: $eventName, emailBody: $emailBody)\n  }\n':
+  '\n  mutation MoreEventsLikeThis($sender: UserEmailInput!, $recipient: UserEmailInput!, $event: EventEmailInput!, $emailBody: String!) {\n    moreEventsLikeThis(sender: $sender, recipient: $recipient, event: $event, emailBody: $emailBody)\n  }\n':
     types.MoreEventsLikeThisDocument,
   '\n  query Events($offset: Int, $limit: Int) {\n    events(offset: $offset, limit: $limit) {\n      ...EventFragment\n    }\n  }\n':
     types.EventsDocument,
@@ -177,6 +179,12 @@ export function gql(
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function gql(
+  source: '\n  mutation UnblockUser($blockerId: Int!, $blockedId: Int!) {\n    unblockUser(blocker_id: $blockerId, blocked_id: $blockedId)\n  }\n',
+): (typeof documents)['\n  mutation UnblockUser($blockerId: Int!, $blockedId: Int!) {\n    unblockUser(blocker_id: $blockerId, blocked_id: $blockedId)\n  }\n'];
+/**
+ * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function gql(
   source: '\n  mutation CreateEvent($event: EventInput!, $location: LocationInputWithoutCoords!) {\n    createEvent(event: $event, location: $location) {\n      id\n    }\n  }\n',
 ): (typeof documents)['\n  mutation CreateEvent($event: EventInput!, $location: LocationInputWithoutCoords!) {\n    createEvent(event: $event, location: $location) {\n      id\n    }\n  }\n'];
 /**
@@ -225,8 +233,8 @@ export function gql(
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function gql(
-  source: '\n  mutation MoreEventsLikeThis($sender: SenderInput!, $recipient: RecipientInput!, $eventId: Int!, $eventName: String!, $emailBody: String!) {\n    moreEventsLikeThis(sender: $sender, recipient: $recipient, eventId: $eventId, eventName: $eventName, emailBody: $emailBody)\n  }\n',
-): (typeof documents)['\n  mutation MoreEventsLikeThis($sender: SenderInput!, $recipient: RecipientInput!, $eventId: Int!, $eventName: String!, $emailBody: String!) {\n    moreEventsLikeThis(sender: $sender, recipient: $recipient, eventId: $eventId, eventName: $eventName, emailBody: $emailBody)\n  }\n'];
+  source: '\n  mutation MoreEventsLikeThis($sender: UserEmailInput!, $recipient: UserEmailInput!, $event: EventEmailInput!, $emailBody: String!) {\n    moreEventsLikeThis(sender: $sender, recipient: $recipient, event: $event, emailBody: $emailBody)\n  }\n',
+): (typeof documents)['\n  mutation MoreEventsLikeThis($sender: UserEmailInput!, $recipient: UserEmailInput!, $event: EventEmailInput!, $emailBody: String!) {\n    moreEventsLikeThis(sender: $sender, recipient: $recipient, event: $event, emailBody: $emailBody)\n  }\n'];
 /**
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
