@@ -2,12 +2,11 @@ import { useMutation } from '@apollo/client';
 import { useNavigate } from 'react-router-dom';
 
 import { Disclosure, Link, WithDisclosure } from 'src/shared/design-system';
-import { ModalForm, zod, zodResolver } from 'src/shared/forms';
+import { EmailField, ModalForm, PasswordField, zod, zodResolver } from 'src/shared/forms';
 
 import { route } from '../../../../route';
 import { useAuth } from '../../auth-core';
 import { SIGN_IN_MUTATION } from '../../queries';
-import { EmailField, PasswordField } from '../fields';
 
 import { OrSignUpButton } from './OrSignUpButton';
 

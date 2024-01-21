@@ -1,10 +1,9 @@
 import { Card, CardBody, CardHeader, Center, Heading, VStack } from '@chakra-ui/react';
 
-import { Form, zod, zodResolver } from 'src/shared/forms';
+import { Form, PasswordField, zod, zodResolver } from 'src/shared/forms';
 import { SubmitButton } from 'src/shared/forms/molecules/SubmitButton';
 
 import { ContentContainer } from '../../../shared/layout';
-import { PasswordField } from '../components/fields';
 
 const schema = zod
   .object({

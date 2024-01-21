@@ -2,10 +2,9 @@ import { ReactNode } from 'react';
 import { useMutation } from '@apollo/client';
 
 import { ButtonProps, useDisclosure, WithDisclosure } from 'src/shared/design-system';
-import { ModalForm, zod, zodResolver } from 'src/shared/forms';
+import { EmailField, ModalForm, NameField, PasswordField, zod, zodResolver } from 'src/shared/forms';
 
 import { SIGN_UP_MUTATION } from '../../queries';
-import { EmailField, NameField, PasswordField } from '../fields';
 
 import { EmailVerificationModal } from './EmailVerificationModal';
 

@@ -23,7 +23,7 @@ const documents = {
     types.SignInDocument,
   '\n  mutation SignUp($email: String!, $first_name: String!, $last_name: String!, $password: String!) {\n    signUp(email: $email, first_name: $first_name, last_name: $last_name, password: $password) {\n      user {\n        id\n        first_name\n        last_name\n        email\n      }\n      token\n    }\n  }\n':
     types.SignUpDocument,
-  '\n  mutation Mutation($token: String!) {\n    verify(token: $token)\n  }\n': types.MutationDocument,
+  '\n  mutation VerifyUser($token: String!) {\n    verify(token: $token)\n  }\n': types.VerifyUserDocument,
   '\n  mutation BlockUser($blockerId: Int!, $blockedId: Int!) {\n    blockUser(blocker_id: $blockerId, blocked_id: $blockedId)\n  }\n':
     types.BlockUserDocument,
   '\n  mutation UnblockUser($blockerId: Int!, $blockedId: Int!) {\n    unblockUser(blocker_id: $blockerId, blocked_id: $blockedId)\n  }\n':
@@ -87,6 +87,8 @@ const documents = {
     types.MessagesByThreadIdDocument,
   '\n  mutation EditUser($user: UserInput!, $location: LocationInputWithoutCoords!) {\n    editUser(user: $user, location: $location) {\n      id\n      first_name\n      last_name\n      description\n      email\n      event_types {\n        id\n        category\n        name\n      }\n      location {\n        ...LocationFragment\n      }\n    }\n  }\n':
     types.EditUserDocument,
+  '\n  mutation EditAuthUser($user: AuthUserInput!, $location: LocationInputWithoutCoords!) {\n    editAuthUser(user: $user, location: $location) {\n      id\n    }\n  }\n':
+    types.EditAuthUserDocument,
   '\n  query UserProfile($userId: Int!) {\n    userById(id: $userId) {\n      ...UserProfileFragment\n    }\n  }\n':
     types.UserProfileDocument,
   '\n  query UserCreatedEvents($userId: Int!, $offset: Int, $limit: Int) {\n    userCreatedEvents(userId: $userId, offset: $offset, limit: $limit) {\n        ...EventFragment\n      }\n    }\n':
@@ -167,8 +169,8 @@ export function gql(
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function gql(
-  source: '\n  mutation Mutation($token: String!) {\n    verify(token: $token)\n  }\n',
-): (typeof documents)['\n  mutation Mutation($token: String!) {\n    verify(token: $token)\n  }\n'];
+  source: '\n  mutation VerifyUser($token: String!) {\n    verify(token: $token)\n  }\n',
+): (typeof documents)['\n  mutation VerifyUser($token: String!) {\n    verify(token: $token)\n  }\n'];
 /**
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
@@ -361,6 +363,12 @@ export function gql(
 export function gql(
   source: '\n  mutation EditUser($user: UserInput!, $location: LocationInputWithoutCoords!) {\n    editUser(user: $user, location: $location) {\n      id\n      first_name\n      last_name\n      description\n      email\n      event_types {\n        id\n        category\n        name\n      }\n      location {\n        ...LocationFragment\n      }\n    }\n  }\n',
 ): (typeof documents)['\n  mutation EditUser($user: UserInput!, $location: LocationInputWithoutCoords!) {\n    editUser(user: $user, location: $location) {\n      id\n      first_name\n      last_name\n      description\n      email\n      event_types {\n        id\n        category\n        name\n      }\n      location {\n        ...LocationFragment\n      }\n    }\n  }\n'];
+/**
+ * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function gql(
+  source: '\n  mutation EditAuthUser($user: AuthUserInput!, $location: LocationInputWithoutCoords!) {\n    editAuthUser(user: $user, location: $location) {\n      id\n    }\n  }\n',
+): (typeof documents)['\n  mutation EditAuthUser($user: AuthUserInput!, $location: LocationInputWithoutCoords!) {\n    editAuthUser(user: $user, location: $location) {\n      id\n    }\n  }\n'];
 /**
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */

@@ -1,7 +1,8 @@
 import { gql } from 'src/gql';
 
 export const VERIFY_USER = gql(`
-  mutation Mutation($token: String!) {
+  mutation VerifyUser($token: String!) {
     verify(token: $token)
   }
 `);
+

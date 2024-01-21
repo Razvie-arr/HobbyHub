@@ -1,11 +1,10 @@
 import { useMutation } from '@apollo/client';
 import { Card, CardBody, CardHeader, Center, Heading, useDisclosure, VStack } from '@chakra-ui/react';
 
-import { Form, zod, zodResolver } from 'src/shared/forms';
+import { EmailField, Form, zod, zodResolver } from 'src/shared/forms';
 import { SubmitButton } from 'src/shared/forms/molecules/SubmitButton';
 
 import { ContentContainer } from '../../../shared/layout';
-import { EmailField } from '../components/fields';
 import { EmailVerificationModal } from '../components/SignUpForm/EmailVerificationModal';
 import { REQUEST_RESET_PASSWORD_MUTATION } from '../queries';
 

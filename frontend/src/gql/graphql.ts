@@ -821,11 +821,11 @@ export type SignUpMutation = {
   };
 };
 
-export type MutationMutationVariables = Exact<{
+export type VerifyUserMutationVariables = Exact<{
   token: Scalars['String']['input'];
 }>;
 
-export type MutationMutation = { __typename?: 'Mutation'; verify: string };
+export type VerifyUserMutation = { __typename?: 'Mutation'; verify: string };
 
 export type BlockUserMutationVariables = Exact<{
   blockerId: Scalars['Int']['input'];
@@ -1161,6 +1161,13 @@ export type EditUserMutation = {
       | null;
   };
 };
+
+export type EditAuthUserMutationVariables = Exact<{
+  user: AuthUserInput;
+  location: LocationInputWithoutCoords;
+}>;
+
+export type EditAuthUserMutation = { __typename?: 'Mutation'; editAuthUser: { __typename?: 'AuthUser'; id: number } };
 
 export type UserProfileQueryVariables = Exact<{
   userId: Scalars['Int']['input'];
@@ -2463,13 +2470,13 @@ export const SignUpDocument = {
     },
   ],
 } as unknown as DocumentNode<SignUpMutation, SignUpMutationVariables>;
-export const MutationDocument = {
+export const VerifyUserDocument = {
   kind: 'Document',
   definitions: [
     {
       kind: 'OperationDefinition',
       operation: 'mutation',
-      name: { kind: 'Name', value: 'Mutation' },
+      name: { kind: 'Name', value: 'VerifyUser' },
       variableDefinitions: [
         {
           kind: 'VariableDefinition',
@@ -2495,7 +2502,7 @@ export const MutationDocument = {
       },
     },
   ],
-} as unknown as DocumentNode<MutationMutation, MutationMutationVariables>;
+} as unknown as DocumentNode<VerifyUserMutation, VerifyUserMutationVariables>;
 export const BlockUserDocument = {
   kind: 'Document',
   definitions: [
@@ -6894,6 +6901,56 @@ export const EditUserDocument = {
     },
   ],
 } as unknown as DocumentNode<EditUserMutation, EditUserMutationVariables>;
+export const EditAuthUserDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'mutation',
+      name: { kind: 'Name', value: 'EditAuthUser' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'user' } },
+          type: { kind: 'NonNullType', type: { kind: 'NamedType', name: { kind: 'Name', value: 'AuthUserInput' } } },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'location' } },
+          type: {
+            kind: 'NonNullType',
+            type: { kind: 'NamedType', name: { kind: 'Name', value: 'LocationInputWithoutCoords' } },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'editAuthUser' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'user' },
+                value: { kind: 'Variable', name: { kind: 'Name', value: 'user' } },
+              },
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'location' },
+                value: { kind: 'Variable', name: { kind: 'Name', value: 'location' } },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [{ kind: 'Field', name: { kind: 'Name', value: 'id' } }],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<EditAuthUserMutation, EditAuthUserMutationVariables>;
 export const UserProfileDocument = {
   kind: 'Document',
   definitions: [

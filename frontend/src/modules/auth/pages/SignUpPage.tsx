@@ -3,11 +3,10 @@ import { Card, CardBody, CardHeader, Center, Heading, useDisclosure, VStack } fr
 import { useNavigate } from 'react-router-dom';
 
 import { route } from 'src/route';
-import { Form, zod, zodResolver } from 'src/shared/forms';
+import { EmailField, Form, NameField, PasswordField, zod, zodResolver } from 'src/shared/forms';
 import { SubmitButton } from 'src/shared/forms/molecules/SubmitButton';
 
 import { ContentContainer } from '../../../shared/layout';
-import { EmailField, NameField, PasswordField } from '../components/fields';
 import { EmailVerificationModal } from '../components/SignUpForm/EmailVerificationModal';
 import { SIGN_UP_MUTATION } from '../queries';
 
