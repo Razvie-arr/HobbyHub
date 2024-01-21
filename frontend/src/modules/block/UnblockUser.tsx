@@ -64,7 +64,13 @@ export const UnblockUserButton = ({
 
   return (
     <>
-      <Button onClick={onOpen} colorScheme="yellow" isLoading={blockUserRequestState.loading} {...buttonProps}>
+      <Button
+        onClick={onOpen}
+        colorScheme="red"
+        variant="outline"
+        isLoading={blockUserRequestState.loading}
+        {...buttonProps}
+      >
         Unblock
       </Button>
 
