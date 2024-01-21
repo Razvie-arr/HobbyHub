@@ -12,6 +12,7 @@ import {
   EventType,
   Group,
   Location,
+  MutationChangePasswordArgs,
   MutationEditAuthUserArgs,
   type MutationRequestResetPasswordArgs,
   type MutationResetPasswordArgs,
@@ -246,6 +247,8 @@ export const editAuthUserResolver = async (
 
   await dataSources.sql.eventTypes.updateUser_EventTypeRelation(user.id, user.event_type_ids);
 
+  user.password = await argon2.hash(user.password);
+
   const dbUpdateUserResponse = await dataSources.sql.db
     .write('User')
     .where('id', user.id)
@@ -263,4 +266,20 @@ export const editAuthUserResolver = async (
   }
 
   return dbUserResponse;
+};
+
+export const changePasswordResolver = async (
+  _: unknown,
+  { id, password }: MutationChangePasswordArgs,
+  { dataSources }: CustomContext,
+) => {
+  const passwordHash = await argon2.hash(password);
+
+  const dbResult = await dataSources.sql.users.changePassword(passwordHash, id);
+
+  if (!dbResult) {
+    throw new GraphQLError(`Error while attempting to change password for user with id ${id}!`);
+  }
+
+  return true;
 };

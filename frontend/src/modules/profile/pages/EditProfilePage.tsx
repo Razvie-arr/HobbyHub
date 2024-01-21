@@ -25,7 +25,7 @@ export const EditProfilePage = ({ user }: WithAuthUser) => {
   return (
     <Container maxW="3xl">
       <EditProfileForm user={user} location={location} />
-      <ChangePasswordForm user={user} location={location} />
+      <ChangePasswordForm user={user} />
     </Container>
   );
 };

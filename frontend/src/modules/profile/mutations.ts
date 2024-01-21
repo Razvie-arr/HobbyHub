@@ -20,11 +20,9 @@ export const EDIT_PROFILE = gql(`
   }
 `);
 
-export const EDIT_AUTH_PROFILE = gql(`
-  mutation EditAuthUser($user: AuthUserInput!, $location: LocationInputWithoutCoords!) {
-    editAuthUser(user: $user, location: $location) {
-      id
-    }
+export const CHANGE_PASSWORD = gql(`
+  mutation ChangePassword($id: Int!, $password: String!) {
+    changePassword(id: $id, password: $password)
   }
 `);
 

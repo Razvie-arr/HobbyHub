@@ -4,9 +4,9 @@ import { useNavigate } from 'react-router-dom';
 
 import { route } from 'src/route';
 import { Form, FormSection, PasswordField, zod, zodResolver } from 'src/shared/forms';
-import { WithAuthUser, WithLocation } from 'src/shared/types';
+import { WithAuthUser } from 'src/shared/types';
 
-import { EDIT_AUTH_PROFILE } from '../../mutations';
+import { CHANGE_PASSWORD } from '../../mutations';
 
 const schema = zod
   .object({
@@ -18,11 +18,11 @@ const schema = zod
     path: ['passwordConfirmation'],
   });
 
-export const ChangePasswordForm = ({ user, location }: WithAuthUser & WithLocation) => {
+export const ChangePasswordForm = ({ user }: WithAuthUser) => {
   const navigate = useNavigate();
   const toast = useToast();
 
-  const [editAuthProfileRequest, editAuthProfileRequestState] = useMutation(EDIT_AUTH_PROFILE, {
+  const [editAuthProfileRequest, editAuthProfileRequestState] = useMutation(CHANGE_PASSWORD, {
     onCompleted: () => {
       toast({
         variant: 'left-accent',
@@ -44,23 +44,8 @@ export const ChangePasswordForm = ({ user, location }: WithAuthUser & WithLocati
       onSubmit={async (values) =>
         editAuthProfileRequest({
           variables: {
-            user: {
-              id: user.id,
-              first_name: user.first_name,
-              last_name: user.last_name,
-              email: user.email,
-              verified: user.verified,
-              description: user.description,
-              location_id: location.id,
-              event_type_ids: user.event_types.map(({ id }) => id),
-              password: values.password,
-            },
-            location: {
-              city: location.city,
-              country: location.country,
-              street_name: location.street_name,
-              street_number: location.street_number,
-            },
+            id: user.id,
+            password: values.password,
           },
         })
       }
