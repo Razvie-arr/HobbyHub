@@ -52,12 +52,12 @@ export const QueryResult = <Q, V extends OperationVariables>({
     const result = data[queryName];
 
     if (Array.isArray(result) && result.length === 0) {
-      return renderOnNoData ?? <NoData description={noDataDescription} title={noDataTitle}/>;
+      return renderOnNoData ?? <NoData description={noDataDescription} title={noDataTitle} wrapInContentContainer />;
     }
 
     return render(result as NonNullable<Q[Exclude<keyof Q, '__typename'>]>, rest);
   }
 
-  return renderOnNoData ?? <NoData description={noDataDescription} title={noDataTitle} />;
+  return renderOnNoData ?? <NoData description={noDataDescription} title={noDataTitle} wrapInContentContainer />;
 };
 

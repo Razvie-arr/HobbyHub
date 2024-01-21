@@ -1,7 +1,6 @@
 import { useQuery } from '@apollo/client';
 import { useParams } from 'react-router-dom';
 
-import { NoData } from '../../../shared/design-system';
 import { QueryResult } from '../../../shared/layout';
 import { getEventFragmentData } from '../../../shared/types';
 import { EventDetails } from '../components';
@@ -21,7 +20,8 @@ const EventDetailsPage = ({ eventId }: EventDetailsProps) => {
       queryResult={eventQueryResult}
       queryName="eventById"
       render={(eventFragment) => <EventDetails event={getEventFragmentData(eventFragment)} />}
-      renderOnNoData={<NoData wrapInContentContainer />}
+      noDataTitle="Event Missing in Action!"
+      noDataDescription="Looks like the event you're looking for has vanished! Maybe it's a typo or the event is over. Don't worry, there are plenty more exciting events to discover!"
     />
   );
 };
