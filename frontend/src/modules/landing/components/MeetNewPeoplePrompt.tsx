@@ -24,7 +24,7 @@ export const MeetNewPeoplePrompt = ({ signUpFormModalButton }: MeetNewPeopleProm
   const breakpoint = useBreakpoint();
   return (
     <HStack spacing={4} w="100%" alignItems="stretch">
-      <Card>
+      <Card p="4">
         <CardBody>
           <VStack alignItems="start" spacing={8}>
             <Heading as="h1" fontSize={{ base: '2xl', md: '5xl' }} lineHeight={1.5}>
