@@ -77,6 +77,11 @@ export type Event = {
   summary: Scalars['String']['output'];
 };
 
+export type EventEmailInput = {
+  id: Scalars['Int']['input'];
+  name: Scalars['String']['input'];
+};
+
 export type EventInput = {
   allow_waitlist: Scalars['Boolean']['input'];
   author_id?: InputMaybe<Scalars['Int']['input']>;
@@ -310,10 +315,9 @@ export type MutationMaxRatingAllParticipantsArgs = {
 
 export type MutationMoreEventsLikeThisArgs = {
   emailBody: Scalars['String']['input'];
-  eventId: Scalars['Int']['input'];
-  eventName: Scalars['String']['input'];
-  recipient: RecipientInput;
-  sender: SenderInput;
+  event: EventEmailInput;
+  recipient: UserEmailInput;
+  sender: UserEmailInput;
 };
 
 export type MutationOnboardUserArgs = {
@@ -714,6 +718,13 @@ export type User = {
   verified: Scalars['Boolean']['output'];
 };
 
+export type UserEmailInput = {
+  email: Scalars['String']['input'];
+  first_name: Scalars['String']['input'];
+  id: Scalars['Int']['input'];
+  last_name: Scalars['String']['input'];
+};
+
 export type UserInput = {
   description?: InputMaybe<Scalars['String']['input']>;
   email: Scalars['String']['input'];
@@ -808,6 +819,7 @@ export type ResolversTypes = {
   Author: ResolverTypeWrapper<ResolversUnionTypes<ResolversTypes>['Author']>;
   Boolean: ResolverTypeWrapper<Scalars['Boolean']['output']>;
   Event: ResolverTypeWrapper<Omit<Event, 'author'> & { author: ResolversTypes['Author'] }>;
+  EventEmailInput: EventEmailInput;
   EventInput: EventInput;
   EventType: ResolverTypeWrapper<EventType>;
   FilterLocationInput: FilterLocationInput;
@@ -834,6 +846,7 @@ export type ResolversTypes = {
   Thread: ResolverTypeWrapper<Thread>;
   Upload: ResolverTypeWrapper<Scalars['Upload']['output']>;
   User: ResolverTypeWrapper<User>;
+  UserEmailInput: UserEmailInput;
   UserInput: UserInput;
 };
 
@@ -845,6 +858,7 @@ export type ResolversParentTypes = {
   Author: ResolversUnionTypes<ResolversParentTypes>['Author'];
   Boolean: Scalars['Boolean']['output'];
   Event: Omit<Event, 'author'> & { author: ResolversParentTypes['Author'] };
+  EventEmailInput: EventEmailInput;
   EventInput: EventInput;
   EventType: EventType;
   FilterLocationInput: FilterLocationInput;
@@ -868,6 +882,7 @@ export type ResolversParentTypes = {
   Thread: Thread;
   Upload: Scalars['Upload']['output'];
   User: User;
+  UserEmailInput: UserEmailInput;
   UserInput: UserInput;
 };
 
@@ -1099,7 +1114,7 @@ export type MutationResolvers<
     ResolversTypes['String'],
     ParentType,
     ContextType,
-    RequireFields<MutationMoreEventsLikeThisArgs, 'emailBody' | 'eventId' | 'eventName' | 'recipient' | 'sender'>
+    RequireFields<MutationMoreEventsLikeThisArgs, 'emailBody' | 'event' | 'recipient' | 'sender'>
   >;
   onboardUser?: Resolver<
     ResolversTypes['AuthUser'],

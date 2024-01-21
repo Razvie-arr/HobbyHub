@@ -75,6 +75,11 @@ export type Event = {
   summary: Scalars['String']['output'];
 };
 
+export type EventEmailInput = {
+  id: Scalars['Int']['input'];
+  name: Scalars['String']['input'];
+};
+
 export type EventInput = {
   allow_waitlist: Scalars['Boolean']['input'];
   author_id?: InputMaybe<Scalars['Int']['input']>;
@@ -308,10 +313,9 @@ export type MutationMaxRatingAllParticipantsArgs = {
 
 export type MutationMoreEventsLikeThisArgs = {
   emailBody: Scalars['String']['input'];
-  eventId: Scalars['Int']['input'];
-  eventName: Scalars['String']['input'];
-  recipient: RecipientInput;
-  sender: SenderInput;
+  event: EventEmailInput;
+  recipient: UserEmailInput;
+  sender: UserEmailInput;
 };
 
 export type MutationOnboardUserArgs = {
@@ -712,6 +716,13 @@ export type User = {
   verified: Scalars['Boolean']['output'];
 };
 
+export type UserEmailInput = {
+  email: Scalars['String']['input'];
+  first_name: Scalars['String']['input'];
+  id: Scalars['Int']['input'];
+  last_name: Scalars['String']['input'];
+};
+
 export type UserInput = {
   description?: InputMaybe<Scalars['String']['input']>;
   email: Scalars['String']['input'];
@@ -823,6 +834,13 @@ export type BlockUserMutationVariables = Exact<{
 
 export type BlockUserMutation = { __typename?: 'Mutation'; blockUser?: string | null };
 
+export type UnblockUserMutationVariables = Exact<{
+  blockerId: Scalars['Int']['input'];
+  blockedId: Scalars['Int']['input'];
+}>;
+
+export type UnblockUserMutation = { __typename?: 'Mutation'; unblockUser?: string | null };
+
 export type CreateEventMutationVariables = Exact<{
   event: EventInput;
   location: LocationInputWithoutCoords;
@@ -877,10 +895,9 @@ export type MassEmailToEventParticipantsMutationVariables = Exact<{
 export type MassEmailToEventParticipantsMutation = { __typename?: 'Mutation'; massEmailToEventParticipants: string };
 
 export type MoreEventsLikeThisMutationVariables = Exact<{
-  sender: SenderInput;
-  recipient: RecipientInput;
-  eventId: Scalars['Int']['input'];
-  eventName: Scalars['String']['input'];
+  sender: UserEmailInput;
+  recipient: UserEmailInput;
+  event: EventEmailInput;
   emailBody: Scalars['String']['input'];
 }>;
 
@@ -2503,6 +2520,49 @@ export const BlockUserDocument = {
     },
   ],
 } as unknown as DocumentNode<BlockUserMutation, BlockUserMutationVariables>;
+export const UnblockUserDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'mutation',
+      name: { kind: 'Name', value: 'UnblockUser' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'blockerId' } },
+          type: { kind: 'NonNullType', type: { kind: 'NamedType', name: { kind: 'Name', value: 'Int' } } },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'blockedId' } },
+          type: { kind: 'NonNullType', type: { kind: 'NamedType', name: { kind: 'Name', value: 'Int' } } },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'unblockUser' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'blocker_id' },
+                value: { kind: 'Variable', name: { kind: 'Name', value: 'blockerId' } },
+              },
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'blocked_id' },
+                value: { kind: 'Variable', name: { kind: 'Name', value: 'blockedId' } },
+              },
+            ],
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<UnblockUserMutation, UnblockUserMutationVariables>;
 export const CreateEventDocument = {
   kind: 'Document',
   definitions: [
@@ -2848,22 +2908,17 @@ export const MoreEventsLikeThisDocument = {
         {
           kind: 'VariableDefinition',
           variable: { kind: 'Variable', name: { kind: 'Name', value: 'sender' } },
-          type: { kind: 'NonNullType', type: { kind: 'NamedType', name: { kind: 'Name', value: 'SenderInput' } } },
+          type: { kind: 'NonNullType', type: { kind: 'NamedType', name: { kind: 'Name', value: 'UserEmailInput' } } },
         },
         {
           kind: 'VariableDefinition',
           variable: { kind: 'Variable', name: { kind: 'Name', value: 'recipient' } },
-          type: { kind: 'NonNullType', type: { kind: 'NamedType', name: { kind: 'Name', value: 'RecipientInput' } } },
+          type: { kind: 'NonNullType', type: { kind: 'NamedType', name: { kind: 'Name', value: 'UserEmailInput' } } },
         },
         {
           kind: 'VariableDefinition',
-          variable: { kind: 'Variable', name: { kind: 'Name', value: 'eventId' } },
-          type: { kind: 'NonNullType', type: { kind: 'NamedType', name: { kind: 'Name', value: 'Int' } } },
-        },
-        {
-          kind: 'VariableDefinition',
-          variable: { kind: 'Variable', name: { kind: 'Name', value: 'eventName' } },
-          type: { kind: 'NonNullType', type: { kind: 'NamedType', name: { kind: 'Name', value: 'String' } } },
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'event' } },
+          type: { kind: 'NonNullType', type: { kind: 'NamedType', name: { kind: 'Name', value: 'EventEmailInput' } } },
         },
         {
           kind: 'VariableDefinition',
@@ -2890,13 +2945,8 @@ export const MoreEventsLikeThisDocument = {
               },
               {
                 kind: 'Argument',
-                name: { kind: 'Name', value: 'eventId' },
-                value: { kind: 'Variable', name: { kind: 'Name', value: 'eventId' } },
-              },
-              {
-                kind: 'Argument',
-                name: { kind: 'Name', value: 'eventName' },
-                value: { kind: 'Variable', name: { kind: 'Name', value: 'eventName' } },
+                name: { kind: 'Name', value: 'event' },
+                value: { kind: 'Variable', name: { kind: 'Name', value: 'event' } },
               },
               {
                 kind: 'Argument',

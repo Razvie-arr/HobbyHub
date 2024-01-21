@@ -54,10 +54,14 @@ export const SendMoreEventsLikeThisMessageModal = ({
         onSubmit: async (formValues) => {
           await sendMoreEventsLikeThisMessage({
             variables: {
-              recipient: { email: recipient.email, first_name: recipient.first_name, id: recipient.id },
-              sender: { first_name: user.first_name, id: user.id },
-              eventId: event.id,
-              eventName: event.name,
+              recipient: {
+                email: recipient.email,
+                first_name: recipient.first_name,
+                last_name: recipient.last_name,
+                id: recipient.id,
+              },
+              sender: { email: user.email, first_name: user.first_name, last_name: user.last_name, id: user.id },
+              event,
               emailBody: formValues.message,
             },
           });

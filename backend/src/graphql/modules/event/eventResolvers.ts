@@ -484,15 +484,15 @@ export const massEmailToEventParticipantsResolver = async (
 
 export const moreEventsLikeThisResolver = async (
   _: unknown,
-  { sender, recipient, eventId, eventName, emailBody }: MutationMoreEventsLikeThisArgs,
+  { sender, recipient, event, emailBody }: MutationMoreEventsLikeThisArgs,
   __: unknown,
 ) => {
   try {
     await sendEmail(recipient.email, 'More events like this', {
-      text: `User ${sender.first_name} would like  to see more events similar to\n${eventName}\nAn user has expressed interest in seeing more events similar to ${eventName}.\nCheck out their message below:\n${emailBody}`,
+      text: `User ${sender.first_name} would like  to see more events similar to\n${event.name}\nAn user has expressed interest in seeing more events similar to ${event.name}.\nCheck out their message below:\n${emailBody}`,
       html: `User <a href="https://frontend-team01-vse.handson.pro/profile/${sender.id}">${sender.first_name}</a> would like  to see more events similar to
-<p><a href="https://frontend-team01-vse.handson.pro/event/${eventId}">${eventName}</a></p>
-<p>An user has expressed interest in seeing more events similar to <a href="https://frontend-team01-vse.handson.pro/event/${eventId}">${eventName}</a>.</p>
+<p><a href="https://frontend-team01-vse.handson.pro/event/${event.id}">${event.name}</a></p>
+<p>An user has expressed interest in seeing more events similar to <a href="https://frontend-team01-vse.handson.pro/event/${event.id}">${event.name}</a>.</p>
 <p>Check out their message below:</p>
 <p>${emailBody}</p>`,
     });
