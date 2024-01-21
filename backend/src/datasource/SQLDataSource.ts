@@ -9,6 +9,7 @@ import {
   groupsDataSource,
   messagesDataSource,
   reviewDataSource,
+  searchDataSource,
   threadsDataSource,
   usersDataSource,
 } from './entitydatasource';
@@ -41,34 +42,7 @@ export class SQLDataSource extends BatchedSQLDataSource {
     getByIds: this.createGetByIdsQuery(tableName),
   });
 
-  public executeSearchByEventNameAuthorNameGroupName = (text: string, offset: number, limit: number) => {
-    const textLowerCase = text.toLowerCase();
-    return this.db.query
-      .select('Event.*')
-      .from('Event')
-      .leftJoin('User', 'Event.author_id', 'User.id')
-      .leftJoin('UserGroup', 'Event.group_id', 'UserGroup.id')
-      .whereRaw('LOWER(Event.name) like ?', `%${textLowerCase}%`)
-      .or.whereRaw('LOWER(User.first_name) like ?', `%${textLowerCase}%`)
-      .or.whereRaw('LOWER(User.last_name) like ?', `%${textLowerCase}%`)
-      .or.whereRaw('LOWER(UserGroup.name) like ?', `%${textLowerCase}%`)
-      .orderBy('start_datetime', 'desc')
-      .offset(offset)
-      .limit(limit);
-  };
-
-  public executeSearchByGroupNameAdminName = (text: string, offset: number, limit: number) => {
-    const textLowerCase = text.toLowerCase();
-    return this.db.query
-      .select('UserGroup.*')
-      .from('UserGroup')
-      .join('User', 'UserGroup.admin_id', 'User.id')
-      .whereRaw('LOWER(UserGroup.name) like ?', `%${textLowerCase}%`)
-      .or.whereRaw('LOWER(User.first_name) like ?', `%${textLowerCase}%`)
-      .or.whereRaw('LOWER(User.last_name) like ?', `%${textLowerCase}%`)
-      .offset(offset)
-      .limit(limit);
-  };
+  search = searchDataSource(this.db);
 
   events = {
     ...this.createBaseQueries('Event'),
