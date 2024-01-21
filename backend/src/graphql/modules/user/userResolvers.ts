@@ -174,50 +174,78 @@ export const blockUserResolver = async (
 
   const participatedEventIdsWithBlockerAdmin = await dataSources.sql.events.getJointEvents(blocker_id, blocked_id);
 
-  const dbRemoveFromEventsResponse = await dataSources.sql.events.removeFromEvents(
-    participatedEventIdsWithBlockerAdmin.map((event) => event.id),
-    blocked_id,
-  );
+  if (participatedEventIdsWithBlockerAdmin && participatedEventIdsWithBlockerAdmin.length > 0) {
+    const dbRemoveFromEventsResponse = await dataSources.sql.events.removeFromEvents(
+      participatedEventIdsWithBlockerAdmin.map((event) => event.id),
+      blocked_id,
+    );
 
-  if (!dbRemoveFromEventsResponse) {
-    throw new GraphQLError(`Error while attempting to remove user with id: ${blocked_id} from joined events.`);
-  }
+    if (!dbRemoveFromEventsResponse) {
+      throw new GraphQLError(`Error while attempting to remove user with id: ${blocked_id} from joined events.`);
+    }
 
-  for (const event of participatedEventIdsWithBlockerAdmin) {
-    try {
-      await sendEmail(user.email, 'Event participation declined', {
-        text: `Unfortunately, you've been removed from event ${event.name}`,
-        html: `Unfortunately, you've been removed from event <a href="https://frontend-team01-vse.handson.pro/event/${event.id}">${event.name}</a>.`,
-      });
-    } catch (error) {
-      throw error;
+    for (const event of participatedEventIdsWithBlockerAdmin) {
+      try {
+        await sendEmail(user.email, 'Event participation declined', {
+          text: `Unfortunately, you've been removed from event ${event.name}`,
+          html: `Unfortunately, you've been removed from event <a href="https://frontend-team01-vse.handson.pro/event/${event.id}">${event.name}</a>.`,
+        });
+      } catch (error) {
+        throw error;
+      }
     }
   }
 
   const pendingEventsIdsWithBlockerAdmin = await dataSources.sql.events.getPendingEvents(blocker_id, blocked_id);
 
-  await dataSources.sql.events.removeFromPending(
-    pendingEventsIdsWithBlockerAdmin.map((event) => event.id),
-    blocked_id,
-  );
+  if (pendingEventsIdsWithBlockerAdmin && pendingEventsIdsWithBlockerAdmin.length > 0) {
+    const dbRemoveFromPendingEvents = await dataSources.sql.events.removeFromPending(
+      pendingEventsIdsWithBlockerAdmin.map((event) => event.id),
+      blocked_id,
+    );
 
-  for (const event of pendingEventsIdsWithBlockerAdmin) {
-    try {
-      await sendEmail(user.email, 'Event registration declined', {
-        text: `Unfortunately, your registration for event ${event.name} has been declined.`,
-        html: `Unfortunately, your registration for event <a href="https://frontend-team01-vse.handson.pro/event/${event.id}">${event.name}</a> has been declined.`,
-      });
-    } catch (error) {
-      throw error;
+    if (!dbRemoveFromPendingEvents) {
+      throw new GraphQLError(`Error while attempting to remove user with id: ${blocked_id} from pending events.`);
+    }
+
+    for (const event of pendingEventsIdsWithBlockerAdmin) {
+      try {
+        await sendEmail(user.email, 'Event registration declined', {
+          text: `Unfortunately, your registration for event ${event.name} has been declined.`,
+          html: `Unfortunately, your registration for event <a href="https://frontend-team01-vse.handson.pro/event/${event.id}">${event.name}</a> has been declined.`,
+        });
+      } catch (error) {
+        throw error;
+      }
     }
   }
 
   const adminGroups = await dataSources.sql.groups.getUserAdminGroups(blocker_id);
-
-  await dataSources.sql.groups.removeFromGroups(
-    adminGroups.map((group) => group.id),
-    blocked_id,
+  const groupsToRemoveFrom = adminGroups.filter(
+    (group) => Array.isArray(group.members) && group.members.some((groupUser: User) => groupUser.id === blocker_id),
   );
+
+  if (groupsToRemoveFrom && groupsToRemoveFrom.length > 0) {
+    const dbRemoveFromGroupsResponse = await dataSources.sql.groups.removeFromGroups(
+      adminGroups.map((group) => group.id),
+      blocked_id,
+    );
+
+    if (!dbRemoveFromGroupsResponse) {
+      throw new GraphQLError(`Error while attempting to remove user with id: ${blocked_id} from joined events.`);
+    }
+
+    for (const group of groupsToRemoveFrom) {
+      try {
+        await sendEmail(user.email, 'Group participation declined', {
+          text: `Unfortunately, you've been removed from group ${group.name}`,
+          html: `Unfortunately, you've been removed from group <a href="https://frontend-team01-vse.handson.pro/group/${group.id}">${group.name}</a>.`,
+        });
+      } catch (error) {
+        throw error;
+      }
+    }
+  }
 
   const dbBlockResponse = await dataSources.sql.db
     .write('Blocked_User')

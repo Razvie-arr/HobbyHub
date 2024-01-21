@@ -89,8 +89,10 @@ import {
   verifyUserResolver,
 } from './modules/user/authResolvers';
 import {
+  blockUserResolver,
   editUserResolver,
   onboardUserResolver,
+  unblockUserResolver,
   userByIdResolver,
   userEventsResolver,
   userEventTypesResolver,
@@ -185,6 +187,8 @@ export const rootResolver: Resolvers = {
 
     editUser: editUserResolver,
     onboardUser: onboardUserResolver,
+    blockUser: blockUserResolver,
+    unblockUser: unblockUserResolver,
 
     editAuthUser: editAuthUserResolver,
 
@@ -247,4 +251,3 @@ export const rootResolver: Resolvers = {
     sender: messageSenderResolver,
   },
 };
-
