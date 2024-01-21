@@ -51,7 +51,7 @@ export const LandingPage = () => {
             <SignUpForm
               disclosure={signUpModalDisclosure}
               modalButtonText="Start a group"
-              modalButtonProps={{ w: '100%', variant: 'outline' }}
+              modalButtonProps={{ w: '100%', variant: 'outline', size: 'md' }}
             />
           }
         />
