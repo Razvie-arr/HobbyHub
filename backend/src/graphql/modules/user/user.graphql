@@ -17,6 +17,7 @@ extend type Mutation {
   onboardUser(user: UserInput!, location: LocationInputWithoutCoords!): AuthUser!
 
   editAuthUser(user: AuthUserInput!, location: LocationInputWithoutCoords!): AuthUser!
+  changePassword(id: Int!, password: String!): Boolean!
 
   blockUser(blocker_id: Int!, blocked_id: Int!): String
   unblockUser(blocker_id: Int!, blocked_id: Int!): String

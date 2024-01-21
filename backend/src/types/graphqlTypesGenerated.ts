@@ -1,6 +1,7 @@
 import { GraphQLResolveInfo, GraphQLScalarType, GraphQLScalarTypeConfig } from 'graphql';
 import { CustomContext } from './types';
 import type { FileUpload } from 'graphql-upload/Upload';
+
 export type Maybe<T> = T | null;
 export type InputMaybe<T> = Maybe<T>;
 export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
@@ -188,6 +189,7 @@ export type Mutation = {
   askForFeedback: Array<Scalars['String']['output']>;
   blockUser?: Maybe<Scalars['String']['output']>;
   cancelEvent: Scalars['String']['output'];
+  changePassword: Scalars['Boolean']['output'];
   createEvent: Event;
   createGroup: Group;
   createLocation?: Maybe<Location>;
@@ -230,6 +232,11 @@ export type MutationBlockUserArgs = {
 
 export type MutationCancelEventArgs = {
   eventId: Scalars['Int']['input'];
+};
+
+export type MutationChangePasswordArgs = {
+  id: Scalars['Int']['input'];
+  password: Scalars['String']['input'];
 };
 
 export type MutationCreateEventArgs = {
@@ -1018,6 +1025,12 @@ export type MutationResolvers<
     ParentType,
     ContextType,
     RequireFields<MutationCancelEventArgs, 'eventId'>
+  >;
+  changePassword?: Resolver<
+    ResolversTypes['Boolean'],
+    ParentType,
+    ContextType,
+    RequireFields<MutationChangePasswordArgs, 'id' | 'password'>
   >;
   createEvent?: Resolver<
     ResolversTypes['Event'],

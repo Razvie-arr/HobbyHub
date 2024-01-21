@@ -82,6 +82,7 @@ import {
   authUserByIdResolver,
   authUserEventTypesResolver,
   authUserLocationResolver,
+  changePasswordResolver,
   editAuthUserResolver,
   requestResetPasswordResolver,
   resetPasswordResolver,
@@ -195,6 +196,7 @@ export const rootResolver: Resolvers = {
     unblockUser: unblockUserResolver,
 
     editAuthUser: editAuthUserResolver,
+    changePassword: changePasswordResolver,
 
     createGroup: createGroupResolver,
     editGroup: editGroupResolver,

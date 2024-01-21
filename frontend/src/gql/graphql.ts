@@ -186,6 +186,7 @@ export type Mutation = {
   askForFeedback: Array<Scalars['String']['output']>;
   blockUser?: Maybe<Scalars['String']['output']>;
   cancelEvent: Scalars['String']['output'];
+  changePassword: Scalars['Boolean']['output'];
   createEvent: Event;
   createGroup: Group;
   createLocation?: Maybe<Location>;
@@ -228,6 +229,11 @@ export type MutationBlockUserArgs = {
 
 export type MutationCancelEventArgs = {
   eventId: Scalars['Int']['input'];
+};
+
+export type MutationChangePasswordArgs = {
+  id: Scalars['Int']['input'];
+  password: Scalars['String']['input'];
 };
 
 export type MutationCreateEventArgs = {
@@ -1162,12 +1168,12 @@ export type EditUserMutation = {
   };
 };
 
-export type EditAuthUserMutationVariables = Exact<{
-  user: AuthUserInput;
-  location: LocationInputWithoutCoords;
+export type ChangePasswordMutationVariables = Exact<{
+  id: Scalars['Int']['input'];
+  password: Scalars['String']['input'];
 }>;
 
-export type EditAuthUserMutation = { __typename?: 'Mutation'; editAuthUser: { __typename?: 'AuthUser'; id: number } };
+export type ChangePasswordMutation = { __typename?: 'Mutation'; changePassword: boolean };
 
 export type UserProfileQueryVariables = Exact<{
   userId: Scalars['Int']['input'];
@@ -6901,26 +6907,23 @@ export const EditUserDocument = {
     },
   ],
 } as unknown as DocumentNode<EditUserMutation, EditUserMutationVariables>;
-export const EditAuthUserDocument = {
+export const ChangePasswordDocument = {
   kind: 'Document',
   definitions: [
     {
       kind: 'OperationDefinition',
       operation: 'mutation',
-      name: { kind: 'Name', value: 'EditAuthUser' },
+      name: { kind: 'Name', value: 'ChangePassword' },
       variableDefinitions: [
         {
           kind: 'VariableDefinition',
-          variable: { kind: 'Variable', name: { kind: 'Name', value: 'user' } },
-          type: { kind: 'NonNullType', type: { kind: 'NamedType', name: { kind: 'Name', value: 'AuthUserInput' } } },
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'id' } },
+          type: { kind: 'NonNullType', type: { kind: 'NamedType', name: { kind: 'Name', value: 'Int' } } },
         },
         {
           kind: 'VariableDefinition',
-          variable: { kind: 'Variable', name: { kind: 'Name', value: 'location' } },
-          type: {
-            kind: 'NonNullType',
-            type: { kind: 'NamedType', name: { kind: 'Name', value: 'LocationInputWithoutCoords' } },
-          },
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'password' } },
+          type: { kind: 'NonNullType', type: { kind: 'NamedType', name: { kind: 'Name', value: 'String' } } },
         },
       ],
       selectionSet: {
@@ -6928,29 +6931,25 @@ export const EditAuthUserDocument = {
         selections: [
           {
             kind: 'Field',
-            name: { kind: 'Name', value: 'editAuthUser' },
+            name: { kind: 'Name', value: 'changePassword' },
             arguments: [
               {
                 kind: 'Argument',
-                name: { kind: 'Name', value: 'user' },
-                value: { kind: 'Variable', name: { kind: 'Name', value: 'user' } },
+                name: { kind: 'Name', value: 'id' },
+                value: { kind: 'Variable', name: { kind: 'Name', value: 'id' } },
               },
               {
                 kind: 'Argument',
-                name: { kind: 'Name', value: 'location' },
-                value: { kind: 'Variable', name: { kind: 'Name', value: 'location' } },
+                name: { kind: 'Name', value: 'password' },
+                value: { kind: 'Variable', name: { kind: 'Name', value: 'password' } },
               },
             ],
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [{ kind: 'Field', name: { kind: 'Name', value: 'id' } }],
-            },
           },
         ],
       },
     },
   ],
-} as unknown as DocumentNode<EditAuthUserMutation, EditAuthUserMutationVariables>;
+} as unknown as DocumentNode<ChangePasswordMutation, ChangePasswordMutationVariables>;
 export const UserProfileDocument = {
   kind: 'Document',
   definitions: [
