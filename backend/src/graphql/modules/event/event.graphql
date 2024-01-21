@@ -34,6 +34,7 @@ extend type Mutation {
 
   cancelEvent(eventId: Int!): String!
   massEmailToEventParticipants(eventId: Int!, emailSubject: String!, emailBody: String!): String!
+  moreEventsLikeThis(sender: UserInput!, recipient: UserInput!, event: EventInput!, emailBody: String!): String!
 }
 
 union Author = User | Group

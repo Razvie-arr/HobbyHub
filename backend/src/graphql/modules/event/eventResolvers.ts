@@ -18,6 +18,7 @@ import {
   MutationDeleteEventArgs,
   MutationEditEventArgs,
   MutationMassEmailToEventParticipantsArgs,
+  MutationMoreEventsLikeThisArgs,
   MutationRequestEventRegistrationArgs,
   MutationResolveEventRegistrationArgs,
   MutationUploadEventImageArgs,
@@ -504,4 +505,25 @@ export const massEmailToEventParticipantsResolver = async (
 
   await sendMassEmailToEventParticipants(event, eventAcceptedParticipants, emailSubject, emailBody, serverUrl);
   return 'Emails successfully sent';
+};
+
+export const moreEventsLikeThisResolver = async (
+  _: unknown,
+  { sender, recipient, event, emailBody }: MutationMoreEventsLikeThisArgs,
+  __: unknown,
+) => {
+  try {
+    await sendEmail(recipient.email, 'More events like this', {
+      text: `User ${sender.first_name} ${sender.last_name} would like  to see more events similar to\n${event.name}\nAn user has expressed interest in seeing more events similar to ${event.name}.\nCheck out their message below:\n${emailBody}`,
+      html: `User <a href="https://frontend-team01-vse.handson.pro/profile/${sender.id}">${sender.first_name} ${sender.last_name}</a> would like  to see more events similar to
+<p><a href="https://frontend-team01-vse.handson.pro/event/${event.id}">${event.name}</a></p>
+<p>An user has expressed interest in seeing more events similar to <a href="https://frontend-team01-vse.handson.pro/event/${event.id}">${event.name}</a>.</p>
+<p>Check out their message below:</p>
+<p>${emailBody}</p>`,
+    });
+  } catch (error) {
+    throw error;
+  }
+
+  return 'Email sent successfully!';
 };
