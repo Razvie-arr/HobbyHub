@@ -8,7 +8,7 @@ import { SubmitButton } from 'src/shared/forms/molecules/SubmitButton';
 
 import { ContentContainer } from '../../../shared/layout';
 import { EmailVerificationModal } from '../components/SignUpForm/EmailVerificationModal';
-import { SIGN_UP_MUTATION } from '../queries';
+import { SIGN_UP_MUTATION } from '../mutations';
 
 const schema = zod
   .object({

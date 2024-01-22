@@ -10,7 +10,7 @@ import { ReactRouterLink } from 'src/shared/navigation';
 import { ContentContainer } from '../../../shared/layout';
 import { useAuth } from '../auth-core';
 import { OrSignUpButton } from '../components/SignInForm/OrSignUpButton';
-import { SIGN_IN_MUTATION } from '../queries';
+import { SIGN_IN_MUTATION } from '../mutations';
 
 const schema = zod.object({
   email: zod.string().email().min(1),

@@ -4,7 +4,7 @@ import { useMutation } from '@apollo/client';
 import { ButtonProps, useDisclosure, WithDisclosure } from 'src/shared/design-system';
 import { EmailField, ModalForm, NameField, PasswordField, zod, zodResolver } from 'src/shared/forms';
 
-import { SIGN_UP_MUTATION } from '../../queries';
+import { SIGN_UP_MUTATION } from '../../mutations';
 
 import { EmailVerificationModal } from './EmailVerificationModal';
 

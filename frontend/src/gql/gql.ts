@@ -17,7 +17,7 @@ const documents = {
     types.OnboardUserDocument,
   '\n  mutation RequestResetPassword($email: String!) {\n    requestResetPassword(email: $email)\n  }\n':
     types.RequestResetPasswordDocument,
-  '\n  mutation ResetPassword($email: String!, $password: String!, $token: String!) {\n    requestResetPassword(email: $email)\n    resetPassword(password: $password, token: $token)\n  }\n':
+  '\n  mutation ResetPassword($password: String!, $token: String!) {\n    resetPassword(password: $password, token: $token)\n  }\n':
     types.ResetPasswordDocument,
   '\n  mutation SignIn($email: String!, $password: String!) {\n    signIn(email: $email, password: $password) {\n      user {\n        id\n        email\n        first_name\n        last_name\n        verified\n        description\n        location {\n          ...LocationFragment\n        }\n        event_types {\n          id\n          name\n          category\n        }\n        groups {\n          ...GroupFragment\n        }\n      }\n      token\n    }\n  }\n':
     types.SignInDocument,
@@ -151,8 +151,8 @@ export function gql(
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function gql(
-  source: '\n  mutation ResetPassword($email: String!, $password: String!, $token: String!) {\n    requestResetPassword(email: $email)\n    resetPassword(password: $password, token: $token)\n  }\n',
-): (typeof documents)['\n  mutation ResetPassword($email: String!, $password: String!, $token: String!) {\n    requestResetPassword(email: $email)\n    resetPassword(password: $password, token: $token)\n  }\n'];
+  source: '\n  mutation ResetPassword($password: String!, $token: String!) {\n    resetPassword(password: $password, token: $token)\n  }\n',
+): (typeof documents)['\n  mutation ResetPassword($password: String!, $token: String!) {\n    resetPassword(password: $password, token: $token)\n  }\n'];
 /**
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */

@@ -1,13 +1,15 @@
+import * as React from 'react';
 import { useMutation } from '@apollo/client';
 import { useNavigate } from 'react-router-dom';
 
-import { Disclosure, Link, WithDisclosure } from 'src/shared/design-system';
+import { Button, Disclosure, Flex, useDisclosure, WithDisclosure } from 'src/shared/design-system';
 import { EmailField, ModalForm, PasswordField, zod, zodResolver } from 'src/shared/forms';
 
 import { route } from '../../../../route';
 import { useAuth } from '../../auth-core';
-import { SIGN_IN_MUTATION } from '../../queries';
+import { SIGN_IN_MUTATION } from '../../mutations';
 
+import { ForgotPasswordModal } from './ForgotPasswordModal';
 import { OrSignUpButton } from './OrSignUpButton';
 
 const schema = zod.object({
@@ -27,6 +29,8 @@ interface SignInFormProps extends WithDisclosure {
 }
 
 export const SignInForm = ({ disclosure, signUpModalDisclosure }: SignInFormProps) => {
+  const forgotPasswordModalDisclosure = useDisclosure({ defaultIsOpen: false });
+
   const auth = useAuth();
   const navigate = useNavigate();
   const [signInRequest, signInRequestState] = useMutation(SIGN_IN_MUTATION, {
@@ -41,6 +45,17 @@ export const SignInForm = ({ disclosure, signUpModalDisclosure }: SignInFormProp
     },
     onError: () => {},
   });
+
+  const handleForgotPasswordClick = () => {
+    disclosure.onClose();
+    forgotPasswordModalDisclosure.onOpen();
+  };
+
+  const handleReturnToSignInClick = () => {
+    forgotPasswordModalDisclosure.onClose();
+    disclosure.onOpen();
+  };
+
   return (
     <>
       <ModalForm
@@ -72,8 +87,16 @@ export const SignInForm = ({ disclosure, signUpModalDisclosure }: SignInFormProp
       >
         <EmailField />
         <PasswordField />
-        <Link color="purple.500">Forgot password?</Link>
+        <Flex>
+          <Button variant="link" color="purple.500" onClick={handleForgotPasswordClick}>
+            Forgot password
+          </Button>
+        </Flex>
       </ModalForm>
+      <ForgotPasswordModal
+        disclosure={forgotPasswordModalDisclosure}
+        handleReturnToSignInClick={handleReturnToSignInClick}
+      />
     </>
   );
 };

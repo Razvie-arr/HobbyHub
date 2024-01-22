@@ -1,5 +1,6 @@
 export const route = {
   landing: () => `/` as const,
+
   events: () => `/events` as const,
   eventDetails: (eventId?: number) => `/event/${eventId ?? ':eventId'}` as const,
   createEvent: () => `/createEvent` as const,
@@ -14,16 +15,20 @@ export const route = {
 
   onboarding: () => `/onboarding` as const,
   verifyUser: () => `/auth/verifyUser` as const,
+
   messages: () => `/messages` as const,
+
   signIn: () => `/signIn` as const,
   signUp: () => `/signUp` as const,
+
   forgotPassword: () => `/forgotPassword` as const,
   resetPassword: () => `/resetPassword` as const,
+  passwordUpdated: () => `/passwordUpdated` as const,
+
   currentProfile: () => '/profile' as const,
   profile: (userId?: number) => `/profile/${userId ?? ':userId'}` as const,
+  editProfile: () => `/editProfile` as const,
 
   addReview: (eventId?: number) => `/addReview${eventId ? `?eventId=${eventId}` : ''}` as const,
-
-  editProfile: () => `/editProfile` as const,
 };
 
