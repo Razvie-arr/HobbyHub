@@ -21,7 +21,7 @@ const createHtml = (eventLink: string, eventName: string, frontendUrl: string): 
   const content = createEmailContent(eventLink, eventName);
   const header = 'The organizer accepted your request to join';
   const linkText = 'Check event';
-  const headerImgUrl = frontendUrl + '/assets/event_registration_accepted.svg';
+  const headerImgUrl = frontendUrl + '/assets/event_registration_accepted.png';
 
   const emailData: EmailData = {
     frontendUrl: frontendUrl,

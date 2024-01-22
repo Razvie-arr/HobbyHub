@@ -40,7 +40,7 @@ const createHtml = (
   const reviewedPersonStatus = isParticipant ? 'Participant' : 'The organizer';
   const header = `${reviewedPersonStatus} <span style="color: #805AD5">${reviewerName}</span> of`;
   const linkText = 'See Details';
-  const headerImgUrl = frontendUrl + '/assets/review.svg';
+  const headerImgUrl = frontendUrl + '/assets/review.png';
 
   const emailData: EmailData = {
     frontendUrl: frontendUrl,

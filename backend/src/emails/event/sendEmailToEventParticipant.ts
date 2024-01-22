@@ -23,7 +23,7 @@ export const sendEmailToEventParticipant = async (
 
 const createHtml = (organizerName: string, eventName: string, content: string, frontendUrl: string): string => {
   const header = `The organizer <span style="color: #805AD5">${organizerName}</span> of`;
-  const headerImgUrl = frontendUrl + '/assets/message.svg';
+  const headerImgUrl = frontendUrl + '/assets/message.png';
 
   const emailData: EmailData = {
     frontendUrl: frontendUrl,

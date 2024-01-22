@@ -21,7 +21,7 @@ const createHtml = (groupLink: string, groupName: string, frontendUrl: string): 
   const content = createEmailContent(groupLink, groupName);
   const header = 'The organizer denied your request to join';
   const linkText = 'Check group';
-  const headerImgUrl = frontendUrl + '/assets/registration_declined.svg';
+  const headerImgUrl = frontendUrl + '/assets/registration_declined.png';
 
   const emailData: EmailData = {
     frontendUrl: frontendUrl,

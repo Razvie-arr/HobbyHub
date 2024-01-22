@@ -24,7 +24,7 @@ const createHtml = (isParticipant: boolean, eventName: string, link: string, fro
   const header = `Rate the ${ratePerson} of the event`;
   const content = createEmailContent(eventName, isParticipant);
   const linkText = 'Review';
-  const headerImgUrl = frontendUrl + '/assets/review.svg';
+  const headerImgUrl = frontendUrl + '/assets/review.png';
 
   const emailData: EmailData = {
     frontendUrl: frontendUrl,

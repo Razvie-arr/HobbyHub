@@ -13,7 +13,7 @@ export const sendEventCancelledEmail = async (email: string, subject: string, ev
 
 const createHtml = (eventName: string, frontendUrl: string): string => {
   const header = "You've been logged out from the event";
-  const headerImgUrl = frontendUrl + '/assets/cancel.svg';
+  const headerImgUrl = frontendUrl + '/assets/cancel.png';
   const content = createEmailContent(eventName);
 
   const emailData: EmailData = {

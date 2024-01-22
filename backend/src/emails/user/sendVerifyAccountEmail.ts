@@ -18,7 +18,7 @@ const createHtml = (verificationLink: string, frontendUrl: string): string => {
   const header = 'Verify your email address';
   const content = createEmailContent();
   const linkText = 'Confirm email';
-  const headerImgUrl = frontendUrl + '/assets/verify.svg';
+  const headerImgUrl = frontendUrl + '/assets/verify.png';
 
   const emailData: EmailData = {
     frontendUrl: frontendUrl,

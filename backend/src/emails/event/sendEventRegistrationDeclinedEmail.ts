@@ -21,7 +21,7 @@ const createHtml = (eventLink: string, eventName: string, frontendUrl: string): 
   const content = createEmailContent(eventLink, eventName);
   const header = 'The organizer denied your request to join';
   const linkText = 'Check event';
-  const headerImgUrl = frontendUrl + '/assets/registration_declined.svg';
+  const headerImgUrl = frontendUrl + '/assets/registration_declined.png';
 
   const emailData: EmailData = {
     frontendUrl: frontendUrl,
