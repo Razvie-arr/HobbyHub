@@ -131,7 +131,7 @@ export const signUpResolver = async (
     location_id: 0,
   };
 
-  const verificationTextMessage = `Please verify your account via this link!\nhttps://frontend-team01-vse.handson.p.pro/auth/verifyUser?token=${token}">`;
+  const verificationTextMessage = `Please verify your account via this link!\nhttps://frontend-team01-vse.handson.pro/auth/verifyUser?token=${token}">`;
   const verificationHTMLMessage = `Please click <a href="https://frontend-team01-vse.handson.pro/auth/verifyUser?token=${token}">here</a> to verify your account!`;
 
   try {
@@ -185,8 +185,8 @@ export const requestResetPasswordResolver = async (
     throw new GraphQLError("Reset token wasn't updated");
   }
 
-  const resetPasswordTextMessage = `Please reset your password via this link!\nhttps://dev-frontend-team01-vse.handson.pro/auth/verifyUser=token?=${resetToken}`;
-  const resetPasswordHTMLMessage = `Please reset your password using this <a href="<url for resetting password>?token=${resetToken}" >link</a>`;
+  const resetPasswordTextMessage = `Please reset your password via this link!\nhttps://frontend-team01-vse.handson.pro/resetPassword=token?=${resetToken}`;
+  const resetPasswordHTMLMessage = `Please reset your password using this <a href="https://frontend-team01-vse.handson.pro/resetPassword?token=${resetToken}" >link</a>`;
 
   try {
     await sendEmail(email, SUBJECT_RESET_PASSWORD, {
