@@ -20,7 +20,7 @@ const createHtml = (recipientName: string, messagesLink: string, frontendUrl: st
   const header = 'You got a message';
   const content = createEmailContent(recipientName);
   const linkText = 'Check message';
-  const headerImgUrl = frontendUrl + '/assets/message.svg';
+  const headerImgUrl = frontendUrl + '/assets/message.png';
 
   const emailData: EmailData = {
     frontendUrl: frontendUrl,

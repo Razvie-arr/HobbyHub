@@ -19,7 +19,7 @@ export const sendEventRegistrationEmail = async (
 
 const createHtml = (content: string, eventLink: string, frontendUrl: string): string => {
   const header = 'Your application has been received for the event';
-  const headerImgUrl = frontendUrl + '/assets/event_registration.svg';
+  const headerImgUrl = frontendUrl + '/assets/event_registration.png';
   const linkText = 'Check event';
 
   const emailData: EmailData = {

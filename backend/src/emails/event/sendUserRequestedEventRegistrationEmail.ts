@@ -24,7 +24,7 @@ export const sendUserRequestedEventRegistrationEmail = async (
 
 const createHtml = (content: string, eventLink: string, frontendUrl: string): string => {
   const header = 'An user requested to join your event';
-  const headerImgUrl = frontendUrl + '/assets/request.svg';
+  const headerImgUrl = frontendUrl + '/assets/request.png';
   const linkText = 'Check event';
 
   const emailData: EmailData = {

@@ -35,7 +35,7 @@ const createHtml = (
   frontendUrl: string,
 ): string => {
   const header = `User <a href="${userProfileLink}" style="color: #805AD5; text-decoration: none">${userName}</a> would like to see more events similar to`;
-  const headerImgUrl = frontendUrl + '/assets/more_events.svg';
+  const headerImgUrl = frontendUrl + '/assets/more_events.png';
   const linkText = 'Check event';
 
   const emailData: EmailData = {

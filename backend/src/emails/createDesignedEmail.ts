@@ -37,7 +37,7 @@ export const createDesignedContent = (templateName: string, context: Object): st
 export const createTestEmailData = (): EmailData => {
   const frontendUrl = getFrontendUrl('localhost:4000');
   const header = 'The organizer denied your request to join';
-  const headerImgUrl = frontendUrl + '/assets/registration_declined.svg';
+  const headerImgUrl = frontendUrl + '/assets/registration_declined.png';
   const content = createTestEmailContent();
   const linkText = 'Check event';
 
