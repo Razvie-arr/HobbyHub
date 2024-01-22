@@ -1,6 +1,7 @@
 import { GraphQLError } from 'graphql/error';
 
-import { sendEmail } from '../../../libs/nodeMailer';
+import { sendEventRegistrationDeclinedEmail } from '../../../emails/event/sendEventRegistrationDeclinedEmail';
+import { sendGroupRegistrationDeclinedEmail } from '../../../emails/event/sendGroupRegistrationDeclinedEmail';
 import {
   AuthUser,
   ContextualNullableResolver,
@@ -164,7 +165,7 @@ export const onboardUserResolver = async (
 export const blockUserResolver = async (
   _: unknown,
   { blocker_id, blocked_id }: MutationBlockUserArgs,
-  { dataSources }: CustomContext,
+  { dataSources, serverUrl }: CustomContext,
 ): Promise<string> => {
   const user = await dataSources.sql.users.getById(blocked_id);
 
@@ -185,14 +186,7 @@ export const blockUserResolver = async (
     }
 
     for (const event of participatedEventIdsWithBlockerAdmin) {
-      try {
-        await sendEmail(user.email, 'Event participation declined', {
-          text: `Unfortunately, you've been removed from event ${event.name}`,
-          html: `Unfortunately, you've been removed from event <a href="https://frontend-team01-vse.handson.pro/event/${event.id}">${event.name}</a>.`,
-        });
-      } catch (error) {
-        throw error;
-      }
+      await sendEventRegistrationDeclinedEmail(user.email, event.id, event.name, serverUrl);
     }
   }
 
@@ -209,14 +203,7 @@ export const blockUserResolver = async (
     }
 
     for (const event of pendingEventsIdsWithBlockerAdmin) {
-      try {
-        await sendEmail(user.email, 'Event registration declined', {
-          text: `Unfortunately, your registration for event ${event.name} has been declined.`,
-          html: `Unfortunately, your registration for event <a href="https://frontend-team01-vse.handson.pro/event/${event.id}">${event.name}</a> has been declined.`,
-        });
-      } catch (error) {
-        throw error;
-      }
+      await sendEventRegistrationDeclinedEmail(user.email, event.id, event.name, serverUrl);
     }
   }
 
@@ -236,14 +223,7 @@ export const blockUserResolver = async (
     }
 
     for (const group of groupsToRemoveFrom) {
-      try {
-        await sendEmail(user.email, 'Group participation declined', {
-          text: `Unfortunately, you've been removed from group ${group.name}`,
-          html: `Unfortunately, you've been removed from group <a href="https://frontend-team01-vse.handson.pro/group/${group.id}">${group.name}</a>.`,
-        });
-      } catch (error) {
-        throw error;
-      }
+      await sendGroupRegistrationDeclinedEmail(user.email, group.id, group.name, serverUrl);
     }
   }
 

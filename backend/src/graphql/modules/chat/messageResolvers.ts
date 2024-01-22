@@ -1,3 +1,4 @@
+import { sendGotMessageEmail } from '../../../emails/chat/sendGotMessageEmail';
 import {
   ContextualResolver,
   ContextualResolverWithParent,
@@ -8,7 +9,7 @@ import {
   User,
 } from '../../../types';
 
-import { sendEmailNotification, sendMessageToChat } from './sendMessage';
+import { sendMessageToChat } from './sendMessageToChat';
 
 export const messageSenderResolver: ContextualResolverWithParent<User, Message> = async (parent, _, { dataSources }) =>
   (await dataSources.sql.users.getById(parent.sender_id)) as unknown as User;
@@ -26,6 +27,6 @@ export const sendMessageResolver = async (
 ): Promise<string> => {
   const response: string = await sendMessageToChat(sender.id, recipient.id, text);
 
-  await sendEmailNotification(sender.first_name, recipient.first_name, recipient.email, serverUrl);
+  await sendGotMessageEmail(recipient.first_name, recipient.email, serverUrl);
   return response;
 };

@@ -1,5 +1,6 @@
 import { GraphQLError } from 'graphql/error';
 
+import { sendAskForFeedbackEmail } from '../../../emails/review/sendAskForFeedbackEmail';
 import {
   ContextualNullableResolver,
   ContextualNullableResolverWithParent,
@@ -18,7 +19,6 @@ import {
 } from '../../../types';
 import { getEventBossId } from '../event/getEventBossId';
 
-import { askForFeedback } from './askForFeedback';
 import { createUserReview } from './createUserReview';
 import { reviewAlreadySent } from './reviewAlreadySent';
 
@@ -79,9 +79,9 @@ export const maxRatingAllParticipantsResolver = async (
     throw new GraphQLError('Event does not exist or does not have participants');
   }
 
-  eventParticipants.forEach(async (participant) => {
-    await createUserReview(participant.id, adminId, text, maxRating, eventId, dataSources, serverUrl);
-  });
+  for (const eventParticipant of eventParticipants) {
+    await createUserReview(eventParticipant.id, adminId, text, maxRating, eventId, dataSources, serverUrl);
+  }
 
   return true;
 };
@@ -94,21 +94,22 @@ export const askForFeedbackResolver = async (_: unknown, __: unknown, { dataSour
     if (event.author_id) {
       const author = await dataSources.sql.users.getById(event.author_id);
       if (author) {
-        await askForFeedback(author, event, serverUrl);
+        await sendAskForFeedbackEmail(false, author.email, event, serverUrl);
       }
     }
 
     if (event.group_id) {
       const group = await dataSources.sql.groups.getById(event.group_id);
       if (group) {
-        await askForFeedback(group.admin, event, serverUrl);
+        const groupAdmin = group.admin;
+        await sendAskForFeedbackEmail(false, groupAdmin.email, event, serverUrl);
       }
     }
 
     const users = await dataSources.sql.events.getAcceptedEventParticipants(event.id);
 
     for (const user of users) {
-      await askForFeedback(user, event, serverUrl);
+      await sendAskForFeedbackEmail(true, user.email, event, serverUrl);
     }
 
     sentEvents.push(event.name);

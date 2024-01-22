@@ -1,9 +1,7 @@
 import { GraphQLError } from 'graphql/error';
 
 import { getSQLDataSource } from '../../../datasource';
-import { sendEmail } from '../../../libs/nodeMailer';
 
-const MESSAGE_NOTIFICATION_SUBJECT = 'New message in HobbyHub';
 export const sendMessageToChat = async (senderId: number, recipientId: number, text: string): Promise<string> =>
   await getSQLDataSource()
     .db.write.transaction(async (trx) => {
@@ -55,22 +53,3 @@ export const sendMessageToChat = async (senderId: number, recipientId: number, t
     .catch((error) => {
       throw new GraphQLError(error);
     });
-
-export const sendEmailNotification = async (
-  senderName: string,
-  recipientName: string,
-  recipientEmail: string,
-  frontendUrl: string,
-) => {
-  const emailTextMessage = `Hi ${recipientName}! You just got a new message from ${senderName}\n View messages using this link ${frontendUrl}/messages`;
-  const emailHtmlMessage = `Hi ${recipientName}! You just got a new message from ${senderName} <br> View messages using this <a href="${frontendUrl}/messages">link </a>`;
-
-  try {
-    await sendEmail(recipientEmail, MESSAGE_NOTIFICATION_SUBJECT, {
-      text: emailTextMessage,
-      html: emailHtmlMessage,
-    });
-  } catch (error) {
-    throw error;
-  }
-};
