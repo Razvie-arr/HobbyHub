@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { useMutation } from '@apollo/client';
 import { useSearchParams } from 'react-router-dom';
 
-import { VERIFY_USER } from '../queries';
+import { VERIFY_USER } from '../mutations';
 
 export const useTokenVerification = () => {
   const [isVerified, setIsVerified] = useState(false);
@@ -28,3 +28,4 @@ export const useTokenVerification = () => {
     verifyUserState,
   };
 };
+

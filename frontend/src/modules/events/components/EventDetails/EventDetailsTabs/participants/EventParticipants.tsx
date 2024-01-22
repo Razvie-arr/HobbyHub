@@ -4,19 +4,19 @@ import { match } from 'ts-pattern';
 
 import { ParticipantState } from 'src/gql/graphql';
 import { NoData } from 'src/shared/design-system';
-import { WithEvent, WithNullableAuthUser } from 'src/shared/types';
+import { WithAuthUser, WithEvent } from 'src/shared/types';
 
 import { SendMassMessageModal } from '../../../../../messages';
 
 import { EventParticipantItem } from './EventParticipantItem';
 
-export const EventParticipants = ({ event, user }: WithEvent & WithNullableAuthUser) => {
+export const EventParticipants = ({ event, user }: WithEvent & WithAuthUser) => {
   const organizer = match(event.author)
     .with({ __typename: 'User' }, (author) => author)
     .with({ __typename: 'Group' }, ({ admin }) => admin)
     .exhaustive();
 
-  const isUserOrganizer = user && user.id === organizer.id;
+  const isUserOrganizer = user.id === organizer.id;
 
   return (
     <>

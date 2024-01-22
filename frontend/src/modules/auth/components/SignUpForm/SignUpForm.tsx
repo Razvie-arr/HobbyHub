@@ -2,10 +2,9 @@ import { ReactNode } from 'react';
 import { useMutation } from '@apollo/client';
 
 import { ButtonProps, useDisclosure, WithDisclosure } from 'src/shared/design-system';
-import { ModalForm, zod, zodResolver } from 'src/shared/forms';
+import { EmailField, ModalForm, NameField, PasswordField, zod, zodResolver } from 'src/shared/forms';
 
-import { SIGN_UP_MUTATION } from '../../queries';
-import { EmailField, NameField, PasswordField } from '../fields';
+import { SIGN_UP_MUTATION } from '../../mutations';
 
 import { EmailVerificationModal } from './EmailVerificationModal';
 
@@ -74,7 +73,10 @@ export const SignUpForm = ({ disclosure, modalButtonText = 'Sign up', modalButto
         <EmailField />
         <PasswordField confirmPassword />
       </ModalForm>
-      <EmailVerificationModal disclosure={emailVerificationModalDisclosure} />
+      <EmailVerificationModal
+        disclosure={emailVerificationModalDisclosure}
+        text="To complete the account verification process, please check your email inbox."
+      />
     </>
   );
 };

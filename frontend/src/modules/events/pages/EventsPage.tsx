@@ -3,7 +3,6 @@ import { useLazyQuery } from '@apollo/client';
 import { ReadonlyArray } from 'effect';
 
 import { SortType } from '../../../gql/graphql';
-import { NoData } from '../../../shared/design-system';
 import {
   AddressFilterField,
   BaseFilters,
@@ -158,7 +157,7 @@ export const EventsPage = ({ location }: EventsPageProps) => {
                 : undefined,
             withMap: true,
           }))}
-          renderOnNoData={<NoData description="Try changing your filter options to find more events." />}
+          noDataDescription="Try changing your filter options to find more events."
         />
       </ContentContainer>
     </BaseFilters>

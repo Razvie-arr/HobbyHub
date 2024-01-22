@@ -16,7 +16,7 @@ import {
   zodResolver,
 } from 'src/shared/forms';
 
-import { NotAuthorized } from '../../../shared/design-system';
+import { WithAuthUser } from '../../../shared/types';
 import { useAuth } from '..';
 
 const onboardingFormSchema = zod.object({
@@ -55,22 +55,18 @@ const ONBOARD_USER = gql(`
   }
 `);
 
-export const OnboardingForm = () => {
-  const { user, token, signIn } = useAuth();
+export const OnboardingForm = ({ user }: WithAuthUser) => {
+  const { token, signIn } = useAuth();
   const [onboardUserRequest, onboardUserRequestState] = useMutation(ONBOARD_USER);
   const navigate = useNavigate();
   const toast = useToast();
 
   useEffect(() => {
-    if (user && (user.location || user.event_types.length > 0)) {
+    if (user.location || user.event_types.length > 0) {
       // TODO: This needs be resolved declaratively
       navigate(route.editProfile());
     }
   });
-
-  if (!user) {
-    return <NotAuthorized requireSignIn wrapInContentContainer />;
-  }
 
   return (
     <Container maxW="3xl">

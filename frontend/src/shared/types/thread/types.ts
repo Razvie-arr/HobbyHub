@@ -1,3 +1,5 @@
+import { NonEmptyArray } from 'effect/ReadonlyArray';
+
 import { DocumentType } from '../../../gql';
 
 import { ThreadFragment } from './fragments';
@@ -13,6 +15,6 @@ export interface WithThreads {
 }
 
 export interface WithNonEmptyThreads {
-  threads: [ThreadData, ...ThreadData[]];
+  threads: NonEmptyArray<ThreadData>;
 }
 

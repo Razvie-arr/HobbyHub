@@ -1,14 +1,18 @@
+import { ReactNode } from 'react';
+
 import { InputField } from 'src/shared/forms';
 
-interface PasswordFieldProps {
+export interface PasswordFieldProps {
+  label?: ReactNode;
+  confirmationLabel?: ReactNode;
   confirmPassword?: boolean;
 }
 
-export const PasswordField = ({ confirmPassword }: PasswordFieldProps) => (
+export const PasswordField = ({ label, confirmationLabel, confirmPassword }: PasswordFieldProps) => (
   <>
     <InputField
       name="password"
-      label="Password"
+      label={label ?? 'Password'}
       type="password"
       isRequired
       autoComplete="off"
@@ -18,7 +22,7 @@ export const PasswordField = ({ confirmPassword }: PasswordFieldProps) => (
     {confirmPassword ? (
       <InputField
         name="passwordConfirmation"
-        label="Password Confirmation"
+        label={confirmationLabel ?? 'Password Confirmation'}
         type="password"
         isRequired
         autoComplete="off"
@@ -28,3 +32,4 @@ export const PasswordField = ({ confirmPassword }: PasswordFieldProps) => (
     ) : null}
   </>
 );
+

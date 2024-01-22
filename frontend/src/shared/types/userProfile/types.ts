@@ -1,3 +1,5 @@
+import { NonEmptyArray } from 'effect/ReadonlyArray';
+
 import { DocumentType } from '../../../gql';
 
 import { UserProfileFragment } from './fragments';
@@ -13,6 +15,6 @@ export interface WithUserProfiles {
 }
 
 export interface WithNonEmptyUserProfiles {
-  userProfiles: [UserProfileData, ...UserProfileData[]];
+  userProfiles: NonEmptyArray<UserProfileData>;
 }
 

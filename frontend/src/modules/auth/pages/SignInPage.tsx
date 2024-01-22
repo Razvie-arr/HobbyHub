@@ -3,15 +3,14 @@ import { Card, CardBody, CardHeader, Center, Heading, Link, VStack } from '@chak
 import { useNavigate } from 'react-router-dom';
 
 import { route } from 'src/route';
-import { Form, zod, zodResolver } from 'src/shared/forms';
+import { EmailField, Form, PasswordField, zod, zodResolver } from 'src/shared/forms';
 import { SubmitButton } from 'src/shared/forms/molecules/SubmitButton';
 import { ReactRouterLink } from 'src/shared/navigation';
 
 import { ContentContainer } from '../../../shared/layout';
 import { useAuth } from '../auth-core';
-import { EmailField, PasswordField } from '../components/fields';
 import { OrSignUpButton } from '../components/SignInForm/OrSignUpButton';
-import { SIGN_IN_MUTATION } from '../queries';
+import { SIGN_IN_MUTATION } from '../mutations';
 
 const schema = zod.object({
   email: zod.string().email().min(1),

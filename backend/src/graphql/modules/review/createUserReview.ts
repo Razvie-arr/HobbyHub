@@ -1,10 +1,12 @@
 import { GraphQLError } from 'graphql/error';
 
 import { SQLDataSource } from '../../../datasource';
+import { sendGotReviewEmail } from '../../../emails/review/sendGotReviewEmail';
+import { User } from '../../../types';
+import { getEventBossId } from '../event/getEventBossId';
 
 import { editAverageUserRating } from './editAverageUserRating';
 import { reviewAlreadySent } from './reviewAlreadySent';
-import { sendReviewNotification } from './sendReviewNotification';
 
 export const createUserReview = async (
   userId: number,
@@ -18,6 +20,15 @@ export const createUserReview = async (
   const event = await dataSources.sql.events.getById(eventId);
   if (!event) {
     throw new GraphQLError('Event does not exist');
+  }
+  const user = (await dataSources.sql.users.getById(userId)) as unknown as User;
+  if (!user) {
+    throw new GraphQLError('User does not exist');
+  }
+
+  const reviewer = (await dataSources.sql.users.getById(reviewerId)) as unknown as User;
+  if (!reviewer) {
+    throw new GraphQLError('Reviewer does not exist');
   }
 
   const isReviewAlreadySent = await reviewAlreadySent(userId, reviewerId, eventId);
@@ -42,7 +53,9 @@ export const createUserReview = async (
     throw new GraphQLError(`Error while fetching Review!`);
   }
 
-  await sendReviewNotification(createdReview, dataSources, serverUrl);
+  const isParticipant = reviewer.id !== (await getEventBossId(event));
+  const reviewerFullName = reviewer.first_name + ' ' + reviewer.last_name;
+  await sendGotReviewEmail(isParticipant, event.name, user.email, reviewerFullName, createdReview, serverUrl);
 
   return createdReview;
 };

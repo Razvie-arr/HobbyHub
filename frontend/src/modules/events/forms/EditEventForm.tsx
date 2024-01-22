@@ -7,37 +7,47 @@ import { match } from 'ts-pattern';
 import { route } from '../../../route';
 import { NotAuthorized } from '../../../shared/design-system';
 import { QueryResult } from '../../../shared/layout';
-import { getEventFragmentData, getLocationFragmentData } from '../../../shared/types';
-import { useAuth } from '../../auth';
+import { getEventFragmentData, getLocationFragmentData, WithAuthUser } from '../../../shared/types';
 import { DeleteEventButton } from '../components';
 import { EDIT_EVENT } from '../mutations';
 import { EVENT } from '../queries';
 
 import { EventForm } from './EventForm';
 
-export const EditEventFormContainer = () => {
+export const EditEventFormContainer = ({ user }: WithAuthUser) => {
   const { eventId } = useParams();
   return pipe(
     eventId,
     Option.fromNullable,
     Option.map(parseInt),
     Option.filter((value) => !isNaN(value)),
-    Option.match({ onNone: () => null, onSome: (id) => <EditEventForm eventId={id} /> }),
+    Option.match({ onNone: () => null, onSome: (id) => <EditEventForm user={user} eventId={id} /> }),
   );
 };
 
-interface EditEventFormProps {
+interface EditEventFormProps extends WithAuthUser {
   eventId: number;
 }
 
-const EditEventForm = ({ eventId }: EditEventFormProps) => {
-  const { user } = useAuth();
-
+const EditEventForm = ({ user, eventId }: EditEventFormProps) => {
   const result = useQuery(EVENT, { variables: { eventId } });
-  const [editEventRequest, editEventRequestState] = useMutation(EDIT_EVENT);
 
-  const navigate = useNavigate();
   const toast = useToast();
+  const navigate = useNavigate();
+
+  const [editEventRequest, editEventRequestState] = useMutation(EDIT_EVENT, {
+    onCompleted: () => {
+      toast({
+        variant: 'left-accent',
+        status: 'success',
+        position: 'top-right',
+        title: 'Event updated!',
+        description: 'Your event was updated successfully.',
+        isClosable: true,
+      });
+      navigate(route.eventDetails(eventId));
+    },
+  });
 
   return (
     <QueryResult
@@ -51,10 +61,6 @@ const EditEventForm = ({ eventId }: EditEventFormProps) => {
           .with({ __typename: 'User' }, ({ id }) => id)
           .with({ __typename: 'Group' }, ({ admin }) => admin.id)
           .exhaustive();
-
-        if (!user) {
-          return <NotAuthorized requireSignIn wrapInContentContainer />;
-        }
 
         if (user.id !== authorId) {
           return <NotAuthorized description="This is not your event, you cannot edit it." wrapInContentContainer />;
@@ -88,7 +94,7 @@ const EditEventForm = ({ eventId }: EditEventFormProps) => {
             handleCancel={() => {
               navigate(route.eventDetails(eventId));
             }}
-            handleSubmit={async (values) => {
+            handleSubmit={async (values) =>
               await editEventRequest({
                 variables: {
                   event: {
@@ -113,17 +119,8 @@ const EditEventForm = ({ eventId }: EditEventFormProps) => {
                     street_number: values.streetNumber,
                   },
                 },
-              });
-              toast({
-                variant: 'left-accent',
-                status: 'success',
-                position: 'top-right',
-                title: 'Event updated!',
-                description: 'Your event was updated successfully.',
-                isClosable: true,
-              });
-              navigate(route.eventDetails(eventId));
-            }}
+              })
+            }
             isLoading={editEventRequestState.loading}
             submitButtonLabel="Save"
           />

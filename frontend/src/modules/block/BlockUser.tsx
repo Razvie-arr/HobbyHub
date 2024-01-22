@@ -56,7 +56,7 @@ export const BlockUserButton = ({
       variant: 'left-accent',
       status: 'success',
       position: 'top-right',
-      title: 'User deleted!',
+      title: 'User blocked!',
       description: `You have blocked ${blockedName} successfully.`,
       isClosable: true,
     });

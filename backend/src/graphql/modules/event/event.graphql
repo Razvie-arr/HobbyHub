@@ -34,13 +34,7 @@ extend type Mutation {
 
   cancelEvent(eventId: Int!): String!
   massEmailToEventParticipants(eventId: Int!, emailSubject: String!, emailBody: String!): String!
-  moreEventsLikeThis(
-    sender: SenderInput!
-    recipient: RecipientInput!
-    eventId: Int!
-    eventName: String!
-    emailBody: String!
-  ): String!
+  moreEventsLikeThis(sender: UserEmailInput!, recipient: UserEmailInput!, event: EventEmailInput!, emailBody: String!): String!
 }
 
 union Author = User | Group
@@ -133,5 +127,10 @@ type ParticipantType {
 enum ParticipantState {
   PENDING
   ACCEPTED
+}
+
+input EventEmailInput{
+  id: Int!
+  name: String!
 }
 

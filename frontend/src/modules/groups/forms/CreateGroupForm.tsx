@@ -1,9 +1,10 @@
 import { useMutation } from '@apollo/client';
 import { useToast } from '@chakra-ui/react';
+import { NonEmptyArray } from 'effect/ReadonlyArray';
 import { useNavigate } from 'react-router-dom';
 
 import { route } from '../../../route';
-import { NotAuthorized } from '../../../shared/design-system';
+import { getGroupFragmentData, WithAuthUser } from '../../../shared/types';
 import { useAuth } from '../../auth';
 import { CREATE_GROUP } from '../mutations';
 
@@ -17,7 +18,7 @@ interface SelectOption {
 const defaultValues = {
   groupImage: null,
   name: '',
-  eventTypes: [] as unknown as [SelectOption, ...SelectOption[]],
+  eventTypes: [] as unknown as NonEmptyArray<SelectOption>,
   summary: '',
   streetName: '',
   streetNumber: '',
@@ -26,15 +27,35 @@ const defaultValues = {
   description: '',
 };
 
-export const CreateGroupForm = () => {
-  const { user } = useAuth();
-  const [createGroupRequest, createGroupRequestState] = useMutation(CREATE_GROUP);
-  const navigate = useNavigate();
-  const toast = useToast();
+export const CreateGroupForm = ({ user }: WithAuthUser) => {
+  const { signIn, token } = useAuth();
 
-  if (!user) {
-    return <NotAuthorized requireSignIn />;
-  }
+  const toast = useToast();
+  const navigate = useNavigate();
+
+  const [createGroupRequest, createGroupRequestState] = useMutation(CREATE_GROUP, {
+    onCompleted: ({ createGroup }) => {
+      toast({
+        variant: 'left-accent',
+        status: 'success',
+        position: 'top-right',
+        title: 'Group created!',
+        description: 'Your group was created successfully.',
+        isClosable: true,
+      });
+
+      const createdGroup = getGroupFragmentData(createGroup);
+      signIn({
+        token,
+        user: {
+          ...user,
+          groups: [...user.groups, createdGroup],
+        },
+      });
+
+      navigate(route.groupDetails(createdGroup.id));
+    },
+  });
 
   return (
     <GroupForm
@@ -46,8 +67,8 @@ export const CreateGroupForm = () => {
       handleCancel={() => {
         navigate(route.groups());
       }}
-      handleSubmit={async (values) => {
-        const result = await createGroupRequest({
+      handleSubmit={async (values) =>
+        await createGroupRequest({
           variables: {
             group: {
               description: values.description,
@@ -64,20 +85,8 @@ export const CreateGroupForm = () => {
               street_number: values.streetNumber,
             },
           },
-        });
-        toast({
-          variant: 'left-accent',
-          status: 'success',
-          position: 'top-right',
-          title: 'Group created!',
-          description: 'Your group was created successfully.',
-          isClosable: true,
-        });
-        const id = result.data?.createGroup.id;
-        if (id) {
-          navigate(route.groupDetails(id));
-        }
-      }}
+        })
+      }
       isLoading={createGroupRequestState.loading}
       submitButtonLabel="Create"
     />

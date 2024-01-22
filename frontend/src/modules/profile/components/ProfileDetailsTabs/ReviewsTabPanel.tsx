@@ -2,7 +2,6 @@ import { useState } from 'react';
 import { useQuery } from '@apollo/client';
 import { Button, Center, Heading, Stack, TabPanel } from '@chakra-ui/react';
 
-import { NoData } from 'src/shared/design-system';
 import { QueryResult } from 'src/shared/layout';
 
 import { getEventFragmentData, WithUserProfile } from '../../../../shared/types';
@@ -52,7 +51,7 @@ export const ReviewsTabPanel = ({ userProfile }: WithUserProfile) => {
             </Center>
           </Stack>
         )}
-        renderOnNoData={<NoData description="This user has not received reviews." />}
+        noDataDescription="This user has not received reviews."
       />
     </TabPanel>
   );

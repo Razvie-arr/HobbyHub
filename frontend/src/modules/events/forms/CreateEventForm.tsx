@@ -1,11 +1,11 @@
 import { useMutation } from '@apollo/client';
 import { useToast } from '@chakra-ui/react';
+import { NonEmptyArray } from 'effect/ReadonlyArray';
 import { useNavigate } from 'react-router-dom';
 
 import { route } from '../../../route';
-import { NotAuthorized } from '../../../shared/design-system';
+import { getEventFragmentData, WithAuthUser } from '../../../shared/types';
 import { getCurrentDateTime } from '../../../utils/form';
-import { useAuth } from '../../auth';
 import { CREATE_EVENT } from '../mutations';
 
 import { EventForm } from './EventForm';
@@ -18,7 +18,7 @@ interface SelectOption {
 const defaultValues = {
   eventImage: null,
   name: '',
-  eventTypes: [] as unknown as [SelectOption, ...SelectOption[]],
+  eventTypes: [] as unknown as NonEmptyArray<SelectOption>,
   summary: '',
   capacity: 1,
   allowWaitlist: false,
@@ -30,17 +30,27 @@ const defaultValues = {
   description: '',
 };
 
-export const CreateEventForm = () => {
-  const { user } = useAuth();
-  const [createEventRequest, createEventRequestState] = useMutation(CREATE_EVENT);
-  const navigate = useNavigate();
+export const CreateEventForm = ({ user }: WithAuthUser) => {
   const toast = useToast();
+  const navigate = useNavigate();
+
+  const [createEventRequest, createEventRequestState] = useMutation(CREATE_EVENT, {
+    onCompleted: ({ createEvent }) => {
+      toast({
+        variant: 'left-accent',
+        status: 'success',
+        position: 'top-right',
+        title: 'Event created!',
+        description: 'Your event was created successfully.',
+        isClosable: true,
+      });
+
+      const { id } = getEventFragmentData(createEvent);
+      navigate(route.eventDetails(id));
+    },
+  });
 
   const currentDateTime = getCurrentDateTime();
-
-  if (!user) {
-    return <NotAuthorized requireSignIn />;
-  }
 
   return (
     <EventForm
@@ -57,8 +67,8 @@ export const CreateEventForm = () => {
       handleCancel={() => {
         navigate(route.events());
       }}
-      handleSubmit={async (values) => {
-        const result = await createEventRequest({
+      handleSubmit={async (values) =>
+        await createEventRequest({
           variables: {
             event: {
               allow_waitlist: values.allowWaitlist,
@@ -80,20 +90,8 @@ export const CreateEventForm = () => {
               street_number: values.streetNumber,
             },
           },
-        });
-        toast({
-          variant: 'left-accent',
-          status: 'success',
-          position: 'top-right',
-          title: 'Event created!',
-          description: 'Your event was created successfully.',
-          isClosable: true,
-        });
-        const id = result.data?.createEvent.id;
-        if (id) {
-          navigate(route.eventDetails(id));
-        }
-      }}
+        })
+      }
       isLoading={createEventRequestState.loading}
       submitButtonLabel="Create"
     />

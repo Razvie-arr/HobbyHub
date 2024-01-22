@@ -2,7 +2,6 @@ import { useState } from 'react';
 import { useQuery } from '@apollo/client';
 import { Heading, TabPanel } from '@chakra-ui/react';
 
-import { NoData } from 'src/shared/design-system';
 import { QueryResult } from 'src/shared/layout';
 import { renderGroupList } from 'src/shared/renderers';
 
@@ -40,7 +39,7 @@ export const GroupsTabPanel = ({ userProfile }: WithUserProfile) => {
             },
           }),
         }))}
-        renderOnNoData={<NoData description="This user has no created groups." />}
+        noDataDescription="This user has no created groups."
       />
     </TabPanel>
   );

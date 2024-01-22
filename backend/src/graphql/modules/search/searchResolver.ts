@@ -7,7 +7,7 @@ export const searchEventsResolver = async (
 ): Promise<Array<Event>> => {
   offset = offset ?? 0;
   limit = limit ?? 100;
-  return dataSources.sql.executeSearchByEventNameAuthorNameGroupName(text, offset, limit);
+  return dataSources.sql.search.executeSearchByEventNameAuthorNameGroupName(text, offset, limit);
 };
 
 export const searchGroupsResolver = async (
@@ -17,5 +17,6 @@ export const searchGroupsResolver = async (
 ): Promise<Array<Group>> => {
   offset = offset ?? 0;
   limit = limit ?? 100;
-  return dataSources.sql.executeSearchByGroupNameAdminName(text, offset, limit);
+  return dataSources.sql.search.executeSearchByGroupNameAdminName(text, offset, limit);
 };
+

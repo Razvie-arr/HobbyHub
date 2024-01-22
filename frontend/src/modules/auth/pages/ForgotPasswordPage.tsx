@@ -1,13 +1,12 @@
 import { useMutation } from '@apollo/client';
 import { Card, CardBody, CardHeader, Center, Heading, useDisclosure, VStack } from '@chakra-ui/react';
 
-import { Form, zod, zodResolver } from 'src/shared/forms';
+import { EmailField, Form, zod, zodResolver } from 'src/shared/forms';
 import { SubmitButton } from 'src/shared/forms/molecules/SubmitButton';
 
 import { ContentContainer } from '../../../shared/layout';
-import { EmailField } from '../components/fields';
 import { EmailVerificationModal } from '../components/SignUpForm/EmailVerificationModal';
-import { REQUEST_RESET_PASSWORD_MUTATION } from '../queries';
+import { REQUEST_RESET_PASSWORD_MUTATION } from '../mutations';
 
 const schema = zod.object({
   email: zod.string().email().min(1),
@@ -31,7 +30,7 @@ export const ForgotPasswordPage = () => {
   return (
     <ContentContainer>
       <Center>
-        <Card p={6} minW="sm" w="50%" m={14}>
+        <Card p={6} alignSelf="center" minW="sm" w="50%" justifySelf="center" m={14}>
           <CardHeader>
             <Heading size="md">Forgot password</Heading>
           </CardHeader>

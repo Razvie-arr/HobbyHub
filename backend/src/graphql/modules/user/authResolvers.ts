@@ -1,8 +1,9 @@
 import * as argon2 from 'argon2';
 import { GraphQLError } from 'graphql/error';
 
+import { sendResetPasswordEmail } from '../../../emails/user/sendResetPasswordEmail';
+import { sendVerifyAccountEmail } from '../../../emails/user/sendVerifyAccountEmail';
 import { createToken, createTokenWithExpirationTime, verifyTokenWithExpirationTime } from '../../../libs/jwt';
-import { sendEmail } from '../../../libs/nodeMailer';
 import {
   type AuthInfo,
   AuthUser,
@@ -12,6 +13,7 @@ import {
   EventType,
   Group,
   Location,
+  MutationChangePasswordArgs,
   MutationEditAuthUserArgs,
   type MutationRequestResetPasswordArgs,
   type MutationResetPasswordArgs,
@@ -23,8 +25,6 @@ import {
 import { createAuthUserInput } from '../../../utils/helpers';
 
 const tokenExpirationTime = 60 * 60;
-const SUBJECT_VERIFY = 'Verification email';
-const SUBJECT_RESET_PASSWORD = 'Reset password link';
 
 export const authUserByIdResolver: ContextualNullableResolver<AuthUser, QueryAuthUserByIdArgs> = async (
   _: unknown,
@@ -85,7 +85,7 @@ export const authUserAdminGroupsResolver: ContextualResolverWithParent<Array<Gro
 export const signUpResolver = async (
   _: unknown,
   { email: rawEmail, password, first_name, last_name }: MutationSignUpArgs,
-  { dataSources }: CustomContext,
+  { dataSources, serverUrl }: CustomContext,
 ): Promise<AuthInfo> => {
   const email = rawEmail.toLocaleLowerCase();
 
@@ -130,17 +130,7 @@ export const signUpResolver = async (
     location_id: 0,
   };
 
-  const verificationTextMessage = `Please verify your account via this link!\nhttps://frontend-team01-vse.handson.p.pro/auth/verifyUser?token=${token}">`;
-  const verificationHTMLMessage = `Please click <a href="https://frontend-team01-vse.handson.pro/auth/verifyUser?token=${token}">here</a> to verify your account!`;
-
-  try {
-    await sendEmail(email, SUBJECT_VERIFY, {
-      text: verificationTextMessage,
-      html: verificationHTMLMessage,
-    });
-  } catch (error) {
-    throw error;
-  }
+  await sendVerifyAccountEmail(email, token, serverUrl);
 
   return { user: userObject, token: token };
 };
@@ -163,37 +153,28 @@ export const verifyUserResolver = async (
 export const requestResetPasswordResolver = async (
   _: unknown,
   { email: rawEmail }: MutationRequestResetPasswordArgs,
-  { dataSources }: CustomContext,
+  { dataSources, serverUrl }: CustomContext,
 ): Promise<boolean> => {
   const email = rawEmail.toLocaleLowerCase();
 
-  const user = (await dataSources.sql.db.query.raw(`SELECT * FROM User WHERE email = ?`, [email]))[0];
-  if (!user) {
+  const user = await dataSources.sql.db.query('User').where('email', email);
+  if (!user || user.length === 0 || !user[0]) {
     throw new GraphQLError('User not found');
   }
 
-  const resetToken = createTokenWithExpirationTime({ id: user.id }, tokenExpirationTime);
+  if (user.length > 1) {
+    throw new GraphQLError('Multiple users found!');
+  }
 
-  const dbUpdateResponse = await dataSources.sql.db.write.raw('UPDATE User SET token = ? WHERE email = ?', [
-    resetToken,
-    email,
-  ]);
+  const resetToken = createTokenWithExpirationTime({ id: user[0].id }, tokenExpirationTime);
+
+  const dbUpdateResponse = await dataSources.sql.users.updateUserToken(email, resetToken);
 
   if (!dbUpdateResponse) {
     throw new GraphQLError("Reset token wasn't updated");
   }
 
-  const resetPasswordTextMessage = `Please reset your password via this link!\nhttps://dev-frontend-team01-vse.handson.pro/auth/verifyUser=token?=${resetToken}`;
-  const resetPasswordHTMLMessage = `Please reset your password using this <a href="<url for resetting password>?token=${resetToken}" >link</a>`;
-
-  try {
-    await sendEmail(email, SUBJECT_RESET_PASSWORD, {
-      text: resetPasswordTextMessage,
-      html: resetPasswordHTMLMessage,
-    });
-  } catch (error) {
-    throw error;
-  }
+  await sendResetPasswordEmail(email, resetToken, serverUrl);
 
   return true;
 };
@@ -203,7 +184,7 @@ export const resetPasswordResolver = async (
   { password, token }: MutationResetPasswordArgs,
   { dataSources }: CustomContext,
 ): Promise<boolean> => {
-  const user = (await dataSources.sql.db.query.raw(`SELECT * FROM User WHERE token = ?`, [token]))[0];
+  const user = await dataSources.sql.users.getUserByToken(token);
   if (!user) {
     throw new GraphQLError('Token is incorrect');
   }
@@ -216,10 +197,7 @@ export const resetPasswordResolver = async (
 
   const passwordHash = await argon2.hash(password);
 
-  const dbUpdateResponse = await dataSources.sql.db.write.raw('UPDATE User SET password = ? WHERE id = ?', [
-    passwordHash,
-    user.id,
-  ]);
+  const dbUpdateResponse = await dataSources.sql.users.updatePassword(passwordHash, user);
 
   if (!dbUpdateResponse) {
     throw new GraphQLError('Password not changed');
@@ -248,6 +226,8 @@ export const editAuthUserResolver = async (
 
   await dataSources.sql.eventTypes.updateUser_EventTypeRelation(user.id, user.event_type_ids);
 
+  user.password = await argon2.hash(user.password);
+
   const dbUpdateUserResponse = await dataSources.sql.db
     .write('User')
     .where('id', user.id)
@@ -265,4 +245,20 @@ export const editAuthUserResolver = async (
   }
 
   return dbUserResponse;
+};
+
+export const changePasswordResolver = async (
+  _: unknown,
+  { id, password }: MutationChangePasswordArgs,
+  { dataSources }: CustomContext,
+) => {
+  const passwordHash = await argon2.hash(password);
+
+  const dbResult = await dataSources.sql.users.changePassword(passwordHash, id);
+
+  if (!dbResult) {
+    throw new GraphQLError(`Error while attempting to change password for user with id ${id}!`);
+  }
+
+  return true;
 };

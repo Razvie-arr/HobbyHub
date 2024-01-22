@@ -96,3 +96,28 @@ export const getPublicStorageFilePath = ({
     relativeFileUrl: `/${path.join(relativeDirectory, uniqueFilename).split(path.sep).join('/')}`,
   };
 };
+
+export const getEventLink = (serverUrl: string, eventId: number): string =>
+  getFrontendUrl(serverUrl) + `/event/${eventId}`;
+
+export const getGroupLink = (serverUrl: string, groupId: number): string =>
+  getFrontendUrl(serverUrl) + `/group/${groupId}`;
+
+export const getMessagesLink = (serverUrl: string): string => getFrontendUrl(serverUrl) + '/messages';
+
+export const getUserProfileLink = (serverUrl: string): string => getFrontendUrl(serverUrl) + '/profile';
+
+export const getUserProfileLinkById = (serverUrl: string, userId: number) =>
+  getFrontendUrl(serverUrl) + `/profile/${userId}`;
+
+export const getFrontendUrl = (serverUrl: string): string => {
+  if (serverUrl.includes('localhost')) {
+    return 'http://localhost:3000';
+  }
+
+  const protocol = 'https://';
+  const frontendUrl = serverUrl.includes('dev')
+    ? 'dev-frontend-team01-vse.handson.pro'
+    : 'frontend-team01-vse.handson.pro';
+  return protocol + frontendUrl;
+};

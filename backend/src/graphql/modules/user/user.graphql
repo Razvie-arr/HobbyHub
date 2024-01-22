@@ -17,6 +17,7 @@ extend type Mutation {
   onboardUser(user: UserInput!, location: LocationInputWithoutCoords!): AuthUser!
 
   editAuthUser(user: AuthUserInput!, location: LocationInputWithoutCoords!): AuthUser!
+  changePassword(id: Int!, password: String!): Boolean!
 
   blockUser(blocker_id: Int!, blocked_id: Int!): String
   unblockUser(blocker_id: Int!, blocked_id: Int!): String
@@ -85,5 +86,12 @@ input AuthUserInput {
   event_type_ids: [Int!]!
 
   location_id: Int
+}
+
+input UserEmailInput{
+  id: Int!
+  email: String!
+  first_name: String!
+  last_name: String!
 }
 

@@ -7,7 +7,7 @@ import { route } from '../../../route';
 import { ReactRouterLink } from '../../../shared/navigation';
 import { getLocationFragmentData, WithUserProfile } from '../../../shared/types';
 import { useAuth } from '../../auth';
-import { BlockUserButton } from '../../block';
+import { BlockUserButton, UnblockUserButton } from '../../block';
 
 export const ProfileDetailsInfo = ({ userProfile }: WithUserProfile) => {
   const { user } = useAuth();
@@ -38,9 +38,15 @@ export const ProfileDetailsInfo = ({ userProfile }: WithUserProfile) => {
                 size="sm"
               />
             ) : null}
-            {user && user.id !== userProfile.id && userProfile.blockedBy?.map(({ id }) => id).includes(user.id)
-              ? 'Unblock'
-              : null}
+            {user && user.id !== userProfile.id && userProfile.blockedBy?.map(({ id }) => id).includes(user.id) ? (
+              <UnblockUserButton
+                blockerId={user.id}
+                blockedId={userProfile.id}
+                blockedName={userProfileName}
+                refetchQueries={['UserProfile']}
+                size="sm"
+              />
+            ) : null}
           </HStack>
           <HStack>
             <Text fontSize="lg" as="b">

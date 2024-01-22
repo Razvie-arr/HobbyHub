@@ -3,7 +3,7 @@ import { gql } from '../../gql';
 export const CREATE_GROUP = gql(`
   mutation CreateGroup($group: GroupInput!, $location: LocationInputWithoutCoords!) {
     createGroup(group: $group, location: $location) {
-      id
+      ...GroupFragment
     }
   }
 `);
@@ -11,7 +11,7 @@ export const CREATE_GROUP = gql(`
 export const EDIT_GROUP = gql(`
   mutation EditGroup($group: GroupInput!, $location: LocationInputWithoutCoords!) {
     editGroup(group: $group, location: $location) {
-      id
+      ...GroupFragment
     }
 }
 `);

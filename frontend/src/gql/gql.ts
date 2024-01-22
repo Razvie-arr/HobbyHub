@@ -17,18 +17,20 @@ const documents = {
     types.OnboardUserDocument,
   '\n  mutation RequestResetPassword($email: String!) {\n    requestResetPassword(email: $email)\n  }\n':
     types.RequestResetPasswordDocument,
-  '\n  mutation ResetPassword($email: String!, $password: String!, $token: String!) {\n    requestResetPassword(email: $email)\n    resetPassword(password: $password, token: $token)\n  }\n':
+  '\n  mutation ResetPassword($password: String!, $token: String!) {\n    resetPassword(password: $password, token: $token)\n  }\n':
     types.ResetPasswordDocument,
   '\n  mutation SignIn($email: String!, $password: String!) {\n    signIn(email: $email, password: $password) {\n      user {\n        id\n        email\n        first_name\n        last_name\n        verified\n        description\n        location {\n          ...LocationFragment\n        }\n        event_types {\n          id\n          name\n          category\n        }\n        groups {\n          ...GroupFragment\n        }\n      }\n      token\n    }\n  }\n':
     types.SignInDocument,
   '\n  mutation SignUp($email: String!, $first_name: String!, $last_name: String!, $password: String!) {\n    signUp(email: $email, first_name: $first_name, last_name: $last_name, password: $password) {\n      user {\n        id\n        first_name\n        last_name\n        email\n      }\n      token\n    }\n  }\n':
     types.SignUpDocument,
-  '\n  mutation Mutation($token: String!) {\n    verify(token: $token)\n  }\n': types.MutationDocument,
+  '\n  mutation VerifyUser($token: String!) {\n    verify(token: $token)\n  }\n': types.VerifyUserDocument,
   '\n  mutation BlockUser($blockerId: Int!, $blockedId: Int!) {\n    blockUser(blocker_id: $blockerId, blocked_id: $blockedId)\n  }\n':
     types.BlockUserDocument,
-  '\n  mutation CreateEvent($event: EventInput!, $location: LocationInputWithoutCoords!) {\n    createEvent(event: $event, location: $location) {\n      id\n    }\n  }\n':
+  '\n  mutation UnblockUser($blockerId: Int!, $blockedId: Int!) {\n    unblockUser(blocker_id: $blockerId, blocked_id: $blockedId)\n  }\n':
+    types.UnblockUserDocument,
+  '\n  mutation CreateEvent($event: EventInput!, $location: LocationInputWithoutCoords!) {\n    createEvent(event: $event, location: $location) {\n      ...EventFragment\n    }\n  }\n':
     types.CreateEventDocument,
-  '\n  mutation EditEvent($event: EventInput!, $location: LocationInputWithoutCoords!) {\n    editEvent(event: $event, location: $location) {\n      id\n    }\n}\n':
+  '\n  mutation EditEvent($event: EventInput!, $location: LocationInputWithoutCoords!) {\n    editEvent(event: $event, location: $location) {\n      ...EventFragment\n    }\n}\n':
     types.EditEventDocument,
   '\n  mutation DeleteEvent($eventId: Int!, $locationId: Int!) {\n    deleteEvent(event_id: $eventId, location_id: $locationId) \n  }\n':
     types.DeleteEventDocument,
@@ -41,7 +43,7 @@ const documents = {
     types.ResolveEventRegistrationDocument,
   '\n  mutation MassEmailToEventParticipants($eventId: Int!, $emailSubject: String!, $emailBody: String!) {\n    massEmailToEventParticipants(eventId: $eventId, emailSubject: $emailSubject, emailBody: $emailBody)\n  }\n':
     types.MassEmailToEventParticipantsDocument,
-  '\n  mutation MoreEventsLikeThis($sender: SenderInput!, $recipient: RecipientInput!, $eventId: Int!, $eventName: String!, $emailBody: String!) {\n    moreEventsLikeThis(sender: $sender, recipient: $recipient, eventId: $eventId, eventName: $eventName, emailBody: $emailBody)\n  }\n':
+  '\n  mutation MoreEventsLikeThis($sender: UserEmailInput!, $recipient: UserEmailInput!, $event: EventEmailInput!, $emailBody: String!) {\n    moreEventsLikeThis(sender: $sender, recipient: $recipient, event: $event, emailBody: $emailBody)\n  }\n':
     types.MoreEventsLikeThisDocument,
   '\n  query Events($offset: Int, $limit: Int) {\n    events(offset: $offset, limit: $limit) {\n      ...EventFragment\n    }\n  }\n':
     types.EventsDocument,
@@ -57,9 +59,9 @@ const documents = {
     types.FilterEventsDocument,
   '\n  query SimilarEvents($userId: Int, $eventId: Int!, $city: String!, $eventTypeIds: [Int!]!) {\n    similarEvents(user_id: $userId, eventId: $eventId, city: $city, eventTypeIds: $eventTypeIds) {\n      ...EventFragment\n    }\n  }\n':
     types.SimilarEventsDocument,
-  '\n  mutation CreateGroup($group: GroupInput!, $location: LocationInputWithoutCoords!) {\n    createGroup(group: $group, location: $location) {\n      id\n    }\n  }\n':
+  '\n  mutation CreateGroup($group: GroupInput!, $location: LocationInputWithoutCoords!) {\n    createGroup(group: $group, location: $location) {\n      ...GroupFragment\n    }\n  }\n':
     types.CreateGroupDocument,
-  '\n  mutation EditGroup($group: GroupInput!, $location: LocationInputWithoutCoords!) {\n    editGroup(group: $group, location: $location) {\n      id\n    }\n}\n':
+  '\n  mutation EditGroup($group: GroupInput!, $location: LocationInputWithoutCoords!) {\n    editGroup(group: $group, location: $location) {\n      ...GroupFragment\n    }\n}\n':
     types.EditGroupDocument,
   '\n  mutation DeleteGroup($groupId: Int!, $locationId: Int!) {\n    deleteGroup(group_id: $groupId, location_id: $locationId) \n  }\n':
     types.DeleteGroupDocument,
@@ -83,8 +85,10 @@ const documents = {
     types.ThreadsDocument,
   '\n  query MessagesByThreadId($threadId: Int!) {\n    messagesByThreadId(threadId: $threadId) {\n      ...MessageFragment\n    }\n  }\n':
     types.MessagesByThreadIdDocument,
-  '\n  mutation EditUser($user: UserInput!, $location: LocationInputWithoutCoords!) {\n    editUser(user: $user, location: $location) {\n      id\n      event_types {\n        id\n        category\n        name\n      }\n    }\n  }\n':
+  '\n  mutation EditUser($user: UserInput!, $location: LocationInputWithoutCoords!) {\n    editUser(user: $user, location: $location) {\n      id\n      first_name\n      last_name\n      description\n      email\n      event_types {\n        id\n        category\n        name\n      }\n      location {\n        ...LocationFragment\n      }\n    }\n  }\n':
     types.EditUserDocument,
+  '\n  mutation ChangePassword($id: Int!, $password: String!) {\n    changePassword(id: $id, password: $password)\n  }\n':
+    types.ChangePasswordDocument,
   '\n  query UserProfile($userId: Int!) {\n    userById(id: $userId) {\n      ...UserProfileFragment\n    }\n  }\n':
     types.UserProfileDocument,
   '\n  query UserCreatedEvents($userId: Int!, $offset: Int, $limit: Int) {\n    userCreatedEvents(userId: $userId, offset: $offset, limit: $limit) {\n        ...EventFragment\n      }\n    }\n':
@@ -147,8 +151,8 @@ export function gql(
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function gql(
-  source: '\n  mutation ResetPassword($email: String!, $password: String!, $token: String!) {\n    requestResetPassword(email: $email)\n    resetPassword(password: $password, token: $token)\n  }\n',
-): (typeof documents)['\n  mutation ResetPassword($email: String!, $password: String!, $token: String!) {\n    requestResetPassword(email: $email)\n    resetPassword(password: $password, token: $token)\n  }\n'];
+  source: '\n  mutation ResetPassword($password: String!, $token: String!) {\n    resetPassword(password: $password, token: $token)\n  }\n',
+): (typeof documents)['\n  mutation ResetPassword($password: String!, $token: String!) {\n    resetPassword(password: $password, token: $token)\n  }\n'];
 /**
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
@@ -165,8 +169,8 @@ export function gql(
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function gql(
-  source: '\n  mutation Mutation($token: String!) {\n    verify(token: $token)\n  }\n',
-): (typeof documents)['\n  mutation Mutation($token: String!) {\n    verify(token: $token)\n  }\n'];
+  source: '\n  mutation VerifyUser($token: String!) {\n    verify(token: $token)\n  }\n',
+): (typeof documents)['\n  mutation VerifyUser($token: String!) {\n    verify(token: $token)\n  }\n'];
 /**
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
@@ -177,14 +181,20 @@ export function gql(
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function gql(
-  source: '\n  mutation CreateEvent($event: EventInput!, $location: LocationInputWithoutCoords!) {\n    createEvent(event: $event, location: $location) {\n      id\n    }\n  }\n',
-): (typeof documents)['\n  mutation CreateEvent($event: EventInput!, $location: LocationInputWithoutCoords!) {\n    createEvent(event: $event, location: $location) {\n      id\n    }\n  }\n'];
+  source: '\n  mutation UnblockUser($blockerId: Int!, $blockedId: Int!) {\n    unblockUser(blocker_id: $blockerId, blocked_id: $blockedId)\n  }\n',
+): (typeof documents)['\n  mutation UnblockUser($blockerId: Int!, $blockedId: Int!) {\n    unblockUser(blocker_id: $blockerId, blocked_id: $blockedId)\n  }\n'];
 /**
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function gql(
-  source: '\n  mutation EditEvent($event: EventInput!, $location: LocationInputWithoutCoords!) {\n    editEvent(event: $event, location: $location) {\n      id\n    }\n}\n',
-): (typeof documents)['\n  mutation EditEvent($event: EventInput!, $location: LocationInputWithoutCoords!) {\n    editEvent(event: $event, location: $location) {\n      id\n    }\n}\n'];
+  source: '\n  mutation CreateEvent($event: EventInput!, $location: LocationInputWithoutCoords!) {\n    createEvent(event: $event, location: $location) {\n      ...EventFragment\n    }\n  }\n',
+): (typeof documents)['\n  mutation CreateEvent($event: EventInput!, $location: LocationInputWithoutCoords!) {\n    createEvent(event: $event, location: $location) {\n      ...EventFragment\n    }\n  }\n'];
+/**
+ * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function gql(
+  source: '\n  mutation EditEvent($event: EventInput!, $location: LocationInputWithoutCoords!) {\n    editEvent(event: $event, location: $location) {\n      ...EventFragment\n    }\n}\n',
+): (typeof documents)['\n  mutation EditEvent($event: EventInput!, $location: LocationInputWithoutCoords!) {\n    editEvent(event: $event, location: $location) {\n      ...EventFragment\n    }\n}\n'];
 /**
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
@@ -225,8 +235,8 @@ export function gql(
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function gql(
-  source: '\n  mutation MoreEventsLikeThis($sender: SenderInput!, $recipient: RecipientInput!, $eventId: Int!, $eventName: String!, $emailBody: String!) {\n    moreEventsLikeThis(sender: $sender, recipient: $recipient, eventId: $eventId, eventName: $eventName, emailBody: $emailBody)\n  }\n',
-): (typeof documents)['\n  mutation MoreEventsLikeThis($sender: SenderInput!, $recipient: RecipientInput!, $eventId: Int!, $eventName: String!, $emailBody: String!) {\n    moreEventsLikeThis(sender: $sender, recipient: $recipient, eventId: $eventId, eventName: $eventName, emailBody: $emailBody)\n  }\n'];
+  source: '\n  mutation MoreEventsLikeThis($sender: UserEmailInput!, $recipient: UserEmailInput!, $event: EventEmailInput!, $emailBody: String!) {\n    moreEventsLikeThis(sender: $sender, recipient: $recipient, event: $event, emailBody: $emailBody)\n  }\n',
+): (typeof documents)['\n  mutation MoreEventsLikeThis($sender: UserEmailInput!, $recipient: UserEmailInput!, $event: EventEmailInput!, $emailBody: String!) {\n    moreEventsLikeThis(sender: $sender, recipient: $recipient, event: $event, emailBody: $emailBody)\n  }\n'];
 /**
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
@@ -273,14 +283,14 @@ export function gql(
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function gql(
-  source: '\n  mutation CreateGroup($group: GroupInput!, $location: LocationInputWithoutCoords!) {\n    createGroup(group: $group, location: $location) {\n      id\n    }\n  }\n',
-): (typeof documents)['\n  mutation CreateGroup($group: GroupInput!, $location: LocationInputWithoutCoords!) {\n    createGroup(group: $group, location: $location) {\n      id\n    }\n  }\n'];
+  source: '\n  mutation CreateGroup($group: GroupInput!, $location: LocationInputWithoutCoords!) {\n    createGroup(group: $group, location: $location) {\n      ...GroupFragment\n    }\n  }\n',
+): (typeof documents)['\n  mutation CreateGroup($group: GroupInput!, $location: LocationInputWithoutCoords!) {\n    createGroup(group: $group, location: $location) {\n      ...GroupFragment\n    }\n  }\n'];
 /**
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function gql(
-  source: '\n  mutation EditGroup($group: GroupInput!, $location: LocationInputWithoutCoords!) {\n    editGroup(group: $group, location: $location) {\n      id\n    }\n}\n',
-): (typeof documents)['\n  mutation EditGroup($group: GroupInput!, $location: LocationInputWithoutCoords!) {\n    editGroup(group: $group, location: $location) {\n      id\n    }\n}\n'];
+  source: '\n  mutation EditGroup($group: GroupInput!, $location: LocationInputWithoutCoords!) {\n    editGroup(group: $group, location: $location) {\n      ...GroupFragment\n    }\n}\n',
+): (typeof documents)['\n  mutation EditGroup($group: GroupInput!, $location: LocationInputWithoutCoords!) {\n    editGroup(group: $group, location: $location) {\n      ...GroupFragment\n    }\n}\n'];
 /**
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
@@ -351,8 +361,14 @@ export function gql(
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function gql(
-  source: '\n  mutation EditUser($user: UserInput!, $location: LocationInputWithoutCoords!) {\n    editUser(user: $user, location: $location) {\n      id\n      event_types {\n        id\n        category\n        name\n      }\n    }\n  }\n',
-): (typeof documents)['\n  mutation EditUser($user: UserInput!, $location: LocationInputWithoutCoords!) {\n    editUser(user: $user, location: $location) {\n      id\n      event_types {\n        id\n        category\n        name\n      }\n    }\n  }\n'];
+  source: '\n  mutation EditUser($user: UserInput!, $location: LocationInputWithoutCoords!) {\n    editUser(user: $user, location: $location) {\n      id\n      first_name\n      last_name\n      description\n      email\n      event_types {\n        id\n        category\n        name\n      }\n      location {\n        ...LocationFragment\n      }\n    }\n  }\n',
+): (typeof documents)['\n  mutation EditUser($user: UserInput!, $location: LocationInputWithoutCoords!) {\n    editUser(user: $user, location: $location) {\n      id\n      first_name\n      last_name\n      description\n      email\n      event_types {\n        id\n        category\n        name\n      }\n      location {\n        ...LocationFragment\n      }\n    }\n  }\n'];
+/**
+ * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function gql(
+  source: '\n  mutation ChangePassword($id: Int!, $password: String!) {\n    changePassword(id: $id, password: $password)\n  }\n',
+): (typeof documents)['\n  mutation ChangePassword($id: Int!, $password: String!) {\n    changePassword(id: $id, password: $password)\n  }\n'];
 /**
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */

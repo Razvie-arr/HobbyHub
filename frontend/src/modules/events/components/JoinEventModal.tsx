@@ -34,6 +34,7 @@ const commonTagProps = {
   display: 'block',
   lineHeight: 2.2,
   variant: 'solid',
+  size: 'lg',
 };
 
 export const JoinEventModal = ({ user, event, buttonSize = 'md' }: JoinEventModalProps) => {

@@ -82,6 +82,7 @@ import {
   authUserByIdResolver,
   authUserEventTypesResolver,
   authUserLocationResolver,
+  changePasswordResolver,
   editAuthUserResolver,
   requestResetPasswordResolver,
   resetPasswordResolver,
@@ -94,6 +95,8 @@ import {
   editUserResolver,
   onboardUserResolver,
   unblockUserResolver,
+  userBlockedByResolver,
+  userBlockingResolver,
   userByIdResolver,
   userEventsResolver,
   userEventTypesResolver,
@@ -193,6 +196,7 @@ export const rootResolver: Resolvers = {
     unblockUser: unblockUserResolver,
 
     editAuthUser: editAuthUserResolver,
+    changePassword: changePasswordResolver,
 
     createGroup: createGroupResolver,
     editGroup: editGroupResolver,
@@ -214,6 +218,8 @@ export const rootResolver: Resolvers = {
     location: userLocationResolver,
     events: userEventsResolver,
     groups: userGroupsResolver,
+    blockedBy: userBlockedByResolver,
+    blocking: userBlockingResolver,
   },
 
   Group: {

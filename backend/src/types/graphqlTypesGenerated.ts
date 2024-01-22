@@ -1,6 +1,7 @@
 import { GraphQLResolveInfo, GraphQLScalarType, GraphQLScalarTypeConfig } from 'graphql';
 import { CustomContext } from './types';
 import type { FileUpload } from 'graphql-upload/Upload';
+
 export type Maybe<T> = T | null;
 export type InputMaybe<T> = Maybe<T>;
 export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
@@ -75,6 +76,11 @@ export type Event = {
   participants: Array<ParticipantType>;
   start_datetime: Scalars['String']['output'];
   summary: Scalars['String']['output'];
+};
+
+export type EventEmailInput = {
+  id: Scalars['Int']['input'];
+  name: Scalars['String']['input'];
 };
 
 export type EventInput = {
@@ -183,6 +189,7 @@ export type Mutation = {
   askForFeedback: Array<Scalars['String']['output']>;
   blockUser?: Maybe<Scalars['String']['output']>;
   cancelEvent: Scalars['String']['output'];
+  changePassword: Scalars['Boolean']['output'];
   createEvent: Event;
   createGroup: Group;
   createLocation?: Maybe<Location>;
@@ -225,6 +232,11 @@ export type MutationBlockUserArgs = {
 
 export type MutationCancelEventArgs = {
   eventId: Scalars['Int']['input'];
+};
+
+export type MutationChangePasswordArgs = {
+  id: Scalars['Int']['input'];
+  password: Scalars['String']['input'];
 };
 
 export type MutationCreateEventArgs = {
@@ -310,10 +322,9 @@ export type MutationMaxRatingAllParticipantsArgs = {
 
 export type MutationMoreEventsLikeThisArgs = {
   emailBody: Scalars['String']['input'];
-  eventId: Scalars['Int']['input'];
-  eventName: Scalars['String']['input'];
-  recipient: RecipientInput;
-  sender: SenderInput;
+  event: EventEmailInput;
+  recipient: UserEmailInput;
+  sender: UserEmailInput;
 };
 
 export type MutationOnboardUserArgs = {
@@ -714,6 +725,13 @@ export type User = {
   verified: Scalars['Boolean']['output'];
 };
 
+export type UserEmailInput = {
+  email: Scalars['String']['input'];
+  first_name: Scalars['String']['input'];
+  id: Scalars['Int']['input'];
+  last_name: Scalars['String']['input'];
+};
+
 export type UserInput = {
   description?: InputMaybe<Scalars['String']['input']>;
   email: Scalars['String']['input'];
@@ -808,6 +826,7 @@ export type ResolversTypes = {
   Author: ResolverTypeWrapper<ResolversUnionTypes<ResolversTypes>['Author']>;
   Boolean: ResolverTypeWrapper<Scalars['Boolean']['output']>;
   Event: ResolverTypeWrapper<Omit<Event, 'author'> & { author: ResolversTypes['Author'] }>;
+  EventEmailInput: EventEmailInput;
   EventInput: EventInput;
   EventType: ResolverTypeWrapper<EventType>;
   FilterLocationInput: FilterLocationInput;
@@ -834,6 +853,7 @@ export type ResolversTypes = {
   Thread: ResolverTypeWrapper<Thread>;
   Upload: ResolverTypeWrapper<Scalars['Upload']['output']>;
   User: ResolverTypeWrapper<User>;
+  UserEmailInput: UserEmailInput;
   UserInput: UserInput;
 };
 
@@ -845,6 +865,7 @@ export type ResolversParentTypes = {
   Author: ResolversUnionTypes<ResolversParentTypes>['Author'];
   Boolean: Scalars['Boolean']['output'];
   Event: Omit<Event, 'author'> & { author: ResolversParentTypes['Author'] };
+  EventEmailInput: EventEmailInput;
   EventInput: EventInput;
   EventType: EventType;
   FilterLocationInput: FilterLocationInput;
@@ -868,6 +889,7 @@ export type ResolversParentTypes = {
   Thread: Thread;
   Upload: Scalars['Upload']['output'];
   User: User;
+  UserEmailInput: UserEmailInput;
   UserInput: UserInput;
 };
 
@@ -1004,6 +1026,12 @@ export type MutationResolvers<
     ContextType,
     RequireFields<MutationCancelEventArgs, 'eventId'>
   >;
+  changePassword?: Resolver<
+    ResolversTypes['Boolean'],
+    ParentType,
+    ContextType,
+    RequireFields<MutationChangePasswordArgs, 'id' | 'password'>
+  >;
   createEvent?: Resolver<
     ResolversTypes['Event'],
     ParentType,
@@ -1099,7 +1127,7 @@ export type MutationResolvers<
     ResolversTypes['String'],
     ParentType,
     ContextType,
-    RequireFields<MutationMoreEventsLikeThisArgs, 'emailBody' | 'eventId' | 'eventName' | 'recipient' | 'sender'>
+    RequireFields<MutationMoreEventsLikeThisArgs, 'emailBody' | 'event' | 'recipient' | 'sender'>
   >;
   onboardUser?: Resolver<
     ResolversTypes['AuthUser'],

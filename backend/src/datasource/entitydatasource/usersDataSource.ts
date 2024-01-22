@@ -1,4 +1,5 @@
 import { DataSourceKnex } from '@nic-jennings/sql-datasource';
+import { GraphQLError } from 'graphql/error';
 
 import { AuthUser, User } from '../../types';
 
@@ -46,4 +47,29 @@ export const usersDataSource = (db: { query: DataSourceKnex; write: DataSourceKn
 
     return [...blockedBy.map((user) => user.id), ...blocking.map((user) => user.id)];
   },
+
+  updateUserToken: (email: String, resetToken: String) =>
+    db.write.raw('UPDATE User SET token = ? WHERE email = ?', [resetToken, email]),
+
+  getUserByToken: async (token: String) => {
+    const result = await db.query.raw(`SELECT * FROM User WHERE token = ?`, [token]);
+    if (!result || !result[0] || !result[0][0]) {
+      throw new GraphQLError('User not found via token!');
+    }
+    return result[0][0] as unknown as User;
+  },
+
+  updatePassword: async (passwordHash: String, user: User) => {
+    const result = await db.write.raw('UPDATE User SET password = ? WHERE id = ?', [passwordHash, user.id]);
+    const dbResponse = await db.write.raw('UPDATE User SET token = NULL WHERE id = ?', [user.id]);
+
+    if (!dbResponse) {
+      throw new GraphQLError(`Error while attempting to delete token for user with id ${user.id}!`);
+    }
+
+    return result;
+  },
+
+  changePassword: async (passwordHash: String, userId: number) =>
+    db.write.raw('UPDATE User SET password = ? WHERE id = ?', [passwordHash, userId]),
 });

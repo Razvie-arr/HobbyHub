@@ -1,7 +1,6 @@
 import { useQuery } from '@apollo/client';
 import { useParams } from 'react-router-dom';
 
-import { NoData } from '../../../shared/design-system';
 import { QueryResult } from '../../../shared/layout';
 import { getGroupFragmentData } from '../../../shared/types';
 import { GroupDetails } from '../components';
@@ -21,7 +20,8 @@ const GroupDetailsPage = ({ groupId }: EventDetailsProps) => {
       queryResult={eventQueryResult}
       queryName="groupById"
       render={(groupFragment) => <GroupDetails group={getGroupFragmentData(groupFragment)} />}
-      renderOnNoData={<NoData wrapInContentContainer />}
+      noDataTitle="Group Not Found!"
+      noDataDescription="The group you're looking for is elusive! It might be a typo or the group's no longer active. Fear not, plenty of other fascinating groups await your discovery!"
     />
   );
 };

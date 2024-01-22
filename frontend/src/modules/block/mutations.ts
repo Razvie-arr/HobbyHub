@@ -6,3 +6,9 @@ export const BLOCK_USER = gql(`
   }
 `);
 
+export const UNBLOCK_USER = gql(`
+  mutation UnblockUser($blockerId: Int!, $blockedId: Int!) {
+    unblockUser(blocker_id: $blockerId, blocked_id: $blockedId)
+  }
+`);
+

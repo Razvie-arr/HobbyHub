@@ -3,7 +3,7 @@ import { gql } from '../../gql';
 export const CREATE_EVENT = gql(`
   mutation CreateEvent($event: EventInput!, $location: LocationInputWithoutCoords!) {
     createEvent(event: $event, location: $location) {
-      id
+      ...EventFragment
     }
   }
 `);
@@ -11,7 +11,7 @@ export const CREATE_EVENT = gql(`
 export const EDIT_EVENT = gql(`
   mutation EditEvent($event: EventInput!, $location: LocationInputWithoutCoords!) {
     editEvent(event: $event, location: $location) {
-      id
+      ...EventFragment
     }
 }
 `);
@@ -53,8 +53,8 @@ export const SEND_MASS_MESSAGE = gql(`
 `);
 
 export const SEND_MORE_EVENTS_LIKE_THIS_MESSAGE = gql(`
-  mutation MoreEventsLikeThis($sender: SenderInput!, $recipient: RecipientInput!, $eventId: Int!, $eventName: String!, $emailBody: String!) {
-    moreEventsLikeThis(sender: $sender, recipient: $recipient, eventId: $eventId, eventName: $eventName, emailBody: $emailBody)
+  mutation MoreEventsLikeThis($sender: UserEmailInput!, $recipient: UserEmailInput!, $event: EventEmailInput!, $emailBody: String!) {
+    moreEventsLikeThis(sender: $sender, recipient: $recipient, event: $event, emailBody: $emailBody)
   }
 `);
 
