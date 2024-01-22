@@ -571,12 +571,14 @@ export type QuerySearchEventsArgs = {
   limit?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
   text: Scalars['String']['input'];
+  user_id?: InputMaybe<Scalars['Int']['input']>;
 };
 
 export type QuerySearchGroupsArgs = {
   limit?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
   text: Scalars['String']['input'];
+  user_id?: InputMaybe<Scalars['Int']['input']>;
 };
 
 export type QuerySimilarEventsArgs = {

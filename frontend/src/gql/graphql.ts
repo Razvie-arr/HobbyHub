@@ -1,5 +1,6 @@
 /* eslint-disable */
 import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';
+
 export type Maybe<T> = T | null;
 export type InputMaybe<T> = Maybe<T>;
 export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
@@ -568,12 +569,14 @@ export type QuerySearchEventsArgs = {
   limit?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
   text: Scalars['String']['input'];
+  user_id?: InputMaybe<Scalars['Int']['input']>;
 };
 
 export type QuerySearchGroupsArgs = {
   limit?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
   text: Scalars['String']['input'];
+  user_id?: InputMaybe<Scalars['Int']['input']>;
 };
 
 export type QuerySimilarEventsArgs = {

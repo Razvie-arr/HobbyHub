@@ -246,8 +246,8 @@ type Query {
   reviewById(reviewId: Int!): Review
   reviewsByUserId(limit: Int, offset: Int, userId: Int!): [Review!]!
   reviewsCount(userId: Int!): Int!
-  searchEvents(limit: Int, offset: Int, text: String!): [Event!]!
-  searchGroups(limit: Int, offset: Int, text: String!): [Group!]!
+  searchEvents(limit: Int, offset: Int, text: String!, user_id: Int): [Event!]!
+  searchGroups(limit: Int, offset: Int, text: String!, user_id: Int): [Group!]!
   similarEvents(city: String!, eventId: Int!, eventTypeIds: [Int!]!, limit: Int, offset: Int, user_id: Int): [Event!]!
   similarGroups(city: String!, eventTypeIds: [Int!]!, groupId: Int!, limit: Int, offset: Int): [Group!]!
   threads(limit: Int, offset: Int, userId: Int!): [Thread!]!
