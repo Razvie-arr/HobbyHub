@@ -67,7 +67,7 @@ The application is organized as follows:
 ### Root directory
 - `node_modules`: Dependencies and libraries.
 - `src`: Main source code
-- `scripts`: Scripts for automation.
+- `scripts`: Scripts for automatisation.
 
 Within `src` there are three key subdirectories:
 ### `datasource`
