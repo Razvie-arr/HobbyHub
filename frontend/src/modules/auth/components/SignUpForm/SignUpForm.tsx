@@ -73,7 +73,10 @@ export const SignUpForm = ({ disclosure, modalButtonText = 'Sign up', modalButto
         <EmailField />
         <PasswordField confirmPassword />
       </ModalForm>
-      <EmailVerificationModal disclosure={emailVerificationModalDisclosure} />
+      <EmailVerificationModal
+        disclosure={emailVerificationModalDisclosure}
+        text="To complete the account verification process, please check your email inbox."
+      />
     </>
   );
 };
