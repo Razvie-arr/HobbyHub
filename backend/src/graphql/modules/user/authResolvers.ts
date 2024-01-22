@@ -1,8 +1,9 @@
 import * as argon2 from 'argon2';
 import { GraphQLError } from 'graphql/error';
 
+import { sendResetPasswordEmail } from '../../../emails/user/sendResetPasswordEmail';
+import { sendVerifyAccountEmail } from '../../../emails/user/sendVerifyAccountEmail';
 import { createToken, createTokenWithExpirationTime, verifyTokenWithExpirationTime } from '../../../libs/jwt';
-import { sendEmail } from '../../../libs/nodeMailer';
 import {
   type AuthInfo,
   AuthUser,
@@ -24,8 +25,6 @@ import {
 import { createAuthUserInput } from '../../../utils/helpers';
 
 const tokenExpirationTime = 60 * 60;
-const SUBJECT_VERIFY = 'Verification email';
-const SUBJECT_RESET_PASSWORD = 'Reset password link';
 
 export const authUserByIdResolver: ContextualNullableResolver<AuthUser, QueryAuthUserByIdArgs> = async (
   _: unknown,
@@ -86,7 +85,7 @@ export const authUserAdminGroupsResolver: ContextualResolverWithParent<Array<Gro
 export const signUpResolver = async (
   _: unknown,
   { email: rawEmail, password, first_name, last_name }: MutationSignUpArgs,
-  { dataSources }: CustomContext,
+  { dataSources, serverUrl }: CustomContext,
 ): Promise<AuthInfo> => {
   const email = rawEmail.toLocaleLowerCase();
 
@@ -131,17 +130,7 @@ export const signUpResolver = async (
     location_id: 0,
   };
 
-  const verificationTextMessage = `Please verify your account via this link!\nhttps://frontend-team01-vse.handson.pro/auth/verifyUser?token=${token}">`;
-  const verificationHTMLMessage = `Please click <a href="https://frontend-team01-vse.handson.pro/auth/verifyUser?token=${token}">here</a> to verify your account!`;
-
-  try {
-    await sendEmail(email, SUBJECT_VERIFY, {
-      text: verificationTextMessage,
-      html: verificationHTMLMessage,
-    });
-  } catch (error) {
-    throw error;
-  }
+  await sendVerifyAccountEmail(email, token, serverUrl);
 
   return { user: userObject, token: token };
 };
@@ -164,7 +153,7 @@ export const verifyUserResolver = async (
 export const requestResetPasswordResolver = async (
   _: unknown,
   { email: rawEmail }: MutationRequestResetPasswordArgs,
-  { dataSources }: CustomContext,
+  { dataSources, serverUrl }: CustomContext,
 ): Promise<boolean> => {
   const email = rawEmail.toLocaleLowerCase();
 
@@ -185,17 +174,7 @@ export const requestResetPasswordResolver = async (
     throw new GraphQLError("Reset token wasn't updated");
   }
 
-  const resetPasswordTextMessage = `Please reset your password via this link!\nhttps://frontend-team01-vse.handson.pro/resetPassword=token?=${resetToken}`;
-  const resetPasswordHTMLMessage = `Please reset your password using this <a href="https://frontend-team01-vse.handson.pro/resetPassword?token=${resetToken}" >link</a>`;
-
-  try {
-    await sendEmail(email, SUBJECT_RESET_PASSWORD, {
-      text: resetPasswordTextMessage,
-      html: resetPasswordHTMLMessage,
-    });
-  } catch (error) {
-    throw error;
-  }
+  await sendResetPasswordEmail(email, resetToken, serverUrl);
 
   return true;
 };

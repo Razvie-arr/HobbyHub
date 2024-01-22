@@ -2,11 +2,7 @@ import nodemailer from 'nodemailer';
 
 import { EMAIL_PASSWORD, EMAIL_USER } from '../config';
 
-export const sendEmail = async (
-  targetEmail: string,
-  targetSubject: string,
-  { text, html }: { text: string; html?: string },
-) => {
+export const sendEmail = async (targetEmail: string, targetSubject: string, html: string) => {
   const transporter = nodemailer.createTransport({
     host: 'smtp-relay.brevo.com',
     port: 587,
@@ -21,8 +17,7 @@ export const sendEmail = async (
     from: 'HobbyHub <no-reply@hobby-hub.io>',
     to: targetEmail.toString(),
     subject: targetSubject,
-    text,
-    html,
+    html: html,
   };
 
   return transporter.sendMail(mailOptions);

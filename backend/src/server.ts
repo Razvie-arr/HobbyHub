@@ -7,6 +7,7 @@ import express from 'express';
 import graphqlUploadExpress from 'graphql-upload/graphqlUploadExpress.js';
 import http from 'http';
 
+import { createDesignedEmail, createTestEmailData } from './emails/createDesignedEmail';
 import { rootResolver } from './graphql/rootResolver';
 import { rootTypeDefs } from './graphql/rootTypeDefs';
 import { getConnection } from './libs/dbConnection';
@@ -42,6 +43,11 @@ const init = async () => {
       serverUrl: requestSenderUrl,
     };
   };
+
+  app.get('/previewEmail', (req, res) => {
+    const renderedTemplate = createDesignedEmail(createTestEmailData());
+    res.send(renderedTemplate);
+  });
 
   app.use(
     '/', //path to graphql server

@@ -1,0 +1,33 @@
+<html lang="en">
+<head>
+    <title>Email</title>
+
+</head>
+<body style="font-family: 'Roboto', sans-serif; background-color: #FAFAFA; font-style: normal; line-height: normal; padding: 30px 0 75px 0; color: #000; font-size: 16px; font-weight: 400;">
+
+<table class="container" style=" vertical-align: middle; margin: 0 auto 30px auto">
+    <tr class="logoSection" style="text-align: center; vertical-align: middle;">
+            <td style="vertical-align: middle; text-align: center;">
+                <img src="{{frontendUrl}}/assets/logo_transparent.png" class="logo" style="width: 55px; height: 55px;">
+            </td>
+            <td class="logoText" style="font-size: 28px; font-weight: 500; vertical-align: middle; text-align: center;">HobbyHub</td>
+        </td>
+    </tr>
+</table>
+
+<table class="container" style="width: 100%; max-width: 750px; margin: 0 auto;">
+    <tr>
+        <td class="main" style="padding: 30px; border-radius: 10px; background: #FFF; box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.25); text-align: center; color: #000;">
+            <img class="headerImg" src="{{headerImgUrl}}" style="width: 90px; height: 90px;">
+            <div class="header" style="margin-top: 15px; font-size: 30px; font-weight: 700; line-height: 36px; letter-spacing: -0.45px; color: #000;">{{{header}}}</div>
+            <div class="content" style="text-align: center; color: #000;">{{{content}}}</div>
+            {{#if link}}
+                <a class="link" href="{{link}}" style="display: block; width: 300px; border-radius: 50px; border: 1px solid #B794F4; background: #805AD5; padding: 10px 0; text-decoration: none; color: #FFF; font-size: 24px; font-weight: 700; text-align: center; margin: 15px auto auto auto;">{{linkText}}</a>
+            {{/if}}
+            <div class="ignoreText" style="color: #A0AEC0; font-size: 16px; font-weight: 400; line-height: 30px; text-align: center; margin-top: 15px">If you received this in error, simply ignore this email and do not click the button.</div>
+        </td>
+    </tr>
+</table>
+
+</body>
+</html>

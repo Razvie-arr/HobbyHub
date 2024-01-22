@@ -2,7 +2,11 @@ import * as fs from 'fs';
 import * as fsPromises from 'fs/promises';
 import { GraphQLError } from 'graphql/error';
 
-import { sendEmail } from '../../../libs/nodeMailer';
+import { sendEventRegistrationAcceptedEmail } from '../../../emails/event/sendEventRegistrationAcceptedEmail';
+import { sendEventRegistrationDeclinedEmail } from '../../../emails/event/sendEventRegistrationDeclinedEmail';
+import { sendEventRegistrationEmail } from '../../../emails/event/sendEventRegistrationEmail';
+import { sendMoreEventsLikeThisEmail } from '../../../emails/event/sendMoreEventsLikeThisEmail';
+import { sendUserRequestedEventRegistrationEmail } from '../../../emails/event/sendUserRequestedEventRegistrationEmail';
 import { DEFAULT_LIMIT, HAVERSINE_FORMULA } from '../../../sharedConstants';
 import {
   ContextualNullableResolver,
@@ -337,7 +341,7 @@ export const userCreatedEventsResolver: ContextualResolver<Array<Event>, QueryUs
 export const requestEventRegistrationResolver = async (
   _: unknown,
   { eventRegistration }: MutationRequestEventRegistrationArgs,
-  { dataSources }: CustomContext,
+  { dataSources, serverUrl }: CustomContext,
 ): Promise<string> => {
   let author;
 
@@ -353,44 +357,45 @@ export const requestEventRegistrationResolver = async (
     throw new GraphQLError(`Invalid user or group id as event author!`);
   }
 
+  const userEmail = eventRegistration.user_email;
+  const eventName = eventRegistration.event_name;
+  const eventId = eventRegistration.event_id;
+
   await dataSources.sql.db
     .write('Event_UserRequest')
-    .insert({ event_id: eventRegistration.event_id, user_id: eventRegistration.user_id, text: eventRegistration.text })
+    .insert({ event_id: eventId, user_id: eventRegistration.user_id, text: eventRegistration.text })
     .catch(() => {
       throw new GraphQLError('There was an unexpected error while inserting into Event_UserRequest table!');
     });
 
-  try {
-    await sendEmail(eventRegistration.user_email, 'Event registration', {
-      text: 'Thank you for your interest! Admin of the event received information about your application. You will receive an email notification right after his/her approval.',
-    });
-  } catch (error) {
-    throw error;
-  }
+  await sendEventRegistrationEmail(userEmail, eventName, eventId, serverUrl);
+  await sendUserRequestedEventRegistrationEmail(
+    author.email,
+    eventRegistration.user_name,
+    eventName,
+    eventId,
+    serverUrl,
+  );
 
-  try {
-    await sendEmail(author.email, 'User requested event registration', {
-      text: `User ${eventRegistration.user_name} requested registration for your event ${eventRegistration.event_name}.`,
-      html: `User ${eventRegistration.user_name} requested registration for your event <a href="https://frontend-team01-vse.handson.pro/event/${eventRegistration.event_id}">${eventRegistration.event_name}</a>.`,
-    });
-  } catch (error) {
-    throw error;
-  }
-
-  return `Registration request for event ${eventRegistration.event_name} by user ${eventRegistration.user_name} was sent!`;
+  return `Registration request for event ${eventName} by user ${userEmail} was sent!`;
 };
 
 export const resolveEventRegistrationResolver = async (
   _: unknown,
   { resolve }: MutationResolveEventRegistrationArgs,
-  { dataSources }: CustomContext,
+  { dataSources, serverUrl }: CustomContext,
 ): Promise<string> => {
+  const userEmail = resolve.user_email;
+  const userId = resolve.user_id;
+  const eventId = resolve.event_id;
+  const eventName = resolve.event_name;
+
   if (resolve.resolution) {
     await dataSources.sql.db
       .write('Event_User')
       .insert({
-        event_id: resolve.event_id,
-        user_id: resolve.user_id,
+        event_id: eventId,
+        user_id: userId,
       })
       .catch(() => {
         throw new GraphQLError('Error while inserting into Event_User table!');
@@ -398,41 +403,27 @@ export const resolveEventRegistrationResolver = async (
       .then(async () => {
         await dataSources.sql.db
           .write('Event_UserRequest')
-          .where('event_id', resolve.event_id)
-          .andWhere('user_id', resolve.user_id)
+          .where('event_id', eventId)
+          .andWhere('user_id', userId)
           .delete();
       })
       .catch(() => {
         throw new GraphQLError('Error while deleting from Event_UserRequest table!');
       })
       .then(async () => {
-        try {
-          await sendEmail(resolve.user_email, 'Event registration confirmed', {
-            text: `Your registration for event ${resolve.event_name} has been confirmed!`,
-            html: `Your registration for event <a href="https://frontend-team01-vse.handson.pro/event/${resolve.event_id}">${resolve.event_name}</a> has been confirmed!`,
-          });
-        } catch (error) {
-          throw error;
-        }
+        await sendEventRegistrationAcceptedEmail(userEmail, eventId, eventName, serverUrl);
       });
   } else {
     await dataSources.sql.db
       .write('Event_UserRequest')
-      .where('event_id', resolve.event_id)
-      .andWhere('user_id', resolve.user_id)
+      .where('event_id', eventId)
+      .andWhere('user_id', userId)
       .delete()
       .catch(() => {
         throw new GraphQLError('Error while deleting from Event_UserRequest table!');
       })
       .then(async () => {
-        try {
-          await sendEmail(resolve.user_email, 'Event registration declined', {
-            text: `Unfortunately, your registration for event ${resolve.event_name} has been declined.`,
-            html: `Unfortunately, your registration for event <a href="https://frontend-team01-vse.handson.pro/event/${resolve.event_id}">${resolve.event_name}</a> has been declined.`,
-          });
-        } catch (error) {
-          throw error;
-        }
+        await sendEventRegistrationDeclinedEmail(userEmail, eventId, eventName, serverUrl);
       });
   }
 
@@ -477,28 +468,32 @@ export const massEmailToEventParticipantsResolver = async (
 
   // send email only to accepted participants
   const eventAcceptedParticipants = await dataSources.sql.events.getAcceptedEventParticipants(eventId);
-
-  await sendMassEmailToEventParticipants(event, eventAcceptedParticipants, emailSubject, emailBody, serverUrl);
-  return 'Emails successfully sent';
+  if (eventAcceptedParticipants) {
+    try {
+      await sendMassEmailToEventParticipants(event, eventAcceptedParticipants, emailSubject, emailBody, serverUrl);
+    } catch (e) {
+      throw new GraphQLError((e as Error).message);
+    }
+    return 'Emails successfully sent.';
+  }
+  return 'No event participants.';
 };
 
 export const moreEventsLikeThisResolver = async (
   _: unknown,
   { sender, recipient, event, emailBody }: MutationMoreEventsLikeThisArgs,
-  __: unknown,
+  { serverUrl }: CustomContext,
 ) => {
-  try {
-    await sendEmail(recipient.email, 'More events like this', {
-      text: `User ${sender.first_name} would like  to see more events similar to\n${event.name}\nAn user has expressed interest in seeing more events similar to ${event.name}.\nCheck out their message below:\n${emailBody}`,
-      html: `User <a href="https://frontend-team01-vse.handson.pro/profile/${sender.id}">${sender.first_name}</a> would like  to see more events similar to
-<p><a href="https://frontend-team01-vse.handson.pro/event/${event.id}">${event.name}</a></p>
-<p>An user has expressed interest in seeing more events similar to <a href="https://frontend-team01-vse.handson.pro/event/${event.id}">${event.name}</a>.</p>
-<p>Check out their message below:</p>
-<p>${emailBody}</p>`,
-    });
-  } catch (error) {
-    throw error;
-  }
+  const userFullName = `${sender.first_name} ${sender.last_name}`;
+  await sendMoreEventsLikeThisEmail(
+    recipient.email,
+    emailBody,
+    userFullName,
+    sender.id,
+    event.name,
+    event.id,
+    serverUrl,
+  );
 
   return 'Email sent successfully!';
 };

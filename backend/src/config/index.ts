@@ -15,4 +15,6 @@ export const { EMAIL_PASSWORD } = process.env;
 
 export const PROJECT_ROOT = path.resolve(process.cwd());
 export const FRONTEND_ROOT = path.resolve(PROJECT_ROOT, `../frontend/`);
+export const BACKEND_ROOT = path.resolve(PROJECT_ROOT, '../backend');
 export const FRONTEND_PUBLIC_FOLDER = path.resolve(FRONTEND_ROOT, `public`);
+export const EMAIL_TEMPLATES_FOLDER = path.resolve(BACKEND_ROOT, 'src', 'emails', 'templates');
