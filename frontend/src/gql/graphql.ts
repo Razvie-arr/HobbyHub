@@ -777,12 +777,11 @@ export type RequestResetPasswordMutationVariables = Exact<{
 export type RequestResetPasswordMutation = { __typename?: 'Mutation'; requestResetPassword: boolean };
 
 export type ResetPasswordMutationVariables = Exact<{
-  email: Scalars['String']['input'];
   password: Scalars['String']['input'];
   token: Scalars['String']['input'];
 }>;
 
-export type ResetPasswordMutation = { __typename?: 'Mutation'; requestResetPassword: boolean; resetPassword: boolean };
+export type ResetPasswordMutation = { __typename?: 'Mutation'; resetPassword: boolean };
 
 export type SignInMutationVariables = Exact<{
   email: Scalars['String']['input'];
@@ -2055,11 +2054,6 @@ export const ResetPasswordDocument = {
       variableDefinitions: [
         {
           kind: 'VariableDefinition',
-          variable: { kind: 'Variable', name: { kind: 'Name', value: 'email' } },
-          type: { kind: 'NonNullType', type: { kind: 'NamedType', name: { kind: 'Name', value: 'String' } } },
-        },
-        {
-          kind: 'VariableDefinition',
           variable: { kind: 'Variable', name: { kind: 'Name', value: 'password' } },
           type: { kind: 'NonNullType', type: { kind: 'NamedType', name: { kind: 'Name', value: 'String' } } },
         },
@@ -2072,17 +2066,6 @@ export const ResetPasswordDocument = {
       selectionSet: {
         kind: 'SelectionSet',
         selections: [
-          {
-            kind: 'Field',
-            name: { kind: 'Name', value: 'requestResetPassword' },
-            arguments: [
-              {
-                kind: 'Argument',
-                name: { kind: 'Name', value: 'email' },
-                value: { kind: 'Variable', name: { kind: 'Name', value: 'email' } },
-              },
-            ],
-          },
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'resetPassword' },

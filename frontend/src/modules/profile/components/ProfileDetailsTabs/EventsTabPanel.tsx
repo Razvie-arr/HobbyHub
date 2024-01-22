@@ -47,14 +47,6 @@ export const EventsTabPanel = ({ userProfile }: WithUserProfile) => {
         }))}
         renderOnNoData={<NoData description="This user has no created events." />}
       />
-      {isCurrentUser ? (
-        <>
-          <Heading fontSize="lg" p="2">
-            Attending
-          </Heading>
-          <NoData description="This user isn't in any event." />
-        </>
-      ) : null}
     </TabPanel>
   );
 };

@@ -4,7 +4,13 @@ import { OnboardingForm, useAuth, VerifyUserPage } from 'src/modules/auth';
 import { CreateEventForm, EditEventForm, EventDetailsPage, EventsPage } from 'src/modules/events';
 import { NotFoundPage } from 'src/shared/navigation';
 
-import { ForgotPasswordPage, ResetPasswordPage, SignInPage, SignUpPage } from './modules/auth/pages';
+import {
+  ForgotPasswordPage,
+  PasswordUpdatedPage,
+  ResetPasswordPage,
+  SignInPage,
+  SignUpPage,
+} from './modules/auth/pages';
 import { CreateGroupForm, EditGroupForm, GroupDetailsPage, GroupsPage } from './modules/groups';
 import { LandingPage } from './modules/landing';
 import { MessagesPage } from './modules/messages';
@@ -39,12 +45,16 @@ export const Routes = () => {
 
       <Route path={route.currentProfile()} element={<ProfileDetailsPage />} />
       <Route path={route.profile()} element={<ProfileDetailsPage />} />
-
       <Route path={route.verifyUser()} element={<VerifyUserPage />} />
+
       <Route path={route.signIn()} element={<SignInPage />} />
       <Route path={route.signUp()} element={<SignUpPage />} />
+
       <Route path={route.forgotPassword()} element={<ForgotPasswordPage />} />
       <Route path={route.resetPassword()} element={<ResetPasswordPage />} />
+      <Route path={route.passwordUpdated()} element={<PasswordUpdatedPage />} />
+
+      {user ? <Route path={route.messages()} element={<MessagesPage user={user} />} /> : null}
 
       <Route path={route.onboarding()} element={createProtectedRoute(OnboardingForm)} />
 
