@@ -24,7 +24,8 @@ export const GroupCard = ({ group, ...other }: GroupCardProps) => (
         size="lg"
         borderRadius="full"
         lineHeight="2.4"
-        colorScheme="purple"
+        bg="purple.500"
+        color="white"
       >
         <Icon as={FaUserGroup} />
       </Tag>
