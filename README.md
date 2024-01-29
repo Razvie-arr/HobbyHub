@@ -1,48 +1,9 @@
-# [4IT580: Agilní vývoj webových aplikací](http://4it580.vse.cz/) na [VŠE](https://www.vse.cz/)
+## Large project developed by 5 people (development, testing and design) in 5 months using agile methodology. Service for finding teammates for activities such as sports, video games, board games, etc. Users can create and join groups and events. Includes integration with Google Maps and email service. Chat, search, referral system and more. I mainly developed the backend and database part. 
 
-## [📖 4IT580: Docs](https://vse-4it580-docs-2023.vercel.app)
+### Frontend: Typescript with React
+### Backend: Typescript using GraphQL, MySQL for database
 
-## JavaScript
 
-We will be using [Node.js](https://nodejs.org/). Please see [`.nvmrc`](./.nvmrc) to find current node.js version we are using.
-New JavaScript features (ES2015+) are "enabled" for all modern browsers with [Babel](https://babeljs.io/).
 
-### Reference
+<img width="1438" alt="image" src="https://github.com/Razvie-arr/HobbyHub/assets/58262342/58b5f737-ed98-47fb-9639-ab54eccd9fe5">
 
-- [JavaScript reference on MDN](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference)
-- [Learn ES2015](https://babeljs.io/docs/en/learn) + more:
-  - [object rest spread](http://babeljs.io/docs/plugins/transform-object-rest-spread/)
-- [TypeScript docs](https://www.typescriptlang.org/docs/)
-
-### Literature
-
-- **[React docs](https://react.dev/learn)**
-- frontend app is created using [`Vite`](https://vitejs.dev/)
-- books:
-  - [You Don't Know JS (book series)](https://github.com/getify/You-Dont-Know-JS/tree/1st-ed)
-    - [Up & Going](https://github.com/getify/You-Dont-Know-JS/blob/1st-ed/up%20%26%20going/README.md)
-    - [Scope & Closures](https://github.com/getify/You-Dont-Know-JS/blob/1st-ed/scope%20%26%20closures/README.md)
-    - [ES6 & Beyond](https://github.com/getify/You-Dont-Know-JS/blob/1st-ed/es6%20%26%20beyond/README.md)
-  - [JavaScript: The Good Parts](http://shop.oreilly.com/product/9780596517748.do)
-
-### JavaScript Packages
-
-- [yarn CLI docs](https://yarnpkg.com/en/docs/cli/)
-- Useful commands:
-  - `yarn install` (install local dependencies - based on `package.json` and `yarn.lock` files)
-  - `yarn add <package-name>` (install new NPM package and add it as a dependency to `package.json`)
-  - `yarn <script-name>` (eg. `yarn start`, `yarn prettier`, see `"scripts"` section in `package.json`)
-- Search for packages:
-  - [npmjs.com](https://www.npmjs.com/)
-  - **[js.coach/react](https://js.coach/react)**
-
-## Server Setup
-
-## SSH
-
-- `ssh username@vse.handson.pro`
-- frontend code: `cd ~/code/cviceni/frontend`
-
-### Domains
-
-- [dev-frontend-**username**-vse.handson.pro](http://dev-frontend-username-vse.handson.pro)
